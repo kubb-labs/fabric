@@ -1,0 +1,66 @@
+const isFunction = (val: unknown): val is Function =>
+  typeof val === 'function'
+
+type Component = any
+
+type PluginInstallFunction<Options = any[]> = Options extends unknown[]
+  ? (app: App, ...options: Options) => any
+  : (app: App, options: Options) => any
+
+export type ObjectPlugin<Options = any[]> = {
+  install: PluginInstallFunction<Options>
+}
+export type FunctionPlugin<Options = any[]> = PluginInstallFunction<Options> &
+  Partial<ObjectPlugin<Options>>
+
+export type RootRenderFunction<HostElement = unknown> = (
+  container: HostElement,
+) => void
+
+export type Plugin<
+  Options = any[],
+  P extends unknown[] = Options extends unknown[] ? Options : [Options],
+> = FunctionPlugin<P> | ObjectPlugin<P>
+
+export interface App<_HostElement= unknown> {
+  _component: Component
+  mount(): void
+  use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
+}
+
+
+export type DefineApp<HostElement> = (rootComponent: Component) => App<HostElement>
+
+
+export function defineApp<HostElement>(
+  render: RootRenderFunction<HostElement>,
+): DefineApp<HostElement> {
+
+  function createApp<HostElement>( rootComponent: Component,): App<HostElement>{
+    const installedPlugins = new WeakSet()
+
+    const app: App<HostElement> = {
+      _component: rootComponent,
+      mount() {
+        return render(rootComponent)
+      },
+      use(plugin: Plugin, ...options: any[]) {
+        if (installedPlugins.has(plugin)) {
+          console.warn(`Plugin has already been applied to target app.`)
+        } else if (plugin && isFunction(plugin.install)) {
+          installedPlugins.add(plugin)
+          plugin.install(app, ...options)
+        } else if (isFunction(plugin)) {
+          installedPlugins.add(plugin)
+          plugin(app, ...options)
+        }
+
+        return app
+      },
+    }
+
+    return app
+  }
+
+  return createApp
+}

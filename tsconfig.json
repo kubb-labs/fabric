@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Base",
+  "compilerOptions": {
+    /* Base Options: */
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "verbatimModuleSyntax": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    /* If transpiling with TypeScript: */
+    "outDir": "dist",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "noErrorTruncation": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "baseUrl": ".",
+    "paths": {
+      "@kubb/ts-craft": ["packages/ts-craft/src/index.ts"],
+      "@kubb/craft-core": ["packages/craft-core/src/index.ts"],
+      "@kubb/react-craft": ["packages/react-craft/src/index.ts"]
+    },
+    "types": ["vitest/globals", "bun-types", "./reset.d.ts"],
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
+    "declaration": false,
+    "declarationMap": false
+  },
+  "include": ["./package.json", "./tsdown.config.ts", "./vitest.config.ts", "./src/**/*"],
+  "exclude": ["node_modules", "dist", "tmp", "coverage", "**/__snapshots__/**"]
+}

@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@kubb/craft-core": "0.0.0",
+    "@kubb/react-craft": "0.0.0",
+    "@kubb/ts-craft": "0.0.0"
+  },
+  "changesets": []
+}
