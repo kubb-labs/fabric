@@ -1,4 +1,4 @@
-import { createRoot } from '../createRoot.ts'
+import { createApp } from '../createApp.ts'
 import { Type } from './Type.tsx'
 
 describe('<Type/>', () => {
@@ -6,10 +6,10 @@ describe('<Type/>', () => {
     const Component = () => {
       return <Type name="Data">string</Type>
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchSnapshot()
+    expect(app.output).toMatchSnapshot()
   })
 
   test('render Type with comments', async () => {
@@ -20,9 +20,9 @@ describe('<Type/>', () => {
         </Type>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchSnapshot()
+    expect(app.output).toMatchSnapshot()
   })
 })

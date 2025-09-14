@@ -6,6 +6,7 @@ export default defineConfig({
     factory: 'src/factory.ts',
   },
   dts: true,
+  target: 'es2019',
   format: ['esm', 'cjs'],
   platform: 'node',
   sourcemap: true,

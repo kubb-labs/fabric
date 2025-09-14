@@ -1,4 +1,4 @@
-import { createRoot } from '../createRoot.ts'
+import { createApp } from '../createApp.ts'
 import { Text } from './Text.tsx'
 
 describe('<Text/>', () => {
@@ -6,9 +6,9 @@ describe('<Text/>', () => {
     const Component = () => {
       return <Text>hallo</Text>
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toBe('hallo')
+    expect(app.output).toBe('hallo')
   })
 })

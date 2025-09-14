@@ -1,9 +1,8 @@
 import process from 'node:process'
 
 import path from 'node:path'
-import { Const, File, createRoot } from '@kubb/react-craft'
+import { Const, File, createApp } from '@kubb/react-craft'
 
-const root = createRoot({ stdout: process.stdout })
 
 /**
  * Create 2 files and write them to the file-system
@@ -33,9 +32,12 @@ function Component() {
 }
 
 async function start() {
-  root.render(<Component />)
-  console.log('\nFiles: ', root.files.length)
-  await root.write()
+  const app = createApp(Component)
+
+  app.mount()
+
+  console.log('\nFiles: ', app.files.length)
+  await app.write()
 }
 
 start()

@@ -2,14 +2,13 @@ import process from 'node:process'
 import { useEffect, useState } from '@kubb/react-craft'
 
 import path from 'node:path'
-import { Const, File, Function, createRoot, useLifecycle } from '@kubb/react-craft'
+import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-craft'
 
-const root = createRoot({ stdout: process.stdout })
 
 const fetchNames = async (): Promise<string[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(['Lily', 'Jan'])
+      resolve(['Lily', 'Jan', 'wouter'])
     }, 2000)
   })
 }
@@ -24,9 +23,10 @@ function Component() {
   useEffect(() => {
     fetchNames().then((newNames) => {
       setNames(newNames)
+
       exit()
     })
-  }, [exit])
+  }, [])
 
   return (
     <File path={path.resolve(__dirname, 'result.ts')} baseName={'result.ts'}>
@@ -57,11 +57,14 @@ function Component() {
 }
 
 async function start() {
-  root.render(<Component />)
+  const app = createApp(Component)
 
-  await root.waitUntilExit()
-  console.log('\nFiles: ', root.files.length)
-  await root.write()
+  app.mount()
+
+  await app.waitUntilExit()
+
+  console.log('\nFiles: ', app.files.length)
+  await app.write()
 }
 
 start()

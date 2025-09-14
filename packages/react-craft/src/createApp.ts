@@ -1,10 +1,21 @@
-import {defineApp} from "@kubb/craft-core";
-import {ReactTemplate} from "./ReactTemplate.tsx";
-import {createElement} from "./index.ts";
-import type { ElementType } from "react";
+import { defineApp, type KubbFile, ref } from '@kubb/craft-core'
+import type { ElementType } from 'react'
+import { createElement } from './index.ts'
+import { ReactTemplate } from './ReactTemplate.tsx'
 
-export const createApp= defineApp<ElementType>((container)=>{
-  const template = new ReactTemplate({})
+export const createApp = defineApp<ElementType>((container) => {
+  const files = ref<Array<KubbFile.File>>([])
+  const output = ref<string>('')
+  const template = new ReactTemplate({ files, output })
 
-  return template.render(createElement(container))
+  return {
+    files,
+    output,
+    mount() {
+      return template.render(createElement(container))
+    },
+    waitUntilExit() {
+      return template.waitUntilExit()
+    },
+  }
 })

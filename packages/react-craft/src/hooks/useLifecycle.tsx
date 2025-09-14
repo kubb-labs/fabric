@@ -9,6 +9,10 @@ export function useLifecycle() {
   const { exit } = useContext(Root.Context)
 
   return {
-    exit,
+    exit: () => {
+      setTimeout(() => {
+        exit()
+      }, 0)
+    },
   }
 }

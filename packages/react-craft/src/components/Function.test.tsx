@@ -1,4 +1,4 @@
-import { createRoot } from '../createRoot.ts'
+import { createApp } from '../createApp.ts'
 import { Function } from './Function.tsx'
 
 describe('<Function/>', () => {
@@ -10,8 +10,8 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -24,8 +24,8 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -38,8 +38,8 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -52,8 +52,8 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -66,8 +66,8 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -80,8 +80,8 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -94,8 +94,8 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -108,8 +108,8 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -128,8 +128,8 @@ describe('<Function/>', () => {
         </>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const root = createApp(Component)
+    root.mount()
 
     expect(root.output).toMatchSnapshot()
   })

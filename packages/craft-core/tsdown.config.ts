@@ -5,6 +5,7 @@ export default defineConfig({
     index: 'src/index.ts',
   },
   dts: true,
+  target: 'es2019',
   format: ['esm', 'cjs'],
   platform: 'node',
   sourcemap: true,

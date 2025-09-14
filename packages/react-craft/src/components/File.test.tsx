@@ -1,5 +1,5 @@
 import { expect } from 'vitest'
-import { createRoot } from '../createRoot.ts'
+import { createApp } from '../createApp.ts'
 import { File } from './File.tsx'
 
 describe('<File/>', () => {
@@ -7,20 +7,20 @@ describe('<File/>', () => {
     const Component = () => {
       return 'test'
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`"test"`)
+    expect(app.output).toMatchInlineSnapshot(`"test"`)
   })
 
   test('render File', () => {
     const Component = () => {
       return <File baseName="test.ts" path="path" />
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`""`)
+    expect(app.output).toMatchInlineSnapshot(`""`)
   })
 
   test('render File with Import and Export', async () => {
@@ -32,10 +32,10 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.files).toMatchInlineSnapshot(`
+    expect(app.files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -80,10 +80,10 @@ describe('<File/>', () => {
         </>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.files).toMatchInlineSnapshot('[]')
+    expect(app.files).toMatchInlineSnapshot('[]')
   })
 
   test('render File with Export inside Source', () => {
@@ -96,10 +96,10 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.files).toMatchInlineSnapshot(`
+    expect(app.files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -145,11 +145,11 @@ describe('<File/>', () => {
         </>
       )
     }
-    const root = createRoot()
+    const app = createApp(Component)
 
-    root.render(<Component />)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`""`)
+    expect(app.output).toMatchInlineSnapshot(`""`)
   })
 
   test('render File with source', () => {
@@ -163,11 +163,11 @@ describe('<File/>', () => {
         </>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`"test"`)
-    expect(root.files).toMatchInlineSnapshot(`
+    expect(app.output).toMatchInlineSnapshot(`"test"`)
+    expect(app.files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -206,13 +206,13 @@ describe('<File/>', () => {
         </>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(
+    expect(app.output).toMatchInlineSnapshot(
       `"<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`,
     )
-    expect(root.files).toMatchInlineSnapshot(`
+    expect(app.files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -249,10 +249,10 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.files).toMatchInlineSnapshot(`
+    expect(app.files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -305,16 +305,16 @@ describe('<File/>', () => {
         </>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchSnapshot()
+    expect(app.output).toMatchSnapshot()
 
-    expect(root.files.length).toBe(2)
+    expect(app.files.length).toBe(2)
 
-    expect(root.files[0]?.sources).toMatchSnapshot()
+    expect(app.files[0]?.sources).toMatchSnapshot()
 
-    expect(root.files[0]?.imports).toMatchInlineSnapshot(`
+    expect(app.files[0]?.imports).toMatchInlineSnapshot(`
       [
         {
           "isNameSpace": undefined,
@@ -326,7 +326,7 @@ describe('<File/>', () => {
       ]
     `)
 
-    expect(root.files[1]?.sources).toMatchSnapshot()
+    expect(app.files[1]?.sources).toMatchSnapshot()
   })
 })
 
@@ -335,10 +335,10 @@ describe('<File.Export/>', () => {
     const Component = () => {
       return <File.Export path="kubb" />
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`
+    expect(app.output).toMatchInlineSnapshot(`
       "export * from "kubb";
       "
     `)
@@ -350,10 +350,10 @@ describe('<File.Import/>', () => {
     const Component = () => {
       return <File.Import name="React" path="react" />
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`
+    expect(app.output).toMatchInlineSnapshot(`
       "import React from "react";
       "
     `)
@@ -363,23 +363,23 @@ describe('<File.Import/>', () => {
     const Component = () => {
       return <File.Import name="React" path="react" isTypeOnly />
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`
+    expect(app.output).toMatchInlineSnapshot(`
       "import type React from "react";
       "
     `)
   })
 
-  test('render Import with root', () => {
+  test('render Import with app', () => {
     const Component = () => {
       return <File.Import name="React" root="types" path="types/test" />
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchInlineSnapshot(`
+    expect(app.output).toMatchInlineSnapshot(`
       "import React from "./test";
       "
     `)
@@ -395,10 +395,10 @@ describe('<File.Import/>', () => {
         </File>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.files).toMatchInlineSnapshot(`
+    expect(app.files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -428,7 +428,7 @@ describe('<File.Import/>', () => {
         },
       ]
     `)
-    expect(root.output).toMatchInlineSnapshot(`"import React from "react";"`)
+    expect(app.output).toMatchInlineSnapshot(`"import React from "react";"`)
   })
 
   test('render Import with File.Import inside of File', () => {
@@ -440,10 +440,10 @@ describe('<File.Import/>', () => {
         </File>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.files).toMatchInlineSnapshot(`
+    expect(app.files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -473,6 +473,6 @@ describe('<File.Import/>', () => {
         },
       ]
     `)
-    expect(root.output).toMatchInlineSnapshot(`"test"`)
+    expect(app.output).toMatchInlineSnapshot(`"test"`)
   })
 })

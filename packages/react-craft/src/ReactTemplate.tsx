@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { KubbFile } from '@kubb/craft-core'
+import type { KubbFile, Ref } from '@kubb/craft-core'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants'
 import { onExit } from 'signal-exit'
@@ -19,6 +19,8 @@ export type ReactTemplateOptions = {
    * Set this to true to always see the result of the render in the console(line per render)
    */
   debug?: boolean
+  output?: Ref<string>
+  files?: Ref<Array<KubbFile.File>>
 }
 
 type Context = Omit<RootContextProps, 'exit'>
@@ -27,14 +29,13 @@ export class ReactTemplate {
   readonly #options: ReactTemplateOptions
   // Ignore last render after unmounting a tree to prevent empty output before exit
   #isUnmounted: boolean
-  #lastRendererResult: RendererResult
 
-  #exitPromise?: Promise<RendererResult>
+  exitPromise?: Promise<void>
   readonly #container: FiberRoot
   readonly #rootNode: DOMElement
 
-  constructor(options: ReactTemplateOptions={}) {
-    this.#options = {...options, stdout: process.stdout, stderr: process.stderr, stdin: process.stdin}
+  constructor(options: ReactTemplateOptions = {}) {
+    this.#options = { ...options }
 
     this.#rootNode = createNode('kubb-root')
     this.#rootNode.onRender = this.onRender
@@ -44,13 +45,6 @@ export class ReactTemplate {
     this.#isUnmounted = false
     this.unmount.bind(this)
 
-    // Store last output to only rerender when needed
-    this.#lastRendererResult = {
-      exports: [],
-      files: [],
-      imports: [],
-      output: '',
-    }
     const originalError = console.error
     console.error = (data: string | Error) => {
       const message = typeof data === 'string' ? data : data?.message
@@ -122,19 +116,9 @@ export class ReactTemplate {
       rendererPackageName: 'kubb', // package name
     })
   }
-
-  get output(): string {
-    return this.#lastRendererResult.output
-  }
-
-  get files(): Array<KubbFile.File> {
-    return this.#lastRendererResult.files
-  }
-
-  resolveExitPromise: (result: RendererResult) => void = () => {}
+  resolveExitPromise: () => void = () => {}
   rejectExitPromise: (reason?: Error) => void = () => {}
   unsubscribeExit: () => void = () => {}
-
   onRender: () => void = () => {
     if (this.#isUnmounted) {
       return
@@ -152,7 +136,12 @@ export class ReactTemplate {
       this.#options.stdout.write(result.output)
     }
 
-    this.#lastRendererResult = result
+    if (this.#options.files) {
+      this.#options.files.value = result.files
+    }
+    if (this.#options.output) {
+      this.#options.output.value = result.output
+    }
   }
   onError(error: Error): void {
     if (process.env.NODE_ENV === 'test') {
@@ -179,12 +168,6 @@ export class ReactTemplate {
     return renderer(this.#rootNode)
   }
 
-  async renderToString(node: ReactNode, context?: Context): Promise<string> {
-    await this.render(node, context)
-
-    return this.#lastRendererResult.output
-  }
-
   unmount(error?: Error | number | null): void {
     if (this.#isUnmounted) {
       return
@@ -201,27 +184,23 @@ export class ReactTemplate {
 
     KubbRenderer.updateContainerSync(null, this.#container, null, null)
 
-    if (this.#options.stdout) {
-      this.#options.stdout.clearLine(0)
-      this.#options.stdout.cursorTo(0)
-      this.#options.stdout.write(`${this.#lastRendererResult.output}\n`)
-    }
-
     if (error instanceof Error) {
       this.rejectExitPromise(error)
 
       return
     }
 
-    this.resolveExitPromise(this.#lastRendererResult)
+    this.resolveExitPromise()
   }
 
-  async waitUntilExit(): Promise<RendererResult> {
-    this.#exitPromise ||= new Promise((resolve, reject) => {
-      this.resolveExitPromise = resolve
-      this.rejectExitPromise = reject
-    })
+  async waitUntilExit(): Promise<void> {
+    if (!this.exitPromise) {
+      this.exitPromise = new Promise((resolve, reject) => {
+        this.resolveExitPromise = resolve
+        this.rejectExitPromise = reject
+      })
+    }
 
-    return this.#exitPromise
+    return this.exitPromise
   }
 }

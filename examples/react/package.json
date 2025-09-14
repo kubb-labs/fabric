@@ -27,7 +27,7 @@
     "@kubb/react-craft": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.1.12",
+    "@types/react": "^19.1.13",
     "react": "^19.1.1",
     "typescript": "^5.9.2"
   },

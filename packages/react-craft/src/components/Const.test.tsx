@@ -1,4 +1,4 @@
-import { createRoot } from '../createRoot.ts'
+import { createApp } from '../createApp.ts'
 import { Const } from './Const.tsx'
 
 describe('<Const/>', () => {
@@ -6,11 +6,10 @@ describe('<Const/>', () => {
     const Component = () => {
       return <Const name="data">"blue"</Const>
     }
-    const root = createRoot()
-    const renderOutput = root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toEqual(renderOutput.output)
-    expect(root.output).toMatchSnapshot()
+    expect(app.output).toMatchSnapshot()
   })
 
   test('render Const with const assertion', () => {
@@ -21,9 +20,9 @@ describe('<Const/>', () => {
         </Const>
       )
     }
-    const root = createRoot()
-    root.render(<Component />)
+    const app = createApp(Component)
+    app.mount()
 
-    expect(root.output).toMatchSnapshot()
+    expect(app.output).toMatchSnapshot()
   })
 })

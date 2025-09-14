@@ -1,9 +1,8 @@
 import process from 'node:process'
 
 import path from 'node:path'
-import { File, Function, createRoot } from '@kubb/react-craft'
+import { File, Function, createApp } from '@kubb/react-craft'
 
-const root = createRoot({ stdout: process.stdout })
 
 /**
  * Create a file and append JSX
@@ -25,9 +24,10 @@ function Component() {
 }
 
 async function start() {
-  root.render(<Component />)
+  const app = createApp(Component)
 
-  await root.write()
+  app.mount()
+  await app.write()
 }
 
 start()
