@@ -1,11 +1,8 @@
+export type { DefineApp } from './defineApp.ts'
+export { defineApp } from './defineApp.ts'
+export * as factory from './factory.ts'
+export { print } from './print.ts'
+export type { Ref } from './reactive/ref.ts'
+export { ref } from './reactive/ref.ts'
 export * as KubbFile from './types.ts'
-export { createIndent, createJSDocBlockText, getRelativePath } from "./utils.ts"
-
-export {defineApp} from './defineApp.ts'
-export type {DefineApp} from "./defineApp.ts"
-
-export {ref} from "./reactive/ref.ts"
-
-
-
-export type {Ref} from "./reactive/ref.ts"
+export { createIndent, createJSDocBlockText, getRelativePath } from './utils.ts'

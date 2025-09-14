@@ -1,4 +1,4 @@
-const names = "Lily and Jan and wouter"
+const names = "Lily and Jan"
 export const getNames = () => names
 export const getFirstChar = () => {
   return names.charAt(0)

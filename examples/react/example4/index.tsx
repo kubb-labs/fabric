@@ -8,7 +8,7 @@ import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-craf
 const fetchNames = async (): Promise<string[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(['Lily', 'Jan', 'wouter'])
+      resolve(['Lily', 'Jan'])
     }, 2000)
   })
 }

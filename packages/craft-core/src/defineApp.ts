@@ -1,3 +1,4 @@
+import { createFile, parseFile } from './parser.ts'
 import type { Ref } from './reactive/ref.ts'
 import type * as KubbFile from './types.ts'
 import { write } from './write.ts'
@@ -57,7 +58,8 @@ export function defineApp<HostElement>(instance: RootRenderFunction<HostElement>
       waitUntilExit,
       async write() {
         for (const file of files.value) {
-          const source = file.sources.map((source) => source.value).join('\n')
+          const resolvedFile = createFile(file)
+          const source = await parseFile(resolvedFile)
 
           await write(file.path, source)
         }

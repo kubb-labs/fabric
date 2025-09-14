@@ -88,7 +88,6 @@
   },
   "dependencies": {
     "@kubb/craft-core": "workspace:*",
-    "@kubb/ts-craft": "workspace:*",
     "dedent": "^1.7.0",
     "execa": "^9.6.0",
     "indent-string": "^5.0.0",

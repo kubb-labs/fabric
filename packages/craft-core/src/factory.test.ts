@@ -1,5 +1,5 @@
 import ts from 'typescript'
-import { format } from '../../craft-core/mocks/format.ts'
+import { format } from '../mocks/format.ts'
 import {
   appendJSDocToNode,
   createArrayDeclaration,

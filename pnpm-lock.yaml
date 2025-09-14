@@ -109,25 +109,37 @@ importers:
       js-runtime:
         specifier: ^0.0.8
         version: 0.0.8
+      natural-orderby:
+        specifier: ^5.0.0
+        version: 5.0.0
+      object-hash:
+        specifier: ^3.0.0
+        version: 3.0.0
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+      remeda:
+        specifier: 'catalog:'
+        version: 2.31.1
+      typescript:
+        specifier: 5.9.2
+        version: 5.9.2
     devDependencies:
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
+      '@types/object-hash':
+        specifier: ^3.0.6
+        version: 3.0.6
       tsdown:
         specifier: 'catalog:'
         version: 0.15.1(typescript@5.9.2)
-      typescript:
-        specifier: 'catalog:'
-        version: 5.9.2
 
   packages/react-craft:
     dependencies:
       '@kubb/craft-core':
         specifier: workspace:*
         version: link:../craft-core
-      '@kubb/ts-craft':
-        specifier: workspace:*
-        version: link:../ts-craft
       dedent:
         specifier: ^1.7.0
         version: 1.7.0
@@ -171,22 +183,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
-
-  packages/ts-craft:
-    dependencies:
-      prettier:
-        specifier: ^3.6.2
-        version: 3.6.2
-      remeda:
-        specifier: 'catalog:'
-        version: 2.31.1
-      typescript:
-        specifier: 5.9.2
-        version: 5.9.2
-    devDependencies:
-      tsdown:
-        specifier: 'catalog:'
-        version: 0.15.1(typescript@5.9.2)
 
 packages:
 
@@ -813,6 +809,9 @@ packages:
   '@types/node@24.3.1':
     resolution: {integrity: sha512-3vXmQDXy+woz+gnrTvuvNrPzekOi+Ds0ReMxw0LzBiK3a+1k0kQn9f2NWk+lgD4rJehFUmYy2gMhJ2ZI+7YP9g==}
 
+  '@types/object-hash@3.0.6':
+    resolution: {integrity: sha512-fOBV8C1FIu2ELinoILQ+ApxcUKz4ngq+IWUYrxSGjXzzjUALijilampwkMgEtJ+h2njAW3pi853QpzNVCHB73w==}
+
   '@types/react-reconciler@0.32.0':
     resolution: {integrity: sha512-+WHarFkJevhH1s655qeeSEf/yxFST0dVRsmSqUgxG8mMOKqycgYBv2wVpyubBY7MX8KiX5FQ03rNIwrxfm7Bmw==}
     peerDependencies:
@@ -1385,6 +1384,10 @@ packages:
   npm-run-path@6.0.0:
     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
     engines: {node: '>=18'}
+
+  object-hash@3.0.0:
+    resolution: {integrity: sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==}
+    engines: {node: '>= 6'}
 
   ofetch@1.4.1:
     resolution: {integrity: sha512-QZj2DfGplQAr2oj9KzceK9Hwz6Whxazmn85yYeVuS3u9XTMOGMRx0kO95MQ+vLsj/S/NwBDMMLU5hpxvI6Tklw==}
@@ -2550,6 +2553,8 @@ snapshots:
     dependencies:
       undici-types: 7.10.0
 
+  '@types/object-hash@3.0.6': {}
+
   '@types/react-reconciler@0.32.0(@types/react@19.1.13)':
     dependencies:
       '@types/react': 19.1.13
@@ -3099,6 +3104,8 @@ snapshots:
     dependencies:
       path-key: 4.0.0
       unicorn-magic: 0.3.0
+
+  object-hash@3.0.0: {}
 
   ofetch@1.4.1:
     dependencies:

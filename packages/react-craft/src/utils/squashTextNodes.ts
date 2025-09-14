@@ -1,6 +1,4 @@
-import { getRelativePath } from  '@kubb/craft-core'
-import { print } from '@kubb/ts-craft'
-import * as factory from '@kubb/ts-craft/factory'
+import { factory, getRelativePath, print } from '@kubb/craft-core'
 
 import type { File } from '../components/File.tsx'
 import { nodeNames } from '../dom.ts'

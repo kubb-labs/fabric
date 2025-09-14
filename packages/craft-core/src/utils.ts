@@ -31,7 +31,6 @@ export function getRelativePath(rootDir?: string | null, filePath?: string | nul
   return `./${slashedPath}`
 }
 
-
 export function createJSDocBlockText({ comments }: { comments: Array<string> }): string {
   const filteredComments = comments.filter(Boolean)
 
@@ -44,4 +43,8 @@ export function createJSDocBlockText({ comments }: { comments: Array<string> }):
 
 export function createIndent(size: number): string {
   return Array.from({ length: size + 1 }).join(' ')
+}
+
+export function trimExtName(text: string): string {
+  return text.replace(/\.[^/.]+$/, '')
 }
