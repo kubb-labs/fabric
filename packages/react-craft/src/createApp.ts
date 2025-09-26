@@ -4,7 +4,7 @@ import type { ElementType } from 'react'
 import { createElement } from './index.ts'
 import { ReactTemplate } from './ReactTemplate.tsx'
 
-export const createApp = defineApp<ElementType>((container) => {
+export const createApp = defineApp<ElementType>((app) => {
   const files = ref<Array<KubbFile.File>>([])
   const output = ref<string>('')
   const template =
@@ -15,8 +15,8 @@ export const createApp = defineApp<ElementType>((container) => {
   return {
     files,
     output,
-    mount() {
-      return template.render(createElement(container))
+    async run() {
+      await template.render(createElement(app))
     },
     waitUntilExit() {
       return template.waitUntilExit()

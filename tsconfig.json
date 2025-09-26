@@ -27,6 +27,8 @@
     "noUnusedParameters": true,
     "baseUrl": ".",
     "paths": {
+      "@kubb/craft-core/plugin": ["packages/craft-core/src/plugin/index.ts"],
+      "@kubb/craft-core/compiler": ["packages/craft-core/src/compiler.ts"],
       "@kubb/craft-core": ["packages/craft-core/src/index.ts"],
       "@kubb/react-craft": ["packages/react-craft/src/index.ts"]
     },

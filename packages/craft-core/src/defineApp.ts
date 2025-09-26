@@ -1,7 +1,7 @@
+import { write } from './fs.ts'
 import { createFile, parseFile } from './parser.ts'
 import type { Ref } from './reactive/ref.ts'
 import type * as KubbFile from './types.ts'
-import { write } from './write.ts'
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function'
 
@@ -15,7 +15,7 @@ export type ObjectPlugin<Options = any[]> = {
 export type FunctionPlugin<Options = any[]> = PluginInstallFunction<Options> & Partial<ObjectPlugin<Options>>
 
 type Renderer = {
-  mount(): void
+  run(): Promise<void> | void
   files: Ref<Array<KubbFile.File>>
   waitUntilExit(): Promise<void>
   output: Ref<string>
@@ -27,7 +27,7 @@ export type Plugin<Options = any[], P extends unknown[] = Options extends unknow
 
 export interface App<_HostElement = unknown> {
   _component: Component
-  mount(): void
+  run(): Promise<void>
   use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
   write(): Promise<void>
   files: Array<KubbFile.File>
@@ -40,7 +40,7 @@ export type DefineApp<HostElement> = (rootComponent: Component) => App<HostEleme
 export function defineApp<HostElement>(instance: RootRenderFunction<HostElement>): DefineApp<HostElement> {
   function createApp<HostElement>(rootComponent: Component): App<HostElement> {
     const installedPlugins = new WeakSet()
-    const { mount, waitUntilExit, files, output } = instance(rootComponent)
+    const { run, waitUntilExit, files, output } = instance(rootComponent)
 
     const app: App<HostElement> = {
       _component: rootComponent,
@@ -50,8 +50,8 @@ export function defineApp<HostElement>(instance: RootRenderFunction<HostElement>
       get output() {
         return output.value
       },
-      async mount() {
-        mount()
+      async run() {
+        await run()
 
         await waitUntilExit()
       },

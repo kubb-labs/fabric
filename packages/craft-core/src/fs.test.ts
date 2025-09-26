@@ -1,9 +1,5 @@
 import path from 'node:path'
-
-import { clean } from './clean.ts'
-import { read } from './read.ts'
-import { getRelativePath } from './utils.ts'
-import { write } from './write.ts'
+import { clean, getRelativePath, read, write } from './fs.ts'
 
 describe('read', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')
@@ -56,5 +52,28 @@ describe('read', () => {
     }
 
     await clean(testFile)
+  })
+})
+
+describe('write', () => {
+  const mocksPath = path.resolve(__dirname, '../../mocks')
+  const filePath = path.resolve(mocksPath, './hellowWorld.js')
+
+  test('if write is creating a file in the mocks folder', async () => {
+    const text = `export const hallo = 'world'`
+
+    await write(filePath, text)
+
+    const file = await read(filePath)
+
+    expect(file).toBeDefined()
+    expect(file).toBe(text)
+  })
+
+  test('do not write if file content is the same', async () => {
+    const text = `export const hallo = 'world'`
+
+    await write(filePath, text)
+    await write(filePath, text)
   })
 })

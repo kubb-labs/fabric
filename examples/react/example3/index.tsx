@@ -3,11 +3,10 @@ import process from 'node:process'
 import path from 'node:path'
 import { Const, File, createApp } from '@kubb/react-craft'
 
-
 /**
  * Create 2 files and write them to the file-system
  */
-function Component() {
+function App() {
   const namesPath = path.resolve(__dirname, 'name.ts')
   const helloWorldPath = path.resolve(__dirname, 'result.ts')
 
@@ -32,9 +31,9 @@ function Component() {
 }
 
 async function start() {
-  const app = createApp(Component)
+  const app = createApp(App)
 
-  app.mount()
+  app.run()
 
   console.log('\nFiles: ', app.files.length)
   await app.write()

@@ -1,0 +1,34 @@
+{
+  "name": "core-pet-store",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Core PetStore example",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kubb-labs/kubb.git",
+    "directory": "examples/core"
+  },
+  "license": "MIT",
+  "author": "stijnvanhulle",
+  "sideEffects": false,
+  "scripts": {
+    "build": "vite build && node ./dist/craft-project.es.js",
+    "example1": "bun ./example1/index.ts",
+    "clean": "npx rimraf ./dist",
+    "test": "vitest",
+    "typecheck": "echo 'empty'"
+  },
+  "dependencies": {
+    "@kubb/craft-core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7"
+  },
+  "packageManager": "pnpm@9.15.5",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=8.15.0"
+  }
+}

@@ -1,12 +1,13 @@
+import "@kubb/react-craft/devtools"
+
 import { useEffect, useRef, useState } from '@kubb/react-craft'
 
 import { Text, createApp, useLifecycle } from '@kubb/react-craft'
 
-
 /**
  * Render component that will count down from 5
  */
-function Component() {
+function App() {
   const timer = useRef<NodeJS.Timer>(null)
   const [counter, setCounter] = useState(5)
   const { exit } = useLifecycle()
@@ -16,7 +17,7 @@ function Component() {
       setCounter((previousCounter) => {
         return previousCounter - 1
       })
-    }, 1000)
+    }, 5000)
 
     return () => {
       clearInterval(timer.current!)
@@ -38,7 +39,6 @@ function Component() {
   return <Text>Counter: {counter}</Text>
 }
 
+const app = createApp(App)
 
-const app = createApp(Component)
-
-app.mount()
+app.run()

@@ -11,7 +11,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -25,7 +25,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -39,7 +39,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -53,7 +53,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -67,7 +67,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -81,7 +81,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -95,7 +95,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -109,7 +109,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })
@@ -129,7 +129,7 @@ describe('<Function/>', () => {
       )
     }
     const root = createApp(Component)
-    root.mount()
+    root.run()
 
     expect(root.output).toMatchSnapshot()
   })

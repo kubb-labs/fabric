@@ -1,12 +1,17 @@
+import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { orderBy } from 'natural-orderby'
-import hash from 'object-hash'
 import { isDeepEqual, uniqueBy } from 'remeda'
 import * as factory from './factory.ts'
+import { getRelativePath, trimExtName } from './fs.ts'
 import { print } from './print.ts'
 import type * as KubbFile from './types.ts'
 import type { ResolvedFile } from './types.ts'
-import { getRelativePath, trimExtName } from './utils.ts'
+
+function hashObject(obj: Record<string, unknown>): string {
+  const str = JSON.stringify(obj, Object.keys(obj).sort())
+  return createHash('sha256').update(str).digest('hex')
+}
 
 export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.Source> {
   return uniqueBy(sources, (obj) => [obj.name, obj.isExportable, obj.isTypeOnly] as const)
@@ -154,7 +159,7 @@ export function createFile<TMeta extends object = object>(file: KubbFile.File<TM
 
   return {
     ...file,
-    id: hash({ path: file.path }),
+    id: hashObject({ path: file.path }),
     name: trimExtName(file.baseName),
     extname,
     imports: imports,

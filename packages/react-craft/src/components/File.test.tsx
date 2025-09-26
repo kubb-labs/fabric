@@ -8,7 +8,7 @@ describe('<File/>', () => {
       return 'test'
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`"test"`)
   })
@@ -18,7 +18,7 @@ describe('<File/>', () => {
       return <File baseName="test.ts" path="path" />
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`""`)
   })
@@ -33,7 +33,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -81,7 +81,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.files).toMatchInlineSnapshot('[]')
   })
@@ -97,7 +97,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -147,7 +147,7 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
 
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`""`)
   })
@@ -164,7 +164,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`"test"`)
     expect(app.files).toMatchInlineSnapshot(`
@@ -207,7 +207,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(
       `"<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`,
@@ -250,7 +250,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -306,7 +306,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchSnapshot()
 
@@ -336,7 +336,7 @@ describe('<File.Export/>', () => {
       return <File.Export path="kubb" />
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`
       "export * from "kubb";
@@ -351,7 +351,7 @@ describe('<File.Import/>', () => {
       return <File.Import name="React" path="react" />
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`
       "import React from "react";
@@ -364,7 +364,7 @@ describe('<File.Import/>', () => {
       return <File.Import name="React" path="react" isTypeOnly />
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`
       "import type React from "react";
@@ -377,7 +377,7 @@ describe('<File.Import/>', () => {
       return <File.Import name="React" root="types" path="types/test" />
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchInlineSnapshot(`
       "import React from "./test";
@@ -396,7 +396,7 @@ describe('<File.Import/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -441,7 +441,7 @@ describe('<File.Import/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.files).toMatchInlineSnapshot(`
       [

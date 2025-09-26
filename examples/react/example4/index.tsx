@@ -4,7 +4,6 @@ import { useEffect, useState } from '@kubb/react-craft'
 import path from 'node:path'
 import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-craft'
 
-
 const fetchNames = async (): Promise<string[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -16,7 +15,7 @@ const fetchNames = async (): Promise<string[]> => {
 /**
  * Create a file and append data based on a promise
  */
-function Component() {
+function App() {
   const [names, setNames] = useState<string[]>([])
   const { exit } = useLifecycle()
 
@@ -57,9 +56,9 @@ function Component() {
 }
 
 async function start() {
-  const app = createApp(Component)
+  const app = createApp(App)
 
-  app.mount()
+  app.run()
 
   await app.waitUntilExit()
 

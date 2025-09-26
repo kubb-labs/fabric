@@ -7,7 +7,7 @@ describe('<Const/>', () => {
       return <Const name="data">"blue"</Const>
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchSnapshot()
   })
@@ -21,7 +21,7 @@ describe('<Const/>', () => {
       )
     }
     const app = createApp(Component)
-    app.mount()
+    app.run()
 
     expect(app.output).toMatchSnapshot()
   })

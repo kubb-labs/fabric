@@ -1,27 +1,15 @@
-import type { KubbFile } from '@kubb/craft-core'
 import { useContext } from 'react'
-import { App } from '../components/App.tsx'
-
-type AppResult = {
-  /**
-   * Exit (unmount)
-   */
-  readonly exit: (error?: Error) => void
-  readonly mode: KubbFile.Mode
-}
+import { App, type AppContextProps } from '../components/App.tsx'
 
 /**
  * `useApp` will return the current App with plugin, pluginManager, fileManager and mode.
  */
-export function useApp(): AppResult {
+export function useApp(): AppContextProps {
   const app = useContext(App.Context)
 
   if (!app) {
     throw new Error('<App /> should be set')
   }
 
-  return {
-    mode: app.mode,
-    exit: app.exit,
-  }
+  return app
 }

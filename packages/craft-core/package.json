@@ -26,13 +26,21 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./plugin": {
+      "import": "./dist/plugin.js",
+      "require": "./dist/plugin.cjs"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.cts",
   "typesVersions": {
-    "*": {}
+    "*": {
+      "plugin": [
+        "./dist/plugin.d.ts"
+      ]
+    }
   },
   "files": [
     "src",
@@ -54,17 +62,16 @@
     "typecheck": "tsc -p ./tsconfig.json --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "prettier": "^3.6.2",
-    "remeda": "catalog:",
-    "typescript": "5.9.2",
-    "fs-extra": "^11.3.1",
+    "fs-extra": "^11.3.2",
     "js-runtime": "^0.0.8",
+    "unplugin": "^2.3.10",
     "natural-orderby": "^5.0.0",
-    "object-hash": "^3.0.0"
+    "remeda": "catalog:",
+    "typescript": "5.9.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
-    "@types/object-hash": "^3.0.6",
+    "prettier": "^3.6.2",
     "tsdown": "catalog:",
     "typescript": "catalog:"
   },

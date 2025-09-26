@@ -118,7 +118,7 @@ export type ResolvedExport = Export
 
 export type ResolvedFile<TMeta extends object = object> = File<TMeta> & {
   /**
-   * @default object-hash
+   * @default hash
    */
   id: string
   /**

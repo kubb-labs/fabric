@@ -3,11 +3,10 @@ import process from 'node:process'
 import path from 'node:path'
 import { File, Function, createApp } from '@kubb/react-craft'
 
-
 /**
  * Create a file and append JSX
  */
-function Component() {
+function App() {
   return (
     <File path={path.resolve(__dirname, 'App.tsx')} baseName={'App.tsx'}>
       <File.Source>
@@ -24,9 +23,9 @@ function Component() {
 }
 
 async function start() {
-  const app = createApp(Component)
+  const app = createApp(App)
 
-  app.mount()
+  app.run()
   await app.write()
 }
 

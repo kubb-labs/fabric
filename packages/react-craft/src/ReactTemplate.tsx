@@ -112,7 +112,7 @@ export class ReactTemplate {
 
     KubbRenderer.injectIntoDevTools({
       bundleType: 0, // 0 for PROD, 1 for DEV
-      version: '18.3.1', // should be React version and not Kubb's custom version
+      version: '19.1.1', // should be React version and not Kubb's custom version
       rendererPackageName: 'kubb', // package name
     })
   }
