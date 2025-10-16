@@ -1,8 +1,8 @@
-import "@kubb/react-craft/devtools"
+// import '@kubb/react-fabric/devtools'
 
-import { useEffect, useRef, useState } from '@kubb/react-craft'
+import { useEffect, useRef, useState } from '@kubb/react-fabric'
 
-import { Text, createApp, useLifecycle } from '@kubb/react-craft'
+import { Text, createApp, useLifecycle } from '@kubb/react-fabric'
 
 /**
  * Render component that will count down from 5
@@ -17,7 +17,7 @@ function App() {
       setCounter((previousCounter) => {
         return previousCounter - 1
       })
-    }, 5000)
+    }, 1000)
 
     return () => {
       clearInterval(timer.current!)

@@ -1,3 +1,5 @@
+# Fabric Core
+
 <p align="center">
   <a href="https://kubb.dev" target="_blank" rel="noopener noreferrer">
     <img width="180" src="https://raw.githubusercontent.com/kubb-labs/fabric/main/assets/logo.png" alt="Kubb fabric logo">
@@ -20,17 +22,6 @@
 
 <br />
 
-Kubb Fabric is a language-agnostic toolkit for generating code and files using JSX and TypeScript.
-It offers a lightweight layer for file generation while orchestrating the overall process of creating and managing files.
-
-## Features
-
-- 🎨 Easily create files from JSX & TS
-- 📚 Simple, automated code generation
-- ⚡ Type-safe with TypeScript support
-- 🚀 Fast and lightweight
-
-
 ## Supporting Kubb
 
 Kubb uses an MIT-licensed open source project with its ongoing development made possible entirely by the support of Sponsors. If you would like to become a sponsor, please consider:
@@ -43,27 +34,6 @@ Kubb uses an MIT-licensed open source project with its ongoing development made 
   </a>
 </p>
 
-## Contributors [![Contributors][contributors-src]][contributors-href]
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-## Star History
-
-<a href="https://star-history.com/#kubb-labs/fabric&Date">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=kubb-labs/fabric&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=kubb-labs/fabric&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kubb-labs/fabric&type=Date" />
-  </picture>
-</a>
-
 
 <!-- Badges -->
 
@@ -71,15 +41,13 @@ Kubb uses an MIT-licensed open source project with its ongoing development made 
 [npm-version-href]: https://npmjs.com/package/@kubb/fabric-core
 [npm-downloads-src]: https://img.shields.io/npm/dm/@kubb/fabric-core?flat&colorA=18181B&colorB=f58517
 [npm-downloads-href]: https://npmjs.com/package/@kubb/fabric-core
-[license-src]: https://img.shields.io/github/license/kubb-labs/fabric.svg?flat&colorA=18181B&colorB=f58517
-[license-href]: https://github.com/kubb-labs/fabric/blob/main/LICENSE
-[build-src]: https://img.shields.io/github/actions/workflow/status/kubb-labs/fabric/ci.yaml?style=flat&colorA=18181B&colorB=f58517
+[license-src]: https://img.shields.io/github/license/kubb-labs/kubb.svg?flat&colorA=18181B&colorB=f58517
+[license-href]: https://github.com/kubb-labs/kubb/blob/main/LICENSE
+[build-src]: https://img.shields.io/github/actions/workflow/status/kubb-labs/kubb/ci.yaml?style=flat&colorA=18181B&colorB=f58517
 [build-href]: https://www.npmjs.com/package/@kubb/fabric-core
 [minified-src]: https://img.shields.io/bundlephobia/min/@kubb/fabric-core?style=flat&colorA=18181B&colorB=f58517
 [minified-href]: https://www.npmjs.com/package/@kubb/fabric-core
-[coverage-src]: https://img.shields.io/codecov/c/github/kubb-labs/fabric?style=flat&colorA=18181B&colorB=f58517
+[coverage-src]: https://img.shields.io/codecov/c/github/kubb-labs/kubb?style=flat&colorA=18181B&colorB=f58517
 [coverage-href]: https://www.npmjs.com/package/@kubb/fabric-core
-[contributors-src]: https://img.shields.io/github/contributors/kubb-labs/fabric?style=flat&colorA=18181B&colorB=f58517&label=%20
-[contributors-href]: #contributors-
 [sponsors-src]: https://img.shields.io/github/sponsors/stijnvanhulle?style=flat&colorA=18181B&colorB=f58517
 [sponsors-href]: https://github.com/sponsors/stijnvanhulle/

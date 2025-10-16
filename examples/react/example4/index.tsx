@@ -1,8 +1,8 @@
 import process from 'node:process'
-import { useEffect, useState } from '@kubb/react-craft'
+import { useEffect, useState } from '@kubb/react-fabric'
 
 import path from 'node:path'
-import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-craft'
+import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-fabric'
 
 const fetchNames = async (): Promise<string[]> => {
   return new Promise((resolve) => {

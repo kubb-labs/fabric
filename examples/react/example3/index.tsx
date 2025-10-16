@@ -1,7 +1,7 @@
 import process from 'node:process'
 
 import path from 'node:path'
-import { Const, File, createApp } from '@kubb/react-craft'
+import { Const, File, createApp } from '@kubb/react-fabric'
 
 /**
  * Create 2 files and write them to the file-system

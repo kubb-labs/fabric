@@ -1,7 +1,37 @@
-import {createApp } from '@kubb/craft-core'
+import { createApp } from '@kubb/fabric-core'
 
-import App from './app.craft'
+export const example1 = createApp()
 
-export const example1 = createApp(App)
+example1.addFile({
+  baseName: 'test.ts',
+  path: './example1/test.ts',
+  sources: [
+    {
+      name: 'test',
+      value: 'const test = 1;',
+      isTypeOnly: false,
+      isExportable: true,
+      isIndexable: true,
+    },
+  ],
+  imports: [],
+  exports: [],
+})
 
+example1.addFile({
+  baseName: 'test2.ts',
+  path: './example1/test2.ts',
+  sources: [
+    {
+      name: 'test',
+      value: 'const test2 = 2;',
+      isTypeOnly: false,
+      isExportable: true,
+      isIndexable: true,
+    },
+  ],
+  imports: [],
+  exports: [],
+})
 
+example1.write()

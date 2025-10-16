@@ -1,0 +1,52 @@
+import type { KubbFile } from '@kubb/fabric-core'
+import type React from 'react'
+import type { KubbNode } from './types.ts'
+
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'kubb-text': {
+        children?: KubbNode
+      }
+      'kubb-file': {
+        id?: string
+        children?: KubbNode
+        baseName: string
+        path: string
+        override?: boolean
+        meta?: KubbFile.File['meta']
+      }
+      'kubb-source': KubbFile.Source & {
+        children?: KubbNode
+      }
+      'kubb-import': KubbFile.Import
+      'kubb-export': KubbFile.Export
+      br: React.DetailedHTMLProps<React.HTMLAttributes<HTMLBRElement>, HTMLBRElement>
+    }
+  }
+}
+// biome-ignore lint/suspicious/noTsIgnore: not needed
+// @ts-ignore
+declare module '@kubb/react-fabric/jsx-runtime' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'kubb-text': {
+        children?: KubbNode
+      }
+      'kubb-file': {
+        id?: string
+        children?: KubbNode
+        baseName: string
+        path: string
+        override?: boolean
+        meta?: KubbFile.File['meta']
+      }
+      'kubb-source': KubbFile.Source & {
+        children?: KubbNode
+      }
+      'kubb-import': KubbFile.Import
+      'kubb-export': KubbFile.Export
+      br: React.DetailedHTMLProps<React.HTMLAttributes<HTMLBRElement>, HTMLBRElement>
+    }
+  }
+}

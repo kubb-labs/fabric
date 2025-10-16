@@ -1,7 +1,7 @@
 import process from 'node:process'
 
 import path from 'node:path'
-import { File, Function, createApp } from '@kubb/react-craft'
+import { File, Function, createApp } from '@kubb/react-fabric'
 
 /**
  * Create a file and append JSX

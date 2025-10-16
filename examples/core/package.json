@@ -13,22 +13,22 @@
   "author": "stijnvanhulle",
   "sideEffects": false,
   "scripts": {
-    "build": "vite build && node ./dist/craft-project.es.js",
+    "generate": "bun run example1",
     "example1": "bun ./example1/index.ts",
     "clean": "npx rimraf ./dist",
     "test": "vitest",
     "typecheck": "echo 'empty'"
   },
   "dependencies": {
-    "@kubb/craft-core": "workspace:*"
+    "@kubb/fabric-core": "workspace:*"
   },
   "devDependencies": {
-    "typescript": "^5.9.2",
-    "vite": "^7.1.7"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10"
   },
-  "packageManager": "pnpm@9.15.5",
+  "packageManager": "pnpm@10.10.0",
   "engines": {
     "node": ">=20",
-    "pnpm": ">=8.15.0"
+    "pnpm": ">=10.10.0"
   }
 }

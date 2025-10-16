@@ -13,7 +13,7 @@
   "author": "stijnvanhulle",
   "sideEffects": false,
   "scripts": {
-    "build": "",
+    "generate": "bun run example1 && bun run example2 && bun run example3 && bun run example4 && bun run example5",
     "clean": "npx rimraf ./dist",
     "example1": "bun ./example1/index.tsx",
     "example2": "bun ./example2/index.tsx",
@@ -24,16 +24,16 @@
     "typecheck": "echo 'empty'"
   },
   "dependencies": {
-    "@kubb/react-craft": "workspace:*"
+    "@kubb/react-fabric": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.1.13",
-    "react": "^19.1.1",
-    "typescript": "^5.9.2"
+    "@types/react": "^19.2.2",
+    "react": "^19.2.0",
+    "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@9.15.5",
+  "packageManager": "pnpm@10.10.0",
   "engines": {
     "node": ">=20",
-    "pnpm": ">=8.15.0"
+    "pnpm": ">=10.10.0"
   }
 }

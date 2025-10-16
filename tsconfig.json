@@ -26,11 +26,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
-      "@kubb/craft-core/plugin": ["packages/craft-core/src/plugin/index.ts"],
-      "@kubb/craft-core/compiler": ["packages/craft-core/src/compiler.ts"],
-      "@kubb/craft-core": ["packages/craft-core/src/index.ts"],
-      "@kubb/react-craft": ["packages/react-craft/src/index.ts"]
+      "@kubb/fabric-core": ["packages/fabric-core/src/index.ts"],
+      "@kubb/react-fabric": ["packages/react-fabric/src/index.ts"]
     },
     "types": ["vitest/globals", "bun-types", "./reset.d.ts"],
     "module": "ES2020",
