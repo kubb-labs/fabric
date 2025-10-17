@@ -1,7 +1,8 @@
 import { write } from './fs.ts'
 import { createFile, parseFile } from './parser.ts'
-import type { Ref } from './reactive/ref.ts'
+import { ref } from './reactive/ref.ts'
 import type * as KubbFile from './types.ts'
+import {isDeepEqual, uniqueWith} from "remeda";
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function'
 
@@ -14,52 +15,63 @@ export type ObjectPlugin<Options = any[]> = {
 }
 export type FunctionPlugin<Options = any[]> = PluginInstallFunction<Options> & Partial<ObjectPlugin<Options>>
 
-type Renderer = {
-  run(): Promise<void> | void
-  files: Ref<Array<KubbFile.File>>
+type AppRenderer = {
+  render(): Promise<string> | string
   waitUntilExit(): Promise<void>
-  output: Ref<string>
 }
 
-export type RootRenderFunction<HostElement = unknown> = (container: HostElement) => Renderer
+export type AppContext = {
+  files: Array<KubbFile.File>
+  addFile(...files: Array<KubbFile.File>): Promise<void>
+}
 
-export type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> = FunctionPlugin<P> | ObjectPlugin<P>
+type RootRenderFunction<HostElement = unknown> = (this: AppContext, container: HostElement, context: AppContext) => AppRenderer
+
+type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> = FunctionPlugin<P> | ObjectPlugin<P>
 
 export interface App<_HostElement = unknown> {
   _component: Component
-  run(): Promise<void>
+  render(): Promise<void>
+  renderToOutput(): Promise<string>
   use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
   write(): Promise<void>
   addFile(...files: Array<KubbFile.File>): Promise<void>
   files: Array<KubbFile.File>
   waitUntilExit(): Promise<void>
-  output: string
 }
 
 export type DefineApp<HostElement> = (rootComponent?: Component) => App<HostElement>
 
 export function defineApp<HostElement>(instance: RootRenderFunction<HostElement>): DefineApp<HostElement> {
-  function createApp<HostElement>(rootComponent: Component): App<HostElement> {
+  function createApp(rootComponent: Component) {
     const installedPlugins = new WeakSet()
-    const { run, waitUntilExit, files, output } = instance(rootComponent)
-
-    const app: App<HostElement> = {
-      _component: rootComponent,
+    const files = ref<Array<KubbFile.File>>([])
+    const context: AppContext = {
       get files() {
         return files.value
       },
-      get output() {
-        return output.value
-      },
-      async run() {
-        await run()
-
-        await waitUntilExit()
-      },
-      waitUntilExit,
       async addFile(...newFiles) {
         files.value.push(...newFiles)
+        // try resolving this uniqueWith check
+        files.value =  uniqueWith(files.value, isDeepEqual)
       },
+    }
+
+    const { render, waitUntilExit } = instance.call(context, rootComponent, context)
+
+    const app: App<HostElement> = {
+      _component: rootComponent,
+      async render() {
+        await render()
+      },
+      async renderToOutput() {
+        return render()
+      },
+      waitUntilExit,
+      get files() {
+        return files.value
+      },
+      addFile: context.addFile,
       async write() {
         for (const file of files.value) {
           const resolvedFile = createFile(file)

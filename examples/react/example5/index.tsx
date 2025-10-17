@@ -25,7 +25,7 @@ function App() {
 async function start() {
   const app = createApp(App)
 
-  app.run()
+  app.render()
   await app.write()
 }
 

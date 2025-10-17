@@ -8,19 +8,19 @@ describe('<File/>', () => {
       return 'test'
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchInlineSnapshot(`"test"`)
+    expect(output).toMatchInlineSnapshot(`"test"`)
   })
 
-  test('render File', () => {
+  test('render File', async () => {
     const Component = () => {
       return <File baseName="test.ts" path="path" />
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchInlineSnapshot(`""`)
+    expect(output).toMatchInlineSnapshot(`""`)
   })
 
   test('render File with Import and Export', async () => {
@@ -33,7 +33,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    await app.render()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -66,7 +66,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('do not render File', () => {
+  test('do not render File', async () => {
     const enable = false
     const Component = () => {
       return (
@@ -81,12 +81,12 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    await app.render()
 
     expect(app.files).toMatchInlineSnapshot('[]')
   })
 
-  test('render File with Export inside Source', () => {
+  test('render File with Export inside Source', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path">
@@ -97,7 +97,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    await app.render()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -130,7 +130,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('render File with source', () => {
+  test('render File with source', async () => {
     const Component = () => {
       return (
         <>
@@ -147,12 +147,12 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
 
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchInlineSnapshot(`""`)
+    expect(output).toMatchInlineSnapshot(`""`)
   })
 
-  test('render File with source', () => {
+  test('render File with source', async () => {
     const Component = () => {
       return (
         <>
@@ -164,9 +164,10 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
+    await app.render()
 
-    expect(app.output).toMatchInlineSnapshot(`"test"`)
+    expect(output).toMatchInlineSnapshot(`"test"`)
     expect(app.files).toMatchInlineSnapshot(`
       [
         {
@@ -191,7 +192,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('render File with source and React element', () => {
+  test('render File with source and React element', async () => {
     const Component = () => {
       return (
         <>
@@ -207,11 +208,10 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
+    app.render()
 
-    expect(app.output).toMatchInlineSnapshot(
-      `"<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`,
-    )
+    expect(output).toMatchInlineSnapshot(`"<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`)
     expect(app.files).toMatchInlineSnapshot(`
       [
         {
@@ -250,7 +250,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    app.render()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -306,9 +306,10 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    await app.render()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
 
     expect(app.files.length).toBe(2)
 
@@ -331,14 +332,14 @@ describe('<File/>', () => {
 })
 
 describe('<File.Export/>', () => {
-  test('render Export with print', () => {
+  test('render Export with print', async () => {
     const Component = () => {
       return <File.Export path="kubb" />
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchInlineSnapshot(`
+    expect(output).toMatchInlineSnapshot(`
       "export * from "kubb";
       "
     `)
@@ -346,46 +347,46 @@ describe('<File.Export/>', () => {
 })
 
 describe('<File.Import/>', () => {
-  test('render Import', () => {
+  test('render Import', async () => {
     const Component = () => {
       return <File.Import name="React" path="react" />
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchInlineSnapshot(`
+    expect(output).toMatchInlineSnapshot(`
       "import React from "react";
       "
     `)
   })
 
-  test('render Import with type', () => {
+  test('render Import with type', async () => {
     const Component = () => {
       return <File.Import name="React" path="react" isTypeOnly />
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchInlineSnapshot(`
+    expect(output).toMatchInlineSnapshot(`
       "import type React from "react";
       "
     `)
   })
 
-  test('render Import with app', () => {
+  test('render Import with app', async () => {
     const Component = () => {
       return <File.Import name="React" root="types" path="types/test" />
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchInlineSnapshot(`
+    expect(output).toMatchInlineSnapshot(`
       "import React from "./test";
       "
     `)
   })
 
-  test('render Import with File.Import inside of File.Source', () => {
+  test('render Import with File.Import inside of File.Source', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path">
@@ -396,7 +397,8 @@ describe('<File.Import/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    await app.render()
+    const output = await app.renderToOutput()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -428,10 +430,10 @@ describe('<File.Import/>', () => {
         },
       ]
     `)
-    expect(app.output).toMatchInlineSnapshot(`"import React from "react";"`)
+    expect(output).toMatchInlineSnapshot(`"import React from "react";"`)
   })
 
-  test('render Import with File.Import inside of File', () => {
+  test('render Import with File.Import inside of File', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path.ts">
@@ -441,7 +443,9 @@ describe('<File.Import/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    await app.render()
+
+    const output = await app.renderToOutput()
 
     expect(app.files).toMatchInlineSnapshot(`
       [
@@ -473,6 +477,6 @@ describe('<File.Import/>', () => {
         },
       ]
     `)
-    expect(app.output).toMatchInlineSnapshot(`"test"`)
+    expect(output).toMatchInlineSnapshot(`"test"`)
   })
 })

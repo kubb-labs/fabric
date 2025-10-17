@@ -7,9 +7,9 @@ describe('<Type/>', () => {
       return <Type name="Data">string</Type>
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render Type with comments', async () => {
@@ -21,8 +21,8 @@ describe('<Type/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 })

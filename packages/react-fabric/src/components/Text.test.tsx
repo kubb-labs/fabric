@@ -2,13 +2,13 @@ import { createApp } from '../createApp.ts'
 import { Text } from './Text.tsx'
 
 describe('<Text/>', () => {
-  test('render', () => {
+  test('render', async () => {
     const Component = () => {
       return <Text>hallo</Text>
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toBe('hallo')
+    expect(output).toBe('hallo')
   })
 })

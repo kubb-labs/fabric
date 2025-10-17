@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { KubbFile, Ref } from '@kubb/fabric-core'
+import type { AppContext, KubbFile } from '@kubb/fabric-core'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants'
 import { onExit } from 'signal-exit'
@@ -8,10 +8,18 @@ import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './kubbRenderer.ts'
 import { KubbRenderer } from './kubbRenderer.ts'
-import { type RendererResult, renderer } from './renderer.ts'
 import type { DOMElement } from './types.ts'
+import { squashTextNodes } from './utils/squashTextNodes.ts'
+import { processFiles } from './utils/processFiles.ts'
 
+export type RendererResult = {
+  output: string
+  imports: Array<KubbFile.Import>
+  exports: Array<KubbFile.Export>
+  files: Array<KubbFile.File>
+}
 export type ReactTemplateOptions = {
+  context: AppContext
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
@@ -19,11 +27,7 @@ export type ReactTemplateOptions = {
    * Set this to true to always see the result of the render in the console(line per render)
    */
   debug?: boolean
-  output?: Ref<string>
-  files?: Ref<Array<KubbFile.File>>
 }
-
-type Context = Omit<RootContextProps, 'exit'>
 
 export class ReactTemplate {
   readonly #options: ReactTemplateOptions
@@ -34,7 +38,7 @@ export class ReactTemplate {
   readonly #container: FiberRoot
   readonly #rootNode: DOMElement
 
-  constructor(options: ReactTemplateOptions = {}) {
+  constructor(options: ReactTemplateOptions) {
     this.#options = { ...options }
 
     this.#rootNode = createNode('kubb-root')
@@ -119,28 +123,21 @@ export class ReactTemplate {
   resolveExitPromise: () => void = () => {}
   rejectExitPromise: (reason?: Error) => void = () => {}
   unsubscribeExit: () => void = () => {}
-  onRender: () => void = () => {
+  onRender: () => void = async () => {
     if (this.#isUnmounted) {
       return
     }
 
-    const result = renderer(this.#rootNode)
+    const output = await this.#render(this.#rootNode, this.#options.context)
 
     if (this.#options.debug) {
-      console.log(result.output)
+      console.log(output)
     }
 
     if (this.#options.stdout) {
       this.#options.stdout.clearLine(0)
       this.#options.stdout.cursorTo(0)
-      this.#options.stdout.write(result.output)
-    }
-
-    if (this.#options.files) {
-      this.#options.files.value = result.files
-    }
-    if (this.#options.output) {
-      this.#options.output.value = result.output
+      this.#options.stdout.write(output)
     }
   }
   onError(error: Error): void {
@@ -154,9 +151,22 @@ export class ReactTemplate {
     this.unmount(error)
   }
 
-  render(node: ReactNode, context?: Context): RendererResult {
+  async #render(node: DOMElement, context: AppContext): Promise<string> {
+    processFiles(node, context)
+    const text = squashTextNodes(node)
+    const files = context.files
+
+    return files.length
+      ? [...files]
+          .flatMap((file) => [...file.sources].map((item) => item.value))
+          .filter(Boolean)
+          .join('\n\n')
+      : text
+  }
+
+  async render(node: ReactNode, { meta = {} }: Omit<RootContextProps, 'exit'> = { meta: {} }): Promise<string> {
     const element = (
-      <Root meta={context?.meta || {}} onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
+      <Root meta={meta} onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
         {node}
       </Root>
     )
@@ -165,7 +175,7 @@ export class ReactTemplate {
 
     KubbRenderer.flushSyncWork()
 
-    return renderer(this.#rootNode)
+    return this.#render(this.#rootNode, this.#options.context)
   }
 
   unmount(error?: Error | number | null): void {

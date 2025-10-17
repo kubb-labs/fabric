@@ -41,4 +41,4 @@ function App() {
 
 const app = createApp(App)
 
-app.run()
+app.render()

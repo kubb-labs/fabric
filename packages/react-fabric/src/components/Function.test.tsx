@@ -10,10 +10,10 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render default Function', async () => {
@@ -24,10 +24,10 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render Function with comments', async () => {
@@ -38,10 +38,10 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render ArrowFunction', async () => {
@@ -52,10 +52,10 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render default ArrowFunction', async () => {
@@ -66,10 +66,10 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render Function Generics', async () => {
@@ -80,10 +80,10 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render ArrowFunction Generics', async () => {
@@ -94,10 +94,10 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render ArrowFunction SingleLine', async () => {
@@ -108,10 +108,10 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
   test('render multiple functions', async () => {
@@ -128,9 +128,9 @@ describe('<Function/>', () => {
         </>
       )
     }
-    const root = createApp(Component)
-    root.run()
+    const app = createApp(Component)
+    const output = await app.renderToOutput()
 
-    expect(root.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 })

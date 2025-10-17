@@ -49,6 +49,12 @@
     "release:canary": {
       "dependsOn": ["build"],
       "outputs": []
+    },
+    "generate": {
+      "dependsOn": [],
+      "outputs": ["src/**"],
+      "inputs": ["package.json"],
+      "cache": false
     }
   }
 }

@@ -2,17 +2,17 @@ import { createApp } from '../createApp.ts'
 import { Const } from './Const.tsx'
 
 describe('<Const/>', () => {
-  test('render Const', () => {
+  test('render Const',async () => {
     const Component = () => {
       return <Const name="data">"blue"</Const>
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 
-  test('render Const with const assertion', () => {
+  test('render Const with const assertion', async() => {
     const Component = () => {
       return (
         <Const name="data" asConst>
@@ -21,8 +21,8 @@ describe('<Const/>', () => {
       )
     }
     const app = createApp(Component)
-    app.run()
+    const output = await app.renderToOutput()
 
-    expect(app.output).toMatchSnapshot()
+    expect(output).toMatchSnapshot()
   })
 })

@@ -1,4 +1,3 @@
-
 import type { JSDoc, Key, KubbNode } from '../types.ts'
 
 import { Space } from './Text.tsx'
