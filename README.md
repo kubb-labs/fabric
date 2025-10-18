@@ -1,15 +1,14 @@
-<p align="center">
+<div align="center">
   <a href="https://kubb.dev" target="_blank" rel="noopener noreferrer">
     <img width="180" src="https://raw.githubusercontent.com/kubb-labs/fabric/main/assets/logo.png" alt="Kubb fabric logo">
   </a>
-</p>
+
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Coverage][coverage-src]][coverage-href]
 [![License][license-src]][license-href]
 [![Sponsors][sponsors-src]][sponsors-href]
-
 <h4>
     <a href="https://kubb.dev/" target="_blank">Documentation</a>
     <span> · </span>
@@ -17,7 +16,7 @@
     <span> · </span>
       <a href="https://github.com/kubb-labs/fabric/issues/" target="_blank">Request Feature</a>
 </h4>
-
+</div>
 <br />
 
 Kubb Fabric is a language-agnostic toolkit for generating code and files using JSX and TypeScript.
