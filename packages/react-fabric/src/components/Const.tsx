@@ -1,6 +1,5 @@
 import type { JSDoc, Key, KubbNode } from '../types.ts'
 
-import { Space } from './Text.tsx'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 type Props = {
@@ -37,28 +36,16 @@ export function Const({ name, export: canExport, type, JSDoc, asConst, children 
           <br />
         </>
       )}
-      {canExport && (
-        <>
-          export
-          <Space />
-        </>
-      )}
-      const {name}
-      <Space />
+      {canExport && <>export </>}
+      const {name}{' '}
       {type && (
         <>
           {':'}
-          {type}
-          <Space />
+          {type}{' '}
         </>
       )}
       = {children}
-      {asConst && (
-        <>
-          <Space />
-          as const
-        </>
-      )}
+      {asConst && <> as const</>}
     </>
   )
 }

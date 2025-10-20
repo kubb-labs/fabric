@@ -3,7 +3,6 @@ import type { AppContext } from '@kubb/fabric-core'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants'
 import { onExit } from 'signal-exit'
-import type { RootContextProps } from './components/Root.tsx'
 import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './kubbRenderer.ts'
@@ -166,9 +165,9 @@ export class ReactTemplate {
       : text
   }
 
-  render(node: ReactNode, { meta = {} }: Omit<RootContextProps, 'exit'> = { meta: {} }): void {
+  render(node: ReactNode): void {
     const element = (
-      <Root meta={meta} onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
+      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
         {node}
       </Root>
     )
@@ -177,9 +176,9 @@ export class ReactTemplate {
     KubbRenderer.flushSyncWork()
   }
 
-  async renderToString(node: ReactNode, { meta = {} }: Omit<RootContextProps, 'exit'> = { meta: {} }): Promise<string> {
+  async renderToString(node: ReactNode): Promise<string> {
     const element = (
-      <Root meta={meta} onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
+      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
         {node}
       </Root>
     )

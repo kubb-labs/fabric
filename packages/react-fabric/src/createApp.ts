@@ -1,7 +1,6 @@
 import process from 'node:process'
 import { defineApp } from '@kubb/fabric-core'
-import type { ElementType } from 'react'
-import { createElement } from './index.ts'
+import { type ElementType, createElement } from 'react'
 import { ReactTemplate } from './ReactTemplate.tsx'
 
 export const createApp = defineApp<ElementType>((app, context) => {

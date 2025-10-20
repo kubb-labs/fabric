@@ -30,32 +30,26 @@ type RootRenderFunction<THostElement = unknown> = (this: AppContext, container: 
 
 type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> = FunctionPlugin<P> | ObjectPlugin<P>
 
-export interface App<_THostElement = unknown> {
+type WriteOptions = {
+  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
+  dryRun?: boolean
+}
+
+export interface App {
   _component: Component
   render(): Promise<void>
   renderToString(): Promise<string>
   getFiles(): Promise<Array<KubbFile.ResolvedFile>>
   use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
-  write(): Promise<void>
+  write(options?: WriteOptions): Promise<void>
   addFile(...files: Array<KubbFile.File>): Promise<void>
   waitUntilExit(): Promise<void>
 }
 
-type DefineOptions = {
-  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
-  dryRun?: boolean
-}
+export type DefineApp = (rootComponent?: Component) => App
 
-export type DefineApp<THostElement> = (rootComponent?: Component, options?: DefineOptions) => App<THostElement>
-
-export function defineApp<THostElement>(instance: RootRenderFunction<THostElement>): DefineApp<THostElement> {
-  function createApp(
-    rootComponent: Component,
-    options: DefineOptions = {
-      extension: { '.ts': '.ts' },
-      dryRun: false,
-    },
-  ) {
+export function defineApp<THostElement>(instance: RootRenderFunction<THostElement>): DefineApp {
+  function createApp(rootComponent: Component) {
     const installedPlugins = new WeakSet()
     const fileManager = new FileManager()
     const context: AppContext = {
@@ -73,7 +67,7 @@ export function defineApp<THostElement>(instance: RootRenderFunction<THostElemen
 
     const { render, renderToString, waitUntilExit } = instance.call(context, rootComponent, context)
 
-    const app: App<THostElement> = {
+    const app: App = {
       _component: rootComponent,
       async render() {
         if (isPromise(render)) {
@@ -90,7 +84,12 @@ export function defineApp<THostElement>(instance: RootRenderFunction<THostElemen
       },
       waitUntilExit,
       addFile: context.addFile,
-      async write() {
+      async write(
+        options = {
+          extension: { '.ts': '.ts' },
+          dryRun: false,
+        },
+      ) {
         await fileManager.processFiles({
           extension: options.extension,
           dryRun: options.dryRun,

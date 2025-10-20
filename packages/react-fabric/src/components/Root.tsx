@@ -2,9 +2,8 @@ import { Component, createContext } from 'react'
 
 import type { KubbNode } from '../types.ts'
 
-type ErrorBoundaryProps<Meta extends Record<string, unknown> = Record<string, unknown>> = {
+type ErrorBoundaryProps = {
   onError: (error: Error) => void
-  meta: Meta
   children?: KubbNode
 }
 
@@ -33,20 +32,18 @@ class ErrorBoundary extends Component<{
   }
 }
 
-export type RootContextProps<Meta extends Record<string, unknown> = Record<string, unknown>> = {
+export type RootContextProps = {
   /**
    * Exit (unmount) the whole Ink app.
    */
   readonly exit: (error?: Error) => void
-  readonly meta: Meta
 }
 
 export const RootContext = createContext<RootContextProps>({
   exit: () => {},
-  meta: {},
 })
 
-type RootProps<Meta extends Record<string, unknown> = Record<string, unknown>> = {
+type RootProps = {
   /**
    * Exit (unmount) hook
    */
@@ -55,11 +52,10 @@ type RootProps<Meta extends Record<string, unknown> = Record<string, unknown>> =
    * Error hook
    */
   readonly onError: (error: Error) => void
-  readonly meta: Meta
   readonly children?: KubbNode
 }
 
-export function Root<Meta extends Record<string, unknown> = Record<string, unknown>>({ onError, onExit, meta, children }: RootProps<Meta>) {
+export function Root({ onError, onExit, children }: RootProps) {
   try {
     return (
       <ErrorBoundary
@@ -67,7 +63,7 @@ export function Root<Meta extends Record<string, unknown> = Record<string, unkno
           onError(error)
         }}
       >
-        <RootContext.Provider value={{ meta, exit: onExit }}>{children}</RootContext.Provider>
+        <RootContext.Provider value={{ exit: onExit }}>{children}</RootContext.Provider>
       </ErrorBoundary>
     )
   } catch (_e) {

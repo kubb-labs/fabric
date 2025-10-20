@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from '@kubb/react-fabric'
 
-import { Text, createApp, useLifecycle } from '@kubb/react-fabric'
+import { createApp, useLifecycle } from '@kubb/react-fabric'
 
 /**
  * Render component that will count down from 5
@@ -33,10 +33,10 @@ function App() {
   }, [counter, exit])
 
   if (counter === 0) {
-    return <Text indentSize={2}>Finished</Text>
+    return <>Finished</>
   }
 
-  return <Text>Counter: {counter}</Text>
+  return <>Counter: {counter}</>
 }
 
 const app = createApp(App)

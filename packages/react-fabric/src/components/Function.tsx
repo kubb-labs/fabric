@@ -1,6 +1,5 @@
 import type { JSDoc, Key, KubbNode } from '../types.ts'
 import { Indent } from './Indent.tsx'
-import { Space } from './Text.tsx'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 type Props = {
@@ -51,24 +50,9 @@ export function Function({ name, default: isDefault, export: canExport, async, g
           <br />
         </>
       )}
-      {canExport && (
-        <>
-          export
-          <Space />
-        </>
-      )}
-      {isDefault && (
-        <>
-          default
-          <Space />
-        </>
-      )}
-      {async && (
-        <>
-          async
-          <Space />
-        </>
-      )}
+      {canExport && <>export </>}
+      {isDefault && <>default </>}
+      {async && <>async </>}
       function {name}
       {generics && (
         <>
@@ -112,25 +96,9 @@ function ArrowFunction({ name, default: isDefault, export: canExport, async, gen
           <br />
         </>
       )}
-      {canExport && (
-        <>
-          export
-          <Space />
-        </>
-      )}
-      {isDefault && (
-        <>
-          default
-          <Space />
-        </>
-      )}
-      const {name} =<Space />
-      {async && (
-        <>
-          async
-          <Space />
-        </>
-      )}
+      {canExport && <>export </>}
+      {isDefault && <>default </>}
+      const {name} = {async && <>async </>}
       {generics && (
         <>
           {'<'}
