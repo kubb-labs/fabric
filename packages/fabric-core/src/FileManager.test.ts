@@ -4,7 +4,7 @@ import { format } from '../mocks/format.ts'
 import { FileManager, combineExports, combineImports, combineSources, createFile } from './FileManager.ts'
 
 import type * as KubbFile from './types.ts'
-import { parseFile } from './parser.ts'
+import { parseFile } from './parsers/parser.ts'
 
 describe('FileManager', () => {
   test('fileManager.add also adds the files to the cache', async () => {
