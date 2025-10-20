@@ -3,7 +3,11 @@
   "tag": "alpha",
   "initialVersions": {
     "@kubb/fabric-core": "0.0.0",
-    "@kubb/react-fabric": "0.0.0"
+    "@kubb/react-fabric": "0.0.0",
+    "core-pet-store": "0.0.1",
+    "react-pet-store": "0.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "khaki-socks-warn"
+  ]
 }
