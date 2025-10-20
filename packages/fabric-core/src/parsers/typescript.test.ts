@@ -1,7 +1,7 @@
 import type ts from 'typescript'
 import { format } from '../../mocks/format.ts'
 
-import { print, createImport, createExport } from './typescript.ts'
+import { print, createImport, createExport, typeScriptParser } from './typescript.ts'
 
 const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
   return format(print([elements].flat().filter(Boolean)))
@@ -96,5 +96,24 @@ describe('TypeScript parser', () => {
     } catch (e) {
       expect(e).toBeDefined()
     }
+  })
+
+  test('typeScriptParser.print combines banner/imports/exports/sources/footer and respects extname', async () => {
+    const file = {
+      path: '/project/src/index.ts',
+      extname: '.ts',
+      banner: '// banner',
+      footer: '// footer',
+      sources: [{ value: 'export const x = 1' }, { value: 'export const y = 2' }],
+      imports: [
+        { name: 'foo', path: './utils.ts' },
+        { name: ['bar'], path: '/project/src/bar.js', root: '/project/src' },
+      ],
+      exports: [{ path: './hello.js' }, { name: ['alpha', 'beta'], path: './names.ts', asAlias: true }],
+      meta: {},
+    } as any
+
+    const output = await typeScriptParser.print(file, { extname: '.ts' as any })
+    expect(await format(output)).toMatchSnapshot()
   })
 })

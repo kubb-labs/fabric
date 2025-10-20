@@ -8,10 +8,10 @@ export default defineConfig({
     exclude: ['**/node_modules/**', '**/dist/**', '**/mocks/**'],
     coverage: {
       exclude: [
-        'throttle', // TODO remove when we use an external library
         '**/dist/**',
         '**/mocks/**',
         '**/configs/**',
+        '**/examples/**',
         '**/scripts/**',
         '**/index.ts',
         '**/types.ts',

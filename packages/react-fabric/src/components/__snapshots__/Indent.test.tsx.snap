@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`<Indent/> > indent mixed children and collapse br elements 1`] = `
+"    Hello    
+    
+    world    
+    <span>!</span>"
+`;
+
+exports[`<Indent/> > indent string children by default size 1`] = `
+"  line1
+    line2
+  line3"
+`;

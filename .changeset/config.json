@@ -3,7 +3,7 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "kubb-labs/kubb"
+      "repo": "kubb-labs/fabric"
     }
   ],
   "commit": false,
