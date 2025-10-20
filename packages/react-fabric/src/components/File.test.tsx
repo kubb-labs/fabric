@@ -8,7 +8,7 @@ describe('<File/>', () => {
       return 'test'
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchInlineSnapshot(`"test"`)
   })
@@ -18,7 +18,7 @@ describe('<File/>', () => {
       return <File baseName="test.ts" path="path" />
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchInlineSnapshot(`""`)
   })
@@ -34,8 +34,9 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
     await app.render()
+    const files = await app.getFiles()
 
-    expect(app.files).toMatchInlineSnapshot(`
+    expect(files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -48,17 +49,12 @@ describe('<File/>', () => {
               "path": "./index.ts",
             },
           ],
+          "extname": ".ts",
           "footer": undefined,
-          "imports": [
-            {
-              "isNameSpace": undefined,
-              "isTypeOnly": false,
-              "name": "React",
-              "path": "react",
-              "root": undefined,
-            },
-          ],
+          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
+          "imports": [],
           "meta": {},
+          "name": "test",
           "path": "path",
           "sources": [],
         },
@@ -81,9 +77,9 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    await app.render()
+    const files = await app.getFiles()
 
-    expect(app.files).toMatchInlineSnapshot('[]')
+    expect(files).toMatchInlineSnapshot('[]')
   })
 
   test('render File with Export inside Source', async () => {
@@ -98,8 +94,9 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
     await app.render()
+    const files = await app.getFiles()
 
-    expect(app.files).toMatchInlineSnapshot(`
+    expect(files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
@@ -112,9 +109,12 @@ describe('<File/>', () => {
               "path": "",
             },
           ],
+          "extname": ".ts",
           "footer": undefined,
+          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
           "imports": [],
           "meta": {},
+          "name": "test",
           "path": "path",
           "sources": [
             {
@@ -147,7 +147,7 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
 
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchInlineSnapshot(`""`)
   })
@@ -164,19 +164,24 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
-    await app.render()
+    const output = await app.renderToString()
 
-    expect(output).toMatchInlineSnapshot(`"test"`)
-    expect(app.files).toMatchInlineSnapshot(`
+    await app.render()
+    const files = await app.getFiles()
+
+    expect(output).toMatchInlineSnapshot(`"ignoretest"`)
+    expect(files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
           "baseName": "test.ts",
           "exports": [],
+          "extname": ".ts",
           "footer": undefined,
+          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
           "imports": [],
           "meta": {},
+          "name": "test",
           "path": "path",
           "sources": [
             {
@@ -208,19 +213,26 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
-    app.render()
+    const output = await app.renderToString()
 
-    expect(output).toMatchInlineSnapshot(`"<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`)
-    expect(app.files).toMatchInlineSnapshot(`
+    await app.render()
+    const files = await app.getFiles()
+
+    expect(output).toMatchInlineSnapshot(
+      `"ignore<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`,
+    )
+    expect(files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
           "baseName": "test.ts",
           "exports": [],
+          "extname": ".ts",
           "footer": undefined,
+          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
           "imports": [],
           "meta": {},
+          "name": "test",
           "path": "path",
           "sources": [
             {
@@ -250,17 +262,21 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    app.render()
+    await app.render()
+    const files = await app.getFiles()
 
-    expect(app.files).toMatchInlineSnapshot(`
+    expect(files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
           "baseName": "test.ts",
           "exports": [],
+          "extname": ".ts",
           "footer": undefined,
+          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
           "imports": [],
           "meta": {},
+          "name": "test",
           "path": "path",
           "sources": [
             {
@@ -307,15 +323,18 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
     await app.render()
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchSnapshot()
 
-    expect(app.files.length).toBe(2)
+    await app.render()
+    const files = await app.getFiles()
 
-    expect(app.files[0]?.sources).toMatchSnapshot()
+    expect(files.length).toBe(1)
 
-    expect(app.files[0]?.imports).toMatchInlineSnapshot(`
+    expect(files[0]?.sources).toMatchSnapshot()
+
+    expect(files[0]?.imports).toMatchInlineSnapshot(`
       [
         {
           "isNameSpace": undefined,
@@ -327,7 +346,7 @@ describe('<File/>', () => {
       ]
     `)
 
-    expect(app.files[1]?.sources).toMatchSnapshot()
+    expect(files[1]?.sources).toMatchSnapshot()
   })
 })
 
@@ -337,7 +356,7 @@ describe('<File.Export/>', () => {
       return <File.Export path="kubb" />
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchInlineSnapshot(`
       "export * from "kubb";
@@ -352,7 +371,7 @@ describe('<File.Import/>', () => {
       return <File.Import name="React" path="react" />
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchInlineSnapshot(`
       "import React from "react";
@@ -365,7 +384,7 @@ describe('<File.Import/>', () => {
       return <File.Import name="React" path="react" isTypeOnly />
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchInlineSnapshot(`
       "import type React from "react";
@@ -378,7 +397,7 @@ describe('<File.Import/>', () => {
       return <File.Import name="React" root="types" path="types/test" />
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toMatchInlineSnapshot(`
       "import React from "./test";
@@ -397,16 +416,20 @@ describe('<File.Import/>', () => {
       )
     }
     const app = createApp(Component)
-    await app.render()
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
-    expect(app.files).toMatchInlineSnapshot(`
+    await app.render()
+    const files = await app.getFiles()
+
+    expect(files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
           "baseName": "test.ts",
           "exports": [],
+          "extname": ".ts",
           "footer": undefined,
+          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
           "imports": [
             {
               "isNameSpace": undefined,
@@ -417,6 +440,7 @@ describe('<File.Import/>', () => {
             },
           ],
           "meta": {},
+          "name": "test",
           "path": "path",
           "sources": [
             {
@@ -430,7 +454,10 @@ describe('<File.Import/>', () => {
         },
       ]
     `)
-    expect(output).toMatchInlineSnapshot(`"import React from "react";"`)
+    expect(output).toMatchInlineSnapshot(`
+      "import React from "react";
+      "
+    `)
   })
 
   test('render Import with File.Import inside of File', async () => {
@@ -443,17 +470,21 @@ describe('<File.Import/>', () => {
       )
     }
     const app = createApp(Component)
+
+    const output = await app.renderToString()
+
     await app.render()
+    const files = await app.getFiles()
 
-    const output = await app.renderToOutput()
-
-    expect(app.files).toMatchInlineSnapshot(`
+    expect(files).toMatchInlineSnapshot(`
       [
         {
           "banner": undefined,
           "baseName": "test.ts",
           "exports": [],
+          "extname": ".ts",
           "footer": undefined,
+          "id": "97e35e44c38e860fc3736792ed817c2b81b7ffd0bd9442bf973c116414ae8e37",
           "imports": [
             {
               "isNameSpace": undefined,
@@ -464,6 +495,7 @@ describe('<File.Import/>', () => {
             },
           ],
           "meta": {},
+          "name": "test",
           "path": "path.ts",
           "sources": [
             {
@@ -477,6 +509,9 @@ describe('<File.Import/>', () => {
         },
       ]
     `)
-    expect(output).toMatchInlineSnapshot(`"test"`)
+    expect(output).toMatchInlineSnapshot(`
+      "import React from "react";
+      test"
+    `)
   })
 })

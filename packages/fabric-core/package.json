@@ -72,6 +72,7 @@
     "fs-extra": "^11.3.2",
     "js-runtime": "^0.0.8",
     "natural-orderby": "^5.0.0",
+    "p-limit": "^7.2.0",
     "remeda": "catalog:",
     "typescript": "5.9.3"
   },

@@ -7,7 +7,7 @@ describe('<Text/>', () => {
       return <Text>hallo</Text>
     }
     const app = createApp(Component)
-    const output = await app.renderToOutput()
+    const output = await app.renderToString()
 
     expect(output).toBe('hallo')
   })

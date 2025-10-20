@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { useEffect, useState } from '@kubb/react-fabric'
 
 import path from 'node:path'
@@ -26,6 +25,10 @@ function App() {
       exit()
     })
   }, [])
+
+  if (!names.length) {
+    return null
+  }
 
   return (
     <File path={path.resolve(__dirname, 'result.ts')} baseName={'result.ts'}>
@@ -62,7 +65,9 @@ async function start() {
 
   await app.waitUntilExit()
 
-  console.log('\nFiles: ', app.files.length)
+  const files = await app.getFiles()
+
+  console.log('\nFiles: ', files.length)
   await app.write()
 }
 

@@ -1,5 +1,3 @@
-import process from 'node:process'
-
 import path from 'node:path'
 import { Const, File, createApp } from '@kubb/react-fabric'
 
@@ -35,7 +33,9 @@ async function start() {
 
   app.render()
 
-  console.log('\nFiles: ', app.files.length)
+  const files = await app.getFiles()
+
+  console.log('\nFiles: ', files.length)
   await app.write()
 }
 

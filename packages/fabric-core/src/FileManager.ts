@@ -1,16 +1,116 @@
+import pLimit from 'p-limit'
+
+import type * as KubbFile from './types.ts'
+import { parseFile } from './parsers/parser.ts'
+import { Cache } from './utils/Cache.ts'
+import { trimExtName, write } from './fs.ts'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { orderBy } from 'natural-orderby'
 import { isDeepEqual, uniqueBy } from 'remeda'
-import { trimExtName } from './fs.ts'
-import type * as KubbFile from './types.ts'
-import type { ResolvedFile } from './types.ts'
-import { typeScriptParser } from './parsers/typescript.ts'
-import { tsxParser } from './parsers/tsx.ts'
+
+type WriteFilesProps = {
+  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
+  dryRun?: boolean
+}
+
+export class FileManager {
+  #cache = new Cache<KubbFile.ResolvedFile>()
+  #limit = pLimit(100)
+
+  constructor() {
+    return this
+  }
+
+  async add(...files: Array<KubbFile.File>) {
+    const resolvedFiles: Array<KubbFile.ResolvedFile> = []
+
+    const mergedFiles = new Map<string, KubbFile.File>()
+
+    files.forEach((file) => {
+      const existing = mergedFiles.get(file.path)
+      if (existing) {
+        mergedFiles.set(file.path, mergeFile(existing, file))
+      } else {
+        mergedFiles.set(file.path, file)
+      }
+    })
+
+    for (const file of mergedFiles.values()) {
+      const existing = this.#cache.get(file.path)
+
+      const merged = existing ? mergeFile(existing, file) : file
+      const resolvedFile = createFile(merged)
+
+      this.#cache.set(resolvedFile.path, resolvedFile)
+      this.flush()
+
+      resolvedFiles.push(resolvedFile)
+    }
+
+    return resolvedFiles
+  }
+
+  flush() {
+    this.#cache.flush()
+  }
+
+  getByPath(path: KubbFile.Path): KubbFile.ResolvedFile | null {
+    return this.#cache.get(path)
+  }
+
+  deleteByPath(path: KubbFile.Path): void {
+    this.#cache.delete(path)
+  }
+
+  clear(): void {
+    this.#cache.clear()
+  }
+
+  getFiles(): Array<KubbFile.ResolvedFile> {
+    const cachedKeys = this.#cache.keys()
+
+    // order by path length and if file is a barrel file
+    const keys = orderBy(cachedKeys, [(v) => v.length, (v) => trimExtName(v).endsWith('index')])
+
+    const files = keys.map((key) => this.#cache.get(key))
+
+    return files.filter(Boolean)
+  }
+
+  async processFiles({ dryRun, extension }: WriteFilesProps): Promise<Array<KubbFile.ResolvedFile>> {
+    const files = this.getFiles()
+
+    const promises = files.map((resolvedFile) => {
+      return this.#limit(async () => {
+        const extname = extension ? extension[resolvedFile.extname] || undefined : resolvedFile.extname
+
+        if (!dryRun) {
+          const source = await parseFile(resolvedFile, { extname })
+
+          await write(resolvedFile.path, source, { sanity: false })
+        }
+      })
+    })
+
+    await Promise.all(promises)
+
+    return files
+  }
+}
 
 function hashObject(obj: Record<string, unknown>): string {
   const str = JSON.stringify(obj, Object.keys(obj).sort())
   return createHash('sha256').update(str).digest('hex')
+}
+
+export function mergeFile<TMeta extends object = object>(a: KubbFile.File<TMeta>, b: KubbFile.File<TMeta>): KubbFile.File<TMeta> {
+  return {
+    ...a,
+    sources: [...(a.sources || []), ...(b.sources || [])],
+    imports: [...(a.imports || []), ...(b.imports || [])],
+    exports: [...(a.exports || []), ...(b.exports || [])],
+  }
 }
 
 export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.Source> {
@@ -167,57 +267,4 @@ export function createFile<TMeta extends object = object>(file: KubbFile.File<TM
     sources: sources,
     meta: file.meta || ({} as TMeta),
   }
-}
-
-export type ParserModule<TMeta extends object = object> = {
-  /**
-   * Convert a file to string
-   */
-  print: (file: KubbFile.ResolvedFile<TMeta>, options: PrintOptions) => Promise<string>
-}
-
-export function createFileParser<TMeta extends object = object>(parser: ParserModule<TMeta>): ParserModule<TMeta> {
-  return parser
-}
-
-type PrintOptions = {
-  extname?: KubbFile.Extname
-}
-
-const defaultParser = createFileParser({
-  async print(file) {
-    return file.sources.map((item) => item.value).join('\n\n')
-  },
-})
-
-const parsers: Record<KubbFile.Extname, ParserModule<any>> = {
-  '.ts': typeScriptParser,
-  '.js': typeScriptParser,
-  '.jsx': tsxParser,
-  '.tsx': tsxParser,
-  '.json': defaultParser,
-}
-
-type GetSourceOptions = {
-  extname?: KubbFile.Extname
-}
-
-export async function parseFile(file: ResolvedFile, { extname }: GetSourceOptions = {}): Promise<string> {
-  async function getFileParser<TMeta extends object = object>(extname: KubbFile.Extname | undefined): Promise<ParserModule<TMeta>> {
-    if (!extname) {
-      return defaultParser
-    }
-
-    const parser = parsers[extname]
-
-    if (!parser) {
-      console.warn(`[parser] No parser found for ${extname}, default parser will be used`)
-    }
-
-    return parser || defaultParser
-  }
-
-  const parser = await getFileParser(file.extname)
-
-  return parser.print(file, { extname })
 }

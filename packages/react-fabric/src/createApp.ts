@@ -11,8 +11,11 @@ export const createApp = defineApp<ElementType>((app, context) => {
       : new ReactTemplate({ context, stdout: process.stdout, stderr: process.stderr, stdin: process.stdin })
 
   return {
-    async render() {
-      return template.render(createElement(app))
+    render() {
+      template.render(createElement(app))
+    },
+    async renderToString() {
+      return template.renderToString(createElement(app))
     },
     waitUntilExit() {
       return template.waitUntilExit()

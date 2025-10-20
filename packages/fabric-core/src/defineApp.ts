@@ -1,8 +1,6 @@
-import { write } from './fs.ts'
-import { createFile, parseFile } from './parser.ts'
-import { ref } from './reactive/ref.ts'
 import type * as KubbFile from './types.ts'
-import {isDeepEqual, uniqueWith} from "remeda";
+import { FileManager } from './FileManager.ts'
+import { isPromise } from 'remeda'
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function'
 
@@ -16,69 +14,87 @@ export type ObjectPlugin<Options = any[]> = {
 export type FunctionPlugin<Options = any[]> = PluginInstallFunction<Options> & Partial<ObjectPlugin<Options>>
 
 type AppRenderer = {
-  render(): Promise<string> | string
+  render(): Promise<void> | void
+  renderToString(): Promise<string> | string
   waitUntilExit(): Promise<void>
 }
 
 export type AppContext = {
-  files: Array<KubbFile.File>
+  fileManager: FileManager
   addFile(...files: Array<KubbFile.File>): Promise<void>
+  files: Array<KubbFile.ResolvedFile>
+  clear: () => void
 }
 
-type RootRenderFunction<HostElement = unknown> = (this: AppContext, container: HostElement, context: AppContext) => AppRenderer
+type RootRenderFunction<THostElement = unknown> = (this: AppContext, container: THostElement, context: AppContext) => AppRenderer
 
 type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> = FunctionPlugin<P> | ObjectPlugin<P>
 
-export interface App<_HostElement = unknown> {
+export interface App<_THostElement = unknown> {
   _component: Component
   render(): Promise<void>
-  renderToOutput(): Promise<string>
+  renderToString(): Promise<string>
+  getFiles(): Promise<Array<KubbFile.ResolvedFile>>
   use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
   write(): Promise<void>
   addFile(...files: Array<KubbFile.File>): Promise<void>
-  files: Array<KubbFile.File>
   waitUntilExit(): Promise<void>
 }
 
-export type DefineApp<HostElement> = (rootComponent?: Component) => App<HostElement>
+type DefineOptions = {
+  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
+  dryRun?: boolean
+}
 
-export function defineApp<HostElement>(instance: RootRenderFunction<HostElement>): DefineApp<HostElement> {
-  function createApp(rootComponent: Component) {
+export type DefineApp<THostElement> = (rootComponent?: Component, options?: DefineOptions) => App<THostElement>
+
+export function defineApp<THostElement>(instance: RootRenderFunction<THostElement>): DefineApp<THostElement> {
+  function createApp(
+    rootComponent: Component,
+    options: DefineOptions = {
+      extension: { '.ts': '.ts' },
+      dryRun: false,
+    },
+  ) {
     const installedPlugins = new WeakSet()
-    const files = ref<Array<KubbFile.File>>([])
+    const fileManager = new FileManager()
     const context: AppContext = {
-      get files() {
-        return files.value
-      },
+      fileManager,
       async addFile(...newFiles) {
-        files.value.push(...newFiles)
-        // try resolving this uniqueWith check
-        files.value =  uniqueWith(files.value, isDeepEqual)
+        await fileManager.add(...newFiles)
+      },
+      clear() {
+        context.fileManager.clear()
+      },
+      get files() {
+        return fileManager.getFiles()
       },
     }
 
-    const { render, waitUntilExit } = instance.call(context, rootComponent, context)
+    const { render, renderToString, waitUntilExit } = instance.call(context, rootComponent, context)
 
-    const app: App<HostElement> = {
+    const app: App<THostElement> = {
       _component: rootComponent,
       async render() {
-        await render()
+        if (isPromise(render)) {
+          await render()
+        } else {
+          render()
+        }
       },
-      async renderToOutput() {
-        return render()
+      async renderToString() {
+        return renderToString()
+      },
+      async getFiles() {
+        return fileManager.getFiles()
       },
       waitUntilExit,
-      get files() {
-        return files.value
-      },
       addFile: context.addFile,
       async write() {
-        for (const file of files.value) {
-          const resolvedFile = createFile(file)
-          const source = await parseFile(resolvedFile)
-
-          await write(file.path, source)
-        }
+        await fileManager.processFiles({
+          extension: options.extension,
+          dryRun: options.dryRun,
+        })
       },
       use(plugin: Plugin, ...options: any[]) {
         if (installedPlugins.has(plugin)) {

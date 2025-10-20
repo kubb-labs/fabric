@@ -3,7 +3,6 @@ import { createImport, createExport, print } from '@kubb/fabric-core/parsers/typ
 import type { File } from '../components/File.tsx'
 import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
-import { getRelativePath } from '@kubb/fabric-core'
 
 export function squashTextNodes(node: DOMElement): string {
   let text = ''
@@ -22,7 +21,8 @@ export function squashTextNodes(node: DOMElement): string {
         return print([
           createImport({
             name: attributes.name,
-            path: attributes.root ? getRelativePath(attributes.root, attributes.path) : attributes.path,
+            path: attributes.path,
+            root: attributes.root,
             isTypeOnly: attributes.isTypeOnly,
           }),
         ])

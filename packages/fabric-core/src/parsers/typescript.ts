@@ -1,7 +1,7 @@
 import ts from 'typescript'
 import { getRelativePath, trimExtName } from '../fs.ts'
 import path from 'node:path'
-import { createFileParser } from '../parser.ts'
+import { createFileParser } from './parser.ts'
 
 const { factory } = ts
 
@@ -53,14 +53,18 @@ export function print(elements: Array<ts.Node> = [], { source = '', baseName = '
 export function createImport({
   name,
   path,
+  root,
   isTypeOnly = false,
   isNameSpace = false,
 }: {
   name: string | Array<string | { propertyName: string; name?: string }>
   path: string
+  root?: string
   isTypeOnly?: boolean
   isNameSpace?: boolean
 }) {
+  const resolvePath = root ? getRelativePath(root, path) : path
+
   if (!Array.isArray(name)) {
     let importPropertyName: ts.Identifier | undefined = factory.createIdentifier(name)
     let importName: ts.NamedImportBindings | undefined
@@ -73,7 +77,7 @@ export function createImport({
     return factory.createImportDeclaration(
       undefined,
       factory.createImportClause(isTypeOnly, importPropertyName, importName),
-      factory.createStringLiteral(path),
+      factory.createStringLiteral(resolvePath),
       undefined,
     )
   }
@@ -98,7 +102,7 @@ export function createImport({
         }),
       ),
     ),
-    factory.createStringLiteral(path),
+    factory.createStringLiteral(resolvePath),
     undefined,
   )
 }

@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { AppContext, KubbFile } from '@kubb/fabric-core'
+import type { AppContext } from '@kubb/fabric-core'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants'
 import { onExit } from 'signal-exit'
@@ -12,12 +12,6 @@ import type { DOMElement } from './types.ts'
 import { squashTextNodes } from './utils/squashTextNodes.ts'
 import { processFiles } from './utils/processFiles.ts'
 
-export type RendererResult = {
-  output: string
-  imports: Array<KubbFile.Import>
-  exports: Array<KubbFile.Export>
-  files: Array<KubbFile.File>
-}
 export type ReactTemplateOptions = {
   context: AppContext
   stdout?: NodeJS.WriteStream
@@ -128,9 +122,18 @@ export class ReactTemplate {
       return
     }
 
-    const output = await this.#render(this.#rootNode, this.#options.context)
+    this.#options.context.clear()
+
+    processFiles(this.#rootNode, this.#options.context)
+
+    if (!this.#options.debug && !this.#options.stdout) {
+      return
+    }
+
+    const output = await this.#getOutput(this.#rootNode, this.#options.context)
 
     if (this.#options.debug) {
+      console.log('Rendering: \n')
       console.log(output)
     }
 
@@ -151,8 +154,7 @@ export class ReactTemplate {
     this.unmount(error)
   }
 
-  async #render(node: DOMElement, context: AppContext): Promise<string> {
-    processFiles(node, context)
+  async #getOutput(node: DOMElement, context: AppContext): Promise<string> {
     const text = squashTextNodes(node)
     const files = context.files
 
@@ -164,7 +166,7 @@ export class ReactTemplate {
       : text
   }
 
-  async render(node: ReactNode, { meta = {} }: Omit<RootContextProps, 'exit'> = { meta: {} }): Promise<string> {
+  render(node: ReactNode, { meta = {} }: Omit<RootContextProps, 'exit'> = { meta: {} }): void {
     const element = (
       <Root meta={meta} onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
         {node}
@@ -172,10 +174,22 @@ export class ReactTemplate {
     )
 
     KubbRenderer.updateContainerSync(element, this.#container, null, null)
+    KubbRenderer.flushSyncWork()
+  }
 
+  async renderToString(node: ReactNode, { meta = {} }: Omit<RootContextProps, 'exit'> = { meta: {} }): Promise<string> {
+    const element = (
+      <Root meta={meta} onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
+        {node}
+      </Root>
+    )
+
+    KubbRenderer.updateContainerSync(element, this.#container, null, null)
     KubbRenderer.flushSyncWork()
 
-    return this.#render(this.#rootNode, this.#options.context)
+    this.#options.context.clear()
+
+    return this.#getOutput(this.#rootNode, this.#options.context)
   }
 
   unmount(error?: Error | number | null): void {
