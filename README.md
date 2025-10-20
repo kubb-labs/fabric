@@ -24,10 +24,10 @@ It offers a lightweight layer for file generation while orchestrating the overal
 
 ## Features
 
-- 🎨 Easily create files from JSX & TS
-- 📚 Simple, automated code generation
-- ⚡ Type-safe with TypeScript support
-- 🚀 Fast and lightweight
+- 🎨 Declarative file generation — Create files effortlessly using JSX or JavaScript syntax.
+- 📦 Cross-runtime support — Works seamlessly with Node.js and Bun.
+- 🧩 Built-in debugging utilities — Simplify development and inspect generation flows with ease.
+- ⚡ Fast and lightweight — Minimal overhead, maximum performance.
 
 
 ## Supporting Kubb

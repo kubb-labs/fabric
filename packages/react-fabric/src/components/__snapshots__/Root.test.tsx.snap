@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`<Root/> > error boundary should catch and call onError 1`] = `""`;
+
+exports[`<Root/> > render Root with children 1`] = `"Hello from Root"`;

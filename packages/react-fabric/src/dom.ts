@@ -11,13 +11,15 @@ export const createNode = (nodeName: string): DOMElement => {
   return node
 }
 
-export const appendChildNode = (node: DOMElement, childNode: DOMElement): void => {
+export const appendChildNode = (node: DOMNode, childNode: DOMElement | DOMNode): void => {
   if (childNode.parentNode) {
     removeChildNode(childNode.parentNode, childNode)
   }
 
-  childNode.parentNode = node
-  node.childNodes.push(childNode)
+  if (node.nodeName !== '#text') {
+    childNode.parentNode = node
+    node.childNodes.push(childNode)
+  }
 }
 
 export const insertBeforeNode = (node: DOMElement, newChildNode: DOMNode, beforeChildNode: DOMNode): void => {

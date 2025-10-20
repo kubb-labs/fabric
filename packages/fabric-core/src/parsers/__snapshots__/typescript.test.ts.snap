@@ -39,3 +39,17 @@ exports[`TypeScript parser > createImport 5`] = `
 "import { hello as helloWorld } from './hello.ts'
 "
 `;
+
+exports[`TypeScript parser > typeScriptParser.print combines banner/imports/exports/sources/footer and respects extname 1`] = `
+"// banner
+import foo from './utils.ts'
+import { bar } from './bar.ts'
+export * from './hello.ts'
+export { alpha, beta } from './names.ts'
+
+export const x = 1
+
+export const y = 2
+// footer
+"
+`;
