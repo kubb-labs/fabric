@@ -2,11 +2,12 @@ import { format } from '../mocks/format.ts'
 import { combineImports, combineSources, createFile, combineExports } from './createFile.ts'
 
 import type * as KubbFile from './KubbFile.ts'
-import { parseFile } from './FileProcessor.ts'
+import { FileProcessor } from './FileProcessor.ts'
 
 describe('createFile', () => {
+  const fileProcessor = new FileProcessor()
   test('if getFileSource is returning code with imports', async () => {
-    const code = await parseFile(
+    const code = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
         path: 'models/ts/test.ts',
@@ -25,7 +26,7 @@ describe('createFile', () => {
       }),
     )
 
-    const codeWithDefaultImport = await parseFile(
+    const codeWithDefaultImport = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
         path: 'models/ts/test.ts',
@@ -52,7 +53,7 @@ describe('createFile', () => {
       }),
     )
 
-    const codeWithDefaultImportOrder = await parseFile(
+    const codeWithDefaultImportOrder = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
         path: 'models/ts/test.ts',
@@ -90,7 +91,7 @@ describe('createFile', () => {
   })
 
   test('if getFileSource is returning code with imports and default import', async () => {
-    const code = await parseFile(
+    const code = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
         path: 'models/ts/test.ts',
@@ -164,8 +165,8 @@ describe('createFile', () => {
       ],
     })
 
-    expect(await format(await parseFile(fileImport))).toMatchSnapshot()
-    expect(await format(await parseFile(fileExport))).toMatchSnapshot()
+    expect(await format(await fileProcessor.parse(fileImport))).toMatchSnapshot()
+    expect(await format(await fileProcessor.parse(fileExport))).toMatchSnapshot()
   })
 
   test('if combineExports is filtering out duplicated sources(by name)', () => {

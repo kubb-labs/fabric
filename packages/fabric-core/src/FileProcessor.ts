@@ -45,12 +45,6 @@ async function getParser<TMeta extends object = object>(extname: KubbFile.Extnam
   return parser || defaultParser
 }
 
-export async function parseFile(file: KubbFile.ResolvedFile, { extname }: GetSourceOptions = {}): Promise<string> {
-  const parser = await getParser(file.extname)
-
-  return parser.print(file, { extname })
-}
-
 export class FileProcessor extends EventEmitter<FileProcessorEvents> {
   #limit = pLimit(100)
 
@@ -59,7 +53,13 @@ export class FileProcessor extends EventEmitter<FileProcessorEvents> {
     return this
   }
 
-  async run(files: Array<KubbFile.ResolvedFile>, { dryRun, extension }: ProcessFilesProps): Promise<KubbFile.ResolvedFile[]> {
+  async parse(file: KubbFile.ResolvedFile, { extname }: GetSourceOptions = {}): Promise<string> {
+    const parser = await getParser(file.extname)
+
+    return parser.print(file, { extname })
+  }
+
+  async run(files: Array<KubbFile.ResolvedFile>, { dryRun, extension }: ProcessFilesProps = {}): Promise<KubbFile.ResolvedFile[]> {
     this.emit('start', { files })
 
     const promises = files.map((resolvedFile) =>
@@ -69,7 +69,7 @@ export class FileProcessor extends EventEmitter<FileProcessorEvents> {
         this.emit('file:start', { file: resolvedFile })
 
         if (!dryRun) {
-          const source = await parseFile(resolvedFile, { extname })
+          const source = await this.parse(resolvedFile, { extname })
           await write(resolvedFile.path, source, { sanity: false })
         }
 
