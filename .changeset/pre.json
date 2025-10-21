@@ -1,9 +1,0 @@
-{
-  "mode": "exit",
-  "tag": "alpha",
-  "initialVersions": {
-    "@kubb/fabric-core": "0.0.0",
-    "@kubb/react-fabric": "0.0.0"
-  },
-  "changesets": []
-}
