@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.1.1
+
+### Patch Changes
+
+- [`f4f16be`](https://github.com/kubb-labs/fabric/commit/f4f16be0486133cdfb69cfa724b98c8523eb8f83) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - expose createFileParser, createFile and FileProcessor
+
 ## 0.1.0
 
 ### Minor Changes
