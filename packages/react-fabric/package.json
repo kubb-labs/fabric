@@ -38,8 +38,8 @@
       "require": "./dist/globals.cjs"
     },
     "./jsx-dev-runtime": {
-      "import": "./dist/jsx-dev-runtime.js",
-      "require": "./dist/jsx-dev-runtime.cjs"
+      "import": "./dist/jsx-runtime.js",
+      "require": "./dist/jsx-runtime.cjs"
     },
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime.js",
@@ -60,7 +60,7 @@
         "./dist/devtools.d.ts"
       ],
       "jsx-dev-runtime": [
-        "./dist/jsx-dev-runtime.d.ts"
+        "./dist/jsx-runtime.d.ts"
       ],
       "jsx-runtime": [
         "./dist/jsx-runtime.d.ts"
