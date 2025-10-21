@@ -1,7 +1,6 @@
 import type * as KubbFile from './KubbFile.ts'
 import { FileManager } from './FileManager.ts'
 import { isPromise } from 'remeda'
-import { FileProcessor } from './FileProcessor.ts'
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function'
 
@@ -54,7 +53,6 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
   function createApp(rootComponent: Component, options?: TContext['options']): App {
     const installedPlugins = new WeakSet()
     const fileManager = new FileManager()
-    const fileProcessor = new FileProcessor()
     const context = {
       options,
       fileManager,
@@ -94,7 +92,7 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
           dryRun: false,
         },
       ) {
-        await fileProcessor.run(fileManager.files, {
+        await fileManager.processor.run({
           extension: options.extension,
           dryRun: options.dryRun,
         })

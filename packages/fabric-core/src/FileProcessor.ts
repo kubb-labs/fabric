@@ -14,7 +14,7 @@ type FileProcessorEvents = {
   'file:finish': [{ file: KubbFile.ResolvedFile }]
 }
 
-type ProcessFilesProps = {
+export type ProcessFilesProps = {
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
   dryRun?: boolean
 }

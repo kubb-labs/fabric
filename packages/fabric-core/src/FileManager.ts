@@ -3,6 +3,7 @@ import { Cache } from './utils/Cache.ts'
 import { trimExtName } from './fs.ts'
 import { orderBy } from 'natural-orderby'
 import { createFile } from './createFile.ts'
+import { FileProcessor, type ProcessFilesProps } from './FileProcessor.ts'
 
 function mergeFile<TMeta extends object = object>(a: KubbFile.File<TMeta>, b: KubbFile.File<TMeta>): KubbFile.File<TMeta> {
   return {
@@ -15,6 +16,7 @@ function mergeFile<TMeta extends object = object>(a: KubbFile.File<TMeta>, b: Ku
 
 export class FileManager {
   #cache = new Cache<KubbFile.ResolvedFile>()
+  #processor = new FileProcessor()
 
   constructor() {
     return this
@@ -74,5 +76,16 @@ export class FileManager {
     const files = keys.map((key) => this.#cache.get(key))
 
     return files.filter(Boolean)
+  }
+
+  get processor() {
+    const files = this.files
+    const processor = this.#processor
+
+    return {
+      async run(options: ProcessFilesProps) {
+        return processor.run(files, options)
+      },
+    }
   }
 }
