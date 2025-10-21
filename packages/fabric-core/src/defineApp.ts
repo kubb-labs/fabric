@@ -1,4 +1,4 @@
-import type * as KubbFile from './types.ts'
+import type * as KubbFile from './KubbFile.ts'
 import { FileManager } from './FileManager.ts'
 import { isPromise } from 'remeda'
 

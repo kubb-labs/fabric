@@ -1,4 +1,4 @@
-import type * as KubbFile from '../types.ts'
+import type * as KubbFile from '../KubbFile.ts'
 import { typeScriptParser } from './typescript.ts'
 import { tsxParser } from './tsx.ts'
 

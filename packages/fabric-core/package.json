@@ -34,6 +34,10 @@
       "import": "./dist/parsers/typescript.js",
       "require": "./dist/parsers/typescript.cjs"
     },
+    "./types": {
+      "import": "./dist/types.js",
+      "require": "./dist/types.cjs"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
@@ -46,6 +50,9 @@
       ],
       "parsers/tsx": [
         "./dist/parsers/tsx.d.ts"
+      ],
+      "types": [
+        "./dist/types.d.ts"
       ]
     }
   },

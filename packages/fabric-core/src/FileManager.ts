@@ -1,6 +1,6 @@
 import pLimit from 'p-limit'
 
-import type * as KubbFile from './types.ts'
+import type * as KubbFile from './KubbFile.ts'
 import { parseFile } from './parsers/parser.ts'
 import { Cache } from './utils/Cache.ts'
 import { trimExtName, write } from './fs.ts'
@@ -12,91 +12,6 @@ import { isDeepEqual, uniqueBy } from 'remeda'
 type WriteFilesProps = {
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
   dryRun?: boolean
-}
-
-export class FileManager {
-  #cache = new Cache<KubbFile.ResolvedFile>()
-  #limit = pLimit(100)
-
-  constructor() {
-    return this
-  }
-
-  async add(...files: Array<KubbFile.File>) {
-    const resolvedFiles: Array<KubbFile.ResolvedFile> = []
-
-    const mergedFiles = new Map<string, KubbFile.File>()
-
-    files.forEach((file) => {
-      const existing = mergedFiles.get(file.path)
-      if (existing) {
-        mergedFiles.set(file.path, mergeFile(existing, file))
-      } else {
-        mergedFiles.set(file.path, file)
-      }
-    })
-
-    for (const file of mergedFiles.values()) {
-      const existing = this.#cache.get(file.path)
-
-      const merged = existing ? mergeFile(existing, file) : file
-      const resolvedFile = createFile(merged)
-
-      this.#cache.set(resolvedFile.path, resolvedFile)
-      this.flush()
-
-      resolvedFiles.push(resolvedFile)
-    }
-
-    return resolvedFiles
-  }
-
-  flush() {
-    this.#cache.flush()
-  }
-
-  getByPath(path: KubbFile.Path): KubbFile.ResolvedFile | null {
-    return this.#cache.get(path)
-  }
-
-  deleteByPath(path: KubbFile.Path): void {
-    this.#cache.delete(path)
-  }
-
-  clear(): void {
-    this.#cache.clear()
-  }
-
-  getFiles(): Array<KubbFile.ResolvedFile> {
-    const cachedKeys = this.#cache.keys()
-
-    // order by path length and if file is a barrel file
-    const keys = orderBy(cachedKeys, [(v) => v.length, (v) => trimExtName(v).endsWith('index')])
-
-    const files = keys.map((key) => this.#cache.get(key))
-
-    return files.filter(Boolean)
-  }
-
-  async processFiles({ dryRun, extension }: WriteFilesProps): Promise<Array<KubbFile.ResolvedFile>> {
-    const files = this.getFiles()
-
-    const promises = files.map((resolvedFile) => {
-      return this.#limit(async () => {
-        const extname = extension ? extension[resolvedFile.extname] || undefined : resolvedFile.extname
-
-        if (!dryRun) {
-          const source = await parseFile(resolvedFile, { extname })
-
-          await write(resolvedFile.path, source, { sanity: false })
-        }
-      })
-    })
-
-    await Promise.all(promises)
-
-    return files
-  }
 }
 
 function hashObject(obj: Record<string, unknown>): string {
@@ -266,5 +181,90 @@ export function createFile<TMeta extends object = object>(file: KubbFile.File<TM
     exports: exports,
     sources: sources,
     meta: file.meta || ({} as TMeta),
+  }
+}
+
+export class FileManager {
+  #cache = new Cache<KubbFile.ResolvedFile>()
+  #limit = pLimit(100)
+
+  constructor() {
+    return this
+  }
+
+  async add(...files: Array<KubbFile.File>) {
+    const resolvedFiles: Array<KubbFile.ResolvedFile> = []
+
+    const mergedFiles = new Map<string, KubbFile.File>()
+
+    files.forEach((file) => {
+      const existing = mergedFiles.get(file.path)
+      if (existing) {
+        mergedFiles.set(file.path, mergeFile(existing, file))
+      } else {
+        mergedFiles.set(file.path, file)
+      }
+    })
+
+    for (const file of mergedFiles.values()) {
+      const existing = this.#cache.get(file.path)
+
+      const merged = existing ? mergeFile(existing, file) : file
+      const resolvedFile = createFile(merged)
+
+      this.#cache.set(resolvedFile.path, resolvedFile)
+      this.flush()
+
+      resolvedFiles.push(resolvedFile)
+    }
+
+    return resolvedFiles
+  }
+
+  flush() {
+    this.#cache.flush()
+  }
+
+  getByPath(path: KubbFile.Path): KubbFile.ResolvedFile | null {
+    return this.#cache.get(path)
+  }
+
+  deleteByPath(path: KubbFile.Path): void {
+    this.#cache.delete(path)
+  }
+
+  clear(): void {
+    this.#cache.clear()
+  }
+
+  getFiles(): Array<KubbFile.ResolvedFile> {
+    const cachedKeys = this.#cache.keys()
+
+    // order by path length and if file is a barrel file
+    const keys = orderBy(cachedKeys, [(v) => v.length, (v) => trimExtName(v).endsWith('index')])
+
+    const files = keys.map((key) => this.#cache.get(key))
+
+    return files.filter(Boolean)
+  }
+
+  async processFiles({ dryRun, extension }: WriteFilesProps): Promise<Array<KubbFile.ResolvedFile>> {
+    const files = this.getFiles()
+
+    const promises = files.map((resolvedFile) => {
+      return this.#limit(async () => {
+        const extname = extension ? extension[resolvedFile.extname] || undefined : resolvedFile.extname
+
+        if (!dryRun) {
+          const source = await parseFile(resolvedFile, { extname })
+
+          await write(resolvedFile.path, source, { sanity: false })
+        }
+      })
+    })
+
+    await Promise.all(promises)
+
+    return files
   }
 }

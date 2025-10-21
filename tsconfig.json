@@ -28,6 +28,7 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
+      "@kubb/fabric-core/types": ["packages/fabric-core/src/types.ts"],
       "@kubb/fabric-core": ["packages/fabric-core/src/index.ts"],
       "@kubb/react-fabric": ["packages/react-fabric/src/index.ts"]
     },

@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { AppContext } from '@kubb/fabric-core'
+import type { AppContext } from '@kubb/fabric-core/types'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants'
 import { onExit } from 'signal-exit'

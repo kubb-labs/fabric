@@ -1,4 +1,4 @@
-import type { KubbFile } from '@kubb/fabric-core'
+import type { KubbFile } from '@kubb/fabric-core/types'
 import type React from 'react'
 import type { KubbNode } from './types.ts'
 

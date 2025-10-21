@@ -6,7 +6,7 @@ export default defineConfig({
     types: 'src/types.ts',
     devtools: 'src/devtools.ts',
     globals: 'src/globals.ts',
-    'jsx-runtime': './src/jsx-runtime.ts'
+    'jsx-runtime': './src/jsx-runtime.ts',
   },
   dts: true,
   target: 'es2019',
