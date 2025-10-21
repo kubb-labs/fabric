@@ -1,5 +1,12 @@
 # react-pet-store
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/react-fabric@0.1.0
+
 ## 0.0.2
 
 ### Patch Changes
