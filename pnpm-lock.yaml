@@ -9,16 +9,6 @@ catalogs:
     '@types/node':
       specifier: ^20.19.23
       version: 20.19.23
-    remeda:
-      specifier: ^2.32.0
-      version: 2.32.0
-    tsdown:
-      specifier: ^0.15.9
-      version: 0.15.9
-    typescript:
-      specifier: ^5.9.3
-      version: 5.9.3
-  react19:
     '@types/react':
       specifier: ^19.2.2
       version: 19.2.2
@@ -31,6 +21,15 @@ catalogs:
     react-reconciler:
       specifier: 0.32.0
       version: 0.32.0
+    remeda:
+      specifier: ^2.32.0
+      version: 2.32.0
+    tsdown:
+      specifier: ^0.15.9
+      version: 0.15.9
+    typescript:
+      specifier: ^5.9.3
+      version: 5.9.3
 
 importers:
 
@@ -157,13 +156,13 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       react:
-        specifier: catalog:react19
+        specifier: 'catalog:'
         version: 19.2.0
       react-devtools-inline:
         specifier: ^7.0.1
         version: 7.0.1
       react-reconciler:
-        specifier: catalog:react19
+        specifier: 'catalog:'
         version: 0.32.0(react@19.2.0)
       signal-exit:
         specifier: ^4.1.0
@@ -173,10 +172,10 @@ importers:
         version: 8.18.3
     devDependencies:
       '@types/react':
-        specifier: catalog:react19
+        specifier: 'catalog:'
         version: 19.2.2
       '@types/react-reconciler':
-        specifier: catalog:react19
+        specifier: 'catalog:'
         version: 0.32.0(@types/react@19.2.2)
       '@types/ws':
         specifier: ^8.18.1

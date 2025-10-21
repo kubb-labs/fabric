@@ -98,15 +98,15 @@
     "execa": "^9.6.0",
     "indent-string": "^5.0.0",
     "natural-orderby": "^5.0.0",
-    "react": "catalog:react19",
+    "react": "catalog:",
     "react-devtools-inline": "^7.0.1",
-    "react-reconciler": "catalog:react19",
+    "react-reconciler": "catalog:",
     "signal-exit": "^4.1.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
-    "@types/react": "catalog:react19",
-    "@types/react-reconciler": "catalog:react19",
+    "@types/react": "catalog:",
+    "@types/react-reconciler": "catalog:",
     "@types/ws": "^8.18.1",
     "tsdown": "catalog:",
     "typescript": "catalog:"
