@@ -149,4 +149,6 @@ describe('FileManager', () => {
 
     expect(expectedRemovedFile).toBeUndefined()
   })
+
+  test.todo('fileManager.processor.run')
 })

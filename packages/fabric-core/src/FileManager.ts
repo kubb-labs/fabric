@@ -78,14 +78,7 @@ export class FileManager {
     return files.filter(Boolean)
   }
 
-  get processor() {
-    const files = this.files
-    const processor = this.#processor
-
-    return {
-      async run(options: ProcessFilesProps) {
-        return processor.run(files, options)
-      },
-    }
+  async write(options: ProcessFilesProps): Promise<KubbFile.ResolvedFile[]> {
+    return this.#processor.run(this.files, options)
   }
 }

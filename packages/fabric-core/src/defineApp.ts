@@ -92,7 +92,7 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
           dryRun: false,
         },
       ) {
-        await fileManager.processor.run({
+        await fileManager.write({
           extension: options.extension,
           dryRun: options.dryRun,
         })
