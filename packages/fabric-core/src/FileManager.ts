@@ -16,7 +16,7 @@ function mergeFile<TMeta extends object = object>(a: KubbFile.File<TMeta>, b: Ku
 
 export class FileManager {
   #cache = new Cache<KubbFile.ResolvedFile>()
-  #processor = new FileProcessor()
+  processor = new FileProcessor()
 
   constructor() {
     return this
@@ -79,6 +79,6 @@ export class FileManager {
   }
 
   async write(options: ProcessFilesProps): Promise<KubbFile.ResolvedFile[]> {
-    return this.#processor.run(this.files, options)
+    return this.processor.run(this.files, options)
   }
 }

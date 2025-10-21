@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import * as FileProcessorMod from './FileProcessor.ts'
+import { FileProcessor } from './FileProcessor.ts'
 import * as FsMod from './fs.ts'
 import type * as KubbFile from './KubbFile.ts'
 
@@ -22,14 +22,14 @@ describe('FileProcessor', () => {
     vi.restoreAllMocks()
   })
 
-  test('parseFile and emit hooks', async () => {
+  test('parse and emit hooks', async () => {
     const file = makeFile({ id: 'c', path: '/tmp/c.ts', baseName: 'c.ts', name: 'c' })
     const files = [file]
 
-    const parseSpy = vi.spyOn(FileProcessorMod, 'parseFile').mockResolvedValue('IGNORED')
     const writeSpy = vi.spyOn(FsMod, 'write').mockResolvedValue('IGNORED')
 
-    const processor = new FileProcessorMod.FileProcessor()
+    const processor = new FileProcessor()
+    const parseSpy = vi.spyOn(processor as any, 'parse').mockResolvedValue('IGNORED')
 
     const starts: any[] = []
     const fileStarts: any[] = []
@@ -55,7 +55,7 @@ describe('FileProcessor', () => {
     expect(fileFinishes[0].file).toEqual(file)
     expect(finishes[0].files).toEqual(files)
 
-    expect(parseSpy).not.toHaveBeenCalled()
+    expect(parseSpy).toHaveBeenCalled()
     expect(writeSpy).toHaveBeenCalled()
   })
 })
