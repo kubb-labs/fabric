@@ -9,9 +9,9 @@ export { Function } from './components/Function.tsx'
 export { Indent } from './components/Indent.tsx'
 export { Type } from './components/Type.tsx'
 export { createApp } from './createApp.ts'
-export { useApp } from './hooks/useApp.ts'
-export { useFile } from './hooks/useFile.ts'
-export { useLifecycle } from './hooks/useLifecycle.tsx'
+export { useApp } from './composables/useApp.ts'
+export { useFile } from './composables/useFile.ts'
+export { useLifecycle } from './composables/useLifecycle.tsx'
 export { createFunctionParams, FunctionParams } from './utils/getFunctionParams.ts'
 
 export const createContext = React.createContext

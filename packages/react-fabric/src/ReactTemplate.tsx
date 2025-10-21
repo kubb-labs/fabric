@@ -11,8 +11,7 @@ import type { DOMElement } from './types.ts'
 import { squashTextNodes } from './utils/squashTextNodes.ts'
 import { processFiles } from './utils/processFiles.ts'
 
-export type ReactTemplateOptions = {
-  context: AppContext
+export type ReactAppContext = AppContext<{
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
@@ -20,10 +19,10 @@ export type ReactTemplateOptions = {
    * Set this to true to always see the result of the render in the console(line per render)
    */
   debug?: boolean
-}
+}>
 
 export class ReactTemplate {
-  readonly #options: ReactTemplateOptions
+  readonly #context: ReactAppContext
   // Ignore last render after unmounting a tree to prevent empty output before exit
   #isUnmounted: boolean
 
@@ -31,8 +30,8 @@ export class ReactTemplate {
   readonly #container: FiberRoot
   readonly #rootNode: DOMElement
 
-  constructor(options: ReactTemplateOptions) {
-    this.#options = { ...options }
+  constructor(context: ReactAppContext) {
+    this.#context = context
 
     this.#rootNode = createNode('kubb-root')
     this.#rootNode.onRender = this.onRender
@@ -121,25 +120,25 @@ export class ReactTemplate {
       return
     }
 
-    this.#options.context.clear()
+    this.#context.clear()
 
-    processFiles(this.#rootNode, this.#options.context)
+    processFiles(this.#rootNode, this.#context)
 
-    if (!this.#options.debug && !this.#options.stdout) {
+    if (!this.#context.options?.debug && !this.#context.options?.stdout) {
       return
     }
 
-    const output = await this.#getOutput(this.#rootNode, this.#options.context)
+    const output = await this.#getOutput(this.#rootNode, this.#context)
 
-    if (this.#options.debug) {
+    if (this.#context.options?.debug) {
       console.log('Rendering: \n')
       console.log(output)
     }
 
-    if (this.#options.stdout) {
-      this.#options.stdout.clearLine(0)
-      this.#options.stdout.cursorTo(0)
-      this.#options.stdout.write(output)
+    if (this.#context.options?.stdout && process.env.NODE_ENV !== 'test') {
+      this.#context.options.stdout.clearLine(0)
+      this.#context.options.stdout.cursorTo(0)
+      this.#context.options.stdout.write(output)
     }
   }
   onError(error: Error): void {
@@ -186,9 +185,9 @@ export class ReactTemplate {
     KubbRenderer.updateContainerSync(element, this.#container, null, null)
     KubbRenderer.flushSyncWork()
 
-    this.#options.context.clear()
+    this.#context.clear()
 
-    return this.#getOutput(this.#rootNode, this.#options.context)
+    return this.#getOutput(this.#rootNode, this.#context)
   }
 
   unmount(error?: Error | number | null): void {
@@ -196,7 +195,7 @@ export class ReactTemplate {
       return
     }
 
-    if (this.#options.debug) {
+    if (this.#context.options?.debug) {
       console.log('Unmount', error)
     }
 

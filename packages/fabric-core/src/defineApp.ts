@@ -19,14 +19,15 @@ type AppRenderer = {
   waitUntilExit(): Promise<void>
 }
 
-export type AppContext = {
+export type AppContext<TOptions = unknown> = {
+  options?: TOptions
   fileManager: FileManager
   addFile(...files: Array<KubbFile.File>): Promise<void>
   files: Array<KubbFile.ResolvedFile>
   clear: () => void
 }
 
-type RootRenderFunction<THostElement = unknown> = (this: AppContext, container: THostElement, context: AppContext) => AppRenderer
+type RootRenderFunction<THostElement, TContext extends AppContext> = (this: TContext, container: THostElement, context: TContext) => AppRenderer
 
 type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> = FunctionPlugin<P> | ObjectPlugin<P>
 
@@ -46,13 +47,14 @@ export interface App {
   waitUntilExit(): Promise<void>
 }
 
-export type DefineApp = (rootComponent?: Component) => App
+export type DefineApp<TContext extends AppContext> = (rootComponent?: Component, options?: TContext['options']) => App
 
-export function defineApp<THostElement>(instance: RootRenderFunction<THostElement>): DefineApp {
-  function createApp(rootComponent: Component) {
+export function defineApp<THostElement, TContext extends AppContext>(instance: RootRenderFunction<THostElement, TContext>): DefineApp<TContext> {
+  function createApp(rootComponent: Component, options?: TContext['options']): App {
     const installedPlugins = new WeakSet()
     const fileManager = new FileManager()
-    const context: AppContext = {
+    const context = {
+      options,
       fileManager,
       async addFile(...newFiles) {
         await fileManager.add(...newFiles)
@@ -63,7 +65,7 @@ export function defineApp<THostElement>(instance: RootRenderFunction<THostElemen
       get files() {
         return fileManager.getFiles()
       },
-    }
+    } as TContext
 
     const { render, renderToString, waitUntilExit } = instance.call(context, rootComponent, context)
 
