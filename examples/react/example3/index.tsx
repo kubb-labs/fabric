@@ -33,7 +33,7 @@ async function start() {
 
   app.render()
 
-  const files = await app.getFiles()
+  const files = app.files
 
   console.log('\nFiles: ', files.length)
   await app.write()

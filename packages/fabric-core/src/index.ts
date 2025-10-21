@@ -1,4 +1,6 @@
 export { createApp } from './createApp.ts'
 export { defineApp } from './defineApp.ts'
-export { FileManager, createFile } from './FileManager.ts'
-export { parseFile } from './parsers/parser.ts'
+export { FileManager } from './FileManager.ts'
+export { createFile } from './createFile.ts'
+export { FileProcessor } from './FileProcessor.ts'
+export { createFileParser } from './parsers/createFileParser.ts'

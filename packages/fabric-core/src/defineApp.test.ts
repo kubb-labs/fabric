@@ -36,7 +36,6 @@ describe('defineApp', () => {
     expect(app._component).toBe(rootComponent)
     expect(typeof app.render).toBe('function')
     expect(typeof app.renderToString).toBe('function')
-    expect(typeof app.getFiles).toBe('function')
     expect(typeof app.addFile).toBe('function')
     expect(typeof app.use).toBe('function')
     expect(typeof app.write).toBe('function')
@@ -73,15 +72,6 @@ describe('defineApp', () => {
     await expect(app.renderToString()).resolves.toBe('hello')
   })
 
-  test('getFiles proxies to FileManager', async () => {
-    const spy = vi.spyOn(FileManager.prototype, 'getFiles').mockReturnValue([])
-    const app = defineApp(() => createRenderer())({})
-
-    const files = await app.getFiles()
-    expect(spy).toHaveBeenCalledTimes(1)
-    expect(files).toEqual([])
-  })
-
   test('addFile proxies to FileManager.add', async () => {
     const spy = vi.spyOn(FileManager.prototype, 'add').mockResolvedValue([] as any)
     const app = defineApp(() => createRenderer())({})
@@ -90,19 +80,6 @@ describe('defineApp', () => {
     await app.addFile(file as any)
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenCalledWith(file)
-  })
-
-  test('write calls FileManager.processFiles with defaults and custom options', async () => {
-    const spy = vi.spyOn(FileManager.prototype, 'processFiles').mockResolvedValue(undefined as any)
-    const app = defineApp(() => createRenderer())({})
-
-    // default options
-    await app.write()
-    expect(spy).toHaveBeenCalledWith({ extension: { '.ts': '.ts' }, dryRun: false })
-
-    // custom options
-    await app.write({ extension: { '.ts': '' } as any, dryRun: true })
-    expect(spy).toHaveBeenLastCalledWith({ extension: { '.ts': '' }, dryRun: true })
   })
 
   test('waitUntilExit delegated from renderer', async () => {

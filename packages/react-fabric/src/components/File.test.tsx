@@ -34,7 +34,7 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -77,7 +77,7 @@ describe('<File/>', () => {
       )
     }
     const app = createApp(Component)
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(files).toMatchInlineSnapshot('[]')
   })
@@ -94,7 +94,7 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -167,7 +167,7 @@ describe('<File/>', () => {
     const output = await app.renderToString()
 
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(output).toMatchInlineSnapshot(`"ignoretest"`)
     expect(files).toMatchInlineSnapshot(`
@@ -216,7 +216,7 @@ describe('<File/>', () => {
     const output = await app.renderToString()
 
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(output).toMatchInlineSnapshot(
       `"ignore<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`,
@@ -263,7 +263,7 @@ describe('<File/>', () => {
     }
     const app = createApp(Component)
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -328,7 +328,7 @@ describe('<File/>', () => {
     expect(output).toMatchSnapshot()
 
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(files.length).toBe(1)
 
@@ -419,7 +419,7 @@ describe('<File.Import/>', () => {
     const output = await app.renderToString()
 
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -474,7 +474,7 @@ describe('<File.Import/>', () => {
     const output = await app.renderToString()
 
     await app.render()
-    const files = await app.getFiles()
+    const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
       [

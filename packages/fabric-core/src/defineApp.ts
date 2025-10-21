@@ -1,6 +1,7 @@
 import type * as KubbFile from './KubbFile.ts'
 import { FileManager } from './FileManager.ts'
 import { isPromise } from 'remeda'
+import { FileProcessor } from './FileProcessor.ts'
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function'
 
@@ -40,7 +41,7 @@ export interface App {
   _component: Component
   render(): Promise<void>
   renderToString(): Promise<string>
-  getFiles(): Promise<Array<KubbFile.ResolvedFile>>
+  files: Array<KubbFile.ResolvedFile>
   use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
   write(options?: WriteOptions): Promise<void>
   addFile(...files: Array<KubbFile.File>): Promise<void>
@@ -53,6 +54,7 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
   function createApp(rootComponent: Component, options?: TContext['options']): App {
     const installedPlugins = new WeakSet()
     const fileManager = new FileManager()
+    const fileProcessor = new FileProcessor()
     const context = {
       options,
       fileManager,
@@ -63,7 +65,7 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
         context.fileManager.clear()
       },
       get files() {
-        return fileManager.getFiles()
+        return fileManager.files
       },
     } as TContext
 
@@ -81,8 +83,8 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
       async renderToString() {
         return renderToString()
       },
-      async getFiles() {
-        return fileManager.getFiles()
+      get files() {
+        return fileManager.files
       },
       waitUntilExit,
       addFile: context.addFile,
@@ -92,7 +94,7 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
           dryRun: false,
         },
       ) {
-        await fileManager.processFiles({
+        await fileProcessor.run(fileManager.files, {
           extension: options.extension,
           dryRun: options.dryRun,
         })

@@ -1,5 +1,5 @@
 import { typeScriptParser } from './typescript.ts'
-import { createFileParser } from './parser.ts'
+import { createFileParser } from './createFileParser.ts'
 
 export const tsxParser = createFileParser({
   async print(file, options = { extname: '.tsx' }) {

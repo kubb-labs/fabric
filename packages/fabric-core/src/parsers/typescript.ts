@@ -1,7 +1,7 @@
 import ts from 'typescript'
 import { getRelativePath, trimExtName } from '../fs.ts'
 import path from 'node:path'
-import { createFileParser } from './parser.ts'
+import { createFileParser } from './createFileParser.ts'
 
 const { factory } = ts
 

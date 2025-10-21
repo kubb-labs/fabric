@@ -6,6 +6,7 @@ export default defineConfig({
     types: 'src/types.ts',
     'parsers/typescript': 'src/parsers/typescript.ts',
     'parsers/tsx': 'src/parsers/tsx.ts',
+    'parsers/default': 'src/parsers/default.ts',
   },
   dts: true,
   target: 'es2019',

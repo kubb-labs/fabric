@@ -1,9 +1,9 @@
 {
-  "name": "core-pet-store",
+  "name": "core-example",
   "version": "0.0.3",
   "private": true,
   "type": "module",
-  "description": "Core PetStore example",
+  "description": "Core example",
   "repository": {
     "type": "git",
     "url": "https://github.com/kubb-labs/kubb.git",

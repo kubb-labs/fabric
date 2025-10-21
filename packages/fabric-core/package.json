@@ -26,6 +26,10 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./parsers/default": {
+      "import": "./dist/parsers/default.js",
+      "require": "./dist/parsers/default.cjs"
+    },
     "./parsers/tsx": {
       "import": "./dist/parsers/tsx.js",
       "require": "./dist/parsers/tsx.cjs"
@@ -50,6 +54,9 @@
       ],
       "parsers/tsx": [
         "./dist/parsers/tsx.d.ts"
+      ],
+      "parsers/default": [
+        "./dist/parsers/default.d.ts"
       ],
       "types": [
         "./dist/types.d.ts"

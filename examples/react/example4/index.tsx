@@ -65,7 +65,7 @@ async function start() {
 
   await app.waitUntilExit()
 
-  const files = await app.getFiles()
+  const files = app.files
 
   console.log('\nFiles: ', files.length)
   await app.write()
