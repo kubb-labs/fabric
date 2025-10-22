@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { createApp } from './createApp.ts'
 import { fsPlugin } from './plugins/fsPlugin.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
-import { typeScriptParser } from './parsers/typeScriptParser.ts'
+import { typescriptParser } from './parsers/typescriptParser.ts'
 import { createParser } from './parsers/createParser.ts'
 
 describe('createApp', () => {
@@ -13,11 +13,11 @@ describe('createApp', () => {
 
   test('creates an app with the fsPlugin and calls write on progress', async () => {
     const onWrite = vi.fn()
-    const spy = vi.spyOn(typeScriptParser, 'parse')
+    const spy = vi.spyOn(typescriptParser, 'parse')
 
     const app = createApp()
     app.use(fsPlugin, { onWrite })
-    app.use(typeScriptParser)
+    app.use(typescriptParser)
 
     await app.addFile({
       baseName: 'index.ts',

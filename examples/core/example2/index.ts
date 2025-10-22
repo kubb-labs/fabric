@@ -1,6 +1,6 @@
 import { createApp } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typeScriptParser } from '@kubb/fabric-core/parsers'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 export const app = createApp()
 
@@ -21,6 +21,6 @@ app.addFile({
 })
 
 app.use(fsPlugin)
-app.use(typeScriptParser)
+app.use(typescriptParser)
 
 app.write()

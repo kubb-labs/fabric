@@ -53,3 +53,17 @@ export const y = 2
 // footer
 "
 `;
+
+exports[`TypeScript parser > typescriptParser.print combines banner/imports/exports/sources/footer and respects extname 1`] = `
+"// banner
+import foo from './utils.ts'
+import { bar } from './bar.ts'
+export * from './hello.ts'
+export { alpha, beta } from './names.ts'
+
+export const x = 1
+
+export const y = 2
+// footer
+"
+`;

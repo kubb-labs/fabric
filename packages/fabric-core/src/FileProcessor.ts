@@ -6,7 +6,7 @@ import type { Parser } from './parsers/types.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { AppEvents } from './App.ts'
-import { typeScriptParser } from './parsers/typeScriptParser.ts'
+import { typescriptParser } from './parsers/typescriptParser.ts'
 import { tsxParser } from './parsers/tsxParser.ts'
 
 export type ProcessFilesProps = {
@@ -37,7 +37,7 @@ export class FileProcessor {
   get #defaultParser(): Set<Parser> {
     console.warn(`[parser] using default parsers, please consider using the "use" method to add custom parsers.`)
 
-    return new Set<Parser>([typeScriptParser, tsxParser, defaultParser])
+    return new Set<Parser>([typescriptParser, tsxParser, defaultParser])
   }
 
   async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParser, extname }: GetParseOptions = {}): Promise<string> {

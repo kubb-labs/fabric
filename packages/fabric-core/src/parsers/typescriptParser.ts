@@ -148,7 +148,7 @@ export function createExport({
   )
 }
 
-export const typeScriptParser = createParser({
+export const typescriptParser = createParser({
   name: 'typescript',
   extNames: ['.ts', '.js'],
   install() {},

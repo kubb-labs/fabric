@@ -1,7 +1,7 @@
 import type ts from 'typescript'
 import { format } from '../../mocks/format.ts'
 
-import { print, createImport, createExport, typeScriptParser } from './typeScriptParser.ts'
+import { print, createImport, createExport, typescriptParser } from './typescriptParser.ts'
 
 const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
   return format(print([elements].flat().filter(Boolean)))
@@ -98,7 +98,7 @@ describe('TypeScript parser', () => {
     }
   })
 
-  test('typeScriptParser.print combines banner/imports/exports/sources/footer and respects extname', async () => {
+  test('typescriptParser.print combines banner/imports/exports/sources/footer and respects extname', async () => {
     const file = {
       path: '/project/src/index.ts',
       extname: '.ts',
@@ -113,7 +113,7 @@ describe('TypeScript parser', () => {
       meta: {},
     } as any
 
-    const output = await typeScriptParser.parse(file, { extname: '.ts' as any })
+    const output = await typescriptParser.parse(file, { extname: '.ts' as any })
     expect(await format(output)).toMatchSnapshot()
   })
 })
