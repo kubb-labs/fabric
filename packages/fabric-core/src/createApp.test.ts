@@ -4,7 +4,7 @@ import { createApp } from './createApp.ts'
 import * as fsPluginModule from './plugins/fsPlugin.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { typeScriptParser } from './parsers/typeScriptParser.ts'
-import {createParser} from "./parsers/createParser.ts";
+import { createParser } from './parsers/createParser.ts'
 
 describe('createApp', () => {
   beforeEach(() => {
@@ -32,10 +32,7 @@ describe('createApp', () => {
 
     await app.write({ extension: { '.ts': '.ts' }, dryRun: false })
 
-    expect(onWrite).toHaveBeenCalledWith(
-      "/tmp/index.ts",
-     expect.stringContaining( "export const x = 1",)
-    )
+    expect(onWrite).toHaveBeenCalledWith('/tmp/index.ts', expect.stringContaining('export const x = 1'))
     expect(spy).toHaveBeenCalled()
   })
 
@@ -59,10 +56,7 @@ describe('createApp', () => {
 
     await app.write({ dryRun: false })
 
-    expect(onWrite).toHaveBeenCalledWith(
-      "/tmp/index.ts",
-      "export const y = 2",
-    )
+    expect(onWrite).toHaveBeenCalledWith('/tmp/index.ts', 'export const y = 2')
     expect(spy).toHaveBeenCalled()
   })
 
@@ -93,14 +87,11 @@ describe('createApp', () => {
 
     const vueParser = createParser({
       name: 'vue',
-      extNames: ['.vue'
-      ],
-      install(){
-
+      extNames: ['.vue'],
+      install() {},
+      async parse(file) {
+        return file.sources.map((source) => source.value).join('')
       },
-      async parse(file){
-        return file.sources.map(source => source.value).join('')
-      }
     })
 
     const spy = vi.spyOn(vueParser, 'parse')
@@ -122,10 +113,7 @@ describe('createApp', () => {
 
     await app.write({ extension: { '.vue': '.vue' }, dryRun: false })
 
-    expect(onWrite).toHaveBeenCalledWith(
-        "/tmp/index.vue",
-        "<script>const test = 2;<script>",
-    )
+    expect(onWrite).toHaveBeenCalledWith('/tmp/index.vue', '<script>const test = 2;<script>')
 
     expect(spy).toHaveBeenCalled()
   })

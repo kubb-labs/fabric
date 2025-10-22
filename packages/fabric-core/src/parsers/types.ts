@@ -16,7 +16,7 @@ export type Parser<TOptions = any[], TMeta extends object = any> = {
   /**
    * Convert a file to string
    */
-  parse: (file: KubbFile.ResolvedFile<TMeta>, options: PrintOptions) => Promise<string>
+  parse(file: KubbFile.ResolvedFile<TMeta>, options: PrintOptions): Promise<string>
 }
 
 export type UserParser<TOptions = any[], TMeta extends object = any> = Omit<Parser<TOptions, TMeta>, 'type'>

@@ -40,7 +40,7 @@ export class FileProcessor {
 
   async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParser, extname }: GetParseOptions = {}): Promise<string> {
     if (!extname) {
-      console.warn(`[parser] No extname found, default parser will be used`)
+      console.warn('[parser] No extname found, default parser will be used')
       return defaultParser.parse(file, { extname })
     }
 

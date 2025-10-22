@@ -71,10 +71,11 @@ export async function write(path: string, data: string, options: { sanity?: bool
 }
 
 export const fsPlugin = createPlugin<Options>({
-  name: 'default',
+  name: 'fs',
+  scope: 'write',
   async install(context, options) {
     context.events.on('process:progress', async ({ file, source }) => {
-      if (options.onWrite) {
+      if (options?.onWrite) {
         await options.onWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })

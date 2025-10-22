@@ -1,8 +1,9 @@
 import { createApp } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
-export const example1 = createApp()
+export const app = createApp()
 
-example1.addFile({
+app.addFile({
   baseName: 'test.ts',
   path: './example1/test.ts',
   sources: [
@@ -18,7 +19,7 @@ example1.addFile({
   exports: [],
 })
 
-example1.addFile({
+app.addFile({
   baseName: 'test2.ts',
   path: './example1/test2.ts',
   sources: [
@@ -34,4 +35,6 @@ example1.addFile({
   exports: [],
 })
 
-example1.write()
+app.use(fsPlugin)
+
+app.write()

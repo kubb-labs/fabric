@@ -4,10 +4,9 @@ export default defineConfig({
   entry: {
     index: 'src/index.ts',
     types: 'src/types.ts',
+    parsers: 'src/parsers/index.ts',
     'parsers/typescript': 'src/parsers/typescriptParser.ts',
-    'parsers/tsx': 'src/parsers/tsxParser.ts',
-    'parsers/default': 'src/parsers/defaultParser.ts',
-    'plugins/fs': 'src/plugins/fsPlugin.ts',
+    plugins: 'src/plugins/index.ts',
   },
   dts: true,
   target: 'es2019',

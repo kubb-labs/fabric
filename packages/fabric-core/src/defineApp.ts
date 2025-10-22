@@ -24,9 +24,11 @@ export type AppContext<TOptions = unknown> = {
   clear: () => void
 }
 
-export type Install<TOptions = any[]> = TOptions extends unknown[]
-  ? (this: AppContext, context: AppContext, ...options: TOptions) => any
-  : (this: AppContext, context: AppContext, options: TOptions) => any
+export type Install<TOptions = any[] | object | undefined> = TOptions extends any[]
+  ? (this: AppContext, context: AppContext, ...options: TOptions) => void
+  : TOptions extends object
+    ? (this: AppContext, context: AppContext, options?: TOptions) => void
+    : (this: AppContext, context: AppContext) => void
 
 type RootRenderFunction<THostElement, TContext extends AppContext> = (this: TContext, container: THostElement, context: TContext) => AppRenderer
 
@@ -44,6 +46,7 @@ export interface App {
     pluginOrParser: Plugin<TOptions> | Parser<TOptions, TMeta>,
     ...options: TOptions extends any[] ? NoInfer<TOptions> : [NoInfer<TOptions>]
   ): this
+  use<TOptions extends any[] | object = any, TMeta extends object = object>(pluginOrParser: Plugin<TOptions> | Parser<TOptions, TMeta>): this
   write(options?: WriteOptions): Promise<void>
   addFile(...files: Array<KubbFile.File>): Promise<void>
   waitUntilExit(): Promise<void>
@@ -145,6 +148,12 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
           dryRun: false,
         },
       ) {
+        const hasWritePlugin = [...installedPlugins].some((item) => item.scope === 'write')
+
+        if (!hasWritePlugin) {
+          console.warn('No write plugin found, please use `app.use(fsPlugin)`')
+        }
+
         await fileManager.write({
           extension: options.extension,
           dryRun: options.dryRun,
