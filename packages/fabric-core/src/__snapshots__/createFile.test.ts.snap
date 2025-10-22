@@ -23,7 +23,11 @@ export type Pet = Pets
 `;
 
 exports[`createFile > if getFileSource is returning code with imports 2`] = `
-"export type Pet = Pets | Cat
+"import client from './Pets.ts'
+import React from './React.ts'
+import type { Pets, Cat } from './Pets.ts'
+
+export type Pet = Pets | Cat
 const test = [client, React]
 "
 `;

@@ -25,7 +25,7 @@ describe('FileProcessor', () => {
       ],
     })
 
-    const code = await processor.parse(file, { extname: '.ts' })
+    const code = await processor.parse(file, { extension: { '.ts': '.ts' } })
 
     expect(code).toContain('import type { A } from "./a.ts"')
     expect(code).toContain('export type X = A')
@@ -41,7 +41,7 @@ describe('FileProcessor', () => {
       sources: [{ value: '{"a":1}' }, { value: '{"b":2}' }],
     })
 
-    const code = await processor.parse(file, { extname: '.json' })
+    const code = await processor.parse(file, { extension: { '.json': '.json' } })
 
     expect(code).toBe('{"a":1}' + '\n\n' + '{"b":2}')
     expect(code.includes('import ')).toBe(false)

@@ -17,7 +17,7 @@ export type ProcessFilesProps = {
 
 type GetParseOptions = {
   parsers?: Set<Parser>
-  extname?: KubbFile.Extname
+  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
 }
 
 type Options = {
@@ -35,22 +35,19 @@ export class FileProcessor {
   }
 
   get #defaultParser(): Set<Parser> {
-    console.warn(`[parser] using default parsers, please consider using the "use" method to add custom parsers.`)
-
     return new Set<Parser>([typescriptParser, tsxParser, defaultParser])
   }
 
-  async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParser, extname }: GetParseOptions = {}): Promise<string> {
+  async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParser, extension }: GetParseOptions = {}): Promise<string> {
+    const extname = extension?.[file.extname] || (path.extname(file.path) as KubbFile.Extname)
+
     if (!extname) {
-      console.warn('[parser] No extname found, default parser will be used')
       return defaultParser.parse(file, { extname })
     }
 
     const parser = [...parsers].find((item) => item.extNames?.includes(extname))
 
     if (!parser) {
-      console.warn(`[parser] No parser found for ${extname}, default parser will be used`)
-
       return defaultParser.parse(file, { extname })
     }
 
@@ -65,12 +62,10 @@ export class FileProcessor {
 
     const promises = files.map((resolvedFile, index) =>
       this.#limit(async () => {
-        const extname = extension?.[resolvedFile.extname] || (path.extname(resolvedFile.path) as KubbFile.Extname)
-
         await this.events.emit('file:start', { file: resolvedFile, index, total })
 
         if (!dryRun) {
-          const source = await this.parse(resolvedFile, { extname, parsers })
+          const source = await this.parse(resolvedFile, { extension, parsers })
           await this.events.emit('process:progress', { file: resolvedFile, source, processed, percentage: (processed / total) * 100, total })
         }
 
