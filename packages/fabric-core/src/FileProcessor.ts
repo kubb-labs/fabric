@@ -39,19 +39,20 @@ export class FileProcessor {
   }
 
   async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParser, extension }: GetParseOptions = {}): Promise<string> {
-    const extname = extension?.[file.extname] || (path.extname(file.path) as KubbFile.Extname)
+    const extname = path.extname(file.path) as KubbFile.Extname
+    const parseExtName = extension?.[file.extname] || undefined
 
     if (!extname) {
-      return defaultParser.parse(file, { extname })
+      return defaultParser.parse(file, { extname: parseExtName })
     }
 
     const parser = [...parsers].find((item) => item.extNames?.includes(extname))
 
     if (!parser) {
-      return defaultParser.parse(file, { extname })
+      return defaultParser.parse(file, { extname: parseExtName })
     }
 
-    return parser.parse(file, { extname })
+    return parser.parse(file, { extname: parseExtName })
   }
 
   async run(files: Array<KubbFile.ResolvedFile>, { parsers, dryRun, extension }: ProcessFilesProps = {}): Promise<KubbFile.ResolvedFile[]> {
