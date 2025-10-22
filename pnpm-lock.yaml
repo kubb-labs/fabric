@@ -96,6 +96,9 @@ importers:
 
   examples/react:
     dependencies:
+      '@kubb/fabric-core':
+        specifier: workspace:*
+        version: link:../../packages/fabric-core
       '@kubb/react-fabric':
         specifier: workspace:*
         version: link:../../packages/react-fabric

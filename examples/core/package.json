@@ -13,8 +13,9 @@
   "author": "stijnvanhulle",
   "sideEffects": false,
   "scripts": {
-    "generate": "bun run example1",
+    "generate": "bun run example1 && bun run example2",
     "example1": "bun ./example1/index.ts",
+    "example2": "bun ./example2/index.ts",
     "clean": "npx rimraf ./dist",
     "test": "vitest",
     "typecheck": "echo 'empty'"

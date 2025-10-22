@@ -24,7 +24,8 @@
     "typecheck": "echo 'empty'"
   },
   "dependencies": {
-    "@kubb/react-fabric": "workspace:*"
+    "@kubb/react-fabric": "workspace:*",
+    "@kubb/fabric-core": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^19.2.2",

@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { File, Function, createApp } from '@kubb/react-fabric'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 /**
  * Create a file and append JSX
@@ -24,6 +25,7 @@ async function start() {
   const app = createApp(App)
 
   app.render()
+  app.use(fsPlugin)
   await app.write()
 }
 

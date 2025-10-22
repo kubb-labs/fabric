@@ -1,5 +1,5 @@
 import type * as KubbFile from '../KubbFile.ts'
-import type { Install } from '../defineApp.ts'
+import type { Install } from '../App.ts'
 
 type PrintOptions = {
   extname?: KubbFile.Extname

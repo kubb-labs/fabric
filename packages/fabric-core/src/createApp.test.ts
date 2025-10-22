@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { createApp } from './createApp.ts'
-import * as fsPluginModule from './plugins/fsPlugin.ts'
+import { fsPlugin } from './plugins/fsPlugin.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { typeScriptParser } from './parsers/typeScriptParser.ts'
 import { createParser } from './parsers/createParser.ts'
@@ -16,7 +16,7 @@ describe('createApp', () => {
     const spy = vi.spyOn(typeScriptParser, 'parse')
 
     const app = createApp()
-    app.use(fsPluginModule.fsPlugin, { onWrite })
+    app.use(fsPlugin, { onWrite })
     app.use(typeScriptParser)
 
     await app.addFile({
@@ -41,7 +41,7 @@ describe('createApp', () => {
     const spy = vi.spyOn(defaultParser, 'parse')
 
     const app = createApp()
-    app.use(fsPluginModule.fsPlugin, { onWrite })
+    app.use(fsPlugin, { onWrite })
 
     await app.addFile({
       baseName: 'index.ts',
@@ -64,7 +64,7 @@ describe('createApp', () => {
     const onWrite = vi.fn()
 
     const app = createApp()
-    app.use(fsPluginModule.fsPlugin, { onWrite })
+    app.use(fsPlugin, { onWrite })
 
     await app.addFile({
       baseName: 'index.ts',
@@ -97,7 +97,7 @@ describe('createApp', () => {
     const spy = vi.spyOn(vueParser, 'parse')
 
     const app = createApp()
-    app.use(fsPluginModule.fsPlugin, { onWrite })
+    app.use(fsPlugin, { onWrite })
     app.use(vueParser)
 
     await app.addFile({

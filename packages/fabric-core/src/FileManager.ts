@@ -5,7 +5,7 @@ import { orderBy } from 'natural-orderby'
 import { createFile } from './createFile.ts'
 import { FileProcessor, type ProcessFilesProps } from './FileProcessor.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { Events } from './defineApp.ts'
+import type { AppEvents } from './App.ts'
 
 function mergeFile<TMeta extends object = object>(a: KubbFile.File<TMeta>, b: KubbFile.File<TMeta>): KubbFile.File<TMeta> {
   return {
@@ -17,14 +17,14 @@ function mergeFile<TMeta extends object = object>(a: KubbFile.File<TMeta>, b: Ku
 }
 
 type Options = {
-  events?: AsyncEventEmitter<Events>
+  events?: AsyncEventEmitter<AppEvents>
 }
 
 export class FileManager {
   #cache = new Cache<KubbFile.ResolvedFile>()
   processor: FileProcessor
 
-  constructor({ events = new AsyncEventEmitter<Events>() }: Options = {}) {
+  constructor({ events = new AsyncEventEmitter<AppEvents>() }: Options = {}) {
     this.processor = new FileProcessor({ events })
     return this
   }

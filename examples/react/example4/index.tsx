@@ -2,6 +2,7 @@ import { useEffect, useState } from '@kubb/react-fabric'
 
 import path from 'node:path'
 import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-fabric'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fetchNames = async (): Promise<string[]> => {
   return new Promise((resolve) => {
@@ -62,6 +63,7 @@ async function start() {
   const app = createApp(App)
 
   app.render()
+  app.use(fsPlugin)
 
   await app.waitUntilExit()
 

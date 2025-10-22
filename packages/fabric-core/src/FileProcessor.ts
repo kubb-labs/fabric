@@ -3,7 +3,7 @@ import pLimit from 'p-limit'
 import type { Parser } from './parsers/types.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { Events } from './defineApp.ts'
+import type { AppEvents } from './App.ts'
 import { typeScriptParser } from './parsers/typeScriptParser.ts'
 import { tsxParser } from './parsers/tsxParser.ts'
 
@@ -19,14 +19,14 @@ type GetParseOptions = {
 }
 
 type Options = {
-  events?: AsyncEventEmitter<Events>
+  events?: AsyncEventEmitter<AppEvents>
 }
 
 export class FileProcessor {
   #limit = pLimit(100)
-  events: AsyncEventEmitter<Events>
+  events: AsyncEventEmitter<AppEvents>
 
-  constructor({ events = new AsyncEventEmitter<Events>() }: Options = {}) {
+  constructor({ events = new AsyncEventEmitter<AppEvents>() }: Options = {}) {
     this.events = events
 
     return this

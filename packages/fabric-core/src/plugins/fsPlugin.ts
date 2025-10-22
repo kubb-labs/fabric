@@ -2,6 +2,7 @@ import { createPlugin } from './createPlugin.ts'
 import { switcher } from 'js-runtime'
 import fs from 'fs-extra'
 import { resolve } from 'node:path'
+import type * as KubbFile from '../KubbFile.ts'
 
 type Options = {
   /**
@@ -70,15 +71,42 @@ export async function write(path: string, data: string, options: { sanity?: bool
   )(path, data.trim(), options)
 }
 
-export const fsPlugin = createPlugin<Options>({
+type WriteOptions = {
+  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
+  dryRun?: boolean
+}
+
+declare module '../index.ts' {
+  interface App {
+    write(options?: WriteOptions): Promise<void>
+  }
+}
+
+export const fsPlugin = createPlugin<Options, { write(options?: WriteOptions): Promise<void> }>({
   name: 'fs',
   scope: 'write',
-  async install(context, options) {
+  async install(_app, context, options) {
     context.events.on('process:progress', async ({ file, source }) => {
       if (options?.onWrite) {
         await options.onWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })
     })
+  },
+  override(_app, context) {
+    return {
+      async write(
+        options = {
+          extension: { '.ts': '.ts' },
+          dryRun: false,
+        },
+      ) {
+        await context.fileManager.write({
+          extension: options.extension,
+          dryRun: options.dryRun,
+          parsers: context.installedParsers,
+        })
+      },
+    }
   },
 })

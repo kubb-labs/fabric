@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { defineApp, type AppContext } from './defineApp.ts'
+import { defineApp } from './defineApp.ts'
+import type { App, AppContext } from './App.ts'
 import { FileManager } from './FileManager.ts'
 import type * as KubbFile from './KubbFile.ts'
+import { createParser } from './parsers'
+import { createPlugin } from './plugins'
 
 const createRenderer = () => {
   const render = vi.fn()
@@ -19,12 +22,10 @@ describe('defineApp', () => {
   test('creates an app with component and methods; binds context to renderer', async () => {
     const renderer = createRenderer()
 
-    let receivedThis: AppContext | undefined
     let receivedContainer: unknown
     let receivedContext: AppContext | undefined
 
-    const instance = function (this: AppContext, container: unknown, context: AppContext) {
-      receivedThis = this
+    const instance = function (container: unknown, context: AppContext) {
       receivedContainer = container
       receivedContext = context
       return renderer
@@ -39,10 +40,9 @@ describe('defineApp', () => {
     expect(typeof app.renderToString).toBe('function')
     expect(typeof app.addFile).toBe('function')
     expect(typeof app.use).toBe('function')
-    expect(typeof app.write).toBe('function')
     expect(typeof app.waitUntilExit).toBe('function')
 
-    expect(receivedThis).toBe(receivedContext)
+    expect(receivedContext).toBeDefined()
     expect(receivedContainer).toBe(rootComponent)
   })
 
@@ -95,20 +95,20 @@ describe('defineApp', () => {
     const renderer = createRenderer()
     const app = defineApp(() => renderer)({})
 
-    const install = vi.fn(function (this: AppContext, ctx: AppContext, ...opts: any[]) {
-      expect(this).toBe(ctx)
+    const install = vi.fn(function (app: App, ctx: AppContext, ...opts: any[]) {
+      expect(app).toBeDefined()
+      expect(ctx).toBeDefined()
       expect(opts).toEqual(['opt1', 'opt2'])
     })
 
-    const plugin = { type: 'plugin' as const, name: 'mockPlugin', install }
+    const plugin = createPlugin({ name: 'mockPlugin', install })
 
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    app.use(plugin as any, 'opt1', 'opt2')
+    app.use(plugin, 'opt1', 'opt2')
     expect(install).toHaveBeenCalledTimes(1)
 
-    // duplicate usage should warn and not reinstall
-    app.use(plugin as any, 'opt1', 'opt2')
+    app.use(plugin, 'opt1', 'opt2')
     expect(warnSpy).toHaveBeenCalledWith('Plugin has already been applied to target app.')
     expect(install).toHaveBeenCalledTimes(2)
   })
@@ -117,20 +117,52 @@ describe('defineApp', () => {
     const renderer = createRenderer()
     const app = defineApp(() => renderer)({})
 
-    const install = vi.fn(function (this: AppContext, ctx: AppContext, ...opts: any[]) {
-      expect(this).toBe(ctx)
+    const install = vi.fn(function (app: App, ctx: AppContext, ...opts: any[]) {
+      expect(app).toBeDefined()
+      expect(ctx).toBeDefined()
       expect(opts).toEqual(['a'])
     })
 
-    const parser = { type: 'parser' as const, name: 'mockParser', install, print: vi.fn() }
+    const parser = createParser<any>({
+      name: 'mockParser',
+      extNames: [],
+      install,
+      async parse() {
+        return ''
+      },
+    })
 
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    app.use(parser as any, 'a')
+    app.use(parser, 'a')
     expect(install).toHaveBeenCalledTimes(1)
 
-    app.use(parser as any, 'a')
+    app.use(parser, 'a')
     expect(warnSpy).toHaveBeenCalledWith('Parser has already been applied to target app.')
     expect(install).toHaveBeenCalledTimes(2)
   })
+
+  test('validate plugin override sync and async', async () => {
+    const renderer = createRenderer()
+    const app = defineApp(() => renderer)({})
+
+    const plugin = createPlugin({
+      name: 'mockPlugin',
+      install() {},
+      override() {
+        return {
+          write() {
+            return 'test'
+          },
+        }
+      },
+    })
+
+    app.use(plugin)
+    app.write()
+
+    expect(app.write).toBeDefined()
+  })
+
+  test.todo('validate plugin install sync and async')
 })
