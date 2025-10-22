@@ -60,9 +60,6 @@ export type AppContext<TOptions = unknown> = {
   fileManager: FileManager
   installedPlugins: Set<Plugin>
   installedParsers: Set<Parser>
-  addFile(...files: Array<KubbFile.File>): Promise<void>
-  files: Array<KubbFile.ResolvedFile>
-  clear: () => void
 }
 
 export type Install<TOptions = any[] | object | undefined> = TOptions extends any[]

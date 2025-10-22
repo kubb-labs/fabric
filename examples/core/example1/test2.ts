@@ -1,1 +1,1 @@
-const test2 = 2;
+const test2 = 2

@@ -120,7 +120,7 @@ export class ReactTemplate {
       return
     }
 
-    this.#context.clear()
+    this.#context.fileManager.clear()
 
     processFiles(this.#rootNode, this.#context)
 
@@ -154,7 +154,7 @@ export class ReactTemplate {
 
   async #getOutput(node: DOMElement, context: AppContext): Promise<string> {
     const text = squashTextNodes(node)
-    const files = context.files
+    const files = context.fileManager.files
 
     return files.length
       ? [...files]
@@ -185,7 +185,7 @@ export class ReactTemplate {
     KubbRenderer.updateContainerSync(element, this.#container, null, null)
     KubbRenderer.flushSyncWork()
 
-    this.#context.clear()
+    this.#context.fileManager.clear()
 
     return this.#getOutput(this.#rootNode, this.#context)
   }

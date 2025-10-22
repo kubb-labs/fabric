@@ -27,15 +27,6 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
       fileManager,
       installedPlugins,
       installedParsers,
-      async addFile(...newFiles) {
-        await fileManager.add(...newFiles)
-      },
-      clear() {
-        fileManager.clear()
-      },
-      get files() {
-        return fileManager.files
-      },
     } as TContext
 
     const { render, renderToString, waitUntilExit } = instance.call(context, rootComponent, context)
