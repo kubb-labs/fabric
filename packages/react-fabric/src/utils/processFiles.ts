@@ -37,7 +37,7 @@ export function processFiles(node: DOMElement, context: AppContext) {
           banner: attributes.banner,
         }
 
-        context.addFile(file)
+        context.fileManager.add(file)
       }
     }
   }

@@ -1,17 +1,9 @@
-import type * as KubbFile from './KubbFile.ts'
 import { FileManager } from './FileManager.ts'
-import { isPromise } from 'remeda'
-
-const isFunction = (val: unknown): val is Function => typeof val === 'function'
-
-type Component = any
-
-type PluginInstallFunction<Options = any[]> = Options extends unknown[] ? (app: App, ...options: Options) => any : (app: App, options: Options) => any
-
-export type ObjectPlugin<Options = any[]> = {
-  install: PluginInstallFunction<Options>
-}
-export type FunctionPlugin<Options = any[]> = PluginInstallFunction<Options> & Partial<ObjectPlugin<Options>>
+import { isFunction, isPromise } from 'remeda'
+import type { Plugin } from './plugins/types.ts'
+import type { Parser } from './parsers/types.ts'
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
+import type { App, AppContext, Component, AppEvents } from './App.ts'
 
 type AppRenderer = {
   render(): Promise<void> | void
@@ -19,57 +11,27 @@ type AppRenderer = {
   waitUntilExit(): Promise<void>
 }
 
-export type AppContext<TOptions = unknown> = {
-  options?: TOptions
-  fileManager: FileManager
-  addFile(...files: Array<KubbFile.File>): Promise<void>
-  files: Array<KubbFile.ResolvedFile>
-  clear: () => void
-}
-
 type RootRenderFunction<THostElement, TContext extends AppContext> = (this: TContext, container: THostElement, context: TContext) => AppRenderer
-
-type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> = FunctionPlugin<P> | ObjectPlugin<P>
-
-type WriteOptions = {
-  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
-  dryRun?: boolean
-}
-
-export interface App {
-  _component: Component
-  render(): Promise<void>
-  renderToString(): Promise<string>
-  files: Array<KubbFile.ResolvedFile>
-  use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
-  write(options?: WriteOptions): Promise<void>
-  addFile(...files: Array<KubbFile.File>): Promise<void>
-  waitUntilExit(): Promise<void>
-}
 
 export type DefineApp<TContext extends AppContext> = (rootComponent?: Component, options?: TContext['options']) => App
 
 export function defineApp<THostElement, TContext extends AppContext>(instance: RootRenderFunction<THostElement, TContext>): DefineApp<TContext> {
   function createApp(rootComponent: Component, options?: TContext['options']): App {
-    const installedPlugins = new WeakSet()
-    const fileManager = new FileManager()
+    const events = new AsyncEventEmitter<AppEvents>()
+    const installedPlugins = new Set<Plugin>()
+    const installedParsers = new Set<Parser>()
+    const fileManager = new FileManager({ events })
     const context = {
+      events,
       options,
       fileManager,
-      async addFile(...newFiles) {
-        await fileManager.add(...newFiles)
-      },
-      clear() {
-        context.fileManager.clear()
-      },
-      get files() {
-        return fileManager.files
-      },
+      installedPlugins,
+      installedParsers,
     } as TContext
 
     const { render, renderToString, waitUntilExit } = instance.call(context, rootComponent, context)
 
-    const app: App = {
+    const app = {
       _component: rootComponent,
       async render() {
         if (isPromise(render)) {
@@ -85,32 +47,45 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
         return fileManager.files
       },
       waitUntilExit,
-      addFile: context.addFile,
-      async write(
-        options = {
-          extension: { '.ts': '.ts' },
-          dryRun: false,
-        },
-      ) {
-        await fileManager.write({
-          extension: options.extension,
-          dryRun: options.dryRun,
-        })
+      async addFile(...newFiles) {
+        await fileManager.add(...newFiles)
       },
-      use(plugin: Plugin, ...options: any[]) {
-        if (installedPlugins.has(plugin)) {
-          console.warn('Plugin has already been applied to target app.')
-        } else if (plugin && isFunction(plugin.install)) {
-          installedPlugins.add(plugin)
-          plugin.install(app, ...options)
-        } else if (isFunction(plugin)) {
-          installedPlugins.add(plugin)
-          plugin(app, ...options)
+      use(pluginOrParser, ...options) {
+        const args = Array.isArray(options) ? options : [options[0]]
+
+        if (pluginOrParser.type === 'plugin') {
+          if (installedPlugins.has(pluginOrParser)) {
+            console.warn('Plugin has already been applied to target app.')
+          } else {
+            installedPlugins.add(pluginOrParser)
+          }
+
+          if (pluginOrParser.override && isFunction(pluginOrParser.override)) {
+            const overrider = pluginOrParser.override
+
+            const extraApp = (overrider as any)(app, context, ...args)
+            Object.assign(app, extraApp)
+          }
+        }
+        if (pluginOrParser.type === 'parser') {
+          if (installedParsers.has(pluginOrParser)) {
+            console.warn('Parser has already been applied to target app.')
+          } else {
+            installedParsers.add(pluginOrParser)
+          }
+        }
+
+        if (pluginOrParser && isFunction(pluginOrParser.install)) {
+          const installer = pluginOrParser.install
+
+          ;(installer as any)(app, context, ...args)
         }
 
         return app
       },
-    }
+    } as App
+
+    events.emit('start', { app })
 
     return app
   }

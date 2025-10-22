@@ -24,6 +24,7 @@ describe('createFile', () => {
           },
         ],
       }),
+      { extname: '.ts' },
     )
 
     const codeWithDefaultImport = await fileProcessor.parse(
@@ -83,6 +84,7 @@ describe('createFile', () => {
           },
         ],
       }),
+      { extname: '.ts' },
     )
 
     expect(await format(code)).toMatchSnapshot()
@@ -108,6 +110,7 @@ describe('createFile', () => {
           },
         ],
       }),
+      { extname: '.ts' },
     )
     expect(await format(code)).toMatchSnapshot()
   })
@@ -165,8 +168,8 @@ describe('createFile', () => {
       ],
     })
 
-    expect(await format(await fileProcessor.parse(fileImport))).toMatchSnapshot()
-    expect(await format(await fileProcessor.parse(fileExport))).toMatchSnapshot()
+    expect(await format(await fileProcessor.parse(fileImport, { extname: '.ts' }))).toMatchSnapshot()
+    expect(await format(await fileProcessor.parse(fileExport, { extname: '.ts' }))).toMatchSnapshot()
   })
 
   test('if combineExports is filtering out duplicated sources(by name)', () => {
