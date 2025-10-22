@@ -1,17 +1,13 @@
 import type * as KubbFile from './KubbFile.ts'
 import { FileManager } from './FileManager.ts'
 import { isPromise } from 'remeda'
+import type { Plugin } from './plugins/types.ts'
+import type { Parser } from './parsers/types.ts'
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 const isFunction = (val: unknown): val is Function => typeof val === 'function'
 
 type Component = any
-
-type PluginInstallFunction<Options = any[]> = Options extends unknown[] ? (app: App, ...options: Options) => any : (app: App, options: Options) => any
-
-export type ObjectPlugin<Options = any[]> = {
-  install: PluginInstallFunction<Options>
-}
-export type FunctionPlugin<Options = any[]> = PluginInstallFunction<Options> & Partial<ObjectPlugin<Options>>
 
 type AppRenderer = {
   render(): Promise<void> | void
@@ -21,15 +17,19 @@ type AppRenderer = {
 
 export type AppContext<TOptions = unknown> = {
   options?: TOptions
+  events: AsyncEventEmitter<Events>
   fileManager: FileManager
   addFile(...files: Array<KubbFile.File>): Promise<void>
   files: Array<KubbFile.ResolvedFile>
   clear: () => void
 }
 
-type RootRenderFunction<THostElement, TContext extends AppContext> = (this: TContext, container: THostElement, context: TContext) => AppRenderer
+//TODO add this. context
+export type Install<TOptions = any[]> = TOptions extends unknown[]
+  ? (this: AppContext, context: AppContext, ...options: TOptions) => any
+  : (this: AppContext, context: AppContext, options: TOptions) => any
 
-type Plugin<Options = any[], P extends unknown[] = Options extends unknown[] ? Options : [Options]> = FunctionPlugin<P> | ObjectPlugin<P>
+type RootRenderFunction<THostElement, TContext extends AppContext> = (this: TContext, container: THostElement, context: TContext) => AppRenderer
 
 type WriteOptions = {
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
@@ -41,7 +41,10 @@ export interface App {
   render(): Promise<void>
   renderToString(): Promise<string>
   files: Array<KubbFile.ResolvedFile>
-  use<Options>(plugin: Plugin<Options>, options: NoInfer<Options>): this
+  use<TOptions extends any[] = any[], TMeta extends object = object>(
+    pluginOrParser: Plugin<TOptions> | Parser<TOptions, TMeta>,
+    ...options: NoInfer<TOptions>
+  ): this
   write(options?: WriteOptions): Promise<void>
   addFile(...files: Array<KubbFile.File>): Promise<void>
   waitUntilExit(): Promise<void>
@@ -49,11 +52,60 @@ export interface App {
 
 export type DefineApp<TContext extends AppContext> = (rootComponent?: Component, options?: TContext['options']) => App
 
+export type Events = {
+  /**
+   * Called in the beginning of the app lifecycle.
+   */
+  start: [{ app: App }]
+  /**
+   * Called in the end of the app lifecycle.
+   */
+  end: [{ app: App }]
+  /**
+   * Called when being rendered
+   */
+  render: [{ app: App }]
+  /**
+   * Called once before processing any files.
+   */
+  'process:start': [{ files: KubbFile.ResolvedFile[] }]
+
+  /**
+   * Called for each file when processing begins.
+   */
+  'file:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+
+  /**
+   * Called for each file when processing finishes.
+   */
+  'file:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+
+  /**
+   * Called periodically (or after each file) to indicate progress.
+   * Useful for progress bars or logging.
+   */
+  'process:progress': [
+    {
+      processed: number
+      total: number
+      percentage: number
+      file: KubbFile.ResolvedFile
+    },
+  ]
+
+  /**
+   * Called once all files have been processed successfully.
+   */
+  'process:end': [{ files: KubbFile.ResolvedFile[] }]
+}
+
 export function defineApp<THostElement, TContext extends AppContext>(instance: RootRenderFunction<THostElement, TContext>): DefineApp<TContext> {
   function createApp(rootComponent: Component, options?: TContext['options']): App {
-    const installedPlugins = new WeakSet()
-    const fileManager = new FileManager()
+    const events = new AsyncEventEmitter<Events>()
+    const installedPlugins = new WeakSet<Plugin | Parser>()
+    const fileManager = new FileManager({ events })
     const context = {
+      events,
       options,
       fileManager,
       async addFile(...newFiles) {
@@ -97,20 +149,26 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
           dryRun: options.dryRun,
         })
       },
-      use(plugin: Plugin, ...options: any[]) {
-        if (installedPlugins.has(plugin)) {
-          console.warn('Plugin has already been applied to target app.')
-        } else if (plugin && isFunction(plugin.install)) {
-          installedPlugins.add(plugin)
-          plugin.install(app, ...options)
-        } else if (isFunction(plugin)) {
-          installedPlugins.add(plugin)
-          plugin(app, ...options)
+      use(pluginOrParser, ...options) {
+        if (installedPlugins.has(pluginOrParser)) {
+          if (pluginOrParser.type === 'plugin') {
+            console.warn('Plugin has already been applied to target app.')
+          }
+          if (pluginOrParser.type === 'parser') {
+            console.warn('Parser has already been applied to target app.')
+          }
+        } else if (pluginOrParser && isFunction(pluginOrParser.install)) {
+          installedPlugins.add(pluginOrParser)
+          const installer = pluginOrParser.install.bind(context)
+
+          installer(context, ...options)
         }
 
         return app
       },
     }
+
+    events.emit('start', { app })
 
     return app
   }

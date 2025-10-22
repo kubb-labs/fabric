@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { defineApp, type AppContext } from './defineApp.ts'
 import { FileManager } from './FileManager.ts'
+import type * as KubbFile from './KubbFile.ts'
 
 const createRenderer = () => {
   const render = vi.fn()
@@ -76,8 +77,8 @@ describe('defineApp', () => {
     const spy = vi.spyOn(FileManager.prototype, 'add').mockResolvedValue([] as any)
     const app = defineApp(() => createRenderer())({})
 
-    const file = { path: '/tmp/a.ts', baseName: 'a.ts', sources: [] as any[] }
-    await app.addFile(file as any)
+    const file = { path: '/tmp/a.ts', baseName: 'a.ts', sources: [] as any[] } as KubbFile.File
+    await app.addFile(file)
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenCalledWith(file)
   })
@@ -88,5 +89,48 @@ describe('defineApp', () => {
 
     await app.waitUntilExit()
     expect(renderer.waitUntilExit).toHaveBeenCalledTimes(1)
+  })
+
+  test('use installs plugin with correct context and options; warns on duplicate', async () => {
+    const renderer = createRenderer()
+    const app = defineApp(() => renderer)({})
+
+    const install = vi.fn(function (this: AppContext, ctx: AppContext, ...opts: any[]) {
+      expect(this).toBe(ctx)
+      expect(opts).toEqual(['opt1', 'opt2'])
+    })
+
+    const plugin = { type: 'plugin' as const, name: 'mockPlugin', install }
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    app.use(plugin as any, 'opt1', 'opt2')
+    expect(install).toHaveBeenCalledTimes(1)
+
+    // duplicate usage should warn and not reinstall
+    app.use(plugin as any, 'opt1', 'opt2')
+    expect(warnSpy).toHaveBeenCalledWith('Plugin has already been applied to target app.')
+    expect(install).toHaveBeenCalledTimes(1)
+  })
+
+  test('use installs parser with correct context and options; warns on duplicate', async () => {
+    const renderer = createRenderer()
+    const app = defineApp(() => renderer)({})
+
+    const install = vi.fn(function (this: AppContext, ctx: AppContext, ...opts: any[]) {
+      expect(this).toBe(ctx)
+      expect(opts).toEqual(['a'])
+    })
+
+    const parser = { type: 'parser' as const, name: 'mockParser', install, print: vi.fn() }
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    app.use(parser as any, 'a')
+    expect(install).toHaveBeenCalledTimes(1)
+
+    app.use(parser as any, 'a')
+    expect(warnSpy).toHaveBeenCalledWith('Parser has already been applied to target app.')
+    expect(install).toHaveBeenCalledTimes(1)
   })
 })

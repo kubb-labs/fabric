@@ -1,85 +1,95 @@
 import type * as KubbFile from './KubbFile.ts'
-import { EventEmitter } from './utils/EventEmitter.ts'
 import { write } from './fs.ts'
 import pLimit from 'p-limit'
 import type { Parser } from './parsers/types.ts'
+import { defaultParser } from './parsers/default.ts'
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
+import type { Events } from './defineApp.ts'
 import { typeScriptParser } from './parsers/typescript.ts'
 import { tsxParser } from './parsers/tsx.ts'
-import { defaultParser } from './parsers/default.ts'
-
-type FileProcessorEvents = {
-  start: [{ files: KubbFile.ResolvedFile[] }]
-  finish: [{ files: KubbFile.ResolvedFile[] }]
-  'file:start': [{ file: KubbFile.ResolvedFile }]
-  'file:finish': [{ file: KubbFile.ResolvedFile }]
-}
 
 export type ProcessFilesProps = {
+  parsers?: Record<KubbFile.Extname, Parser<any>>
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
   dryRun?: boolean
 }
 
-type GetSourceOptions = {
+type GetParseOptions = {
   extname?: KubbFile.Extname
+  parsers?: Record<KubbFile.Extname, Parser<any>>
 }
 
-async function getParser<TMeta extends object = object>(extname: KubbFile.Extname | undefined): Promise<Parser<TMeta>> {
-  const parsers: Record<KubbFile.Extname, Parser<any>> = {
-    '.ts': typeScriptParser,
-    '.js': typeScriptParser,
-    '.jsx': tsxParser,
-    '.tsx': tsxParser,
-    '.json': defaultParser,
-  }
-
-  if (!extname) {
-    return defaultParser
-  }
-
-  const parser = parsers[extname]
-
-  if (!parser) {
-    console.warn(`[parser] No parser found for ${extname}, default parser will be used`)
-  }
-
-  return parser || defaultParser
+type Options = {
+  events?: AsyncEventEmitter<Events>
 }
 
-export class FileProcessor extends EventEmitter<FileProcessorEvents> {
+export class FileProcessor {
   #limit = pLimit(100)
+  events: AsyncEventEmitter<Events>
 
-  constructor(maxListener = 1000) {
-    super(maxListener)
+  constructor({ events = new AsyncEventEmitter<Events>() }: Options = {}) {
+    this.events = events
+
     return this
   }
 
-  async parse(file: KubbFile.ResolvedFile, { extname }: GetSourceOptions = {}): Promise<string> {
-    const parser = await getParser(file.extname)
+  get defaultParser(): Record<KubbFile.Extname, Parser<any>> {
+    return {
+      '.ts': typeScriptParser,
+      '.js': typeScriptParser,
+      '.jsx': tsxParser,
+      '.tsx': tsxParser,
+      '.json': defaultParser,
+    }
+  }
+
+  async parse(file: KubbFile.ResolvedFile, { parsers = this.defaultParser, extname }: GetParseOptions = {}): Promise<string> {
+    if (!extname) {
+      console.warn(`[parser] No parser found for ${extname}, default parser will be used`)
+      return defaultParser.print(file, { extname })
+    }
+
+    const parser = parsers[extname]
+
+    if (!parser) {
+      console.warn(`[parser] No parser found for ${extname}, default parser will be used`)
+
+      return defaultParser.print(file, { extname })
+    }
 
     return parser.print(file, { extname })
   }
 
-  async run(files: Array<KubbFile.ResolvedFile>, { dryRun, extension }: ProcessFilesProps = {}): Promise<KubbFile.ResolvedFile[]> {
-    this.emit('start', { files })
+  async run(files: Array<KubbFile.ResolvedFile>, { parsers, dryRun, extension }: ProcessFilesProps = {}): Promise<KubbFile.ResolvedFile[]> {
+    await this.events.emit('process:start', { files })
 
-    const promises = files.map((resolvedFile) =>
+    let processed = 0
+    const total = files.length
+
+    const promises = files.map((resolvedFile, index) =>
       this.#limit(async () => {
         const extname = extension?.[resolvedFile.extname] || undefined
 
-        this.emit('file:start', { file: resolvedFile })
+        await this.events.emit('file:start', { file: resolvedFile, index, total })
+
+        await this.events.emit('file:start', { file: resolvedFile, index, total })
 
         if (!dryRun) {
-          const source = await this.parse(resolvedFile, { extname })
+          const source = await this.parse(resolvedFile, { extname, parsers })
           await write(resolvedFile.path, source, { sanity: false })
         }
 
-        this.emit('file:finish', { file: resolvedFile })
+        await this.events.emit('process:progress', { file: resolvedFile, processed, percentage: (processed / total) * 100, total })
+
+        await this.events.emit('file:end', { file: resolvedFile, index, total })
+
+        processed++
       }),
     )
 
     await Promise.all(promises)
 
-    this.emit('finish', { files })
+    await this.events.emit('process:end', { files })
 
     return files
   }

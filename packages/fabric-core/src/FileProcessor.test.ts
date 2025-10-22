@@ -1,61 +1,98 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { describe, test, expect } from 'vitest'
 
 import { FileProcessor } from './FileProcessor.ts'
-import * as FsMod from './fs.ts'
-import type * as KubbFile from './KubbFile.ts'
-
-const makeFile = (overrides: Partial<KubbFile.ResolvedFile> = {}): KubbFile.ResolvedFile =>
-  ({
-    id: overrides.id ?? '1',
-    name: overrides.name ?? 'index',
-    baseName: overrides.baseName ?? 'index.ts',
-    path: overrides.path ?? '/tmp/index.ts',
-    extname: overrides.extname ?? '.ts',
-    sources: overrides.sources ?? [],
-    imports: overrides.imports ?? [],
-    exports: overrides.exports ?? [],
-    meta: overrides.meta ?? {},
-  }) as any
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
+import { createFile } from './createFile.ts'
 
 describe('FileProcessor', () => {
-  beforeEach(() => {
-    vi.restoreAllMocks()
+  test('parse() uses TypeScript parser for .ts', async () => {
+    const processor = new FileProcessor()
+
+    const file = createFile({
+      baseName: 'test.ts',
+      path: 'models/ts/test.ts',
+      imports: [
+        {
+          name: ['A'],
+          path: './a.ts',
+          isTypeOnly: true,
+        },
+      ],
+      sources: [
+        {
+          value: 'export type X = A',
+        },
+      ],
+    })
+
+    const code = await processor.parse(file, { extname: '.ts' })
+
+    expect(code).toContain('import type { A } from "./a.ts"')
+    expect(code).toContain('export type X = A')
   })
 
-  test('parse and emit hooks', async () => {
-    const file = makeFile({ id: 'c', path: '/tmp/c.ts', baseName: 'c.ts', name: 'c' })
-    const files = [file]
-
-    const writeSpy = vi.spyOn(FsMod, 'write').mockResolvedValue('IGNORED')
-
+  test('parse() uses default parser for .json', async () => {
     const processor = new FileProcessor()
-    const parseSpy = vi.spyOn(processor as any, 'parse').mockResolvedValue('IGNORED')
 
-    const starts: any[] = []
-    const fileStarts: any[] = []
-    const fileFinishes: any[] = []
-    const finishes: any[] = []
+    const file = createFile({
+      baseName: 'test.json',
+      path: 'models/ts/test.json',
+      imports: [],
+      sources: [{ value: '{"a":1}' }, { value: '{"b":2}' }],
+    })
 
-    processor.on('start', (payload) => starts.push(payload))
-    processor.on('file:start', (payload) => fileStarts.push(payload))
-    processor.on('file:finish', (payload) => fileFinishes.push(payload))
-    processor.on('finish', (payload) => finishes.push(payload))
+    const code = await processor.parse(file, { extname: '.json' })
 
-    const result = await processor.run(files, { extension: {} })
+    expect(code).toBe('{"a":1}' + '\n\n' + '{"b":2}')
+    expect(code.includes('import ')).toBe(false)
+  })
 
-    expect(result).toEqual(files)
+  test('run() emits lifecycle events (simple)', async () => {
+    const events = new AsyncEventEmitter()
+    const processor = new FileProcessor({ events })
 
-    expect(starts).toHaveLength(1)
-    expect(fileStarts).toHaveLength(1)
-    expect(fileFinishes).toHaveLength(1)
-    expect(finishes).toHaveLength(1)
+    const files = [
+      createFile({
+        baseName: 'a.ts',
+        path: 'models/ts/a.ts',
+        sources: [{ value: 'export const a = 1' }],
+      }),
+      createFile({
+        baseName: 'b.ts',
+        path: 'models/ts/b.ts',
+        sources: [{ value: 'export const b = 2' }],
+      }),
+    ]
 
-    expect(starts[0].files).toEqual(files)
-    expect(fileStarts[0].file).toEqual(file)
-    expect(fileFinishes[0].file).toEqual(file)
-    expect(finishes[0].files).toEqual(files)
+    let processStart = 0
+    let processEnd = 0
+    let fileStart = 0
+    let fileEnd = 0
+    let progress = 0
 
-    expect(parseSpy).toHaveBeenCalled()
-    expect(writeSpy).toHaveBeenCalled()
+    events.on('process:start', () => {
+      processStart++
+    })
+    events.on('process:end', () => {
+      processEnd++
+    })
+    events.on('file:start', () => {
+      fileStart++
+    })
+    events.on('file:end', () => {
+      fileEnd++
+    })
+    events.on('process:progress', () => {
+      progress++
+    })
+
+    const result = await processor.run(files, { dryRun: true })
+
+    expect(result).toBe(files as any)
+    expect(processStart).toBe(1)
+    expect(processEnd).toBe(1)
+    expect(fileStart).toBe(files.length * 2)
+    expect(fileEnd).toBe(files.length)
+    expect(progress).toBe(files.length)
   })
 })

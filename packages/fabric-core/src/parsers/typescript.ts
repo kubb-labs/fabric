@@ -1,7 +1,7 @@
 import ts from 'typescript'
 import { getRelativePath, trimExtName } from '../fs.ts'
 import path from 'node:path'
-import { createFileParser } from './createFileParser.ts'
+import { createParser } from './createParser.ts'
 
 const { factory } = ts
 
@@ -147,7 +147,9 @@ export function createExport({
   )
 }
 
-export const typeScriptParser = createFileParser({
+export const typeScriptParser = createParser({
+  name: 'typescript',
+  install() {},
   async print(file, options = { extname: '.ts' }) {
     const source = file.sources.map((item) => item.value).join('\n\n')
 

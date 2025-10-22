@@ -1,6 +1,7 @@
 import path from 'node:path'
 
 import { FileManager } from './FileManager.ts'
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 describe('FileManager', () => {
   test('fileManager.add also adds the files to the cache', async () => {
@@ -150,5 +151,52 @@ describe('FileManager', () => {
     expect(expectedRemovedFile).toBeUndefined()
   })
 
-  test.todo('fileManager.processor.run')
+  test('fileManager.processor.run', async () => {
+    const events = new AsyncEventEmitter()
+    const fileManager = new FileManager({ events })
+    let processStart = 0
+    let processEnd = 0
+    let fileStart = 0
+    let fileEnd = 0
+    let progress = 0
+
+    await fileManager.add(
+      {
+        path: path.resolve('./src/a.ts'),
+        baseName: 'a.ts',
+        sources: [],
+      },
+      {
+        path: path.resolve('./src/b.ts'),
+        baseName: 'b.ts',
+        sources: [],
+      },
+    )
+
+    events.on('process:start', () => {
+      processStart++
+    })
+    events.on('process:end', () => {
+      processEnd++
+    })
+    events.on('file:start', () => {
+      fileStart++
+    })
+    events.on('file:end', () => {
+      fileEnd++
+    })
+    events.on('process:progress', () => {
+      progress++
+    })
+
+    const files = fileManager.files
+    const result = await fileManager.processor.run(files, { dryRun: true })
+
+    expect(result).toBe(files)
+    expect(processStart).toBe(1)
+    expect(processEnd).toBe(1)
+    expect(fileStart).toBe(files.length * 2)
+    expect(fileEnd).toBe(files.length)
+    expect(progress).toBe(files.length)
+  })
 })
