@@ -1,16 +1,15 @@
 import type ts from 'typescript'
-import { format } from '../../mocks/format.ts'
 
 import { print, createImport, createExport, typescriptParser } from './typescriptParser.ts'
 
 const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
-  return format(print([elements].flat().filter(Boolean)))
+  return print([elements].flat().filter(Boolean))
 }
 
 describe('TypeScript parser', () => {
   test('createImport', async () => {
     expect(
-      await formatTS(
+     formatTS(
         createImport({
           name: 'hello',
           path: './hello.ts',
@@ -19,7 +18,7 @@ describe('TypeScript parser', () => {
     ).toMatchSnapshot()
 
     expect(
-      await formatTS(
+     formatTS(
         createImport({
           name: 'hello',
           path: './hello.ts',
@@ -29,7 +28,7 @@ describe('TypeScript parser', () => {
     ).toMatchSnapshot()
 
     expect(
-      await formatTS(
+     formatTS(
         createImport({
           name: ['hello'],
           path: './hello.ts',
@@ -38,7 +37,7 @@ describe('TypeScript parser', () => {
     ).toMatchSnapshot()
 
     expect(
-      await formatTS(
+     formatTS(
         createImport({
           name: 'hello',
           path: './hello.ts',
@@ -48,7 +47,7 @@ describe('TypeScript parser', () => {
     ).toMatchSnapshot()
 
     expect(
-      await formatTS(
+     formatTS(
         createImport({
           name: [{ propertyName: 'hello', name: 'helloWorld' }],
           path: './hello.ts',
@@ -59,7 +58,7 @@ describe('TypeScript parser', () => {
 
   test('createExport', async () => {
     expect(
-      await formatTS(
+     formatTS(
         createExport({
           path: './hello.ts',
         }),
@@ -67,7 +66,7 @@ describe('TypeScript parser', () => {
     ).toMatchSnapshot()
 
     expect(
-      await formatTS(
+     formatTS(
         createExport({
           name: ['hello', 'world'],
           asAlias: true,
@@ -77,7 +76,7 @@ describe('TypeScript parser', () => {
     ).toMatchSnapshot()
 
     expect(
-      await formatTS(
+     formatTS(
         createExport({
           name: 'hello',
           asAlias: true,
@@ -87,7 +86,7 @@ describe('TypeScript parser', () => {
     ).toMatchSnapshot()
 
     try {
-      await formatTS(
+     formatTS(
         createExport({
           name: 'hello',
           path: './hello.ts',
@@ -113,7 +112,7 @@ describe('TypeScript parser', () => {
       meta: {},
     } as any
 
-    const output = await typescriptParser.parse(file, { extname: '.ts' as any })
-    expect(await format(output)).toMatchSnapshot()
+    const output =await typescriptParser.parse(file, { extname: '.ts' as any })
+    expect(output).toMatchSnapshot()
   })
 })
