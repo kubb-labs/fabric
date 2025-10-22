@@ -7,7 +7,7 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
  */
 function App() {
   return (
-    <File path={path.resolve(__dirname, 'App.tsx')} baseName={'App.tsx'}>
+    <File path={path.resolve(__dirname, 'gen/App.tsx')} baseName={'App.tsx'}>
       <File.Source>
         <Function export name={'Users'}>
           {`

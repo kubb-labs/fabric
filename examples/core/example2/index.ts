@@ -6,7 +6,7 @@ export const app = createApp()
 
 app.addFile({
   baseName: 'test.ts',
-  path: './example2/test.ts',
+  path: './example2/gen/test.ts',
   sources: [
     {
       name: 'test',

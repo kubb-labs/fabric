@@ -32,7 +32,7 @@ function App() {
   }
 
   return (
-    <File path={path.resolve(__dirname, 'result.ts')} baseName={'result.ts'}>
+    <File path={path.resolve(__dirname, 'gen/result.ts')} baseName={'result.ts'}>
       <File.Source>
         <Const name={'names'}>"{names.join(' and ')}"</Const>
         <br />

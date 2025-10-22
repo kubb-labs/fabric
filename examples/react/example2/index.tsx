@@ -8,7 +8,7 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
  */
 function App() {
   return (
-    <File path={path.resolve(__dirname, 'result.ts')} baseName={'result.ts'}>
+    <File path={path.resolve(__dirname, 'gen/result.ts')} baseName={'result.ts'}>
       <File.Source>
         <Const name={'hello'}>"World!"</Const>
       </File.Source>

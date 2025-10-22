@@ -6,8 +6,8 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
  * Create 2 files and write them to the file-system
  */
 function App() {
-  const namesPath = path.resolve(__dirname, 'name.ts')
-  const helloWorldPath = path.resolve(__dirname, 'result.ts')
+  const namesPath = path.resolve(__dirname, 'gen/name.ts')
+  const helloWorldPath = path.resolve(__dirname, 'gen/result.ts')
 
   return (
     <>
