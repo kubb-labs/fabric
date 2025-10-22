@@ -15,7 +15,10 @@ describe('TypeScript parser', () => {
           path: './hello.ts',
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "import hello from "./hello.ts";
+      "
+    `)
 
     expect(
      formatTS(
@@ -25,7 +28,10 @@ describe('TypeScript parser', () => {
           isTypeOnly: true,
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "import type hello from "./hello.ts";
+      "
+    `)
 
     expect(
      formatTS(
@@ -34,7 +40,10 @@ describe('TypeScript parser', () => {
           path: './hello.ts',
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "import { hello } from "./hello.ts";
+      "
+    `)
 
     expect(
      formatTS(
@@ -44,7 +53,10 @@ describe('TypeScript parser', () => {
           isNameSpace: true,
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "import * as hello from "./hello.ts";
+      "
+    `)
 
     expect(
      formatTS(
@@ -53,7 +65,10 @@ describe('TypeScript parser', () => {
           path: './hello.ts',
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "import { hello as helloWorld } from "./hello.ts";
+      "
+    `)
   })
 
   test('createExport', async () => {
@@ -63,7 +78,10 @@ describe('TypeScript parser', () => {
           path: './hello.ts',
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "export * from "./hello.ts";
+      "
+    `)
 
     expect(
      formatTS(
@@ -73,7 +91,10 @@ describe('TypeScript parser', () => {
           path: './hello.ts',
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "export { hello, world } from "./hello.ts";
+      "
+    `)
 
     expect(
      formatTS(
@@ -83,7 +104,10 @@ describe('TypeScript parser', () => {
           path: './hello.ts',
         }),
       ),
-    ).toMatchSnapshot()
+    ).toMatchInlineSnapshot(`
+      "export * as hello from "./hello.ts";
+      "
+    `)
 
     try {
      formatTS(
@@ -113,6 +137,17 @@ describe('TypeScript parser', () => {
     } as any
 
     const output =await typescriptParser.parse(file, { extname: '.ts' as any })
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`
+      "// banner
+      import foo from "./utils.ts";
+      import { bar } from "./bar.ts";
+      export * from "./hello.ts";
+      export { alpha, beta } from "./names.ts";
+
+      export const x = 1
+
+      export const y = 2
+      // footer"
+    `)
   })
 })
