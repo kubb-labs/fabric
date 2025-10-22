@@ -1,5 +1,5 @@
 import { FileManager } from './FileManager.ts'
-import { isFunction, isPromise } from 'remeda'
+import { isFunction } from 'remeda'
 import type { Plugin } from './plugins/types.ts'
 import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
@@ -34,11 +34,7 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
     const app = {
       _component: rootComponent,
       async render() {
-        if (isPromise(render)) {
-          await render()
-        } else {
-          render()
-        }
+        return Promise.resolve(render())
       },
       async renderToString() {
         return renderToString()
@@ -51,7 +47,7 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
         await fileManager.add(...newFiles)
       },
       use(pluginOrParser, ...options) {
-        const args = Array.isArray(options) ? options : [options[0]]
+        const args = options
 
         if (pluginOrParser.type === 'plugin') {
           if (installedPlugins.has(pluginOrParser)) {

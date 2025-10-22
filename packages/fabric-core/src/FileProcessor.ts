@@ -1,6 +1,5 @@
 import type * as KubbFile from './KubbFile.ts'
 import pLimit from 'p-limit'
-import path from 'node:path'
 
 import type { Parser } from './parsers/types.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
@@ -27,26 +26,29 @@ type Options = {
 export class FileProcessor {
   #limit = pLimit(100)
   events: AsyncEventEmitter<AppEvents>
+  readonly #defaultParsers: Set<Parser>
 
   constructor({ events = new AsyncEventEmitter<AppEvents>() }: Options = {}) {
     this.events = events
+    this.#defaultParsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])
 
     return this
   }
 
-  get #defaultParser(): Set<Parser> {
-    return new Set<Parser>([typescriptParser, tsxParser, defaultParser])
-  }
-
-  async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParser, extension }: GetParseOptions = {}): Promise<string> {
-    const extname = path.extname(file.path) as KubbFile.Extname
+  async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParsers, extension }: GetParseOptions = {}): Promise<string> {
     const parseExtName = extension?.[file.extname] || undefined
 
-    if (!extname) {
+    if (!file.extname) {
       return defaultParser.parse(file, { extname: parseExtName })
     }
 
-    const parser = [...parsers].find((item) => item.extNames?.includes(extname))
+    let parser: Parser | undefined
+    for (const item of parsers) {
+      if (item.extNames?.includes(file.extname)) {
+        parser = item
+        break
+      }
+    }
 
     if (!parser) {
       return defaultParser.parse(file, { extname: parseExtName })
@@ -67,7 +69,10 @@ export class FileProcessor {
 
         if (!dryRun) {
           const source = await this.parse(resolvedFile, { extension, parsers })
-          await this.events.emit('process:progress', { file: resolvedFile, source, processed, percentage: (processed / total) * 100, total })
+          const nextProcessed = processed + 1
+          const percentage = (nextProcessed / total) * 100
+          processed = nextProcessed
+          await this.events.emit('process:progress', { file: resolvedFile, source, processed, percentage, total })
         }
 
         await this.events.emit('file:end', { file: resolvedFile, index, total })
