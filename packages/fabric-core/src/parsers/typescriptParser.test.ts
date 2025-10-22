@@ -9,7 +9,7 @@ const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
 describe('TypeScript parser', () => {
   test('createImport', async () => {
     expect(
-     formatTS(
+      formatTS(
         createImport({
           name: 'hello',
           path: './hello.ts',
@@ -21,7 +21,7 @@ describe('TypeScript parser', () => {
     `)
 
     expect(
-     formatTS(
+      formatTS(
         createImport({
           name: 'hello',
           path: './hello.ts',
@@ -34,7 +34,7 @@ describe('TypeScript parser', () => {
     `)
 
     expect(
-     formatTS(
+      formatTS(
         createImport({
           name: ['hello'],
           path: './hello.ts',
@@ -46,7 +46,7 @@ describe('TypeScript parser', () => {
     `)
 
     expect(
-     formatTS(
+      formatTS(
         createImport({
           name: 'hello',
           path: './hello.ts',
@@ -59,7 +59,7 @@ describe('TypeScript parser', () => {
     `)
 
     expect(
-     formatTS(
+      formatTS(
         createImport({
           name: [{ propertyName: 'hello', name: 'helloWorld' }],
           path: './hello.ts',
@@ -73,7 +73,7 @@ describe('TypeScript parser', () => {
 
   test('createExport', async () => {
     expect(
-     formatTS(
+      formatTS(
         createExport({
           path: './hello.ts',
         }),
@@ -84,7 +84,7 @@ describe('TypeScript parser', () => {
     `)
 
     expect(
-     formatTS(
+      formatTS(
         createExport({
           name: ['hello', 'world'],
           asAlias: true,
@@ -97,7 +97,7 @@ describe('TypeScript parser', () => {
     `)
 
     expect(
-     formatTS(
+      formatTS(
         createExport({
           name: 'hello',
           asAlias: true,
@@ -110,7 +110,7 @@ describe('TypeScript parser', () => {
     `)
 
     try {
-     formatTS(
+      formatTS(
         createExport({
           name: 'hello',
           path: './hello.ts',
@@ -136,7 +136,7 @@ describe('TypeScript parser', () => {
       meta: {},
     } as any
 
-    const output =await typescriptParser.parse(file, { extname: '.ts' as any })
+    const output = await typescriptParser.parse(file, { extname: '.ts' as any })
     expect(output).toMatchInlineSnapshot(`
       "// banner
       import foo from "./utils.ts";
