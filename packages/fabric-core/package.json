@@ -38,6 +38,10 @@
       "import": "./dist/parsers/typescript.js",
       "require": "./dist/parsers/typescript.cjs"
     },
+    "./plugins/fs": {
+      "import": "./dist/plugins/fs.js",
+      "require": "./dist/plugins/fs.cjs"
+    },
     "./types": {
       "import": "./dist/types.js",
       "require": "./dist/types.cjs"
@@ -57,6 +61,9 @@
       ],
       "parsers/default": [
         "./dist/parsers/default.d.ts"
+      ],
+      "plugins/fs": [
+        "./dist/plugins/fs.d.ts"
       ],
       "types": [
         "./dist/types.d.ts"

@@ -190,12 +190,12 @@ describe('FileManager', () => {
     })
 
     const files = fileManager.files
-    const result = await fileManager.processor.run(files, { dryRun: true })
+    const result = await fileManager.processor.run(files)
 
     expect(result).toBe(files)
     expect(processStart).toBe(1)
     expect(processEnd).toBe(1)
-    expect(fileStart).toBe(files.length * 2)
+    expect(fileStart).toBe(files.length)
     expect(fileEnd).toBe(files.length)
     expect(progress).toBe(files.length)
   })

@@ -2,8 +2,9 @@ import { createParser } from './createParser.ts'
 
 export const defaultParser = createParser({
   name: 'default',
+  extNames: ['.json'],
   install() {},
-  async print(file) {
+  async parse(file) {
     return file.sources.map((item) => item.value).join('\n\n')
   },
 })

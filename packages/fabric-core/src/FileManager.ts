@@ -1,6 +1,6 @@
 import type * as KubbFile from './KubbFile.ts'
 import { Cache } from './utils/Cache.ts'
-import { trimExtName } from './fs.ts'
+import { trimExtName } from './utils/trimExtName.ts'
 import { orderBy } from 'natural-orderby'
 import { createFile } from './createFile.ts'
 import { FileProcessor, type ProcessFilesProps } from './FileProcessor.ts'

@@ -1,0 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TypeScript parser > createExport 1`] = `
+"export * from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > createExport 2`] = `
+"export { hello, world } from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > createExport 3`] = `
+"export * as hello from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > createImport 1`] = `
+"import hello from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > createImport 2`] = `
+"import type hello from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > createImport 3`] = `
+"import { hello } from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > createImport 4`] = `
+"import * as hello from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > createImport 5`] = `
+"import { hello as helloWorld } from './hello.ts'
+"
+`;
+
+exports[`TypeScript parser > typeScriptParser.print combines banner/imports/exports/sources/footer and respects extname 1`] = `
+"// banner
+import foo from './utils.ts'
+import { bar } from './bar.ts'
+export * from './hello.ts'
+export { alpha, beta } from './names.ts'
+
+export const x = 1
+
+export const y = 2
+// footer
+"
+`;

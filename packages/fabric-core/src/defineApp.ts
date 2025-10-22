@@ -24,7 +24,6 @@ export type AppContext<TOptions = unknown> = {
   clear: () => void
 }
 
-//TODO add this. context
 export type Install<TOptions = any[]> = TOptions extends unknown[]
   ? (this: AppContext, context: AppContext, ...options: TOptions) => any
   : (this: AppContext, context: AppContext, options: TOptions) => any
@@ -41,9 +40,9 @@ export interface App {
   render(): Promise<void>
   renderToString(): Promise<string>
   files: Array<KubbFile.ResolvedFile>
-  use<TOptions extends any[] = any[], TMeta extends object = object>(
+  use<TOptions extends any[] | object = any, TMeta extends object = object>(
     pluginOrParser: Plugin<TOptions> | Parser<TOptions, TMeta>,
-    ...options: NoInfer<TOptions>
+    ...options: TOptions extends any[] ? NoInfer<TOptions> : [NoInfer<TOptions>]
   ): this
   write(options?: WriteOptions): Promise<void>
   addFile(...files: Array<KubbFile.File>): Promise<void>
@@ -89,6 +88,7 @@ export type Events = {
       processed: number
       total: number
       percentage: number
+      source: string
       file: KubbFile.ResolvedFile
     },
   ]
@@ -102,7 +102,8 @@ export type Events = {
 export function defineApp<THostElement, TContext extends AppContext>(instance: RootRenderFunction<THostElement, TContext>): DefineApp<TContext> {
   function createApp(rootComponent: Component, options?: TContext['options']): App {
     const events = new AsyncEventEmitter<Events>()
-    const installedPlugins = new WeakSet<Plugin | Parser>()
+    const installedPlugins = new Set<Plugin>()
+    const installedParsers = new Set<Parser>()
     const fileManager = new FileManager({ events })
     const context = {
       events,
@@ -147,21 +148,30 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
         await fileManager.write({
           extension: options.extension,
           dryRun: options.dryRun,
+          parsers: installedParsers,
         })
       },
       use(pluginOrParser, ...options) {
-        if (installedPlugins.has(pluginOrParser)) {
-          if (pluginOrParser.type === 'plugin') {
+        if (pluginOrParser.type === 'plugin') {
+          if (installedPlugins.has(pluginOrParser)) {
             console.warn('Plugin has already been applied to target app.')
+          } else {
+            installedPlugins.add(pluginOrParser)
           }
-          if (pluginOrParser.type === 'parser') {
+        }
+        if (pluginOrParser.type === 'parser') {
+          if (installedParsers.has(pluginOrParser)) {
             console.warn('Parser has already been applied to target app.')
+          } else {
+            installedParsers.add(pluginOrParser)
           }
-        } else if (pluginOrParser && isFunction(pluginOrParser.install)) {
-          installedPlugins.add(pluginOrParser)
+        }
+
+        if (pluginOrParser && isFunction(pluginOrParser.install)) {
           const installer = pluginOrParser.install.bind(context)
 
-          installer(context, ...options)
+          const args = Array.isArray(options) ? options : [options[0]]
+          ;(installer as any)(context, ...args)
         }
 
         return app

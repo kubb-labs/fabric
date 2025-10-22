@@ -5,13 +5,14 @@ import { createParser } from './createParser.ts'
 describe('createParser', () => {
   test('returns a parser object with type and provided properties', async () => {
     const install = vi.fn()
-    const print = vi.fn().mockResolvedValue('printed')
+    const parse = vi.fn().mockResolvedValue('printed')
 
-    const userParser = {
+    const userParser = createParser({
       name: 'testParser',
+      extNames: ['.ts'],
       install,
-      print,
-    }
+      parse,
+    })
 
     const parser = createParser(userParser)
 
@@ -19,8 +20,8 @@ describe('createParser', () => {
     expect(parser.name).toBe('testParser')
     expect(parser.install).toBe(install)
 
-    const result = await parser.print({} as any, {})
-    expect(print).toHaveBeenCalledTimes(1)
+    const result = await parser.parse({} as any, {})
+    expect(parse).toHaveBeenCalledTimes(1)
     expect(result).toBe('printed')
   })
 })

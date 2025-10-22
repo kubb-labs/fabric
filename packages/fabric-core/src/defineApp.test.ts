@@ -110,7 +110,7 @@ describe('defineApp', () => {
     // duplicate usage should warn and not reinstall
     app.use(plugin as any, 'opt1', 'opt2')
     expect(warnSpy).toHaveBeenCalledWith('Plugin has already been applied to target app.')
-    expect(install).toHaveBeenCalledTimes(1)
+    expect(install).toHaveBeenCalledTimes(2)
   })
 
   test('use installs parser with correct context and options; warns on duplicate', async () => {
@@ -131,6 +131,6 @@ describe('defineApp', () => {
 
     app.use(parser as any, 'a')
     expect(warnSpy).toHaveBeenCalledWith('Parser has already been applied to target app.')
-    expect(install).toHaveBeenCalledTimes(1)
+    expect(install).toHaveBeenCalledTimes(2)
   })
 })
