@@ -1,5 +1,7 @@
 import type * as KubbFile from './KubbFile.ts'
 import pLimit from 'p-limit'
+import path from 'node:path'
+
 import type { Parser } from './parsers/types.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
@@ -63,7 +65,7 @@ export class FileProcessor {
 
     const promises = files.map((resolvedFile, index) =>
       this.#limit(async () => {
-        const extname = extension?.[resolvedFile.extname] || undefined
+        const extname = extension?.[resolvedFile.extname] || (path.extname(resolvedFile.path) as KubbFile.Extname)
 
         await this.events.emit('file:start', { file: resolvedFile, index, total })
 
