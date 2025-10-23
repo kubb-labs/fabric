@@ -1,22 +1,6 @@
 
 import {beforeEach, describe, expect, test, vi} from 'vitest'
 
-const hoisted = vi.hoisted(() => {
-  const fileManagerInstance = {
-    files: [],
-    add: vi.fn().mockResolvedValue([] as any),
-  }
-  class FileManagerMock {
-    files = fileManagerInstance.files
-    add = fileManagerInstance.add
-  }
-  return { fileManagerInstance, FileManagerMock }
-})
-
-vi.mock('../FileManager.ts', () => ({
-  FileManager: hoisted.FileManagerMock,
-}))
-
 import {barrelPlugin, getBarrelFiles} from './barrelPlugin.ts'
 import { createFile } from '../createFile.ts'
 import {defineApp} from "../defineApp.ts";
@@ -70,8 +54,6 @@ const files= [
     ],
   }),
 ]
-const countFiles = 4
-const countSources = 6
 
 describe('getBarrelFiles', () => {
   beforeEach(() => {
@@ -87,7 +69,7 @@ describe('getBarrelFiles', () => {
     expect(barrelFiles.every((f) => f.sources.every(s=>s.isIndexable && s.isExportable))).toBe(true)
 
     const rootIndex = barrelFiles.find((f) => f.path === 'src/index.ts')!
-    expect(rootIndex.exports?.length).toBe(countSources)
+    expect(rootIndex.exports?.length).toBe(6)
   })
 
   test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", () => {
@@ -100,7 +82,7 @@ describe('getBarrelFiles', () => {
     expect(barrelFiles.every((f) => f.sources.every(s=>s.isIndexable && s.isExportable))).toBe(true)
 
     const rootIndex = barrelFiles.find((f) => f.path === 'src/index.ts')!
-    expect(rootIndex.exports?.length).toBe(countSources)
+    expect(rootIndex.exports?.length).toBe(6)
   })
 
   test("mode 'propagate' should not generate any barrel files", () => {
@@ -124,26 +106,34 @@ describe('barrelPlugin', () => {
     app.use(barrelPlugin,{mode: "propagate", root:'src'})
     app.addFile(...files)
 
+    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+
     app.writeEntry({
       root: 'src',
       mode: 'all'
     })
-    expect(hoisted.fileManagerInstance.add).toHaveBeenCalledTimes(2)
+
+    expect(addSpy).toHaveBeenCalledTimes(1)
+    expect(addSpy).toHaveBeenCalledWith(expect.objectContaining({ "baseName": "index.ts",             }))
 
   })
 
   test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", async() => {
     const app = defineApp()()
 
-    app.use(barrelPlugin,{mode: "propagate", root:''})
+    app.use(barrelPlugin,{mode: "propagate", root:'src'})
     await app.addFile(...files)
+
+    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+
 
     await app.writeEntry({
       root: 'src',
       mode: 'named'
     })
 
-    expect(hoisted.fileManagerInstance.add).toHaveBeenCalledTimes(countFiles)
+    expect(addSpy).toHaveBeenCalledTimes(1)
+    expect(addSpy).toHaveBeenCalledWith(expect.objectContaining({ "baseName": "index.ts",             }))
 
   })
 
@@ -153,12 +143,15 @@ describe('barrelPlugin', () => {
     app.use(barrelPlugin,{mode: "propagate", root:'src'})
     app.addFile(...files)
 
+    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+
     app.writeEntry({
       root: 'src',
       mode: 'propagate'
     })
 
-    expect(hoisted.fileManagerInstance.add).toHaveBeenCalledTimes(countSources)
+    expect(addSpy).toHaveBeenCalledTimes(1)
+    expect(addSpy).toHaveBeenCalledWith(expect.objectContaining({ "baseName": "index.ts",             }))
 
   })
   test("mode false should not generate any barrel files", async () => {
@@ -167,12 +160,14 @@ describe('barrelPlugin', () => {
     app.use(barrelPlugin,{mode: "propagate", root:'src'})
     await app.addFile(...files)
 
+    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+
     await app.writeEntry({
       root: 'src',
       mode: false
     })
 
-    expect(hoisted.fileManagerInstance.add).toHaveBeenCalledTimes(files.length)
+    expect(addSpy).toHaveBeenCalledTimes(0)
   })
 })
 
