@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.1.5
+
+### Patch Changes
+
+- [`c7f32d4`](https://github.com/kubb-labs/fabric/commit/c7f32d470ae88c0667356c4f788d3292ad5f5410) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - Correct use declare global with Kubb.App interface
+
 ## 0.1.4
 
 ### Patch Changes
