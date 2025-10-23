@@ -41,7 +41,7 @@ declare global {
 export const reactPlugin = createPlugin<Options, ExtendOptions>({
   name: 'react',
   install() {},
-  inject(app, options: Options = {}) {
+  inject(app, options = {}) {
     const runtime = new Runtime({ fileManager: app.context.fileManager, ...options })
 
     return {
