@@ -4,6 +4,12 @@ import type { Parser } from './parsers/types.ts'
 import type { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { FileManager } from './FileManager.ts'
 
+declare global {
+  namespace Kubb {
+    interface App {}
+  }
+}
+
 export type Component = any
 
 export type AppEvents = {
@@ -74,7 +80,7 @@ export type Inject<TOptions = any[] | object | undefined, TAppExtension extends 
     ? (app: App, options?: TOptions) => Partial<TAppExtension>
     : (app: App) => Partial<TAppExtension>
 
-export interface App<TOptions = unknown> {
+export interface App<TOptions = unknown> extends Kubb.App {
   context: AppContext<TOptions>
   files: Array<KubbFile.ResolvedFile>
   use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(

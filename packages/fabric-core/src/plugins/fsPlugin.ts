@@ -80,9 +80,19 @@ export async function write(path: string, data: string, options: { sanity?: bool
   )(path, data.trim(), options)
 }
 
-declare module '../index.ts' {
+// biome-ignore lint/suspicious/noTsIgnore: production ready
+// @ts-ignore
+declare module '@kubb/fabric-core' {
   interface App {
     write(options?: WriteOptions): Promise<void>
+  }
+}
+
+declare global {
+  namespace Kubb {
+    interface App {
+      write(options?: WriteOptions): Promise<void>
+    }
   }
 }
 

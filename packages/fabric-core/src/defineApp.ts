@@ -3,7 +3,9 @@ import { isFunction } from 'remeda'
 import type { Plugin } from './plugins/types.ts'
 import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { App, AppContext, Component, AppEvents } from './App.ts'
+import type { AppContext, Component, AppEvents } from './App.ts'
+
+import type { App } from './index.ts'
 
 type RootRenderFunction<TApp extends App> = (app: TApp) => void | Promise<void>
 

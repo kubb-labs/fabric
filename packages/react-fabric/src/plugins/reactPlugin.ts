@@ -18,11 +18,23 @@ type ExtendOptions = {
   waitUntilExit(): Promise<void>
 }
 
+// biome-ignore lint/suspicious/noTsIgnore: production ready
+// @ts-ignore
 declare module '@kubb/fabric-core' {
   interface App {
     render(App: ElementType): Promise<void> | void
     renderToString(App: ElementType): Promise<string> | string
     waitUntilExit(): Promise<void>
+  }
+}
+
+declare global {
+  namespace Kubb {
+    interface App {
+      render(App: ElementType): Promise<void> | void
+      renderToString(App: ElementType): Promise<string> | string
+      waitUntilExit(): Promise<void>
+    }
   }
 }
 
