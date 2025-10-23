@@ -68,14 +68,9 @@ export function defineApp<TOptions = unknown>(instance?: RootRenderFunction<App<
       },
     } as App<TOptions>
 
-    // start
-    events.emit('start')
     if (instance) {
       instance(app)
     }
-
-    // end
-    events.emit('end')
 
     return app
   }

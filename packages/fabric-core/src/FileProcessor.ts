@@ -31,8 +31,14 @@ export class FileProcessor {
     return this
   }
 
-  async parse(file: KubbFile.ResolvedFile, { parsers = new Set(), extension }: GetParseOptions = {}): Promise<string> {
+  async parse(file: KubbFile.ResolvedFile, { parsers, extension }: GetParseOptions = {}): Promise<string> {
     const parseExtName = extension?.[file.extname] || undefined
+
+    if (!parsers) {
+      console.warn('No parsers provided, using default parser. If you want to use a specific parser, please provide it in the options.')
+
+      return defaultParser.parse(file, { extname: parseExtName })
+    }
 
     if (!file.extname) {
       return defaultParser.parse(file, { extname: parseExtName })

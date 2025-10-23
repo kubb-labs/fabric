@@ -22,10 +22,13 @@ type Options = {
 
 export class FileManager {
   #cache = new Cache<KubbFile.ResolvedFile>()
+  events: AsyncEventEmitter<AppEvents>
   processor: FileProcessor
 
   constructor({ events = new AsyncEventEmitter<AppEvents>() }: Options = {}) {
     this.processor = new FileProcessor({ events })
+
+    this.events = events
     return this
   }
 
