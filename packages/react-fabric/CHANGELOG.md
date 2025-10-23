@@ -1,5 +1,37 @@
 # @kubb/react-fabric
 
+## 0.1.5
+
+### Patch Changes
+
+- [`c7f32d4`](https://github.com/kubb-labs/fabric/commit/c7f32d470ae88c0667356c4f788d3292ad5f5410) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - Correct use declare global with Kubb.App interface
+
+- Updated dependencies [[`c7f32d4`](https://github.com/kubb-labs/fabric/commit/c7f32d470ae88c0667356c4f788d3292ad5f5410)]:
+  - @kubb/fabric-core@0.1.5
+
+## 0.1.4
+
+### Patch Changes
+
+- [`2434a5a`](https://github.com/kubb-labs/fabric/commit/2434a5a1aff83672d51efab6d9598b02b5dbe635) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - No defaultParsers + reactPlugin to use React as compiler
+
+- Updated dependencies [[`2434a5a`](https://github.com/kubb-labs/fabric/commit/2434a5a1aff83672d51efab6d9598b02b5dbe635)]:
+  - @kubb/fabric-core@0.1.4
+
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [[`502cb7a`](https://github.com/kubb-labs/fabric/commit/502cb7a2d28074c2433ec3add94a07bcee86a4de)]:
+  - @kubb/fabric-core@0.1.3
+
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`a1d95ae`](https://github.com/kubb-labs/fabric/commit/a1d95ae26ffb3ea77e389509a8fae75d1ff1ddb4)]:
+  - @kubb/fabric-core@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

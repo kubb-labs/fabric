@@ -28,8 +28,13 @@
     "baseUrl": ".",
     "rootDir": ".",
     "paths": {
+      "@kubb/fabric-core/parsers": ["packages/fabric-core/src/parsers/index.ts"],
+      "@kubb/fabric-core/plugins": ["packages/fabric-core/src/plugins/index.ts"],
       "@kubb/fabric-core/types": ["packages/fabric-core/src/types.ts"],
       "@kubb/fabric-core": ["packages/fabric-core/src/index.ts"],
+      "@kubb/react-fabric/parsers": ["packages/react-fabric/src/parsers/index.ts"],
+      "@kubb/react-fabric/plugins": ["packages/react-fabric/src/plugins/index.ts"],
+      "@kubb/react-fabric/types": ["packages/react-fabric/src/types.ts"],
       "@kubb/react-fabric": ["packages/react-fabric/src/index.ts"]
     },
     "types": ["vitest/globals", "bun-types", "./reset.d.ts"],

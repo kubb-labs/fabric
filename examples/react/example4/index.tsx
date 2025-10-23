@@ -2,6 +2,7 @@ import { useEffect, useState } from '@kubb/react-fabric'
 
 import path from 'node:path'
 import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-fabric'
+import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
 
 const fetchNames = async (): Promise<string[]> => {
   return new Promise((resolve) => {
@@ -31,7 +32,7 @@ function App() {
   }
 
   return (
-    <File path={path.resolve(__dirname, 'result.ts')} baseName={'result.ts'}>
+    <File path={path.resolve(__dirname, 'gen/result.ts')} baseName={'result.ts'}>
       <File.Source>
         <Const name={'names'}>"{names.join(' and ')}"</Const>
         <br />
@@ -59,9 +60,12 @@ function App() {
 }
 
 async function start() {
-  const app = createApp(App)
+  const app = createApp()
 
-  app.render()
+  app.use(fsPlugin)
+  app.use(reactPlugin)
+
+  app.render(App)
 
   await app.waitUntilExit()
 

@@ -1,0 +1,59 @@
+import { createPlugin } from '@kubb/fabric-core/plugins'
+import { Runtime } from '../Runtime.tsx'
+import { createElement, type ElementType } from 'react'
+
+type Options = {
+  stdout?: NodeJS.WriteStream
+  stdin?: NodeJS.ReadStream
+  stderr?: NodeJS.WriteStream
+  /**
+   * Set this to true to always see the result of the render in the console(line per render)
+   */
+  debug?: boolean
+}
+
+type ExtendOptions = {
+  render(App: ElementType): Promise<void> | void
+  renderToString(App: ElementType): Promise<string> | string
+  waitUntilExit(): Promise<void>
+}
+
+// biome-ignore lint/suspicious/noTsIgnore: production ready
+// @ts-ignore
+declare module '@kubb/fabric-core' {
+  interface App {
+    render(App: ElementType): Promise<void> | void
+    renderToString(App: ElementType): Promise<string> | string
+    waitUntilExit(): Promise<void>
+  }
+}
+
+declare global {
+  namespace Kubb {
+    interface App {
+      render(App: ElementType): Promise<void> | void
+      renderToString(App: ElementType): Promise<string> | string
+      waitUntilExit(): Promise<void>
+    }
+  }
+}
+
+export const reactPlugin = createPlugin<Options, ExtendOptions>({
+  name: 'react',
+  install() {},
+  inject(app, options: Options = {}) {
+    const runtime = new Runtime({ fileManager: app.context.fileManager, ...options })
+
+    return {
+      async render(App) {
+        runtime.render(createElement(App))
+      },
+      async renderToString(App) {
+        return runtime.renderToString(createElement(App))
+      },
+      waitUntilExit() {
+        return runtime.waitUntilExit()
+      },
+    }
+  },
+})

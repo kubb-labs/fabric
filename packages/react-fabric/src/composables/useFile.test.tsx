@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest'
 import { File } from '../components/File'
 import { useFile } from './useFile'
-import { createApp as createReactApp } from '../createApp'
+import { createApp } from '@kubb/fabric-core'
+import { reactPlugin } from '@kubb/react-fabric/plugins'
 
 describe('useFile', () => {
   test('returns current file context when used inside <File />', async () => {
@@ -15,13 +16,16 @@ describe('useFile', () => {
 
     const meta = { flag: true }
 
-    const app = createReactApp(() => (
+    const Component = () => (
       <File baseName="index.ts" path="/tmp/index.ts" meta={meta}>
         <Test />
       </File>
-    ))
+    )
 
-    await app.render()
+    const app = createApp()
+    app.use(reactPlugin)
+
+    app.render(Component)
 
     expect(ctx).toBeDefined()
     expect(ctx?.baseName).toBe('index.ts')

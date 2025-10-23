@@ -1,6 +1,6 @@
 {
   "name": "@kubb/react-fabric",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "React integration for Kubb, providing JSX runtime support and React component generation capabilities for code generation plugins.",
   "keywords": [
     "react",
@@ -41,6 +41,14 @@
       "import": "./dist/jsx-runtime.js",
       "require": "./dist/jsx-runtime.cjs"
     },
+    "./parsers": {
+      "import": "./dist/parsers.js",
+      "require": "./dist/parsers.cjs"
+    },
+    "./plugins": {
+      "import": "./dist/plugins.js",
+      "require": "./dist/plugins.cjs"
+    },
     "./types": {
       "import": "./dist/types.js",
       "require": "./dist/types.cjs"
@@ -60,6 +68,12 @@
       ],
       "jsx-runtime": [
         "./dist/jsx-runtime.d.ts"
+      ],
+      "parsers": [
+        "./dist/parsers.d.ts"
+      ],
+      "plugins": [
+        "./dist/plugins.d.ts"
       ],
       "types": [
         "./dist/types.d.ts"

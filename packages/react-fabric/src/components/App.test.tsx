@@ -1,6 +1,7 @@
-import { createApp } from '../createApp.ts'
+import { createApp } from '@kubb/fabric-core'
 import { App } from './App.tsx'
 import { Root } from './Root.tsx'
+import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 describe('<App/>', () => {
   test('render App with meta and children', async () => {
@@ -15,8 +16,9 @@ describe('<App/>', () => {
       )
     }
 
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })

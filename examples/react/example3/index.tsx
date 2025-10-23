@@ -1,12 +1,13 @@
 import path from 'node:path'
 import { Const, File, createApp } from '@kubb/react-fabric'
+import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
 
 /**
  * Create 2 files and write them to the file-system
  */
 function App() {
-  const namesPath = path.resolve(__dirname, 'name.ts')
-  const helloWorldPath = path.resolve(__dirname, 'result.ts')
+  const namesPath = path.resolve(__dirname, 'gen/name.ts')
+  const helloWorldPath = path.resolve(__dirname, 'gen/result.ts')
 
   return (
     <>
@@ -29,9 +30,12 @@ function App() {
 }
 
 async function start() {
-  const app = createApp(App)
+  const app = createApp()
 
-  app.render()
+  app.use(fsPlugin)
+  app.use(reactPlugin)
+
+  app.render(App)
 
   const files = app.files
 

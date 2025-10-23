@@ -1,92 +1,123 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { defineApp, type AppContext } from './defineApp.ts'
-import { FileManager } from './FileManager.ts'
+const hoisted = vi.hoisted(() => {
+  const fileManagerInstance = {
+    files: [],
+    add: vi.fn().mockResolvedValue([] as any),
+  }
+  class FileManagerMock {
+    files = fileManagerInstance.files
+    add = fileManagerInstance.add
+  }
+  return { fileManagerInstance, FileManagerMock }
+})
 
-const createRenderer = () => {
-  const render = vi.fn()
-  const renderToString = vi.fn().mockResolvedValue('rendered')
-  const waitUntilExit = vi.fn().mockResolvedValue(undefined)
-  return { render, renderToString, waitUntilExit }
-}
+vi.mock('./FileManager.ts', () => ({
+  FileManager: hoisted.FileManagerMock,
+}))
+
+import { defineApp } from './defineApp.ts'
+import type { App } from './App.ts'
+import type * as KubbFile from './KubbFile.ts'
+import { createParser } from './parsers'
+import { createPlugin } from './plugins'
 
 describe('defineApp', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
 
-  test('creates an app with component and methods; binds context to renderer', async () => {
-    const renderer = createRenderer()
-
-    let receivedThis: AppContext | undefined
-    let receivedContainer: unknown
-    let receivedContext: AppContext | undefined
-
-    const instance = function (this: AppContext, container: unknown, context: AppContext) {
-      receivedThis = this
-      receivedContainer = container
-      receivedContext = context
-      return renderer
-    }
+  test('creates an app and calls instance with app when provided', async () => {
+    const instance = vi.fn()
 
     const createApp = defineApp(instance)
-    const rootComponent = { name: 'Root' }
-    const app = createApp(rootComponent)
+    const app = createApp()
 
-    expect(app._component).toBe(rootComponent)
-    expect(typeof app.render).toBe('function')
-    expect(typeof app.renderToString).toBe('function')
     expect(typeof app.addFile).toBe('function')
     expect(typeof app.use).toBe('function')
-    expect(typeof app.write).toBe('function')
-    expect(typeof app.waitUntilExit).toBe('function')
 
-    expect(receivedThis).toBe(receivedContext)
-    expect(receivedContainer).toBe(rootComponent)
-  })
-
-  test('render delegates to renderer (sync and async cases)', async () => {
-    {
-      const renderer = createRenderer()
-      const instance = () => renderer
-      const app = defineApp(instance)({})
-
-      await app.render()
-      expect(renderer.render).toHaveBeenCalledTimes(1)
-    }
-    {
-      const asyncRender = vi.fn().mockResolvedValue(undefined)
-      const instance = () => ({ ...createRenderer(), render: asyncRender })
-      const app = defineApp(instance)({})
-
-      await app.render()
-      expect(asyncRender).toHaveBeenCalledTimes(1)
-    }
-  })
-
-  test('renderToString returns renderer result', async () => {
-    const renderer = createRenderer()
-    renderer.renderToString.mockResolvedValue('hello')
-    const app = defineApp(() => renderer)({})
-
-    await expect(app.renderToString()).resolves.toBe('hello')
+    expect(instance).toHaveBeenCalledTimes(1)
+    expect(instance).toHaveBeenCalledWith(app)
   })
 
   test('addFile proxies to FileManager.add', async () => {
-    const spy = vi.spyOn(FileManager.prototype, 'add').mockResolvedValue([] as any)
-    const app = defineApp(() => createRenderer())({})
+    const app = defineApp()()
 
-    const file = { path: '/tmp/a.ts', baseName: 'a.ts', sources: [] as any[] }
-    await app.addFile(file as any)
-    expect(spy).toHaveBeenCalledTimes(1)
-    expect(spy).toHaveBeenCalledWith(file)
+    const file = { path: '/tmp/a.ts', baseName: 'a.ts', sources: [] as any[] } as KubbFile.File
+
+    await app.addFile(file)
+    expect(hoisted.fileManagerInstance.add).toHaveBeenCalledTimes(1)
+    expect(hoisted.fileManagerInstance.add).toHaveBeenCalledWith(file)
   })
 
-  test('waitUntilExit delegated from renderer', async () => {
-    const renderer = createRenderer()
-    const app = defineApp(() => renderer)({})
+  test('use installs plugin with correct app and options; warns on duplicate', async () => {
+    const app = defineApp()()
 
-    await app.waitUntilExit()
-    expect(renderer.waitUntilExit).toHaveBeenCalledTimes(1)
+    const install = vi.fn(function (app: App, ...opts: any[]) {
+      expect(app).toBeDefined()
+      expect(opts).toEqual(['opt1', 'opt2'])
+    })
+
+    const plugin = createPlugin({ name: 'mockPlugin', install })
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    app.use(plugin, 'opt1', 'opt2')
+    expect(install).toHaveBeenCalledTimes(1)
+
+    app.use(plugin, 'opt1', 'opt2')
+    expect(warnSpy).toHaveBeenCalledWith('Plugin has already been applied to target app.')
+    expect(install).toHaveBeenCalledTimes(2)
   })
+
+  test('use installs parser with correct app and options; warns on duplicate', async () => {
+    const app = defineApp()()
+
+    const install = vi.fn(function (app: App, ...opts: any[]) {
+      expect(app).toBeDefined()
+      expect(opts).toEqual(['a'])
+    })
+
+    const parser = createParser<any>({
+      name: 'mockParser',
+      extNames: [],
+      install,
+      async parse() {
+        return ''
+      },
+    })
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    app.use(parser, 'a')
+    expect(install).toHaveBeenCalledTimes(1)
+
+    app.use(parser, 'a')
+    expect(warnSpy).toHaveBeenCalledWith('Parser has already been applied to target app.')
+    expect(install).toHaveBeenCalledTimes(2)
+  })
+
+  test('validate plugin override sync and async', async () => {
+    const app = defineApp()()
+
+    const plugin = createPlugin({
+      name: 'mockPlugin',
+      install() {},
+      inject() {
+        return {
+          write() {
+            return 'test'
+          },
+        }
+      },
+    })
+
+    app.use(plugin)
+    app.write()
+
+    expect(app.write).toBeDefined()
+  })
+
+  test.todo('validate plugin install sync and async')
+  test.todo('validate plugin inject sync and async')
 })

@@ -1,10 +1,12 @@
 import { createApp } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
-export const example1 = createApp()
+export const app = createApp()
 
-example1.addFile({
+app.addFile({
   baseName: 'test.ts',
-  path: './example1/test.ts',
+  path: './example1/gen/test.ts',
   sources: [
     {
       name: 'test',
@@ -18,9 +20,9 @@ example1.addFile({
   exports: [],
 })
 
-example1.addFile({
+app.addFile({
   baseName: 'test2.ts',
-  path: './example1/test2.ts',
+  path: './example1/gen/test2.ts',
   sources: [
     {
       name: 'test',
@@ -34,4 +36,7 @@ example1.addFile({
   exports: [],
 })
 
-example1.write()
+app.use(fsPlugin)
+app.use(typescriptParser)
+
+app.write()

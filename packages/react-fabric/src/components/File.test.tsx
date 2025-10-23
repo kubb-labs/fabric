@@ -1,14 +1,16 @@
 import { expect } from 'vitest'
-import { createApp } from '../createApp.ts'
 import { File } from './File.tsx'
+import { createApp } from '@kubb/fabric-core'
+import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 describe('<File/>', () => {
   test('render text', async () => {
     const Component = () => {
       return 'test'
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`"test"`)
   })
@@ -17,8 +19,9 @@ describe('<File/>', () => {
     const Component = () => {
       return <File baseName="test.ts" path="path" />
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`""`)
   })
@@ -32,8 +35,10 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const app = createApp(Component)
-    await app.render()
+    const app = createApp()
+    app.use(reactPlugin)
+
+    await app.render(Component)
     const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
@@ -76,7 +81,10 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp(Component)
+    const app = createApp()
+    app.use(reactPlugin)
+
+    app.render(Component)
     const files = app.files
 
     expect(files).toMatchInlineSnapshot('[]')
@@ -92,8 +100,10 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const app = createApp(Component)
-    await app.render()
+    const app = createApp()
+    app.use(reactPlugin)
+
+    await app.render(Component)
     const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
@@ -145,9 +155,10 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp(Component)
+    const app = createApp()
+    app.use(reactPlugin)
 
-    const output = await app.renderToString()
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`""`)
   })
@@ -163,10 +174,11 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
-    await app.render()
+    await app.render(Component)
     const files = app.files
 
     expect(output).toMatchInlineSnapshot(`"ignoretest"`)
@@ -212,10 +224,11 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
-    await app.render()
+    await app.render(Component)
     const files = app.files
 
     expect(output).toMatchInlineSnapshot(
@@ -261,8 +274,11 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const app = createApp(Component)
-    await app.render()
+    const app = createApp()
+
+    app.use(reactPlugin)
+
+    await app.render(Component)
     const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
@@ -321,13 +337,15 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp(Component)
-    await app.render()
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+
+    await app.render(Component)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchSnapshot()
 
-    await app.render()
+    await app.render(Component)
     const files = app.files
 
     expect(files.length).toBe(1)
@@ -355,8 +373,9 @@ describe('<File.Export/>', () => {
     const Component = () => {
       return <File.Export path="kubb" />
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "export * from "kubb";
@@ -370,8 +389,9 @@ describe('<File.Import/>', () => {
     const Component = () => {
       return <File.Import name="React" path="react" />
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "import React from "react";
@@ -383,8 +403,9 @@ describe('<File.Import/>', () => {
     const Component = () => {
       return <File.Import name="React" path="react" isTypeOnly />
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "import type React from "react";
@@ -396,8 +417,9 @@ describe('<File.Import/>', () => {
     const Component = () => {
       return <File.Import name="React" root="types" path="types/test" />
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "import React from "./test";
@@ -415,10 +437,11 @@ describe('<File.Import/>', () => {
         </File>
       )
     }
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
-    await app.render()
+    await app.render(Component)
     const files = app.files
 
     expect(files).toMatchInlineSnapshot(`
@@ -469,11 +492,12 @@ describe('<File.Import/>', () => {
         </File>
       )
     }
-    const app = createApp(Component)
+    const app = createApp()
+    app.use(reactPlugin)
 
-    const output = await app.renderToString()
+    const output = await app.renderToString(Component)
 
-    await app.render()
+    await app.render(Component)
     const files = app.files
 
     expect(files).toMatchInlineSnapshot(`

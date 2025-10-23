@@ -1,5 +1,5 @@
 import type * as KubbFile from './KubbFile.ts'
-import { trimExtName } from './fs.ts'
+import { trimExtName } from './utils/trimExtName.ts'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { isDeepEqual, uniqueBy } from 'remeda'

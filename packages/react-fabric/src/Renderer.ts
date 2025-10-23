@@ -43,7 +43,7 @@ let currentUpdatePriority = NoEventPriority
  * @link https://github.com/pixijs/pixi-react/tree/main/packages
  * @link https://github.com/diegomura/react-pdf/blob/master/packages/reconciler/src/reconciler-31.ts
  */
-export const KubbRenderer = Reconciler({
+export const Renderer = Reconciler({
   getRootHostContext: () => ({
     type: 'kubb-root',
     isFile: false,

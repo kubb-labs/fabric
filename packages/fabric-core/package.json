@@ -1,6 +1,6 @@
 {
   "name": "@kubb/fabric-core",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "Core functionality for Kubb's plugin-based code generation system, providing the foundation for transforming OpenAPI specifications.",
   "keywords": [
     "typescript",
@@ -26,17 +26,17 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./parsers/default": {
-      "import": "./dist/parsers/default.js",
-      "require": "./dist/parsers/default.cjs"
-    },
-    "./parsers/tsx": {
-      "import": "./dist/parsers/tsx.js",
-      "require": "./dist/parsers/tsx.cjs"
+    "./parsers": {
+      "import": "./dist/parsers.js",
+      "require": "./dist/parsers.cjs"
     },
     "./parsers/typescript": {
       "import": "./dist/parsers/typescript.js",
       "require": "./dist/parsers/typescript.cjs"
+    },
+    "./plugins": {
+      "import": "./dist/plugins.js",
+      "require": "./dist/plugins.cjs"
     },
     "./types": {
       "import": "./dist/types.js",
@@ -49,14 +49,14 @@
   "types": "./dist/index.d.cts",
   "typesVersions": {
     "*": {
+      "parsers": [
+        "./dist/parsers.d.ts"
+      ],
       "parsers/typescript": [
         "./dist/parsers/typescript.d.ts"
       ],
-      "parsers/tsx": [
-        "./dist/parsers/tsx.d.ts"
-      ],
-      "parsers/default": [
-        "./dist/parsers/default.d.ts"
+      "plugins": [
+        "./dist/plugins.d.ts"
       ],
       "types": [
         "./dist/types.d.ts"

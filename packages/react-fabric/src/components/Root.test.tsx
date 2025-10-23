@@ -1,6 +1,7 @@
 import { vi } from 'vitest'
-import { createApp } from '../createApp.ts'
 import { Root } from './Root.tsx'
+import { createApp } from '@kubb/fabric-core'
+import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 function Thrower(): React.ReactNode {
   throw new Error('boom')
@@ -16,8 +17,9 @@ describe('<Root/>', () => {
       )
     }
 
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -34,8 +36,9 @@ describe('<Root/>', () => {
       )
     }
 
-    const app = createApp(Component)
-    const output = await app.renderToString()
+    const app = createApp()
+    app.use(reactPlugin)
+    const output = await app.renderToString(Component)
 
     expect(output).toMatchSnapshot()
     expect(onError).toHaveBeenCalledTimes(1)

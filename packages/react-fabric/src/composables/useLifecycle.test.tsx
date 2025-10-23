@@ -1,9 +1,9 @@
 import { describe, expect, test, vi } from 'vitest'
 import { Root } from '../components/Root'
 import { useLifecycle } from './useLifecycle'
-import { KubbRenderer } from '../kubbRenderer'
 import { ConcurrentRoot } from 'react-reconciler/constants'
 import { createNode } from '../dom'
+import { Renderer } from '../Renderer.ts'
 
 describe('useLifecycle', () => {
   test('exit schedules Root.onExit asynchronously', async () => {
@@ -31,10 +31,10 @@ describe('useLifecycle', () => {
 
     // Create a container similar to ReactTemplate
     const rootNode = createNode('kubb-root')
-    const container = KubbRenderer.createContainer(rootNode, ConcurrentRoot, null, false, false, 'id', console.error, console.error, console.error, null)
+    const container = Renderer.createContainer(rootNode, ConcurrentRoot, null, false, false, 'id', console.error, console.error, console.error, null)
 
-    KubbRenderer.updateContainerSync(element, container, null, null)
-    KubbRenderer.flushSyncWork()
+    Renderer.updateContainerSync(element, container, null, null)
+    Renderer.flushSyncWork()
 
     expect(onExit).not.toHaveBeenCalled()
     vi.runAllTimers()
