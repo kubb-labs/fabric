@@ -3,12 +3,13 @@ import { squashExportNodes } from './squashExportNodes.ts'
 import { squashImportNodes } from './squashImportNodes.ts'
 import { squashSourceNodes } from './squashSourceNodes.ts'
 
-import type { AppContext, KubbFile } from '@kubb/fabric-core/types'
+import type { KubbFile } from '@kubb/fabric-core/types'
 import type React from 'react'
 import type { File } from '../components/File.tsx'
 import type { DOMElement } from '../types.ts'
+import type { FileManager } from '@kubb/fabric-core'
 
-export function processFiles(node: DOMElement, context: AppContext) {
+export function processFiles(node: DOMElement, fileManager: FileManager) {
   for (let index = 0; index < node.childNodes.length; index++) {
     const childNode = node.childNodes[index]
 
@@ -17,7 +18,7 @@ export function processFiles(node: DOMElement, context: AppContext) {
     }
 
     if (childNode.nodeName !== '#text' && childNode.nodeName !== 'kubb-file' && nodeNames.includes(childNode.nodeName)) {
-      processFiles(childNode, context)
+      processFiles(childNode, fileManager)
     }
 
     if (childNode.nodeName === 'kubb-file') {
@@ -37,7 +38,7 @@ export function processFiles(node: DOMElement, context: AppContext) {
           banner: attributes.banner,
         }
 
-        context.fileManager.add(file)
+        fileManager.add(file)
       }
     }
   }

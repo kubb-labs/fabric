@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { Const, File, createApp } from '@kubb/react-fabric'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
 
 /**
  * Create 2 files and write them to the file-system
@@ -30,10 +30,12 @@ function App() {
 }
 
 async function start() {
-  const app = createApp(App)
+  const app = createApp()
 
-  app.render()
   app.use(fsPlugin)
+  app.use(reactPlugin)
+
+  app.render(App)
 
   const files = app.files
 

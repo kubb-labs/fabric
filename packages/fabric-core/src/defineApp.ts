@@ -5,18 +5,12 @@ import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { App, AppContext, Component, AppEvents } from './App.ts'
 
-type AppRenderer = {
-  render(): Promise<void> | void
-  renderToString(): Promise<string> | string
-  waitUntilExit(): Promise<void>
-}
+type RootRenderFunction<TApp extends App> = (app: TApp) => void | Promise<void>
 
-type RootRenderFunction<THostElement, TContext extends AppContext> = (this: TContext, container: THostElement, context: TContext) => AppRenderer
+export type DefineApp<TOptions> = (rootComponent?: Component, options?: TOptions) => App
 
-export type DefineApp<TContext extends AppContext> = (rootComponent?: Component, options?: TContext['options']) => App
-
-export function defineApp<THostElement, TContext extends AppContext>(instance: RootRenderFunction<THostElement, TContext>): DefineApp<TContext> {
-  function createApp(rootComponent: Component, options?: TContext['options']): App {
+export function defineApp<TOptions = unknown>(instance?: RootRenderFunction<App<TOptions>>): DefineApp<TOptions> {
+  function createApp(options?: TOptions): App {
     const events = new AsyncEventEmitter<AppEvents>()
     const installedPlugins = new Set<Plugin>()
     const installedParsers = new Set<Parser>()
@@ -27,22 +21,13 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
       fileManager,
       installedPlugins,
       installedParsers,
-    } as TContext
-
-    const { render, renderToString, waitUntilExit } = instance.call(context, rootComponent, context)
+    } as AppContext<TOptions>
 
     const app = {
-      _component: rootComponent,
-      async render() {
-        return Promise.resolve(render())
-      },
-      async renderToString() {
-        return renderToString()
-      },
+      context,
       get files() {
         return fileManager.files
       },
-      waitUntilExit,
       async addFile(...newFiles) {
         await fileManager.add(...newFiles)
       },
@@ -56,10 +41,10 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
             installedPlugins.add(pluginOrParser)
           }
 
-          if (pluginOrParser.override && isFunction(pluginOrParser.override)) {
-            const overrider = pluginOrParser.override
+          if (pluginOrParser.inject && isFunction(pluginOrParser.inject)) {
+            const injecter = pluginOrParser.inject
 
-            const extraApp = (overrider as any)(app, context, ...args)
+            const extraApp = (injecter as any)(app, ...args)
             Object.assign(app, extraApp)
           }
         }
@@ -74,14 +59,18 @@ export function defineApp<THostElement, TContext extends AppContext>(instance: R
         if (pluginOrParser && isFunction(pluginOrParser.install)) {
           const installer = pluginOrParser.install
 
-          ;(installer as any)(app, context, ...args)
+          ;(installer as any)(app, ...args)
         }
 
         return app
       },
-    } as App
+    } as App<TOptions>
 
+    // start
     events.emit('start', { app })
+    if (instance) {
+      instance(app)
+    }
 
     return app
   }

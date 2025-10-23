@@ -1,17 +1,18 @@
 import process from 'node:process'
-import type { AppContext } from '@kubb/fabric-core/types'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants'
 import { onExit } from 'signal-exit'
 import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
-import type { FiberRoot } from './kubbRenderer.ts'
-import { KubbRenderer } from './kubbRenderer.ts'
+import type { FiberRoot } from './Renderer.ts'
+import { Renderer } from './Renderer.ts'
 import type { DOMElement } from './types.ts'
 import { squashTextNodes } from './utils/squashTextNodes.ts'
 import { processFiles } from './utils/processFiles.ts'
+import type { FileManager } from '@kubb/fabric-core'
 
-export type ReactAppContext = AppContext<{
+type Options = {
+  fileManager: FileManager
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
@@ -19,10 +20,10 @@ export type ReactAppContext = AppContext<{
    * Set this to true to always see the result of the render in the console(line per render)
    */
   debug?: boolean
-}>
+}
 
-export class ReactTemplate {
-  readonly #context: ReactAppContext
+export class Runtime {
+  readonly #options: Options
   // Ignore last render after unmounting a tree to prevent empty output before exit
   #isUnmounted: boolean
 
@@ -30,8 +31,8 @@ export class ReactTemplate {
   readonly #container: FiberRoot
   readonly #rootNode: DOMElement
 
-  constructor(context: ReactAppContext) {
-    this.#context = context
+  constructor(options: Options) {
+    this.#options = options
 
     this.#rootNode = createNode('kubb-root')
     this.#rootNode.onRender = this.onRender
@@ -85,7 +86,7 @@ export class ReactTemplate {
     const onRecoverableError = logRecoverableError
     const transitionCallbacks = null
 
-    this.#container = KubbRenderer.createContainer(
+    this.#container = Renderer.createContainer(
       this.#rootNode,
       rootTag,
       hydrationCallbacks,
@@ -106,12 +107,17 @@ export class ReactTemplate {
       { alwaysLast: false },
     ).bind(this)
 
-    KubbRenderer.injectIntoDevTools({
+    Renderer.injectIntoDevTools({
       bundleType: 0, // 0 for PROD, 1 for DEV
       version: '19.1.1', // should be React version and not Kubb's custom version
       rendererPackageName: 'kubb', // package name
     })
   }
+
+  get fileManager() {
+    return this.#options.fileManager
+  }
+
   resolveExitPromise: () => void = () => {}
   rejectExitPromise: (reason?: Error) => void = () => {}
   unsubscribeExit: () => void = () => {}
@@ -120,25 +126,25 @@ export class ReactTemplate {
       return
     }
 
-    this.#context.fileManager.clear()
+    this.fileManager.clear()
 
-    processFiles(this.#rootNode, this.#context)
+    processFiles(this.#rootNode, this.fileManager)
 
-    if (!this.#context.options?.debug && !this.#context.options?.stdout) {
+    if (!this.#options?.debug && !this.#options?.stdout) {
       return
     }
 
-    const output = await this.#getOutput(this.#rootNode, this.#context)
+    const output = await this.#getOutput(this.#rootNode)
 
-    if (this.#context.options?.debug) {
+    if (this.#options?.debug) {
       console.log('Rendering: \n')
       console.log(output)
     }
 
-    if (this.#context.options?.stdout && process.env.NODE_ENV !== 'test') {
-      this.#context.options.stdout.clearLine(0)
-      this.#context.options.stdout.cursorTo(0)
-      this.#context.options.stdout.write(output)
+    if (this.#options?.stdout && process.env.NODE_ENV !== 'test') {
+      this.#options.stdout.clearLine(0)
+      this.#options.stdout.cursorTo(0)
+      this.#options.stdout.write(output)
     }
   }
   onError(error: Error): void {
@@ -152,9 +158,9 @@ export class ReactTemplate {
     this.unmount(error)
   }
 
-  async #getOutput(node: DOMElement, context: AppContext): Promise<string> {
+  async #getOutput(node: DOMElement): Promise<string> {
     const text = squashTextNodes(node)
-    const files = context.fileManager.files
+    const files = this.fileManager.files
 
     return files.length
       ? [...files]
@@ -171,8 +177,8 @@ export class ReactTemplate {
       </Root>
     )
 
-    KubbRenderer.updateContainerSync(element, this.#container, null, null)
-    KubbRenderer.flushSyncWork()
+    Renderer.updateContainerSync(element, this.#container, null, null)
+    Renderer.flushSyncWork()
   }
 
   async renderToString(node: ReactNode): Promise<string> {
@@ -182,12 +188,12 @@ export class ReactTemplate {
       </Root>
     )
 
-    KubbRenderer.updateContainerSync(element, this.#container, null, null)
-    KubbRenderer.flushSyncWork()
+    Renderer.updateContainerSync(element, this.#container, null, null)
+    Renderer.flushSyncWork()
 
-    this.#context.fileManager.clear()
+    this.fileManager.clear()
 
-    return this.#getOutput(this.#rootNode, this.#context)
+    return this.#getOutput(this.#rootNode)
   }
 
   unmount(error?: Error | number | null): void {
@@ -195,7 +201,7 @@ export class ReactTemplate {
       return
     }
 
-    if (this.#context.options?.debug) {
+    if (this.#options?.debug) {
       console.log('Unmount', error)
     }
 
@@ -204,7 +210,7 @@ export class ReactTemplate {
 
     this.#isUnmounted = true
 
-    KubbRenderer.updateContainerSync(null, this.#container, null, null)
+    Renderer.updateContainerSync(null, this.#container, null, null)
 
     if (error instanceof Error) {
       this.rejectExitPromise(error)

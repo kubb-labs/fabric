@@ -4,12 +4,21 @@ import fs from 'fs-extra'
 import { resolve } from 'node:path'
 import type * as KubbFile from '../KubbFile.ts'
 
+type WriteOptions = {
+  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
+  dryRun?: boolean
+}
+
 type Options = {
   /**
    * Optional callback that is invoked whenever a file is written by the plugin.
    * Useful for tests to observe write operations without spying on internal functions.
    */
   onWrite?: (path: string, data: string) => void | Promise<void>
+}
+
+type ExtendOptions = {
+  write(options?: WriteOptions): Promise<void>
 }
 
 export async function write(path: string, data: string, options: { sanity?: boolean } = {}): Promise<string | undefined> {
@@ -71,29 +80,24 @@ export async function write(path: string, data: string, options: { sanity?: bool
   )(path, data.trim(), options)
 }
 
-type WriteOptions = {
-  extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
-  dryRun?: boolean
-}
-
 declare module '../index.ts' {
   interface App {
     write(options?: WriteOptions): Promise<void>
   }
 }
 
-export const fsPlugin = createPlugin<Options, { write(options?: WriteOptions): Promise<void> }>({
+export const fsPlugin = createPlugin<Options, ExtendOptions>({
   name: 'fs',
   scope: 'write',
-  async install(_app, context, options) {
-    context.events.on('process:progress', async ({ file, source }) => {
+  async install(app, options) {
+    app.context.events.on('process:progress', async ({ file, source }) => {
       if (options?.onWrite) {
         await options.onWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })
     })
   },
-  override(_app, context) {
+  inject(app) {
     return {
       async write(
         options = {
@@ -101,10 +105,10 @@ export const fsPlugin = createPlugin<Options, { write(options?: WriteOptions): P
           dryRun: false,
         },
       ) {
-        await context.fileManager.write({
+        await app.context.fileManager.write({
           extension: options.extension,
           dryRun: options.dryRun,
-          parsers: context.installedParsers,
+          parsers: app.context.installedParsers,
         })
       },
     }

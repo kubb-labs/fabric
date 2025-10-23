@@ -1,4 +1,4 @@
-import type { Install, Override } from '../App.ts'
+import type { Install, Inject } from '../App.ts'
 
 export type Plugin<TOptions = any[], TAppExtension extends Record<string, any> = {}> = {
   name: string
@@ -9,7 +9,7 @@ export type Plugin<TOptions = any[], TAppExtension extends Record<string, any> =
    * Runtime app overrides or extensions.
    * Merged into the app instance after install.
    */
-  override?: Override<TOptions, TAppExtension>
+  inject?: Inject<TOptions, TAppExtension>
 }
 
 export type UserPlugin<TOptions = any[], TAppExtension extends Record<string, any> = {}> = Omit<Plugin<TOptions, TAppExtension>, 'type'>

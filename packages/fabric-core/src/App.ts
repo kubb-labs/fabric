@@ -63,21 +63,19 @@ export type AppContext<TOptions = unknown> = {
 }
 
 export type Install<TOptions = any[] | object | undefined> = TOptions extends any[]
-  ? (app: App, context: AppContext, ...options: TOptions) => void
+  ? (app: App, ...options: TOptions) => void
   : TOptions extends object
-    ? (app: App, context: AppContext, options?: TOptions) => void
-    : (app: App, context: AppContext) => void
+    ? (app: App, options?: TOptions) => void
+    : (app: App) => void
 
-export type Override<TOptions = any[] | object | undefined, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
-  ? (app: App, context: AppContext, ...options: TOptions) => Partial<TAppExtension>
+export type Inject<TOptions = any[] | object | undefined, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
+  ? (app: App, ...options: TOptions) => Partial<TAppExtension>
   : TOptions extends object
-    ? (app: App, context: AppContext, options?: TOptions) => Partial<TAppExtension>
-    : (app: App, context: AppContext) => Partial<TAppExtension>
+    ? (app: App, options?: TOptions) => Partial<TAppExtension>
+    : (app: App) => Partial<TAppExtension>
 
-export interface App {
-  _component: Component
-  render(): Promise<void>
-  renderToString(): Promise<string>
+export interface App<TOptions = unknown> {
+  context: AppContext<TOptions>
   files: Array<KubbFile.ResolvedFile>
   use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
     pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
@@ -87,5 +85,4 @@ export interface App {
     pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
   ): this & TAppExtension
   addFile(...files: Array<KubbFile.File>): Promise<void>
-  waitUntilExit(): Promise<void>
 }

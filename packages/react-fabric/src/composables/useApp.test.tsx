@@ -2,7 +2,8 @@ import { describe, expect, test } from 'vitest'
 
 import { App } from '../components/App'
 import { useApp } from './useApp'
-import { createApp as createReactApp } from '../createApp'
+import { createApp } from '@kubb/fabric-core'
+import { reactPlugin } from '../plugins/reactPlugin'
 
 describe('useApp', () => {
   test('returns meta and exit when used inside <App />', async () => {
@@ -15,13 +16,16 @@ describe('useApp', () => {
     }
 
     const meta = { count: 1 }
-    const app = createReactApp(() => (
+    const app = createApp()
+    app.use(reactPlugin)
+
+    const Component = () => (
       <App meta={meta}>
         <Test />
       </App>
-    ))
+    )
 
-    await app.render()
+    await app.render(Component)
 
     expect(value).toBeDefined()
     expect(value?.meta).toEqual(meta)

@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { File, createApp } from '@kubb/react-fabric'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { createParser, typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
+import { createParser, typescriptParser } from '@kubb/react-fabric/parsers'
 
 const vueParser = createParser({
   name: 'vue',
@@ -38,11 +38,14 @@ const msg = ref('Hello World!')
 }
 
 async function start() {
-  const app = createApp(App)
+  const app = createApp()
 
-  app.render()
   app.use(fsPlugin)
+  app.use(reactPlugin)
   app.use(vueParser)
+
+  app.render(App)
+
   await app.write()
 }
 
