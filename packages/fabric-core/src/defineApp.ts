@@ -33,7 +33,7 @@ export function defineApp<TOptions = unknown>(instance?: RootRenderFunction<App<
       async addFile(...newFiles) {
         await fileManager.add(...newFiles)
       },
-      use(pluginOrParser, ...options) {
+      async use(pluginOrParser, ...options) {
         const args = options
 
         if (pluginOrParser.type === 'plugin') {
@@ -61,7 +61,7 @@ export function defineApp<TOptions = unknown>(instance?: RootRenderFunction<App<
         if (pluginOrParser && isFunction(pluginOrParser.install)) {
           const installer = pluginOrParser.install
 
-          ;(installer as any)(app, ...args)
+          await (installer as any)(app, ...args)
         }
 
         return app
@@ -69,10 +69,13 @@ export function defineApp<TOptions = unknown>(instance?: RootRenderFunction<App<
     } as App<TOptions>
 
     // start
-    events.emit('start', { app })
+    events.emit('start')
     if (instance) {
       instance(app)
     }
+
+    // end
+    events.emit('end')
 
     return app
   }

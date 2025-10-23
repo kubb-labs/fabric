@@ -119,4 +119,5 @@ describe('defineApp', () => {
   })
 
   test.todo('validate plugin install sync and async')
+  test.todo('validate plugin inject sync and async')
 })

@@ -22,4 +22,6 @@ describe('write', () => {
     await write(filePath, text)
     await write(filePath, text)
   })
+
+  test('clean at the beginning of the plugin generation')
 })

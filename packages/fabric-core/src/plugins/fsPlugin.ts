@@ -15,6 +15,9 @@ type Options = {
    * Useful for tests to observe write operations without spying on internal functions.
    */
   onWrite?: (path: string, data: string) => void | Promise<void>
+  clean?: {
+    path: string
+  }
 }
 
 type ExtendOptions = {
@@ -98,13 +101,18 @@ declare global {
 
 export const fsPlugin = createPlugin<Options, ExtendOptions>({
   name: 'fs',
-  scope: 'write',
   async install(app, options) {
     app.context.events.on('process:progress', async ({ file, source }) => {
       if (options?.onWrite) {
         await options.onWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })
+    })
+
+    app.context.events.on('start', async () => {
+      if (options?.clean) {
+        await fs.remove(options.clean.path)
+      }
     })
   },
   inject(app) {
