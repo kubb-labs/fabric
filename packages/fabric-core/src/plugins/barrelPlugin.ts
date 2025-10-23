@@ -166,7 +166,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
   inject(app) {
     return {
       async writeEntry({ root, mode }) {
-        if (!mode) {
+        if (!mode || mode === 'propagate') {
           return undefined
         }
 
