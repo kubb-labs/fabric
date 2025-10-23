@@ -42,7 +42,7 @@ type GetBarrelFilesOptions = {
 export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Array<KubbFile.File> {
   const cachedFiles = new Map<KubbFile.Path, KubbFile.File>()
 
-  if (mode === 'propagate') {
+  if (mode === 'propagate' || mode === false) {
     return []
   }
 
