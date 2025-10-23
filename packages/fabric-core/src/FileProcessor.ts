@@ -5,8 +5,6 @@ import type { Parser } from './parsers/types.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { AppEvents } from './App.ts'
-import { typescriptParser } from './parsers/typescriptParser.ts'
-import { tsxParser } from './parsers/tsxParser.ts'
 
 export type ProcessFilesProps = {
   parsers?: Set<Parser>
@@ -26,16 +24,14 @@ type Options = {
 export class FileProcessor {
   #limit = pLimit(100)
   events: AsyncEventEmitter<AppEvents>
-  readonly #defaultParsers: Set<Parser>
 
   constructor({ events = new AsyncEventEmitter<AppEvents>() }: Options = {}) {
     this.events = events
-    this.#defaultParsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])
 
     return this
   }
 
-  async parse(file: KubbFile.ResolvedFile, { parsers = this.#defaultParsers, extension }: GetParseOptions = {}): Promise<string> {
+  async parse(file: KubbFile.ResolvedFile, { parsers = new Set(), extension }: GetParseOptions = {}): Promise<string> {
     const parseExtName = extension?.[file.extname] || undefined
 
     if (!file.extname) {

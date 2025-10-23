@@ -3,8 +3,13 @@ import { combineImports, combineSources, createFile, combineExports } from './cr
 
 import type * as KubbFile from './KubbFile.ts'
 import { FileProcessor } from './FileProcessor.ts'
+import type { Parser } from './parsers/types.ts'
+import { typescriptParser } from './parsers/typescriptParser.ts'
+import { tsxParser } from './parsers/tsxParser.ts'
+import { defaultParser } from './parsers/defaultParser.ts'
 
 describe('createFile', () => {
+  const parsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])
   const fileProcessor = new FileProcessor()
   test('if getFileSource is returning code with imports', async () => {
     const code = await fileProcessor.parse(
@@ -24,7 +29,7 @@ describe('createFile', () => {
           },
         ],
       }),
-      { extension: { '.ts': '.ts' } },
+      { parsers },
     )
 
     const codeWithDefaultImport = await fileProcessor.parse(
@@ -52,6 +57,9 @@ describe('createFile', () => {
           },
         ],
       }),
+      {
+        parsers,
+      },
     )
 
     const codeWithDefaultImportOrder = await fileProcessor.parse(
@@ -84,7 +92,7 @@ describe('createFile', () => {
           },
         ],
       }),
-      { extension: { '.ts': '.ts' } },
+      { parsers },
     )
 
     expect(await format(code)).toMatchSnapshot()
@@ -110,7 +118,7 @@ describe('createFile', () => {
           },
         ],
       }),
-      { extension: { '.ts': '.ts' } },
+      { parsers },
     )
     expect(await format(code)).toMatchSnapshot()
   })
@@ -168,8 +176,8 @@ describe('createFile', () => {
       ],
     })
 
-    expect(await format(await fileProcessor.parse(fileImport, { extension: { '.ts': '.ts' } }))).toMatchSnapshot()
-    expect(await format(await fileProcessor.parse(fileExport, { extension: { '.ts': '.ts' } }))).toMatchSnapshot()
+    expect(await format(await fileProcessor.parse(fileImport, { parsers }))).toMatchSnapshot()
+    expect(await format(await fileProcessor.parse(fileExport, { parsers }))).toMatchSnapshot()
   })
 
   test('if combineExports is filtering out duplicated sources(by name)', () => {

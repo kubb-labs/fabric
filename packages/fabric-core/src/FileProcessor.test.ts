@@ -3,8 +3,12 @@ import { describe, test, expect } from 'vitest'
 import { FileProcessor } from './FileProcessor.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import { createFile } from './createFile.ts'
+import type { Parser } from './parsers/types.ts'
+import { defaultParser, tsxParser, typescriptParser } from './parsers'
 
 describe('FileProcessor', () => {
+  const parsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])
+
   test('parse() uses TypeScript parser for .ts', async () => {
     const processor = new FileProcessor()
 
@@ -25,7 +29,7 @@ describe('FileProcessor', () => {
       ],
     })
 
-    const code = await processor.parse(file, { extension: { '.ts': '.ts' } })
+    const code = await processor.parse(file, { parsers })
 
     expect(code).toContain('import type { A } from "./a.ts"')
     expect(code).toContain('export type X = A')
@@ -41,7 +45,7 @@ describe('FileProcessor', () => {
       sources: [{ value: '{"a":1}' }, { value: '{"b":2}' }],
     })
 
-    const code = await processor.parse(file, { extension: { '.json': '.json' } })
+    const code = await processor.parse(file, { parsers })
 
     expect(code).toBe('{"a":1}' + '\n\n' + '{"b":2}')
     expect(code.includes('import ')).toBe(false)

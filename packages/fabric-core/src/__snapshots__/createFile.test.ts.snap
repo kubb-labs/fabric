@@ -10,8 +10,8 @@ type Test = Pets | Lily | Dog
 `;
 
 exports[`createFile > if getFileSource is returning code with exports and exports as 2`] = `
-"export type * as Dog from './Dog.ts'
-export type { Pets, Lily } from './Pets.ts'
+"export type * as Dog from './Dog'
+export type { Pets, Lily } from './Pets'
 "
 `;
 
