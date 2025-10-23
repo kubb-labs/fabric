@@ -20,7 +20,7 @@ app.addFile({
   exports: [],
 })
 
-app.use(fsPlugin)
+app.use(fsPlugin, { clean: { path: './example2/gen' } })
 app.use(typescriptParser)
 
 app.write()

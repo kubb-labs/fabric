@@ -3,27 +3,33 @@
 import { createPlugin } from './createPlugin.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
-import path from 'node:path'
+import path, { resolve } from 'node:path'
 import { getRelativePath } from '../utils/getRelativePath.ts'
 
-type Mode = 'all' | 'named' | 'propagate'
+type Mode = 'all' | 'named' | 'propagate' | false
 
 type Options = {
   root: string
   mode: Mode
 }
 
-type ExtendOptions = {}
+type ExtendOptions = {
+  writeEntry(options: Options): Promise<void>
+}
 
 // biome-ignore lint/suspicious/noTsIgnore: production ready
 // @ts-ignore
 declare module '@kubb/fabric-core' {
-  interface App {}
+  interface App {
+    writeEntry(options: Options): Promise<void>
+  }
 }
 
 declare global {
   namespace Kubb {
-    interface App {}
+    interface App {
+      writeEntry(options: Options): Promise<void>
+    }
   }
 }
 
@@ -103,8 +109,8 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
           isTypeOnly: source.isTypeOnly,
           //TODO use parser to generate import
           value: '',
-          isExportable: false,
-          isIndexable: false,
+          isExportable: mode === 'all' || mode === 'named',
+          isIndexable: mode === 'all' || mode === 'named',
         })
       })
     })
@@ -136,19 +142,67 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
 
 export const barrelPlugin = createPlugin<Options, ExtendOptions>({
   name: 'barrel',
-  async install(app, options) {
+  install(app, options) {
     if (!options) {
       throw new Error('Barrel plugin requires options.root and options.mode')
     }
 
-    app.context.events.on('process:end', async ({ files }) => {
-      const root = ''
+    if (!options.mode) {
+      return undefined
+    }
+
+    app.context.events.onOnce('process:end', async ({ files }) => {
+      const root = options.root
       // TODO check if we need meta here per file
       const barrelFiles = getBarrelFiles({ files, root, mode: options.mode })
 
-      console.log(barrelFiles)
-
       await app.context.fileManager.add(...barrelFiles)
+
+      await app.context.fileManager.write({
+        parsers: app.context.installedParsers,
+      })
     })
+  },
+  inject(app) {
+    return {
+      async writeEntry({ root, mode }) {
+        if (!mode) {
+          return undefined
+        }
+
+        const rootPath = resolve(root, 'index.ts')
+
+        const barrelFiles = app.files.filter((file) => {
+          return file.sources.some((source) => source.isIndexable)
+        })
+
+        const rootFile: KubbFile.File = {
+          path: rootPath,
+          baseName: 'index.ts',
+          exports: barrelFiles
+            .flatMap((file) => {
+              const containsOnlyTypes = file.sources.every((source) => source.isTypeOnly)
+
+              return file.sources
+                ?.map((source) => {
+                  if (!file.path || !source.isIndexable) {
+                    return undefined
+                  }
+
+                  return {
+                    name: mode === 'all' ? undefined : [source.name],
+                    path: getRelativePath(rootPath, file.path),
+                    isTypeOnly: mode === 'all' ? containsOnlyTypes : source.isTypeOnly,
+                  } as KubbFile.Export
+                })
+                .filter(Boolean)
+            })
+            .filter(Boolean),
+          sources: [],
+        }
+
+        await app.context.fileManager.add(rootFile)
+      },
+    }
   },
 })

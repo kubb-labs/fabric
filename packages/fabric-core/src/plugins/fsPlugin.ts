@@ -101,18 +101,16 @@ declare global {
 
 export const fsPlugin = createPlugin<Options, ExtendOptions>({
   name: 'fs',
-  async install(app, options) {
+  install(app, options) {
+    if (options?.clean) {
+      fs.removeSync(options.clean.path)
+    }
+
     app.context.events.on('process:progress', async ({ file, source }) => {
       if (options?.onWrite) {
         await options.onWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })
-    })
-
-    app.context.events.on('start', async () => {
-      if (options?.clean) {
-        await fs.remove(options.clean.path)
-      }
     })
   },
   inject(app) {

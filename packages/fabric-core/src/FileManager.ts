@@ -89,6 +89,10 @@ export class FileManager {
   }
 
   async write(options: ProcessFilesProps): Promise<KubbFile.ResolvedFile[]> {
-    return this.processor.run(this.files, options)
+    const resolvedFiles = await this.processor.run(this.files, options)
+
+    this.clear()
+
+    return resolvedFiles
   }
 }

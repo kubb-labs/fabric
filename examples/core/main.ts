@@ -1,3 +1,3 @@
-import { app } from './example1/index'
-
-app.write()
+import './example1/run.ts'
+import './example2/run.ts'
+import './example3/run.ts'
