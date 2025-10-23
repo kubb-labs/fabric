@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.1.4
+
+### Patch Changes
+
+- [`2434a5a`](https://github.com/kubb-labs/fabric/commit/2434a5a1aff83672d51efab6d9598b02b5dbe635) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - No defaultParsers + reactPlugin to use React as compiler
+
+- Updated dependencies [[`2434a5a`](https://github.com/kubb-labs/fabric/commit/2434a5a1aff83672d51efab6d9598b02b5dbe635)]:
+  - @kubb/fabric-core@0.1.4
+
 ## 0.1.3
 
 ### Patch Changes
