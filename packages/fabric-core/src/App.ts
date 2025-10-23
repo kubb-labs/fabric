@@ -83,21 +83,12 @@ export type Inject<TOptions = any[] | object | undefined, TAppExtension extends 
 export interface App<TOptions = unknown> extends Kubb.App {
   context: AppContext<TOptions>
   files: Array<KubbFile.ResolvedFile>
-  // sync
   use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
     pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
     ...options: TOptions extends any[] ? NoInfer<TOptions> : [NoInfer<TOptions>]
-  ): this & TAppExtension
+  ): (this & TAppExtension) | Promise<this & TAppExtension>
   use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
     pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
-  ): this & TAppExtension
-  // async
-  use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
-    pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
-    ...options: TOptions extends any[] ? NoInfer<TOptions> : [NoInfer<TOptions>]
-  ): Promise<this & TAppExtension>
-  use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
-    pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
-  ): Promise<this & TAppExtension>
+  ): (this & TAppExtension) | Promise<this & TAppExtension>
   addFile(...files: Array<KubbFile.File>): Promise<void>
 }
