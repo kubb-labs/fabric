@@ -3,7 +3,7 @@ import type { Install, Inject } from '../App.ts'
 export type Plugin<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = {
   name: string
   type: 'plugin'
-  install: Install<TOptions> | Promise<Install<TOptions>>
+  install: Install<TOptions>
   /**
    * Runtime app overrides or extensions.
    * Merged into the app instance after install.

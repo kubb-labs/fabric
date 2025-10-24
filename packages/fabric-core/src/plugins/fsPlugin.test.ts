@@ -1,6 +1,7 @@
 import path from 'node:path'
-import { write } from './fsPlugin.ts'
+import { write, fsPlugin } from './fsPlugin.ts'
 import fs from 'fs-extra'
+import type { App } from '../App.ts'
 
 describe('write', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')
@@ -23,5 +24,24 @@ describe('write', () => {
     await write(filePath, text)
   })
 
-  test('clean at the beginning of the plugin generation')
+  test('clean at the beginning of the plugin generation', async () => {
+    const cleanDir = path.resolve(mocksPath, './tmp-clean')
+    const nestedFile = path.resolve(cleanDir, 'test.txt')
+
+    await fs.ensureDir(cleanDir)
+    await fs.outputFile(nestedFile, 'should be removed')
+
+    expect(await fs.pathExists(cleanDir)).toBe(true)
+    expect(await fs.pathExists(nestedFile)).toBe(true)
+
+    const appStub = {
+      context: {
+        events: { on: vi.fn() },
+      },
+    } as unknown as App
+
+    await fsPlugin.install(appStub, { clean: { path: cleanDir } })
+
+    expect(await fs.pathExists(cleanDir)).toBe(false)
+  })
 })

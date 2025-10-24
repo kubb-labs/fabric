@@ -71,10 +71,10 @@ export type AppContext<TOptions = unknown> = {
 type AllOptional<T> = {} extends T ? true : false
 
 export type Install<TOptions = unknown> = TOptions extends any[]
-  ? (app: App, ...options: TOptions) => void
+  ? (app: App, ...options: TOptions) => void | Promise<void>
   : AllOptional<TOptions> extends true
-    ? (app: App, options: TOptions | undefined) => void
-    : (app: App, options: TOptions) => void
+    ? (app: App, options: TOptions | undefined) => void | Promise<void>
+    : (app: App, options: TOptions) => void | Promise<void>
 
 export type Inject<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
   ? (app: App, ...options: TOptions) => Partial<TAppExtension>
