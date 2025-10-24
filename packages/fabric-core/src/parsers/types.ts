@@ -5,7 +5,7 @@ type PrintOptions = {
   extname?: KubbFile.Extname
 }
 
-export type Parser<TOptions = any[], TMeta extends object = any> = {
+export type Parser<TOptions = unknown, TMeta extends object = any> = {
   name: string
   type: 'parser'
   /**
@@ -19,4 +19,4 @@ export type Parser<TOptions = any[], TMeta extends object = any> = {
   parse(file: KubbFile.ResolvedFile<TMeta>, options: PrintOptions): Promise<string>
 }
 
-export type UserParser<TOptions = any[], TMeta extends object = any> = Omit<Parser<TOptions, TMeta>, 'type'>
+export type UserParser<TOptions = unknown, TMeta extends object = any> = Omit<Parser<TOptions, TMeta>, 'type'>

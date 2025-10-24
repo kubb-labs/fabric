@@ -14,8 +14,8 @@ export type DefineApp<TOptions> = (rootComponent?: Component, options?: TOptions
 export function defineApp<TOptions = unknown>(instance?: RootRenderFunction<App<TOptions>>): DefineApp<TOptions> {
   function createApp(options?: TOptions): App {
     const events = new AsyncEventEmitter<AppEvents>()
-    const installedPlugins = new Set<Plugin>()
-    const installedParsers = new Set<Parser>()
+    const installedPlugins = new Set<Plugin<any>>()
+    const installedParsers = new Set<Parser<any>>()
     const fileManager = new FileManager({ events })
     const context = {
       events,

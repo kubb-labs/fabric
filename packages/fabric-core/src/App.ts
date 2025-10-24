@@ -68,27 +68,30 @@ export type AppContext<TOptions = unknown> = {
   installedParsers: Set<Parser>
 }
 
-export type Install<TOptions = any[] | object | undefined> = TOptions extends any[]
-  ? (app: App, ...options: TOptions) => void
-  : TOptions extends object
-    ? (app: App, options?: TOptions) => void
-    : (app: App) => void
+type AllOptional<T> = {} extends T ? true : false
 
-export type Inject<TOptions = any[] | object | undefined, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
+export type Install<TOptions = unknown> = TOptions extends any[]
+  ? (app: App, ...options: TOptions) => void
+  : AllOptional<TOptions> extends true
+    ? (app: App, options: TOptions | undefined) => void
+    : (app: App, options: TOptions) => void
+
+export type Inject<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
   ? (app: App, ...options: TOptions) => Partial<TAppExtension>
-  : TOptions extends object
-    ? (app: App, options?: TOptions) => Partial<TAppExtension>
-    : (app: App) => Partial<TAppExtension>
+  : AllOptional<TOptions> extends true
+    ? (app: App, options: TOptions | undefined) => Partial<TAppExtension>
+    : (app: App, options: TOptions) => Partial<TAppExtension>
 
 export interface App<TOptions = unknown> extends Kubb.App {
   context: AppContext<TOptions>
   files: Array<KubbFile.ResolvedFile>
-  use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
-    pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
-    ...options: TOptions extends any[] ? NoInfer<TOptions> : [NoInfer<TOptions>]
-  ): (this & TAppExtension) | Promise<this & TAppExtension>
-  use<TOptions extends any[] | object = any, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
-    pluginOrParser: Plugin<TOptions, TAppExtension> | Parser<TOptions, TMeta>,
+  use<TPluginOptions = unknown, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
+    pluginOrParser: Plugin<TPluginOptions, TAppExtension> | Parser<TPluginOptions, TMeta>,
+    ...options: TPluginOptions extends any[]
+      ? NoInfer<TPluginOptions>
+      : AllOptional<TPluginOptions> extends true
+        ? [NoInfer<TPluginOptions>?] // Optional when all props are optional
+        : [NoInfer<TPluginOptions>] // Required otherwise
   ): (this & TAppExtension) | Promise<this & TAppExtension>
   addFile(...files: Array<KubbFile.File>): Promise<void>
 }
