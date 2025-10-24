@@ -12,6 +12,13 @@ declare global {
 
 export type Component = any
 
+export type AppOptions = {
+  /**
+   * @default 'sequential'
+   */
+  mode?: AppMode
+}
+
 export type AppEvents = {
   /**
    * Called in the beginning of the app lifecycle.
@@ -49,7 +56,7 @@ export type AppEvents = {
       processed: number
       total: number
       percentage: number
-      source: string
+      source?: string
       file: KubbFile.ResolvedFile
     },
   ]
@@ -60,13 +67,15 @@ export type AppEvents = {
   'process:end': [{ files: KubbFile.ResolvedFile[] }]
 }
 
-export type AppContext<TOptions = unknown> = {
+export type AppContext<TOptions extends AppOptions> = {
   options?: TOptions
   events: AsyncEventEmitter<AppEvents>
   fileManager: FileManager
   installedPlugins: Set<Plugin>
   installedParsers: Set<Parser>
 }
+
+export type AppMode = 'sequential' | 'parallel'
 
 type AllOptional<T> = {} extends T ? true : false
 
@@ -82,7 +91,7 @@ export type Inject<TOptions = unknown, TAppExtension extends Record<string, any>
     ? (app: App, options: TOptions | undefined) => Partial<TAppExtension>
     : (app: App, options: TOptions) => Partial<TAppExtension>
 
-export interface App<TOptions = unknown> extends Kubb.App {
+export interface App<TOptions extends AppOptions = AppOptions> extends Kubb.App {
   context: AppContext<TOptions>
   files: Array<KubbFile.ResolvedFile>
   use<TPluginOptions = unknown, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(

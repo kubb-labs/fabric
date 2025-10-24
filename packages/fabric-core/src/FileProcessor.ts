@@ -4,12 +4,16 @@ import pLimit from 'p-limit'
 import type { Parser } from './parsers/types.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { AppEvents } from './App.ts'
+import type { AppEvents, AppMode } from './App.ts'
 
 export type ProcessFilesProps = {
   parsers?: Set<Parser>
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
   dryRun?: boolean
+  /**
+   * @default 'sequential'
+   */
+  mode?: AppMode
 }
 
 type GetParseOptions = {
@@ -59,31 +63,51 @@ export class FileProcessor {
     return parser.parse(file, { extname: parseExtName })
   }
 
-  async run(files: Array<KubbFile.ResolvedFile>, { parsers, dryRun, extension }: ProcessFilesProps = {}): Promise<KubbFile.ResolvedFile[]> {
+  async run(
+    files: Array<KubbFile.ResolvedFile>,
+    { parsers, mode = 'sequential', dryRun, extension }: ProcessFilesProps = {},
+  ): Promise<KubbFile.ResolvedFile[]> {
     await this.events.emit('process:start', { files })
 
     let processed = 0
     const total = files.length
 
-    const promises = files.map((resolvedFile, index) =>
-      this.#limit(async () => {
-        await this.events.emit('file:start', { file: resolvedFile, index, total })
+    const processOne = async (resolvedFile: KubbFile.ResolvedFile, index: number) => {
+      const percentage = (processed / total) * 100
 
-        if (!dryRun) {
-          const source = await this.parse(resolvedFile, { extension, parsers })
-          const nextProcessed = processed + 1
-          const percentage = (nextProcessed / total) * 100
-          processed = nextProcessed
-          await this.events.emit('process:progress', { file: resolvedFile, source, processed, percentage, total })
+      await this.events.emit('file:start', { file: resolvedFile, index, total })
+
+      const source = dryRun ? undefined : await this.parse(resolvedFile, { extension, parsers })
+
+      await this.events.emit('process:progress', {
+        file: resolvedFile,
+        source,
+        processed,
+        percentage,
+        total,
+      })
+
+      processed++
+
+      await this.events.emit('file:end', { file: resolvedFile, index, total })
+    }
+
+    if (mode === 'sequential') {
+      async function* asyncFiles() {
+        for (let index = 0; index < files.length; index++) {
+          yield [files[index], index] as const
         }
+      }
 
-        await this.events.emit('file:end', { file: resolvedFile, index, total })
-
-        processed++
-      }),
-    )
-
-    await Promise.all(promises)
+      for await (const [file, index] of asyncFiles()) {
+        if (file) {
+          await processOne(file, index)
+        }
+      }
+    } else {
+      const promises = files.map((resolvedFile, index) => this.#limit(() => processOne(resolvedFile, index)))
+      await Promise.all(promises)
+    }
 
     await this.events.emit('process:end', { files })
 

@@ -3,15 +3,15 @@ import { isFunction } from 'remeda'
 import type { Plugin } from './plugins/types.ts'
 import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { AppContext, Component, AppEvents } from './App.ts'
+import type { AppContext, AppEvents, AppOptions } from './App.ts'
 
 import type { App } from './index.ts'
 
 type RootRenderFunction<TApp extends App> = (app: TApp) => void | Promise<void>
 
-export type DefineApp<TOptions> = (rootComponent?: Component, options?: TOptions) => App
+export type DefineApp<TOptions> = (options?: TOptions) => App
 
-export function defineApp<TOptions = unknown>(instance?: RootRenderFunction<App<TOptions>>): DefineApp<TOptions> {
+export function defineApp<TOptions extends AppOptions>(instance?: RootRenderFunction<App<TOptions>>): DefineApp<TOptions> {
   function createApp(options?: TOptions): App {
     const events = new AsyncEventEmitter<AppEvents>()
     const installedPlugins = new Set<Plugin<any>>()

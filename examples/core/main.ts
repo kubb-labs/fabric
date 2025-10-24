@@ -1,3 +1,4 @@
 import './example1/run.ts'
 import './example2/run.ts'
 import './example3/run.ts'
+import './example4/run.ts'

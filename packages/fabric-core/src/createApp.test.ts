@@ -12,11 +12,11 @@ describe('createApp', () => {
   })
 
   test('creates an app with the fsPlugin and calls write on progress', async () => {
-    const onWrite = vi.fn()
+    const onBeforeWrite = vi.fn()
     const spy = vi.spyOn(typescriptParser, 'parse')
 
     const app = createApp()
-    app.use(fsPlugin, { onWrite })
+    app.use(fsPlugin, { onBeforeWrite, dryRun: false })
     app.use(typescriptParser)
 
     await app.addFile({
@@ -30,18 +30,18 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write({ extension: { '.ts': '.ts' }, dryRun: false })
+    await app.write({ extension: { '.ts': '.ts' } })
 
-    expect(onWrite).toHaveBeenCalledWith('/tmp/index.ts', expect.stringContaining('export const x = 1'))
+    expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.ts', expect.stringContaining('export const x = 1'))
     expect(spy).toHaveBeenCalled()
   })
 
   test('call default parser when no extension are set', async () => {
-    const onWrite = vi.fn()
+    const onBeforeWrite = vi.fn()
     const spy = vi.spyOn(defaultParser, 'parse')
 
     const app = createApp()
-    app.use(fsPlugin, { onWrite })
+    app.use(fsPlugin, { onBeforeWrite, dryRun: false })
 
     await app.addFile({
       baseName: 'index.ts',
@@ -54,17 +54,17 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write({ dryRun: false })
+    await app.write()
 
-    expect(onWrite).toHaveBeenCalledWith('/tmp/index.ts', 'export const y = 2')
+    expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.ts', 'export const y = 2')
     expect(spy).toHaveBeenCalled()
   })
 
   test('does not call write when fsPlugin is in dryRun mode', async () => {
-    const onWrite = vi.fn()
+    const onBeforeWrite = vi.fn()
 
     const app = createApp()
-    app.use(fsPlugin, { onWrite })
+    app.use(fsPlugin, { onBeforeWrite, dryRun: true })
 
     await app.addFile({
       baseName: 'index.ts',
@@ -77,13 +77,13 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write({ extension: { '.ts': '.ts' }, dryRun: true })
+    await app.write({ extension: { '.ts': '.ts' } })
 
-    expect(onWrite).not.toHaveBeenCalled()
+    expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.ts', undefined)
   })
 
   test('creates an app with the fsPlugin and parser for vue', async () => {
-    const onWrite = vi.fn()
+    const onBeforeWrite = vi.fn()
 
     const vueParser = createParser({
       name: 'vue',
@@ -97,7 +97,7 @@ describe('createApp', () => {
     const spy = vi.spyOn(vueParser, 'parse')
 
     const app = createApp()
-    app.use(fsPlugin, { onWrite })
+    app.use(fsPlugin, { onBeforeWrite, dryRun: false })
     app.use(vueParser)
 
     await app.addFile({
@@ -111,9 +111,9 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write({ extension: { '.vue': '.vue' }, dryRun: false })
+    await app.write({ extension: { '.vue': '.vue' } })
 
-    expect(onWrite).toHaveBeenCalledWith('/tmp/index.vue', '<script>const test = 2;<script>')
+    expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.vue', '<script>const test = 2;<script>')
 
     expect(spy).toHaveBeenCalled()
   })

@@ -110,7 +110,7 @@ describe('barrelPlugin', () => {
     const [calledArg] = addSpy.mock.calls[0] as any
     const file = calledArg as KubbFile.ResolvedFile
 
-    expect(addSpy).toHaveBeenCalledTimes(1)
+    expect(addSpy).toHaveBeenCalledTimes(2)
     expect(file.baseName).toBe('index.ts')
     expect(file.exports).toMatchSnapshot()
   })
@@ -131,7 +131,7 @@ describe('barrelPlugin', () => {
     const [calledArg] = addSpy.mock.calls[0] as any
     const file = calledArg as KubbFile.ResolvedFile
 
-    expect(addSpy).toHaveBeenCalledTimes(1)
+    expect(addSpy).toHaveBeenCalledTimes(2)
     expect(file.baseName).toBe('index.ts')
     expect(file.exports).toMatchSnapshot()
   })

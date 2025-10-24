@@ -6,15 +6,15 @@ import type * as KubbFile from '../KubbFile.ts'
 
 type WriteOptions = {
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
-  dryRun?: boolean
 }
 
 type Options = {
+  dryRun?: boolean
   /**
    * Optional callback that is invoked whenever a file is written by the plugin.
    * Useful for tests to observe write operations without spying on internal functions.
    */
-  onWrite?: (path: string, data: string) => void | Promise<void>
+  onBeforeWrite?: (path: string, data: string | undefined) => void | Promise<void>
   clean?: {
     path: string
   }
@@ -24,13 +24,14 @@ type ExtendOptions = {
   write(options?: WriteOptions): Promise<void>
 }
 
-export async function write(path: string, data: string, options: { sanity?: boolean } = {}): Promise<string | undefined> {
-  if (data.trim() === '') {
-    return undefined
-  }
+export async function write(path: string, data: string | undefined, options: { sanity?: boolean } = {}): Promise<string | undefined> {
   return switcher(
     {
-      node: async (path: string, data: string, { sanity }: { sanity?: boolean }) => {
+      node: async (path, data: string | undefined, { sanity }: { sanity?: boolean }) => {
+        if (!data || data?.trim() === '') {
+          return undefined
+        }
+
         try {
           const oldContent = await fs.readFile(resolve(path), {
             encoding: 'utf-8',
@@ -42,7 +43,7 @@ export async function write(path: string, data: string, options: { sanity?: bool
           /* empty */
         }
 
-        await fs.outputFile(resolve(path), data, { encoding: 'utf-8' })
+        await fs.outputFile(resolve(path), data.trim(), { encoding: 'utf-8' })
 
         if (sanity) {
           const savedData = await fs.readFile(resolve(path), {
@@ -58,29 +59,29 @@ export async function write(path: string, data: string, options: { sanity?: bool
 
         return data
       },
-      bun: async (path: string, data: string, { sanity }: { sanity?: boolean }) => {
-        try {
-          await Bun.write(resolve(path), data)
+      bun: async (path: string, data: string | undefined, { sanity }: { sanity?: boolean }) => {
+        if (!data || data?.trim() === '') {
+          return undefined
+        }
 
-          if (sanity) {
-            const file = Bun.file(resolve(path))
-            const savedData = await file.text()
+        await Bun.write(resolve(path), data.trim())
 
-            if (savedData?.toString() !== data?.toString()) {
-              throw new Error(`Sanity check failed for ${path}\n\nData[${path.length}]:\n${path}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
-            }
+        if (sanity) {
+          const file = Bun.file(resolve(path))
+          const savedData = await file.text()
 
-            return savedData
+          if (savedData?.toString() !== data?.toString()) {
+            throw new Error(`Sanity check failed for ${path}\n\nData[${path.length}]:\n${path}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
           }
 
-          return data
-        } catch (e) {
-          console.error(e)
+          return savedData
         }
+
+        return data
       },
     },
     'node',
-  )(path, data.trim(), options)
+  )(path, data, options)
 }
 
 // biome-ignore lint/suspicious/noTsIgnore: production ready
@@ -101,29 +102,29 @@ declare global {
 
 export const fsPlugin = createPlugin<Options, ExtendOptions>({
   name: 'fs',
-  install(app, options) {
-    if (options?.clean) {
+  install(app, options = {}) {
+    if (options.clean) {
       fs.removeSync(options.clean.path)
     }
 
     app.context.events.on('process:progress', async ({ file, source }) => {
-      if (options?.onWrite) {
-        await options.onWrite(file.path, source)
+      if (options.onBeforeWrite) {
+        await options.onBeforeWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })
     })
   },
-  inject(app) {
+  inject(app, { dryRun } = {}) {
     return {
       async write(
         options = {
           extension: { '.ts': '.ts' },
-          dryRun: false,
         },
       ) {
         await app.context.fileManager.write({
+          mode: app.context.options?.mode,
           extension: options.extension,
-          dryRun: options.dryRun,
+          dryRun,
           parsers: app.context.installedParsers,
         })
       },
