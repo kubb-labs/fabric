@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.1.8
+
+### Patch Changes
+
+- [`71622a1`](https://github.com/kubb-labs/fabric/commit/71622a1986169a73b7f10d83941ffb03f81490ef) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - graphPlugin
+
 ## 0.1.7
 
 ### Patch Changes
