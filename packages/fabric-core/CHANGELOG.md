@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.0
+
+### Minor Changes
+
+- [`9a01dfd`](https://github.com/kubb-labs/fabric/commit/9a01dfd5f8941ec1d26832526f3c24460c496a48) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Prepare v0.1.0
+
 ## 0.1.8
 
 ### Patch Changes
