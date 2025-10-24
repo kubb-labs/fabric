@@ -6,6 +6,11 @@ type BarrelData = {
   name: string
 }
 
+export type Graph = {
+  nodes: Array<{ id: string; label: string }>
+  edges: Array<{ from: string; to: string }>
+}
+
 export class TreeNode<TData = unknown> {
   data: TData
   parent?: TreeNode<TData>
@@ -60,6 +65,27 @@ export class TreeNode<TData = unknown> {
       if (predicate(leaf)) return leaf
     }
     return undefined
+  }
+
+  static toGraph(root: TreeNode<BarrelData>): Graph {
+    const nodes: Array<{ id: string; label: string }> = []
+    const edges: Array<{ from: string; to: string }> = []
+
+    root.forEach((node) => {
+      nodes.push({
+        id: node.data.path,
+        label: node.data.name,
+      })
+
+      for (const child of node.children) {
+        edges.push({
+          from: node.data.path,
+          to: child.data.path,
+        })
+      }
+    })
+
+    return { nodes, edges }
   }
 
   static fromFiles(files: Array<KubbFile.File>, rootFolder = ''): TreeNode<BarrelData> | null {

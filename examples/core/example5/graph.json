@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "./example5",
+      "label": "./example5"
+    },
+    {
+      "id": "./example5/gen",
+      "label": "gen"
+    },
+    {
+      "id": "./example5/gen/hooks",
+      "label": "hooks"
+    },
+    {
+      "id": "./example5/gen/hooks/controller",
+      "label": "controller"
+    },
+    {
+      "id": "./example5/gen/hooks/controller/testController.ts",
+      "label": "testController.ts"
+    },
+    {
+      "id": "./example5/gen/hooks/controller/fileController.ts",
+      "label": "fileController.ts"
+    }
+  ],
+  "edges": [
+    {
+      "from": "./example5",
+      "to": "./example5/gen"
+    },
+    {
+      "from": "./example5/gen",
+      "to": "./example5/gen/hooks"
+    },
+    {
+      "from": "./example5/gen/hooks",
+      "to": "./example5/gen/hooks/controller"
+    },
+    {
+      "from": "./example5/gen/hooks/controller",
+      "to": "./example5/gen/hooks/controller/testController.ts"
+    },
+    {
+      "from": "./example5/gen/hooks/controller",
+      "to": "./example5/gen/hooks/controller/fileController.ts"
+    }
+  ]
+}

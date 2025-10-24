@@ -3,21 +3,7 @@ import { createPlugin } from './createPlugin.ts'
 import { relative } from 'node:path'
 import process from 'node:process'
 
-type Options = {}
-
-// biome-ignore lint/suspicious/noTsIgnore: production ready
-// @ts-ignore
-declare module '@kubb/fabric-core' {
-  interface App {}
-}
-
-declare global {
-  namespace Kubb {
-    interface App {}
-  }
-}
-
-export const progressPlugin = createPlugin<Options>({
+export const progressPlugin = createPlugin({
   name: 'progress',
   install(app) {
     const progressBar = new SingleBar(

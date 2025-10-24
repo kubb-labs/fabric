@@ -36,7 +36,13 @@ export type AppEvents = {
    * Called once before processing any files.
    */
   'process:start': [{ files: KubbFile.ResolvedFile[] }]
+  /**
+   * Called when FileManager is adding files to its cache
+   */
 
+  'file:add': [{ files: KubbFile.ResolvedFile[] }]
+  'write:start': [{ files: KubbFile.ResolvedFile[] }]
+  'write:end': [{ files: KubbFile.ResolvedFile[] }]
   /**
    * Called for each file when processing begins.
    */

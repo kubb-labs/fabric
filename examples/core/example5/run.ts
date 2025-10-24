@@ -1,12 +1,11 @@
 import { createApp } from '@kubb/fabric-core'
-import { fsPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin, graphPlugin } from '@kubb/fabric-core/plugins'
 
 export const app = createApp()
 
 app.addFile({
   baseName: 'testController.ts',
-  path: './example3/gen/hooks/controller/testController.ts',
+  path: './example5/gen/hooks/controller/testController.ts',
   sources: [
     {
       name: 'testController',
@@ -22,7 +21,7 @@ app.addFile({
 
 app.addFile({
   baseName: 'fileController.ts',
-  path: './example3/gen/hooks/controller/fileController.ts',
+  path: './example5/gen/hooks/controller/fileController.ts',
   sources: [
     {
       name: 'fileController',
@@ -36,9 +35,9 @@ app.addFile({
   exports: [],
 })
 
-app.use(fsPlugin, { clean: { path: './example3/gen' } })
-app.use(typescriptParser)
-app.use(barrelPlugin, { root: './example3/gen/hooks', mode: 'named' })
+app.use(fsPlugin, {
+  clean: { path: './example5/gen' },
+})
+app.use(graphPlugin, { root: './example5', open: false })
 
 app.write()
-app.writeEntry({ root: './example3/gen', mode: 'named' })

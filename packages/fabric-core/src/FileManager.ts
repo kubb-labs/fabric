@@ -58,6 +58,8 @@ export class FileManager {
       resolvedFiles.push(resolvedFile)
     }
 
+    await this.events.emit('file:add', { files: resolvedFiles })
+
     return resolvedFiles
   }
 
@@ -88,10 +90,15 @@ export class FileManager {
     return files.filter(Boolean)
   }
 
+  //TODO add test and check if write of FileManager contains the newly added file
   async write(options: ProcessFilesProps): Promise<KubbFile.ResolvedFile[]> {
+    await this.events.emit('write:start', { files: this.files })
+
     const resolvedFiles = await this.processor.run(this.files, options)
 
     this.clear()
+
+    await this.events.emit('write:end', { files: resolvedFiles })
 
     return resolvedFiles
   }

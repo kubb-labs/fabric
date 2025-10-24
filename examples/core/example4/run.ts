@@ -5,7 +5,7 @@ import { typescriptParser } from '@kubb/fabric-core/parsers'
 export const app = createApp()
 
 app.addFile({
-  baseName: 'test.ts',
+  baseName: 'testController.ts',
   path: './example4/gen/hooks/controller/testController.ts',
   sources: [
     {
@@ -21,7 +21,7 @@ app.addFile({
 })
 
 app.addFile({
-  baseName: 'test.ts',
+  baseName: 'fileController.ts',
   path: './example4/gen/hooks/controller/fileController.ts',
   sources: [
     {

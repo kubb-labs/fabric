@@ -88,11 +88,14 @@
     "js-runtime": "^0.0.8",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.2.0",
+    "serve-handler": "^6.1.6",
+    "tiny-open": "^1.2.0",
     "typescript": "5.9.3"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
     "@types/fs-extra": "^11.0.4",
+    "@types/serve-handler": "^6.1.4",
     "remeda": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"

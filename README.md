@@ -138,6 +138,20 @@ import { progressPlugin } from '@kubb/fabric-core/plugins'
 |---|---|---|-----------------------------------------------------------------------------------------|
 | — | — | — | This plugin has no options, it displays a CLI progress bar by listening to core events. |
 
+
+#### `graphPlugin`
+Shows a graph of all files
+
+```
+import { graphPlugin } from '@kubb/fabric-core/plugins'
+```
+
+| Option | Type      | Default | Description                                   |
+|--------|-----------|---------|-----------------------------------------------|
+| root   | `string`  |         | Root directory where to start searching from. |
+| open   | `boolean` | false   | Open a webpage with the generated graph       |
+
+
 #### `reactPlugin`
 Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.
 

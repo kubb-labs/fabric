@@ -3,7 +3,7 @@
 import { createPlugin } from './createPlugin.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
-import path, { resolve } from 'node:path'
+import path from 'node:path'
 import { getRelativePath } from '../utils/getRelativePath.ts'
 import { createFile } from '../createFile.ts'
 
@@ -55,8 +55,13 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
   const cachedFiles = new Map<KubbFile.Path, KubbFile.File>()
   const dedupe = new Map<KubbFile.Path, Set<string>>()
 
-  const tree = TreeNode.fromFiles(files, root)
-  tree?.forEach((node) => {
+  const treeNode = TreeNode.fromFiles(files, root)
+
+  if (!treeNode) {
+    return []
+  }
+
+  treeNode.forEach((node) => {
     // Only create a barrel for directory-like nodes that have a parent with a path
     if (!node?.children || !node.parent?.data.path) {
       return
@@ -139,17 +144,11 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
       return undefined
     }
 
-    app.context.events.onOnce('process:end', async ({ files }) => {
+    app.context.events.on('write:start', async ({ files }) => {
       const root = options.root
       const barrelFiles = getBarrelFiles({ files, root, mode: options.mode })
 
       await app.context.fileManager.add(...barrelFiles)
-
-      await app.context.fileManager.write({
-        mode: app.context.options?.mode,
-        dryRun: options.dryRun,
-        parsers: app.context.installedParsers,
-      })
     })
   },
   inject(app, options) {
@@ -163,7 +162,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
           return undefined
         }
 
-        const rootPath = resolve(root, 'index.ts')
+        const rootPath = path.resolve(root, 'index.ts')
 
         const barrelFiles = app.files.filter((file) => {
           return file.sources.some((source) => source.isIndexable)

@@ -35,9 +35,9 @@ function makeFiles(count = 3): KubbFile.ResolvedFile[] {
 describe('progressPlugin', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
-    startSpy = vi.spyOn(SingleBar.prototype as any, 'start').mockImplementation(() => undefined as any)
-    incrementSpy = vi.spyOn(SingleBar.prototype as any, 'increment').mockImplementation(() => undefined as any)
-    stopSpy = vi.spyOn(SingleBar.prototype as any, 'stop').mockImplementation(() => undefined as any)
+    startSpy = vi.spyOn(SingleBar.prototype as any, 'start')
+    incrementSpy = vi.spyOn(SingleBar.prototype as any, 'increment')
+    stopSpy = vi.spyOn(SingleBar.prototype as any, 'stop')
   })
 
   test('starts progress bar on process:start with total and initial value 1', async () => {

@@ -76,4 +76,10 @@ describe('TreeNode', () => {
       ]
     `)
   })
+
+  test('if TreeNode.toGraph renders a graph correctly', () => {
+    expect(tree).toBeDefined()
+
+    expect(TreeNode.toGraph(tree!)).toMatchSnapshot()
+  })
 })
