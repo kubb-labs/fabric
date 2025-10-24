@@ -1,5 +1,15 @@
 # @kubb/fabric-core
 
+## 0.1.6
+
+### Patch Changes
+
+- [#12](https://github.com/kubb-labs/fabric/pull/12) [`ead05cc`](https://github.com/kubb-labs/fabric/commit/ead05cc1d1a57bec1d72d4159f6fcb54371bfd0c) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - - Options in install and use could be optional or required
+
+- [`67295d8`](https://github.com/kubb-labs/fabric/commit/67295d8c210d768d1e4307c1c7a683ebe978f145) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - `fileProcessor.parse` to use parsers
+
+- [#12](https://github.com/kubb-labs/fabric/pull/12) [`ead05cc`](https://github.com/kubb-labs/fabric/commit/ead05cc1d1a57bec1d72d4159f6fcb54371bfd0c) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Support for barrelPlugin to create barrel files
+
 ## 0.1.5
 
 ### Patch Changes
