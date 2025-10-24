@@ -50,6 +50,7 @@ export const reactPlugin = createPlugin<Options, ExtendOptions>({
         await app.context.events.emit('start')
       },
       async renderToString(App) {
+        await app.context.events.emit('start')
         return runtime.renderToString(createElement(App))
       },
       async waitUntilExit() {

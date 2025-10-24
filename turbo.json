@@ -17,8 +17,7 @@
     "start": {
       "dependsOn": ["^start"],
       "outputs": ["dist/**"],
-      "cache": false,
-      "persistent": true
+      "cache": false
     },
     "test": {
       "dependsOn": ["^build"],

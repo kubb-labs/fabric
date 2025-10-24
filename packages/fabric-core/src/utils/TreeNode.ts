@@ -95,6 +95,7 @@ export class TreeNode<TData = unknown> {
 
     const filteredFiles = files.filter((file) => {
       const filePath = normalizePath(file.path)
+
       return !filePath.endsWith('.json') && (!rootFolder || filePath.startsWith(rootPrefix))
     })
 

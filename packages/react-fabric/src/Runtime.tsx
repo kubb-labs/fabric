@@ -46,20 +46,20 @@ export class Runtime {
     console.error = (data: string | Error) => {
       const message = typeof data === 'string' ? data : data?.message
 
-      if (message.match(/Encountered two children with the same key/gi)) {
+      if (message?.match(/Encountered two children with the same key/gi)) {
         return
       }
-      if (message.match(/React will try to recreat/gi)) {
+      if (message?.match(/React will try to recreat/gi)) {
         return
       }
-      if (message.match(/Each child in a list should have a unique/gi)) {
+      if (message?.match(/Each child in a list should have a unique/gi)) {
         return
       }
-      if (message.match(/The above error occurred in the <KubbErrorBoundary/gi)) {
+      if (message?.match(/The above error occurred in the <KubbErrorBoundary/gi)) {
         return
       }
 
-      if (message.match(/A React Element from an older version of React was render/gi)) {
+      if (message?.match(/A React Element from an older version of React was render/gi)) {
         return
       }
 
@@ -126,7 +126,8 @@ export class Runtime {
       return
     }
 
-    this.fileManager.clear()
+    // TODO check if we need a clear
+    // this.fileManager.clear()
 
     processFiles(this.#rootNode, this.fileManager)
 

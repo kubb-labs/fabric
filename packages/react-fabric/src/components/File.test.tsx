@@ -2,6 +2,7 @@ import { expect } from 'vitest'
 import { File } from './File.tsx'
 import { createApp } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 describe('<File/>', () => {
   test('render text', async () => {
@@ -483,7 +484,7 @@ describe('<File.Import/>', () => {
     `)
   })
 
-  test('render Import with File.Import inside of File', async () => {
+  test('render Import with File.Import inside of File with render', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path.ts">
@@ -494,8 +495,7 @@ describe('<File.Import/>', () => {
     }
     const app = createApp()
     app.use(reactPlugin)
-
-    const output = await app.renderToString(Component)
+    app.use(typescriptParser)
 
     await app.render(Component)
     const files = app.files
@@ -533,6 +533,22 @@ describe('<File.Import/>', () => {
         },
       ]
     `)
+  })
+
+  test('render Import with File.Import inside of File with renderToString', async () => {
+    const Component = () => {
+      return (
+        <File baseName="test.ts" path="path.ts">
+          <File.Import name="React" path="react" />
+          <File.Source>test</File.Source>
+        </File>
+      )
+    }
+    const app = createApp()
+    app.use(reactPlugin)
+    app.use(typescriptParser)
+
+    const output = await app.renderToString(Component)
     expect(output).toMatchInlineSnapshot(`
       "import React from "react";
       test"
