@@ -89,10 +89,10 @@ Factory to create your own `createApp` with an optional bootstrap `instance(app)
 
 ## Plugins
 #### `fsPlugin`
-Writes files to disk on `process:progress`., supports dry runs and cleaning an output folder before writing.
+Writes files to disk on `process:progress`, supports dry runs and cleaning an output folder before writing.
 
 ```
-import { fsPlugin } @kubb/fabric-core/plugins`
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 ```
 
 | Option | Type                                                                 | Default | Description                                                           |
@@ -111,7 +111,7 @@ Injected `app.write` options (via `fsPlugin`):
 Generates `index.ts` barrel files per folder at `process:end`. `writeEntry` creates a single entry barrel at `root`.
 
 ```
-import { barrelPlugin } @kubb/fabric-core/plugins`
+import { barrelPlugin } from '@kubb/fabric-core/plugins'
 ```
 
 | Option | Type                                       | Default | Description |
@@ -131,7 +131,7 @@ Injected `app.writeEntry` parameters (via `barrelPlugin`):
 Shows a CLI progress bar by listening to core events.
 
 ```
-import { progressPlugin } @kubb/fabric-core/plugins`
+import { progressPlugin } from '@kubb/fabric-core/plugins'
 ```
 
 | Option | Type | Default | Description                                                                             |
@@ -142,7 +142,7 @@ import { progressPlugin } @kubb/fabric-core/plugins`
 Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.
 
 ```
-import { reactPlugin } @kubb/react-fabric/plugins`
+import { reactPlugin } from '@kubb/react-fabric/plugins'
 ```
 
 | Option | Type | Default | Description |
@@ -166,7 +166,7 @@ Factory to declare a plugin that can be registered via `app.use`.
 
 | Field | Required | Description                                                                                                               |
 |---|---|---------------------------------------------------------------------------------------------------------------------------|
-| `name` | Yes | tring identifier of your plugin.                                                                                          |
+| `name` | Yes | String identifier of your plugin.                                                                                         |
 | `install(app, options)` | Yes | Called when the plugin is registered. You can subscribe to core events and perform side effects here.                     |
 | `inject?(app, options)` | No | Return synchronously the runtime methods/properties to merge into `app` (e.g. `write`, `render`). This must not be async. |
 
@@ -203,7 +203,7 @@ app.sayHello() // -> Hello Fabric!
 Prints TS/JS imports/exports and sources, supports extname mapping for generated import/export paths.
 
 ```
-import { typescriptParser } @kubb/fabric-core/parsers`
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 ```
 
 | Option | Type | Default | Description                                                                                 |
@@ -216,7 +216,7 @@ import { typescriptParser } @kubb/fabric-core/parsers`
 Delegates to `typescriptParser` with TSX printing settings.
 
 ```
-import { tsxParser } @kubb/fabric-core/parsers`
+import { tsxParser } from '@kubb/fabric-core/parsers'
 ```
 
 | Option | Type | Default | Description |
@@ -267,13 +267,13 @@ const vueParser = createParser<{ banner?: string }>({
 
 const app = createApp()
 app.use(vueParser)
-app.use(fsPlugin); // make it possible to write to the filsystem
+app.use(fsPlugin); // make it possible to write to the filesystem
 
 app.write({ extension: { '.vue': '.ts' } })
 ```
 
 > [!NOTE]
-> - `app.use` accepts both plugins and parsers. The `fsPlugin` handles I/O and adds ``app.write`. Parsers decide how files are converted to strings for specific extensions.
+> - `app.use` accepts both plugins and parsers. The `fsPlugin` handles I/O and adds `app.write`. Parsers decide how files are converted to strings for specific extensions.
 > - When extension mapping is provided to `app.write`, Fabric picks a parser whose `extNames` include the file’s extension. Otherwise, the default parser is used.
 
 # Supporting Kubb

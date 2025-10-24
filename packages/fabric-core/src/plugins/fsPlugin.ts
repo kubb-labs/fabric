@@ -71,7 +71,7 @@ export async function write(path: string, data: string | undefined, options: { s
           const savedData = await file.text()
 
           if (savedData?.toString() !== data?.toString()) {
-            throw new Error(`Sanity check failed for ${path}\n\nData[${path.length}]:\n${path}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
+            throw new Error(`Sanity check failed for ${path}\n\nData[${data.length}]:\n${data}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
           }
 
           return savedData
