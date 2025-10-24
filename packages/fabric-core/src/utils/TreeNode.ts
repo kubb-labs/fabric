@@ -6,214 +6,113 @@ type BarrelData = {
   name: string
 }
 
-export class TreeNode {
-  data: BarrelData
-  parent?: TreeNode
-  children: Array<TreeNode> = []
-  #cachedLeaves?: Array<TreeNode> = undefined
+export class TreeNode<TData = unknown> {
+  data: TData
+  parent?: TreeNode<TData>
+  children: Array<TreeNode<TData>> = []
+  #cachedLeaves?: Array<TreeNode<TData>>
 
-  constructor(data: BarrelData, parent?: TreeNode) {
+  constructor(data: TData, parent?: TreeNode<TData>) {
     this.data = data
     this.parent = parent
-    return this
   }
 
-  addChild(data: BarrelData): TreeNode {
+  addChild(data: TData): TreeNode<TData> {
     const child = new TreeNode(data, this)
-    if (!this.children) {
-      this.children = []
-    }
     this.children.push(child)
+    this.#cachedLeaves = undefined // invalidate cached leaves
     return child
   }
 
-  get root(): TreeNode {
-    if (!this.parent) {
-      return this
-    }
-    return this.parent.root
-  }
+  get leaves(): Array<TreeNode<TData>> {
+    if (this.#cachedLeaves) return this.#cachedLeaves
+    if (this.children.length === 0) return [this]
 
-  get leaves(): Array<TreeNode> {
-    if (!this.children || this.children.length === 0) {
-      // this is a leaf
-      return [this]
-    }
+    const stack: Array<TreeNode<TData>> = [...this.children]
+    const result: Array<TreeNode<TData>> = []
 
-    if (this.#cachedLeaves) {
-      return this.#cachedLeaves
-    }
-
-    // if not a leaf, return all children's leaves recursively
-    const leaves: TreeNode[] = []
-    if (this.children) {
-      for (let i = 0, { length } = this.children; i < length; i++) {
-        leaves.push.apply(leaves, this.children[i]!.leaves)
+    for (const node of stack) {
+      if (node.children.length) {
+        for (const child of node.children) stack.push(child)
+      } else {
+        result.push(node)
       }
     }
 
-    this.#cachedLeaves = leaves
-
-    return leaves
+    this.#cachedLeaves = result
+    return result
   }
 
-  forEach(callback: (treeNode: TreeNode) => void): this {
-    if (typeof callback !== 'function') {
-      throw new TypeError('forEach() callback must be a function')
-    }
+  forEach(callback: (node: TreeNode<TData>) => void): this {
+    const stack: Array<TreeNode<TData>> = [this]
 
-    // run this node through function
-    callback(this)
-
-    // do the same for all children
-    if (this.children) {
-      for (let i = 0, { length } = this.children; i < length; i++) {
-        this.children[i]?.forEach(callback)
+    for (const node of stack) {
+      callback(node)
+      if (node.children.length) {
+        for (const child of node.children) stack.push(child)
       }
     }
-
     return this
   }
 
-  findDeep(predicate?: (value: TreeNode, index: number, obj: TreeNode[]) => boolean): TreeNode | undefined {
-    if (typeof predicate !== 'function') {
-      throw new TypeError('find() predicate must be a function')
+  findDeep(predicate: (node: TreeNode<TData>) => boolean): TreeNode<TData> | undefined {
+    for (const leaf of this.leaves) {
+      if (predicate(leaf)) return leaf
     }
-
-    return this.leaves.find(predicate)
+    return undefined
   }
 
-  forEachDeep(callback: (treeNode: TreeNode) => void): void {
-    if (typeof callback !== 'function') {
-      throw new TypeError('forEach() callback must be a function')
+  static fromFiles(files: Array<KubbFile.File>, rootFolder = ''): TreeNode<BarrelData> | null {
+    const normalizePath = (p: string): string => p.replace(/\\/g, '/')
+    const normalizedRoot = normalizePath(rootFolder)
+    const rootPrefix = normalizedRoot.endsWith('/') ? normalizedRoot : `${normalizedRoot}/`
+
+    const filteredFiles = files.filter((file) => {
+      const filePath = normalizePath(file.path)
+      return !filePath.endsWith('.json') && (!rootFolder || filePath.startsWith(rootPrefix))
+    })
+
+    if (filteredFiles.length === 0) {
+      return null
     }
 
-    this.leaves.forEach(callback)
-  }
+    const treeNode = new TreeNode<BarrelData>({
+      name: rootFolder || '',
+      path: rootFolder || '',
+      file: undefined,
+    })
 
-  filterDeep(callback: (treeNode: TreeNode) => boolean): Array<TreeNode> {
-    if (typeof callback !== 'function') {
-      throw new TypeError('filter() callback must be a function')
-    }
+    for (const file of filteredFiles) {
+      const relPath = normalizePath(file.path).slice(rootPrefix.length)
+      const parts = relPath.split('/')
 
-    return this.leaves.filter(callback)
-  }
+      let current = treeNode
+      let currentPath = rootFolder
 
-  mapDeep<T>(callback: (treeNode: TreeNode) => T): Array<T> {
-    if (typeof callback !== 'function') {
-      throw new TypeError('map() callback must be a function')
-    }
+      for (const [index, part] of parts.entries()) {
+        const isLast = index === parts.length - 1
+        currentPath += (currentPath.endsWith('/') ? '' : '/') + part
 
-    return this.leaves.map(callback)
-  }
+        let next: TreeNode<BarrelData> | undefined
+        for (const child of current.children) {
+          if ((child.data as BarrelData).name === part) {
+            next = child
+            break
+          }
+        }
 
-  public static build(files: KubbFile.File[], root?: string): TreeNode | null {
-    try {
-      const filteredTree = buildDirectoryTree(files, root)
-
-      if (!filteredTree) {
-        return null
-      }
-
-      const treeNode = new TreeNode({
-        name: filteredTree.name,
-        path: filteredTree.path,
-        file: filteredTree.file,
-      })
-
-      const recurse = (node: typeof treeNode, item: DirectoryTree) => {
-        const subNode = node.addChild({
-          name: item.name,
-          path: item.path,
-          file: item.file,
-        })
-
-        if (item.children?.length) {
-          item.children?.forEach((child) => {
-            recurse(subNode, child)
+        if (!next) {
+          next = current.addChild({
+            name: part,
+            path: currentPath,
+            file: isLast ? file : undefined,
           })
         }
+
+        current = next
       }
-
-      filteredTree.children?.forEach((child) => {
-        recurse(treeNode, child)
-      })
-
-      return treeNode
-    } catch (e) {
-      throw new Error('Something went wrong with creating barrel files with the TreeNode class', { cause: e })
     }
+
+    return treeNode
   }
-}
-
-export type DirectoryTree = {
-  name: string
-  path: string
-  file?: KubbFile.File
-  children: Array<DirectoryTree>
-}
-
-const normalizePath = (p: string): string => p.replace(/\\/g, '/')
-
-export function buildDirectoryTree(files: Array<KubbFile.File>, rootFolder = ''): DirectoryTree | null {
-  const normalizedRootFolder = normalizePath(rootFolder)
-  const rootPrefix = normalizedRootFolder.endsWith('/') ? normalizedRootFolder : `${normalizedRootFolder}/`
-
-  const filteredFiles = files.filter((file) => {
-    const normalizedFilePath = normalizePath(file.path)
-    return rootFolder ? normalizedFilePath.startsWith(rootPrefix) && !normalizedFilePath.endsWith('.json') : !normalizedFilePath.endsWith('.json')
-  })
-
-  if (filteredFiles.length === 0) {
-    return null // No files match the root folder
-  }
-
-  const root: DirectoryTree = {
-    name: rootFolder || '',
-    path: rootFolder || '',
-    children: [],
-  }
-
-  filteredFiles.forEach((file) => {
-    const path = file.path.slice(rootFolder.length)
-    const parts = path.split('/')
-    let currentLevel: DirectoryTree[] = root.children
-    let currentPath = rootFolder
-
-    parts.forEach((part, index) => {
-      if (index !== 0) {
-        currentPath += `/${part}`
-      } else {
-        currentPath += `${part}`
-      }
-
-      let existingNode = currentLevel.find((node) => node.name === part)
-
-      if (!existingNode) {
-        if (index === parts.length - 1) {
-          // If it's the last part, it's a file
-          existingNode = {
-            name: part,
-            file,
-            path: currentPath,
-          } as DirectoryTree
-        } else {
-          // Otherwise, it's a folder
-          existingNode = {
-            name: part,
-            path: currentPath,
-            children: [],
-          } as DirectoryTree
-        }
-        currentLevel.push(existingNode)
-      }
-
-      // Move to the next level if it's a folder
-      if (!existingNode.file) {
-        currentLevel = existingNode.children
-      }
-    })
-  })
-
-  return root
 }

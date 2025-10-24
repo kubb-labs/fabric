@@ -23,141 +23,14 @@ describe('TreeNode', () => {
       meta: {},
     },
   ]
-  const tree = TreeNode.build(files, 'src/')
-  const treeWindows = TreeNode.build(files, 'src\\')
+  const tree = TreeNode.fromFiles(files, 'src/')
+  const treeWindows = TreeNode.fromFiles(files, 'src\\')
 
   test('if schemas folder contains x files and y folders', () => {
     expect(tree).toBeDefined()
     expect(treeWindows).toBeDefined()
 
-    expect(tree).toMatchInlineSnapshot(`
-      TreeNode {
-        "children": [
-          TreeNode {
-            "children": [],
-            "data": {
-              "file": {
-                "baseName": "test.ts",
-                "meta": {},
-                "path": "src/test.ts",
-                "sources": [],
-              },
-              "name": "test.ts",
-              "path": "src/test.ts",
-            },
-            "parent": [Circular],
-          },
-          TreeNode {
-            "children": [
-              TreeNode {
-                "children": [],
-                "data": {
-                  "file": {
-                    "baseName": "hello.ts",
-                    "meta": {},
-                    "path": "src/sub/hello.ts",
-                    "sources": [],
-                  },
-                  "name": "hello.ts",
-                  "path": "src/sub/hello.ts",
-                },
-                "parent": [Circular],
-              },
-              TreeNode {
-                "children": [],
-                "data": {
-                  "file": {
-                    "baseName": "world.ts",
-                    "meta": {},
-                    "path": "src/sub/world.ts",
-                    "sources": [],
-                  },
-                  "name": "world.ts",
-                  "path": "src/sub/world.ts",
-                },
-                "parent": [Circular],
-              },
-            ],
-            "data": {
-              "file": undefined,
-              "name": "sub",
-              "path": "src/sub",
-            },
-            "parent": [Circular],
-          },
-        ],
-        "data": {
-          "file": undefined,
-          "name": "src/",
-          "path": "src/",
-        },
-        "parent": undefined,
-      }
-    `)
-    expect(tree).toMatchInlineSnapshot(`
-      TreeNode {
-        "children": [
-          TreeNode {
-            "children": [],
-            "data": {
-              "file": {
-                "baseName": "test.ts",
-                "meta": {},
-                "path": "src/test.ts",
-                "sources": [],
-              },
-              "name": "test.ts",
-              "path": "src/test.ts",
-            },
-            "parent": [Circular],
-          },
-          TreeNode {
-            "children": [
-              TreeNode {
-                "children": [],
-                "data": {
-                  "file": {
-                    "baseName": "hello.ts",
-                    "meta": {},
-                    "path": "src/sub/hello.ts",
-                    "sources": [],
-                  },
-                  "name": "hello.ts",
-                  "path": "src/sub/hello.ts",
-                },
-                "parent": [Circular],
-              },
-              TreeNode {
-                "children": [],
-                "data": {
-                  "file": {
-                    "baseName": "world.ts",
-                    "meta": {},
-                    "path": "src/sub/world.ts",
-                    "sources": [],
-                  },
-                  "name": "world.ts",
-                  "path": "src/sub/world.ts",
-                },
-                "parent": [Circular],
-              },
-            ],
-            "data": {
-              "file": undefined,
-              "name": "sub",
-              "path": "src/sub",
-            },
-            "parent": [Circular],
-          },
-        ],
-        "data": {
-          "file": undefined,
-          "name": "src/",
-          "path": "src/",
-        },
-        "parent": undefined,
-      }
-    `)
+    expect(tree).toMatchSnapshot()
   })
 
   test('if leaves are rendered correctly', () => {
@@ -185,7 +58,7 @@ describe('TreeNode', () => {
   })
 
   test('if `foreach` is executed correctly', () => {
-    const items: TreeNode['data'][] = []
+    const items: TreeNode<{ name: string }>['data'][] = []
 
     tree?.forEach((treeNode) => {
       items.push(treeNode.data)

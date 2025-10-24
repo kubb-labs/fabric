@@ -5,6 +5,7 @@ import type * as KubbFile from '../KubbFile.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
 import path, { resolve } from 'node:path'
 import { getRelativePath } from '../utils/getRelativePath.ts'
+import { createFile } from '../createFile.ts'
 
 type Mode = 'all' | 'named' | 'propagate' | false
 
@@ -40,104 +41,85 @@ type GetBarrelFilesOptions = {
 }
 
 export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Array<KubbFile.File> {
-  const cachedFiles = new Map<KubbFile.Path, KubbFile.File>()
-
+  // Do not generate when propagating or disabled
   if (mode === 'propagate' || mode === false) {
     return []
   }
 
-  TreeNode.build(files, root)?.forEach((treeNode) => {
-    if (!treeNode || !treeNode.children || !treeNode.parent?.data.path) {
-      return undefined
+  const cachedFiles = new Map<KubbFile.Path, KubbFile.File>()
+  const dedupe = new Map<KubbFile.Path, Set<string>>()
+
+  const tree = TreeNode.fromFiles(files, root)
+  tree?.forEach((node) => {
+    // Only create a barrel for directory-like nodes that have a parent with a path
+    if (!node?.children || !node.parent?.data.path) {
+      return
     }
 
-    const barrelFile: KubbFile.File = {
-      path: path.join(treeNode.parent?.data.path, 'index.ts') as KubbFile.Path,
-      baseName: 'index.ts',
-      exports: [],
-      sources: [],
+    const parentPath = node.parent.data.path as KubbFile.Path
+    const barrelPath = path.join(parentPath, 'index.ts') as KubbFile.Path
+
+    let barrelFile = cachedFiles.get(barrelPath)
+    if (!barrelFile) {
+      barrelFile = createFile({
+        path: barrelPath,
+        baseName: 'index.ts',
+        exports: [],
+        sources: [],
+      })
+      cachedFiles.set(barrelPath, barrelFile)
+      dedupe.set(barrelPath, new Set<string>())
     }
-    const previousBarrelFile = cachedFiles.get(barrelFile.path)
-    const leaves = treeNode.leaves
 
-    leaves.forEach((item) => {
-      if (!item.data.name) {
-        return undefined
+    const seen = dedupe.get(barrelPath)!
+
+    // Collect all leaves under the current directory node
+    node.leaves.forEach((leaf) => {
+      const file = leaf.data.file
+      if (!file) {
+        return
       }
 
-      const sources = item.data.file?.sources || []
-
-      if (!sources.some((source) => source.isIndexable)) {
-        console.warn(`No isIndexable source found(source should have a name and isIndexable):\nFile: ${JSON.stringify(item.data.file, undefined, 2)}`)
-      }
-
+      const sources = file.sources || []
       sources.forEach((source) => {
-        if (!item.data.file?.path || !source.isIndexable || !source.name) {
-          return undefined
-        }
-        const alreadyContainInPreviousBarrelFile = previousBarrelFile?.sources.some(
-          (item) => item.name === source.name && item.isTypeOnly === source.isTypeOnly,
-        )
-
-        if (alreadyContainInPreviousBarrelFile) {
-          return undefined
+        if (!file.path || !source.isIndexable || !source.name) {
+          return
         }
 
-        if (!barrelFile.exports) {
-          barrelFile.exports = []
+        const key = `${source.name}|${source.isTypeOnly ? '1' : '0'}`
+        if (seen.has(key)) {
+          return
         }
+        seen.add(key)
 
-        // true when we have a subdirectory that also contains barrel files
-        const isSubExport = !!treeNode.parent?.data.path?.split?.('/')?.length
+        // Always compute relative path from the parent directory to the file path
+        barrelFile!.exports!.push({
+          name: [source.name],
+          path: getRelativePath(parentPath, file.path),
+          isTypeOnly: source.isTypeOnly,
+        })
 
-        if (isSubExport) {
-          barrelFile.exports.push({
-            name: [source.name],
-            path: getRelativePath(treeNode.parent?.data.path, item.data.path),
-            isTypeOnly: source.isTypeOnly,
-          })
-        } else {
-          barrelFile.exports.push({
-            name: [source.name],
-            path: `./${item.data.file.baseName}`,
-            isTypeOnly: source.isTypeOnly,
-          })
-        }
-
-        barrelFile.sources.push({
+        barrelFile!.sources.push({
           name: source.name,
           isTypeOnly: source.isTypeOnly,
-          //TODO use parser to generate import
-          value: '',
+          value: '', // TODO use parser to generate import
           isExportable: mode === 'all' || mode === 'named',
           isIndexable: mode === 'all' || mode === 'named',
         })
       })
     })
-
-    if (previousBarrelFile) {
-      previousBarrelFile.sources.push(...barrelFile.sources)
-      previousBarrelFile.exports?.push(...(barrelFile.exports || []))
-    } else {
-      cachedFiles.set(barrelFile.path, barrelFile)
-    }
   })
 
+  const result = [...cachedFiles.values()]
+
   if (mode === 'all') {
-    return [...cachedFiles.values()].map((file) => {
-      return {
-        ...file,
-        exports: file.exports?.map((exportItem) => {
-          return {
-            ...exportItem,
-            name: undefined,
-          }
-        }),
-      }
-    })
+    return result.map((file) => ({
+      ...file,
+      exports: file.exports?.map((e) => ({ ...e, name: undefined })),
+    }))
   }
 
-  return [...cachedFiles.values()]
+  return result
 }
 
 export const barrelPlugin = createPlugin<Options, ExtendOptions>({
@@ -153,7 +135,6 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
 
     app.context.events.onOnce('process:end', async ({ files }) => {
       const root = options.root
-      // TODO check if we need meta here per file
       const barrelFiles = getBarrelFiles({ files, root, mode: options.mode })
 
       await app.context.fileManager.add(...barrelFiles)
@@ -176,7 +157,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
           return file.sources.some((source) => source.isIndexable)
         })
 
-        const rootFile: KubbFile.File = {
+        const rootFile = createFile({
           path: rootPath,
           baseName: 'index.ts',
           exports: barrelFiles
@@ -199,7 +180,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
             })
             .filter(Boolean),
           sources: [],
-        }
+        })
 
         await app.context.fileManager.add(rootFile)
       },

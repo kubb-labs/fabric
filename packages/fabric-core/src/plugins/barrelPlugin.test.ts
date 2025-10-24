@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { barrelPlugin, getBarrelFiles } from './barrelPlugin.ts'
 import { createFile } from '../createFile.ts'
 import { defineApp } from '../defineApp.ts'
+import type * as KubbFile from '../KubbFile.ts'
 
 const files = [
   createFile({
@@ -55,7 +56,7 @@ describe('getBarrelFiles', () => {
   test("mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable", () => {
     const barrelFiles = getBarrelFiles({ files, root: 'src', mode: 'all' })
 
-    expect(barrelFiles).toMatchSnapshot()
+    expect(barrelFiles.flatMap((item) => item.exports)).toMatchSnapshot()
     expect(barrelFiles.length).toBe(3)
 
     expect(barrelFiles.every((file) => file.baseName === 'index.ts')).toBeTruthy()
@@ -68,7 +69,7 @@ describe('getBarrelFiles', () => {
   test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", () => {
     const barrelFiles = getBarrelFiles({ files, root: 'src', mode: 'named' })
 
-    expect(barrelFiles).toMatchSnapshot()
+    expect(barrelFiles.flatMap((item) => item.exports)).toMatchSnapshot()
     expect(barrelFiles.length).toBe(3)
 
     expect(barrelFiles.every((file) => file.baseName === 'index.ts')).toBeTruthy()
@@ -90,97 +91,28 @@ describe('getBarrelFiles', () => {
 })
 
 describe('barrelPlugin', () => {
-  const example = {
-    baseName: 'index.ts',
-    exports: [
-      {
-        isTypeOnly: false,
-        name: undefined,
-        path: './a.ts',
-      },
-      {
-        isTypeOnly: false,
-        name: undefined,
-        path: './sub/d.ts',
-      },
-      {
-        isTypeOnly: false,
-        name: undefined,
-        path: './sub/d.ts',
-      },
-      {
-        isTypeOnly: false,
-        name: undefined,
-        path: './sub/index.ts',
-      },
-      {
-        isTypeOnly: false,
-        name: undefined,
-        path: './sub/index.ts',
-      },
-      {
-        isTypeOnly: false,
-        name: undefined,
-        path: './sub/sub2/b.ts',
-      },
-    ],
-  }
-  const exampleNamed = {
-    baseName: 'index.ts',
-    exports: [
-      {
-        isTypeOnly: undefined,
-        name: ['A'],
-        path: './a.ts',
-      },
-      {
-        isTypeOnly: undefined,
-        name: ['D'],
-        path: './sub/d.ts',
-      },
-      {
-        isTypeOnly: true,
-        name: ['E'],
-        path: './sub/d.ts',
-      },
-      {
-        isTypeOnly: undefined,
-        name: ['world'],
-        path: './sub/index.ts',
-      },
-      {
-        isTypeOnly: undefined,
-        name: ['hello'],
-        path: './sub/index.ts',
-      },
-      {
-        isTypeOnly: undefined,
-        name: ['b'],
-        path: './sub/sub2/b.ts',
-      },
-    ],
-    path: '/Users/stijnvanhulle/GitHub/fabric/src/index.ts',
-    sources: [],
-  }
-
   beforeEach(() => {
     vi.restoreAllMocks()
   })
-  test("mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable", () => {
+  test("mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable", async () => {
     const app = defineApp()()
 
-    app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
-    app.addFile(...files)
+    await app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
+    await app.addFile(...files)
 
     const addSpy = vi.spyOn(app.context.fileManager, 'add')
 
-    app.writeEntry({
+    await app.writeEntry({
       root: 'src',
       mode: 'all',
     })
 
+    const [calledArg] = addSpy.mock.calls[0] as any
+    const file = calledArg as KubbFile.ResolvedFile
+
     expect(addSpy).toHaveBeenCalledTimes(1)
-    expect(addSpy).toHaveBeenCalledWith(expect.objectContaining(example))
+    expect(file.baseName).toBe('index.ts')
+    expect(file.exports).toMatchSnapshot()
   })
 
   test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", async () => {
@@ -196,19 +128,23 @@ describe('barrelPlugin', () => {
       mode: 'named',
     })
 
+    const [calledArg] = addSpy.mock.calls[0] as any
+    const file = calledArg as KubbFile.ResolvedFile
+
     expect(addSpy).toHaveBeenCalledTimes(1)
-    expect(addSpy).toHaveBeenCalledWith(expect.objectContaining(exampleNamed))
+    expect(file.baseName).toBe('index.ts')
+    expect(file.exports).toMatchSnapshot()
   })
 
-  test("mode 'propagate' should not generate any barrel files", () => {
+  test("mode 'propagate' should not generate any barrel files", async () => {
     const app = defineApp()()
 
-    app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
-    app.addFile(...files)
+    await app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
+    await app.addFile(...files)
 
     const addSpy = vi.spyOn(app.context.fileManager, 'add')
 
-    app.writeEntry({
+    await app.writeEntry({
       root: 'src',
       mode: 'propagate',
     })
