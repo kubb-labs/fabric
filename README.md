@@ -88,15 +88,12 @@ Factory to create your own `createApp` with an optional bootstrap `instance(app)
   - `process:end { files }`
 
 ## Plugins
-
-| Plugin | Injects                                                               | Description                                                                                                          |
-|---|-----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| `fsPlugin` | `app.write` | Writes files to disk on `process:progress`. Supports dry runs and cleaning an output folder before writing.          |
-| `barrelPlugin` | `app.writeEntry`                                      | Generates `index.ts` barrel files per folder at `process:end`. `writeEntry` creates a single entry barrel at `root`. |
-| `progressPlugin` | —                                                                     | Shows a CLI progress bar by listening to core events.                                                                |
-| `reactPlugin` | `app.render`, `app.renderToString`, `app.waitUntilExit`                    | Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.                |
-
 #### `fsPlugin`
+Writes files to disk on `process:progress`., supports dry runs and cleaning an output folder before writing.
+
+```
+import { fsPlugin } @kubb/fabric-core/plugins`
+```
 
 | Option | Type                                                                 | Default | Description                                                           |
 |---|----------------------------------------------------------------------|---|-----------------------------------------------------------------------|
@@ -111,6 +108,11 @@ Injected `app.write` options (via `fsPlugin`):
 | extension | `Record<Extname, Extname \| ''>` | — | Maps input file extensions to output extensions. When set, the matching parser (by extNames) is used. |
 
 #### `barrelPlugin`
+Generates `index.ts` barrel files per folder at `process:end`. `writeEntry` creates a single entry barrel at `root`.
+
+```
+import { barrelPlugin } @kubb/fabric-core/plugins`
+```
 
 | Option | Type                                       | Default | Description |
 |---|--------------------------------------------|---|---|
@@ -126,12 +128,22 @@ Injected `app.writeEntry` parameters (via `barrelPlugin`):
 | mode | `'all' \| 'named' \| 'propagate' \| false` | Controls which export style to use for the entry barrel. |
 
 #### `progressPlugin`
+Shows a CLI progress bar by listening to core events.
+
+```
+import { progressPlugin } @kubb/fabric-core/plugins`
+```
 
 | Option | Type | Default | Description                                                                             |
 |---|---|---|-----------------------------------------------------------------------------------------|
 | — | — | — | This plugin has no options, it displays a CLI progress bar by listening to core events. |
 
 #### `reactPlugin`
+Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.
+
+```
+import { reactPlugin } @kubb/react-fabric/plugins`
+```
 
 | Option | Type | Default | Description |
 |---|---|---|---|
@@ -186,28 +198,39 @@ app.sayHello() // -> Hello Fabric!
 ```
 
 ## Parsers
+#### `typescriptParser`
 
-| Parser | extNames | Signature / Use | Description                                                                                           |
-|---|---|---|-------------------------------------------------------------------------------------------------------|
-| `defaultParser` | — | `defaultParser.parse(file)` | Fallback parser used when no extension mapping is provided to `app.write`.                            |
-| `typescriptParser` | `['.ts', '.js']` | `typescriptParser.parse(file, { extname?: string })` | Prints TS/JS imports/exports and sources, supports extname mapping for generated import/export paths. |
-| `tsxParser` | `['.tsx', '.jsx']` | `tsxParser.parse(file, { extname?: string })` | Delegates to `typescriptParser` with TSX printing settings.                                           |
+Prints TS/JS imports/exports and sources, supports extname mapping for generated import/export paths.
 
-#### `typescriptParser.parse`
+```
+import { typescriptParser } @kubb/fabric-core/parsers`
+```
 
 | Option | Type | Default | Description                                                                                 |
 |---|---|---|---------------------------------------------------------------------------------------------|
 | file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 | extname | `string` | `'.ts'` | Extension to use when emitting import/export paths (e.g., rewrite `./file` to `./file.ts`). |
 
-#### `tsxParser.parse`
+#### `tsxParser`
+
+Delegates to `typescriptParser` with TSX printing settings.
+
+```
+import { tsxParser } @kubb/fabric-core/parsers`
+```
 
 | Option | Type | Default | Description |
 |---|---|---|---|
 | file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 | extname | `string` | `'.tsx'` | Extension to use when emitting import/export paths for TSX/JSX files. |
 
-#### `defaultParser.parse`
+#### `defaultParser`
+
+Fallback parser used when no extension mapping is provided to `app.write`.
+
+```
+import { defaultParser } @kubb/fabric-core/parsers`
+```
 
 | Option | Type | Default | Description                                                              |
 |---|---|---|--------------------------------------------------------------------------|
