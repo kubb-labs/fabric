@@ -78,14 +78,18 @@ Returns an app instance with:
 Factory to create your own `createApp` with an optional bootstrap `instance(app)` called on creation.
 
 ### App events (emitted by the core during processing)
-  - `start`
-  - `end`
-  - `render { app }`
-  - `process:start { files }`
-  - `file:start { file, index, total }`
-  - `process:progress { file, source, processed, percentage, total }`
-  - `file:end { file, index, total }`
-  - `process:end { files }`
+- `start`
+- `end`
+- `render { app }`
+- `file:add { files }`
+- `write:start { files }`
+- `write:end { files }`
+- `file:start { file, index, total }`
+- `file:end { file, index, total }`
+- `process:start { files }`
+- `process:progress { file, source, processed, percentage, total }`
+- `process:end { files }`
+
 
 ## Plugins
 #### `fsPlugin`
