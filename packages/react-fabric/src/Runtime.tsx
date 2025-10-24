@@ -126,8 +126,8 @@ export class Runtime {
       return
     }
 
-    // TODO check if we need a clear
-    // this.fileManager.clear()
+    // TODO remove to allow multiple renders
+    this.fileManager.clear()
 
     processFiles(this.#rootNode, this.fileManager)
 
