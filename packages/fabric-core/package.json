@@ -85,13 +85,15 @@
   "dependencies": {
     "fs-extra": "^11.3.2",
     "js-runtime": "^0.0.8",
+    "cli-progress": "^3.12.0",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.2.0",
-    "remeda": "catalog:",
     "typescript": "5.9.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
+    "@types/cli-progress": "^3.11.6",
+    "remeda": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:"
   },

@@ -12,24 +12,30 @@ type Mode = 'all' | 'named' | 'propagate' | false
 type Options = {
   root: string
   mode: Mode
+  dryRun?: boolean
+}
+
+type WriteEntryOptions = {
+  root: string
+  mode: Mode
 }
 
 type ExtendOptions = {
-  writeEntry(options: Options): Promise<void>
+  writeEntry(options: WriteEntryOptions): Promise<void>
 }
 
 // biome-ignore lint/suspicious/noTsIgnore: production ready
 // @ts-ignore
 declare module '@kubb/fabric-core' {
   interface App {
-    writeEntry(options: Options): Promise<void>
+    writeEntry(options: WriteEntryOptions): Promise<void>
   }
 }
 
 declare global {
   namespace Kubb {
     interface App {
-      writeEntry(options: Options): Promise<void>
+      writeEntry(options: WriteEntryOptions): Promise<void>
     }
   }
 }
@@ -140,11 +146,17 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
       await app.context.fileManager.add(...barrelFiles)
 
       await app.context.fileManager.write({
+        mode: app.context.options?.mode,
+        dryRun: options.dryRun,
         parsers: app.context.installedParsers,
       })
     })
   },
-  inject(app) {
+  inject(app, options) {
+    if (!options) {
+      throw new Error('Barrel plugin requires options.root and options.mode')
+    }
+
     return {
       async writeEntry({ root, mode }) {
         if (!mode || mode === 'propagate') {
@@ -157,7 +169,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
           return file.sources.some((source) => source.isIndexable)
         })
 
-        const rootFile = createFile({
+        const entryFile = createFile({
           path: rootPath,
           baseName: 'index.ts',
           exports: barrelFiles
@@ -182,7 +194,13 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
           sources: [],
         })
 
-        await app.context.fileManager.add(rootFile)
+        await app.context.fileManager.add(entryFile)
+
+        await app.context.fileManager.write({
+          mode: app.context.options?.mode,
+          dryRun: options.dryRun,
+          parsers: app.context.installedParsers,
+        })
       },
     }
   },
