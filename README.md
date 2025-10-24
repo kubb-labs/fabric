@@ -3,7 +3,6 @@
     <img width="180" src="https://raw.githubusercontent.com/kubb-labs/fabric/main/assets/logo.png" alt="Kubb fabric logo">
   </a>
 
-
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Coverage][coverage-src]][coverage-href]
@@ -90,19 +89,19 @@ Factory to create your own `createApp` with an optional bootstrap `instance(app)
 
 ## Plugins
 
-| Plugin | Injects                                                               | Description |
-|---|-----------------------------------------------------------------------|---|
-| `fsPlugin` | `app.write` | Writes files to disk on `process:progress`. Supports dry runs and cleaning an output folder before writing. |
+| Plugin | Injects                                                               | Description                                                                                                          |
+|---|-----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| `fsPlugin` | `app.write` | Writes files to disk on `process:progress`. Supports dry runs and cleaning an output folder before writing.          |
 | `barrelPlugin` | `app.writeEntry`                                      | Generates `index.ts` barrel files per folder at `process:end`. `writeEntry` creates a single entry barrel at `root`. |
-| `progressPlugin` | —                                                                     | Shows a CLI progress bar by listening to core events. |
-| `reactPlugin` | `app.render`, `app.renderToString`, `app.waitUntilExit`                    | Enables rendering React components to the terminal or to a string; useful for CLI UIs and templating. |
+| `progressPlugin` | —                                                                     | Shows a CLI progress bar by listening to core events.                                                                |
+| `reactPlugin` | `app.render`, `app.renderToString`, `app.waitUntilExit`                    | Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.                |
 
 #### `fsPlugin`
 
-| Option | Type                                                                 | Default | Description |
-|---|----------------------------------------------------------------------|---|---|
-| dryRun | `boolean`                                                            | `false` | If true, do not write files to disk; still emits events. |
-| onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `process:progress`. |
+| Option | Type                                                                 | Default | Description                                                           |
+|---|----------------------------------------------------------------------|---|-----------------------------------------------------------------------|
+| dryRun | `boolean`                                                            | `false` | If true, do not write files to disk.               |
+| onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `process:progress`.            |
 | clean | `{ path: string }`                                                   | — | If provided, removes the directory at `path` before writing any files. |
 
 Injected `app.write` options (via `fsPlugin`):
@@ -143,41 +142,116 @@ Injected `app.writeEntry` parameters (via `barrelPlugin`):
 
 Injected methods (via `reactPlugin`):
 
-| Method | Signature | Description |
-|---|---|---|
-| `render` | `(App: React.ElementType) => Promise<void> \| void` | Render a React component tree to the terminal and emit the core `start` event. |
+| Method | Signature | Description                                                                                        |
+|---|---|----------------------------------------------------------------------------------------------------|
+| `render` | `(App: React.ElementType) => Promise<void> \| void` | Render a React component tree to the terminal and emit the core `start` event.                     |
 | `renderToString` | `(App: React.ElementType) => Promise<string> \| string` | Render a React component tree and return the final output as a string (without writing to stdout). |
-| `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits; resolves when unmounted and emits the core `end` event. |
+| `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
+
+#### `createPlugin`
+
+Factory to declare a plugin that can be registered via `app.use`.
+
+| Field | Required | Description                                                                                                               |
+|---|---|---------------------------------------------------------------------------------------------------------------------------|
+| `name` | Yes | tring identifier of your plugin.                                                                                          |
+| `install(app, options)` | Yes | Called when the plugin is registered. You can subscribe to core events and perform side effects here.                     |
+| `inject?(app, options)` | No | Return synchronously the runtime methods/properties to merge into `app` (e.g. `write`, `render`). This must not be async. |
+
+Example:
+
+```ts
+import { createApp } from '@kubb/fabric-core'
+import { createPlugin } from '@kubb/fabric-core/plugins'
+
+const helloPlugin = createPlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
+  name: 'helloPlugin',
+  install(app, options) {
+    app.context.events.on('start', () => {
+      console.log('App started')
+    })
+  },
+  inject(app, options) {
+    return {
+      sayHello(msg = options?.name ?? 'world') {
+        console.log(`Hello ${msg}!`)
+      },
+    }
+  },
+})
+
+const app = createApp()
+await app.use(helloPlugin, { name: 'Fabric' })
+app.sayHello() // -> Hello Fabric!
+```
 
 ## Parsers
 
-| Parser | extNames | Signature / Use | Description |
-|---|---|---|---|
-| `defaultParser` | — | `defaultParser.parse(file)` | Fallback parser used when no extension mapping is provided to `app.write`. |
-| `typescriptParser` | `['.ts', '.js']` | `typescriptParser.parse(file, { extname?: string })` | Prints TS/JS imports/exports and sources; supports extname mapping for generated import/export paths. |
-| `tsxParser` | `['.tsx', '.jsx']` | `tsxParser.parse(file, { extname?: string })` | Delegates to `typescriptParser` with TSX printing settings. |
+| Parser | extNames | Signature / Use | Description                                                                                           |
+|---|---|---|-------------------------------------------------------------------------------------------------------|
+| `defaultParser` | — | `defaultParser.parse(file)` | Fallback parser used when no extension mapping is provided to `app.write`.                            |
+| `typescriptParser` | `['.ts', '.js']` | `typescriptParser.parse(file, { extname?: string })` | Prints TS/JS imports/exports and sources, supports extname mapping for generated import/export paths. |
+| `tsxParser` | `['.tsx', '.jsx']` | `tsxParser.parse(file, { extname?: string })` | Delegates to `typescriptParser` with TSX printing settings.                                           |
 
 #### `typescriptParser.parse`
 
-| Option | Type | Default | Description |
-|---|---|---|---|
+| Option | Type | Default | Description                                                                                 |
+|---|---|---|---------------------------------------------------------------------------------------------|
+| file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 | extname | `string` | `'.ts'` | Extension to use when emitting import/export paths (e.g., rewrite `./file` to `./file.ts`). |
 
 #### `tsxParser.parse`
 
 | Option | Type | Default | Description |
 |---|---|---|---|
+| file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 | extname | `string` | `'.tsx'` | Extension to use when emitting import/export paths for TSX/JSX files. |
 
 #### `defaultParser.parse`
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| — | — | — | This parser takes no options; it concatenates sources with a blank line. |
+| Option | Type | Default | Description                                                              |
+|---|---|---|--------------------------------------------------------------------------|
+| file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
+
+#### `createParser`
+Factory to declare a parser that can be registered via `app.use` and selected by `extNames` during `app.write`.
+
+| Field | Required | Description                                                                                                     |
+|---|---|-----------------------------------------------------------------------------------------------------------------|
+| `name` | Yes | String identifier of your parser.                                                                               |
+| `extNames` | Yes | List of file extensions this parser can handle (e.g. ['.ts']). Use `undefined` for the default parser fallback. |
+| `install(app, options)` | No | Optional setup when the parser is registered (subscribe to events, set state, etc.).                            |
+| `parse(file, { extname })` | Yes | Must return the final string that will be written for the given file.                                           |
+
+Example:
+
+```ts
+import { createApp } from '@kubb/fabric-core'
+import { createParser } from '@kubb/fabric-core/parsers'
+
+const vueParser = createParser<{ banner?: string }>({
+  name: 'vueParser',
+  extNames: ['.vue'],
+  async install(app, options) {
+    // Optional setup
+  },
+  async parse(file, { extname }) {
+    const banner = file.options?.banner ?? ''
+    const sources = file.sources.map(s => s.value).join('\n')
+    return `${banner}\n${sources}`
+  },
+})
+
+const app = createApp()
+app.use(vueParser)
+app.use(fsPlugin); // make it possible to write to the filsystem
+
+app.write({ extension: { '.vue': '.ts' } })
+```
 
 > [!NOTE]
-> - app.use accepts both plugins and parsers. The fsPlugin handles I/O and adds app.write. Parsers decide how files are converted to strings for specific extensions.
-> - When extension mapping is provided to `app.write`, Fabric picks a parser whose `extNames` include the file’s extension; otherwise, the default parser is used.
+> - `app.use` accepts both plugins and parsers. The `fsPlugin` handles I/O and adds ``app.write`. Parsers decide how files are converted to strings for specific extensions.
+> - When extension mapping is provided to `app.write`, Fabric picks a parser whose `extNames` include the file’s extension. Otherwise, the default parser is used.
 
 # Supporting Kubb
 
