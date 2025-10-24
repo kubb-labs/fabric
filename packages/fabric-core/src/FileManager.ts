@@ -22,10 +22,13 @@ type Options = {
 
 export class FileManager {
   #cache = new Cache<KubbFile.ResolvedFile>()
+  events: AsyncEventEmitter<AppEvents>
   processor: FileProcessor
 
   constructor({ events = new AsyncEventEmitter<AppEvents>() }: Options = {}) {
     this.processor = new FileProcessor({ events })
+
+    this.events = events
     return this
   }
 
@@ -86,6 +89,10 @@ export class FileManager {
   }
 
   async write(options: ProcessFilesProps): Promise<KubbFile.ResolvedFile[]> {
-    return this.processor.run(this.files, options)
+    const resolvedFiles = await this.processor.run(this.files, options)
+
+    this.clear()
+
+    return resolvedFiles
   }
 }

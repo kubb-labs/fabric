@@ -22,6 +22,16 @@ import type * as KubbFile from './KubbFile.ts'
 import { createParser } from './parsers'
 import { createPlugin } from './plugins'
 
+declare global {
+  namespace Kubb {
+    interface App {
+      installedSync: boolean
+      installedAsync: boolean
+      hello(): string
+    }
+  }
+}
+
 describe('defineApp', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
@@ -113,11 +123,53 @@ describe('defineApp', () => {
     })
 
     app.use(plugin)
-    app.write()
+    await app.write()
 
     expect(app.write).toBeDefined()
   })
 
-  test.todo('validate plugin install sync and async')
-  test.todo('validate plugin inject sync and async')
+  test('validate plugin install sync and async', async () => {
+    {
+      const app = defineApp()()
+      const plugin = createPlugin({
+        name: 'syncInstall',
+        install(app) {
+          app.installedSync = true
+        },
+      })
+      app.use(plugin)
+      expect(app.installedSync).toBe(true)
+    }
+    {
+      const app = defineApp()()
+      const plugin = createPlugin({
+        name: 'asyncInstall',
+        async install(app) {
+          await Promise.resolve()
+          app.installedAsync = true
+        },
+      })
+      await app.use(plugin)
+      expect(app.installedAsync).toBe(true)
+    }
+  })
+
+  test('validate plugin inject sync', async () => {
+    const app = defineApp()()
+    const plugin = createPlugin({
+      name: 'syncInject',
+      install() {},
+      inject() {
+        return {
+          hello() {
+            return 'world'
+          },
+        }
+      },
+    })
+
+    app.use(plugin)
+    expect(typeof app.hello).toBe('function')
+    expect(app.hello()).toBe('world')
+  })
 })

@@ -1,0 +1,221 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`barrelPlugin > mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable 1`] = `
+[
+  {
+    "isTypeOnly": false,
+    "name": undefined,
+    "path": "./a.ts",
+  },
+  {
+    "isTypeOnly": false,
+    "name": undefined,
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": false,
+    "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": false,
+    "name": undefined,
+    "path": "./sub/sub2/b.ts",
+  },
+]
+`;
+
+exports[`barrelPlugin > mode 'named' should produce named exports and mark barrel sources indexable/exportable 1`] = `
+[
+  {
+    "isTypeOnly": true,
+    "name": [
+      "E",
+    ],
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "A",
+    ],
+    "path": "./a.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "D",
+    ],
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "world",
+      "hello",
+    ],
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "b",
+    ],
+    "path": "./sub/sub2/b.ts",
+  },
+]
+`;
+
+exports[`getBarrelFiles > mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable 1`] = `
+[
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./a.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": true,
+    "name": undefined,
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./sub/sub2/b.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./sub2/b.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./d.ts",
+  },
+  {
+    "isTypeOnly": true,
+    "name": undefined,
+    "path": "./d.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./b.ts",
+  },
+]
+`;
+
+exports[`getBarrelFiles > mode 'named' should produce named exports and mark barrel sources indexable/exportable 1`] = `
+[
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "A",
+    ],
+    "path": "./a.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "D",
+    ],
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": true,
+    "name": [
+      "E",
+    ],
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "world",
+    ],
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "hello",
+    ],
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "b",
+    ],
+    "path": "./sub/sub2/b.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "b",
+    ],
+    "path": "./sub2/b.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "D",
+    ],
+    "path": "./d.ts",
+  },
+  {
+    "isTypeOnly": true,
+    "name": [
+      "E",
+    ],
+    "path": "./d.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "world",
+    ],
+    "path": "./index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "hello",
+    ],
+    "path": "./index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "b",
+    ],
+    "path": "./b.ts",
+  },
+]
+`;

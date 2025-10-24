@@ -41,18 +41,21 @@ declare global {
 export const reactPlugin = createPlugin<Options, ExtendOptions>({
   name: 'react',
   install() {},
-  inject(app, options: Options = {}) {
+  inject(app, options = {}) {
     const runtime = new Runtime({ fileManager: app.context.fileManager, ...options })
 
     return {
       async render(App) {
         runtime.render(createElement(App))
+        await app.context.events.emit('start')
       },
       async renderToString(App) {
         return runtime.renderToString(createElement(App))
       },
-      waitUntilExit() {
-        return runtime.waitUntilExit()
+      async waitUntilExit() {
+        await runtime.waitUntilExit()
+
+        await app.context.events.emit('end')
       },
     }
   },

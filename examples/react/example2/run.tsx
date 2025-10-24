@@ -22,8 +22,6 @@ async function start() {
 
   app.render(App)
 
-  console.log('\nFiles: ', app.files)
-
   await app.write()
 }
 
