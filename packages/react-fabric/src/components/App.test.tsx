@@ -1,4 +1,4 @@
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { App } from './App.tsx'
 import { Root } from './Root.tsx'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
@@ -16,9 +16,9 @@ describe('<App/>', () => {
       )
     }
 
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })

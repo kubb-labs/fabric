@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { barrelPlugin, getBarrelFiles } from './barrelPlugin.ts'
 import { createFile } from '../createFile.ts'
-import { defineApp } from '../defineApp.ts'
+import { defineFabric } from '../defineFabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 
 const files = [
@@ -95,14 +95,14 @@ describe('barrelPlugin', () => {
     vi.restoreAllMocks()
   })
   test("mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable", async () => {
-    const app = defineApp()()
+    const fabric = defineFabric()()
 
-    await app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
-    await app.addFile(...files)
+    await fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
+    await fabric.addFile(...files)
 
-    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+    const addSpy = vi.spyOn(fabric.context.fileManager, 'add')
 
-    await app.writeEntry({
+    await fabric.writeEntry({
       root: 'src',
       mode: 'all',
     })
@@ -116,14 +116,14 @@ describe('barrelPlugin', () => {
   })
 
   test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", async () => {
-    const app = defineApp()()
+    const fabric = defineFabric()()
 
-    app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
-    await app.addFile(...files)
+    fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
+    await fabric.addFile(...files)
 
-    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+    const addSpy = vi.spyOn(fabric.context.fileManager, 'add')
 
-    await app.writeEntry({
+    await fabric.writeEntry({
       root: 'src',
       mode: 'named',
     })
@@ -137,14 +137,14 @@ describe('barrelPlugin', () => {
   })
 
   test("mode 'propagate' should not generate any barrel files", async () => {
-    const app = defineApp()()
+    const fabric = defineFabric()()
 
-    await app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
-    await app.addFile(...files)
+    await fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
+    await fabric.addFile(...files)
 
-    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+    const addSpy = vi.spyOn(fabric.context.fileManager, 'add')
 
-    await app.writeEntry({
+    await fabric.writeEntry({
       root: 'src',
       mode: 'propagate',
     })
@@ -152,14 +152,14 @@ describe('barrelPlugin', () => {
     expect(addSpy).toHaveBeenCalledTimes(0)
   })
   test('mode false should not generate any barrel files', async () => {
-    const app = defineApp()()
+    const fabric = defineFabric()()
 
-    app.use(barrelPlugin, { mode: 'propagate', root: 'src' })
-    await app.addFile(...files)
+    fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
+    await fabric.addFile(...files)
 
-    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+    const addSpy = vi.spyOn(fabric.context.fileManager, 'add')
 
-    await app.writeEntry({
+    await fabric.writeEntry({
       root: 'src',
       mode: false,
     })

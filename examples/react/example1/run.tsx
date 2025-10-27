@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from '@kubb/react-fabric'
 
-import { createApp, useLifecycle } from '@kubb/react-fabric'
+import { createFabric, useLifecycle } from '@kubb/react-fabric'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
 import * as process from 'node:process'
 
@@ -41,8 +41,8 @@ function App() {
   return <>Counter: {counter}</>
 }
 
-const app = createApp()
+const fabric = createFabric()
 
-app.use(reactPlugin, { stderr: process.stderr, stdout: process.stdout, stdin: process.stdin })
+fabric.use(reactPlugin, { stderr: process.stderr, stdout: process.stdout, stdin: process.stdin })
 
-app.render(App)
+fabric.render(App)

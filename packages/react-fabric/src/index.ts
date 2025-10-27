@@ -15,7 +15,7 @@ export { useFile } from './composables/useFile.ts'
 export { useLifecycle } from './composables/useLifecycle.tsx'
 
 // expose fabric core helpers
-export { createApp } from '@kubb/fabric-core'
+export { createFabric } from '@kubb/fabric-core'
 
 // utils
 export { createFunctionParams, FunctionParams } from './utils/getFunctionParams.ts'

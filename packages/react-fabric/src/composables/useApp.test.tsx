@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 
 import { App } from '../components/App'
 import { useApp } from './useApp'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin'
 
 describe('useApp', () => {
@@ -16,8 +16,8 @@ describe('useApp', () => {
     }
 
     const meta = { count: 1 }
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
     const Component = () => (
       <App meta={meta}>
@@ -25,7 +25,7 @@ describe('useApp', () => {
       </App>
     )
 
-    await app.render(Component)
+    await fabric.render(Component)
 
     expect(value).toBeDefined()
     expect(value?.meta).toEqual(meta)

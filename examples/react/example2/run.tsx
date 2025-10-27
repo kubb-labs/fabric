@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { Const, File, createApp } from '@kubb/react-fabric'
+import { Const, File, createFabric } from '@kubb/react-fabric'
 import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
 
 /**
@@ -16,13 +16,13 @@ function App() {
 }
 
 async function start() {
-  const app = createApp()
-  app.use(fsPlugin)
-  app.use(reactPlugin)
+  const fabric = createFabric()
+  fabric.use(fsPlugin)
+  fabric.use(reactPlugin)
 
-  app.render(App)
+  fabric.render(App)
 
-  await app.write()
+  await fabric.write()
 }
 
 start()

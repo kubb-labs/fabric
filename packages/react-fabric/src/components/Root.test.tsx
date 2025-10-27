@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 import { Root } from './Root.tsx'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 function Thrower(): React.ReactNode {
@@ -17,9 +17,9 @@ describe('<Root/>', () => {
       )
     }
 
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -36,9 +36,9 @@ describe('<Root/>', () => {
       )
     }
 
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
     expect(onError).toHaveBeenCalledTimes(1)

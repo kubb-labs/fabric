@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { File, createApp } from '@kubb/react-fabric'
+import { File, createFabric } from '@kubb/react-fabric'
 import { fsPlugin, graphPlugin, progressPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 
 /**
@@ -14,22 +14,22 @@ function App() {
 }
 
 async function start() {
-  const app = createApp()
+  const fabric = createFabric()
 
-  app.use(fsPlugin, { clean: { path: path.resolve(__dirname, './gen') } })
-  app.use(reactPlugin)
-  app.use(fsPlugin, {
+  fabric.use(fsPlugin, { clean: { path: path.resolve(__dirname, './gen') } })
+  fabric.use(reactPlugin)
+  fabric.use(fsPlugin, {
     async onBeforeWrite() {
       await new Promise((resolve) => setTimeout(resolve, 1000))
     },
     clean: { path: './example7/gen' },
   })
-  app.use(progressPlugin)
-  app.use(graphPlugin, { root: path.resolve(__dirname, './gen'), open: false })
+  fabric.use(progressPlugin)
+  fabric.use(graphPlugin, { root: path.resolve(__dirname, './gen'), open: false })
 
-  app.render(App)
+  fabric.render(App)
 
-  await app.write()
+  await fabric.write()
 }
 
 start()

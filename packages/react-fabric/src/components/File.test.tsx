@@ -1,6 +1,6 @@
 import { expect } from 'vitest'
 import { File } from './File.tsx'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 
@@ -9,9 +9,9 @@ describe('<File/>', () => {
     const Component = () => {
       return 'test'
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`"test"`)
   })
@@ -20,9 +20,9 @@ describe('<File/>', () => {
     const Component = () => {
       return <File baseName="test.ts" path="path" />
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`""`)
   })
@@ -36,11 +36,11 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -82,11 +82,11 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    app.render(Component)
-    const files = app.files
+    fabric.render(Component)
+    const files = fabric.files
 
     expect(files).toMatchInlineSnapshot('[]')
   })
@@ -101,11 +101,11 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -156,10 +156,10 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    const output = await app.renderToString(Component)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`""`)
   })
@@ -175,12 +175,12 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(output).toMatchInlineSnapshot(`"ignoretest"`)
     expect(files).toMatchInlineSnapshot(`
@@ -225,12 +225,12 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(output).toMatchInlineSnapshot(
       `"ignore<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>"`,
@@ -275,12 +275,12 @@ describe('<File/>', () => {
         </File>
       )
     }
-    const app = createApp()
+    const fabric = createFabric()
 
-    app.use(reactPlugin)
+    fabric.use(reactPlugin)
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -338,16 +338,16 @@ describe('<File/>', () => {
         </>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    await app.render(Component)
-    const output = await app.renderToString(Component)
+    await fabric.render(Component)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(files.length).toBe(1)
 
@@ -374,9 +374,9 @@ describe('<File.Export/>', () => {
     const Component = () => {
       return <File.Export path="kubb" />
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "export * from "kubb";
@@ -390,9 +390,9 @@ describe('<File.Import/>', () => {
     const Component = () => {
       return <File.Import name="React" path="react" />
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "import React from "react";
@@ -404,9 +404,9 @@ describe('<File.Import/>', () => {
     const Component = () => {
       return <File.Import name="React" path="react" isTypeOnly />
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "import type React from "react";
@@ -414,13 +414,13 @@ describe('<File.Import/>', () => {
     `)
   })
 
-  test('render Import with app', async () => {
+  test('render Import with fabric', async () => {
     const Component = () => {
       return <File.Import name="React" root="types" path="types/test" />
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchInlineSnapshot(`
       "import React from "./test";
@@ -438,12 +438,12 @@ describe('<File.Import/>', () => {
         </File>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -493,12 +493,12 @@ describe('<File.Import/>', () => {
         </File>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    app.use(typescriptParser)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    fabric.use(typescriptParser)
 
-    await app.render(Component)
-    const files = app.files
+    await fabric.render(Component)
+    const files = fabric.files
 
     expect(files).toMatchInlineSnapshot(`
       [
@@ -544,11 +544,11 @@ describe('<File.Import/>', () => {
         </File>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    app.use(typescriptParser)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    fabric.use(typescriptParser)
 
-    const output = await app.renderToString(Component)
+    const output = await fabric.renderToString(Component)
     expect(output).toMatchInlineSnapshot(`
       "import React from "react";
       test"

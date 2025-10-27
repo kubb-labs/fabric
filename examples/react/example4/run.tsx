@@ -1,7 +1,7 @@
 import { useEffect, useState } from '@kubb/react-fabric'
 
 import path from 'node:path'
-import { Const, File, Function, createApp, useLifecycle } from '@kubb/react-fabric'
+import { Const, File, Function, createFabric, useLifecycle } from '@kubb/react-fabric'
 import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
 
 const fetchNames = async (): Promise<string[]> => {
@@ -60,19 +60,19 @@ function App() {
 }
 
 async function start() {
-  const app = createApp()
+  const fabric = createFabric()
 
-  app.use(fsPlugin)
-  app.use(reactPlugin)
+  fabric.use(fsPlugin)
+  fabric.use(reactPlugin)
 
-  app.render(App)
+  fabric.render(App)
 
-  await app.waitUntilExit()
+  await fabric.waitUntilExit()
 
-  const files = app.files
+  const files = fabric.files
 
   console.log('\nFiles: ', files.length)
-  await app.write()
+  await fabric.write()
 }
 
 start()

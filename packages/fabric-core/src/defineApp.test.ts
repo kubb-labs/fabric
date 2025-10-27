@@ -16,7 +16,7 @@ vi.mock('./FileManager.ts', () => ({
   FileManager: hoisted.FileManagerMock,
 }))
 
-import { defineApp } from './defineApp.ts'
+import { defineFabric } from './defineFabric.ts'
 import type { App } from './App.ts'
 import type * as KubbFile from './KubbFile.ts'
 import { createParser } from './parsers'
@@ -37,34 +37,34 @@ describe('defineApp', () => {
     vi.restoreAllMocks()
   })
 
-  test('creates an app and calls instance with app when provided', async () => {
+  test('creates an fabric and calls instance with fabric when provided', async () => {
     const instance = vi.fn()
 
-    const createApp = defineApp(instance)
-    const app = createApp()
+    const createFabric = defineFabric(instance)
+    const fabric = createFabric()
 
-    expect(typeof app.addFile).toBe('function')
-    expect(typeof app.use).toBe('function')
+    expect(typeof fabric.addFile).toBe('function')
+    expect(typeof fabric.use).toBe('function')
 
     expect(instance).toHaveBeenCalledTimes(1)
-    expect(instance).toHaveBeenCalledWith(app)
+    expect(instance).toHaveBeenCalledWith(fabric)
   })
 
   test('addFile proxies to FileManager.add', async () => {
-    const app = defineApp()()
+    const fabric = defineFabric()()
 
     const file = { path: '/tmp/a.ts', baseName: 'a.ts', sources: [] as any[] } as KubbFile.File
 
-    await app.addFile(file)
+    await fabric.addFile(file)
     expect(hoisted.fileManagerInstance.add).toHaveBeenCalledTimes(1)
     expect(hoisted.fileManagerInstance.add).toHaveBeenCalledWith(file)
   })
 
-  test('use installs plugin with correct app and options; warns on duplicate', async () => {
-    const app = defineApp()()
+  test('use installs plugin with correct fabric and options; warns on duplicate', async () => {
+    const fabric = defineFabric()()
 
-    const install = vi.fn(function (app: App, ...opts: any[]) {
-      expect(app).toBeDefined()
+    const install = vi.fn(function (fabric: App, ...opts: any[]) {
+      expect(fabric).toBeDefined()
       expect(opts).toEqual(['opt1', 'opt2'])
     })
 
@@ -72,19 +72,19 @@ describe('defineApp', () => {
 
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    app.use(plugin, 'opt1', 'opt2')
+    fabric.use(plugin, 'opt1', 'opt2')
     expect(install).toHaveBeenCalledTimes(1)
 
-    app.use(plugin, 'opt1', 'opt2')
+    fabric.use(plugin, 'opt1', 'opt2')
     expect(warnSpy).toHaveBeenCalledWith('Plugin has already been applied to target app.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 
-  test('use installs parser with correct app and options; warns on duplicate', async () => {
-    const app = defineApp()()
+  test('use installs parser with correct fabric and options; warns on duplicate', async () => {
+    const fabric = defineFabric()()
 
-    const install = vi.fn(function (app: App, ...opts: any[]) {
-      expect(app).toBeDefined()
+    const install = vi.fn(function (fabric: App, ...opts: any[]) {
+      expect(fabric).toBeDefined()
       expect(opts).toEqual(['a'])
     })
 
@@ -99,16 +99,16 @@ describe('defineApp', () => {
 
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    app.use(parser, 'a')
+    fabric.use(parser, 'a')
     expect(install).toHaveBeenCalledTimes(1)
 
-    app.use(parser, 'a')
+    fabric.use(parser, 'a')
     expect(warnSpy).toHaveBeenCalledWith('Parser has already been applied to target app.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 
   test('validate plugin override sync and async', async () => {
-    const app = defineApp()()
+    const fabric = defineFabric()()
 
     const plugin = createPlugin({
       name: 'mockPlugin',
@@ -122,40 +122,40 @@ describe('defineApp', () => {
       },
     })
 
-    app.use(plugin)
-    await app.write()
+    fabric.use(plugin)
+    await fabric.write()
 
-    expect(app.write).toBeDefined()
+    expect(fabric.write).toBeDefined()
   })
 
   test('validate plugin install sync and async', async () => {
     {
-      const app = defineApp()()
+      const fabric = defineFabric()()
       const plugin = createPlugin({
         name: 'syncInstall',
-        install(app) {
-          app.installedSync = true
+        install(fabric) {
+          fabric.installedSync = true
         },
       })
-      app.use(plugin)
-      expect(app.installedSync).toBe(true)
+      fabric.use(plugin)
+      expect(fabric.installedSync).toBe(true)
     }
     {
-      const app = defineApp()()
+      const fabric = defineFabric()()
       const plugin = createPlugin({
         name: 'asyncInstall',
-        async install(app) {
+        async install(fabric) {
           await Promise.resolve()
-          app.installedAsync = true
+          fabric.installedAsync = true
         },
       })
-      await app.use(plugin)
-      expect(app.installedAsync).toBe(true)
+      await fabric.use(plugin)
+      expect(fabric.installedAsync).toBe(true)
     }
   })
 
   test('validate plugin inject sync', async () => {
-    const app = defineApp()()
+    const fabric = defineFabric()()
     const plugin = createPlugin({
       name: 'syncInject',
       install() {},
@@ -168,8 +168,8 @@ describe('defineApp', () => {
       },
     })
 
-    app.use(plugin)
-    expect(typeof app.hello).toBe('function')
-    expect(app.hello()).toBe('world')
+    fabric.use(plugin)
+    expect(typeof fabric.hello).toBe('function')
+    expect(fabric.hello()).toBe('world')
   })
 })

@@ -9,10 +9,10 @@ import type { App } from './index.ts'
 
 type RootRenderFunction<TApp extends App> = (app: TApp) => void | Promise<void>
 
-export type DefineApp<TOptions> = (options?: TOptions) => App
+export type DefineFabric<TOptions> = (options?: TOptions) => App
 
-export function defineApp<TOptions extends AppOptions>(instance?: RootRenderFunction<App<TOptions>>): DefineApp<TOptions> {
-  function createApp(options?: TOptions): App {
+export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderFunction<App<TOptions>>): DefineFabric<TOptions> {
+  function createFabric(options?: TOptions): App {
     const events = new AsyncEventEmitter<AppEvents>()
     const installedPlugins = new Set<Plugin<any>>()
     const installedParsers = new Set<Parser<any>>()
@@ -75,5 +75,5 @@ export function defineApp<TOptions extends AppOptions>(instance?: RootRenderFunc
     return app
   }
 
-  return createApp
+  return createFabric
 }

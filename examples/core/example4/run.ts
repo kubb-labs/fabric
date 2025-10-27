@@ -1,10 +1,10 @@
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin, progressPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 
-export const app = createApp()
+export const fabric = createFabric()
 
-app.addFile({
+fabric.addFile({
   baseName: 'testController.ts',
   path: './example4/gen/hooks/controller/testController.ts',
   sources: [
@@ -20,7 +20,7 @@ app.addFile({
   exports: [],
 })
 
-app.addFile({
+fabric.addFile({
   baseName: 'fileController.ts',
   path: './example4/gen/hooks/controller/fileController.ts',
   sources: [
@@ -36,14 +36,14 @@ app.addFile({
   exports: [],
 })
 
-app.use(fsPlugin, {
+fabric.use(fsPlugin, {
   dryRun: true,
   async onBeforeWrite() {
     await new Promise((resolve) => setTimeout(resolve, 1000))
   },
   clean: { path: './example4/gen' },
 })
-app.use(typescriptParser)
-app.use(progressPlugin)
+fabric.use(typescriptParser)
+fabric.use(progressPlugin)
 
-app.write()
+fabric.write()

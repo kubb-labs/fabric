@@ -1,5 +1,5 @@
-export { createApp } from './createApp.ts'
-export { defineApp } from './defineApp.ts'
+export { createFabric } from './createFabric.ts'
+export { defineFabric } from './defineFabric.ts'
 export { FileManager } from './FileManager.ts'
 export { createFile } from './createFile.ts'
 export { FileProcessor } from './FileProcessor.ts'

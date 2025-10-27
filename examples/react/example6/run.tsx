@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { File, createApp } from '@kubb/react-fabric'
+import { File, createFabric } from '@kubb/react-fabric'
 import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 import { createParser, typescriptParser } from '@kubb/react-fabric/parsers'
 
@@ -38,15 +38,15 @@ const msg = ref('Hello World!')
 }
 
 async function start() {
-  const app = createApp()
+  const fabric = createFabric()
 
-  app.use(fsPlugin)
-  app.use(reactPlugin)
-  app.use(vueParser)
+  fabric.use(fsPlugin)
+  fabric.use(reactPlugin)
+  fabric.use(vueParser)
 
-  app.render(App)
+  fabric.render(App)
 
-  await app.write()
+  await fabric.write()
 }
 
 start()

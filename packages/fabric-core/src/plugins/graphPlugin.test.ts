@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import * as GraphPluginModule from './graphPlugin.ts'
 import { graphPlugin } from './graphPlugin.ts'
-import { defineApp } from '../defineApp.ts'
+import { defineFabric } from '../defineFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
 
@@ -34,15 +34,15 @@ describe('graphPlugin', () => {
   })
 
   test('creates graph.json and graph.html on write:start', async () => {
-    const app = defineApp()()
-    await app.use(graphPlugin, { root: 'src', open: false })
+    const fabric = defineFabric()()
+    await fabric.use(graphPlugin, { root: 'src', open: false })
 
     const files = makeFiles(2)
 
-    await app.context.events.emit('write:start', { files })
+    await fabric.context.events.emit('write:start', { files })
 
-    const graphJson = app.files.find((item) => item.baseName === 'graph.json')
-    const graphHtml = app.files.find((item) => item.baseName === 'graph.html')
+    const graphJson = fabric.files.find((item) => item.baseName === 'graph.json')
+    const graphHtml = fabric.files.find((item) => item.baseName === 'graph.html')
 
     expect(graphJson).toBeDefined()
     expect(graphJson?.sources).toMatchSnapshot()
@@ -52,15 +52,15 @@ describe('graphPlugin', () => {
   })
 
   test('does nothing when getGraph returns undefined', async () => {
-    const app = defineApp()()
-    await app.use(graphPlugin, { root: 'out' })
+    const fabric = defineFabric()()
+    await fabric.use(graphPlugin, { root: 'out' })
 
     const files = makeFiles(1)
 
-    const addSpy = vi.spyOn(app.context.fileManager, 'add')
+    const addSpy = vi.spyOn(fabric.context.fileManager, 'add')
     vi.spyOn(GraphPluginModule, 'getGraph').mockReturnValue(undefined)
 
-    await app.context.events.emit('write:start', { files })
+    await fabric.context.events.emit('write:start', { files })
 
     expect(addSpy).not.toHaveBeenCalled()
   })

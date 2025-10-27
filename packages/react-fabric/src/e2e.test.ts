@@ -18,7 +18,7 @@ vi.mock('./Runtime.tsx', () => {
   return { Runtime: RuntimeMock }
 })
 
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from './plugins/reactPlugin.ts'
 
 const Component = () => 'test'
@@ -29,27 +29,27 @@ describe('e2e', () => {
   })
 
   test('render delegates to Runtime.render', async () => {
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    await app.render(Component)
+    await fabric.render(Component)
 
     expect(hoisted.instance.render).toHaveBeenCalledTimes(1)
   })
 
   test('renderToString returns runtime result', async () => {
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    await expect(app.renderToString(Component)).resolves.toBe('hello')
+    await expect(fabric.renderToString(Component)).resolves.toBe('hello')
     expect(hoisted.instance.renderToString).toHaveBeenCalledTimes(1)
   })
 
   test('waitUntilExit delegated from runtime', async () => {
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    await app.waitUntilExit()
+    await fabric.waitUntilExit()
     expect(hoisted.instance.waitUntilExit).toHaveBeenCalledTimes(1)
   })
 })

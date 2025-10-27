@@ -1,15 +1,15 @@
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Type } from './Type.tsx'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 
 describe('<Type/>', () => {
   test('render Type', async () => {
     const Component = () => {
       return <Type name="Data">string</Type>
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -22,9 +22,9 @@ describe('<Type/>', () => {
         </Type>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })

@@ -1,5 +1,5 @@
 import { Function } from './Function.tsx'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 describe('<Function/>', () => {
@@ -11,9 +11,9 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -26,9 +26,9 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -41,9 +41,9 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -56,9 +56,9 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -71,9 +71,9 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -86,9 +86,9 @@ describe('<Function/>', () => {
         </Function>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -101,9 +101,9 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -116,9 +116,9 @@ describe('<Function/>', () => {
         </Function.Arrow>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -137,9 +137,9 @@ describe('<Function/>', () => {
         </>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })

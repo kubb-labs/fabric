@@ -1,25 +1,25 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
-import { createApp } from './createApp.ts'
+import { createFabric } from './createFabric.ts'
 import { fsPlugin } from './plugins/fsPlugin.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { typescriptParser } from './parsers/typescriptParser.ts'
 import { createParser } from './parsers/createParser.ts'
 
-describe('createApp', () => {
+describe('createFabric', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
 
-  test('creates an app with the fsPlugin and calls write on progress', async () => {
+  test('creates an fabric with the fsPlugin and calls write on progress', async () => {
     const onBeforeWrite = vi.fn()
     const spy = vi.spyOn(typescriptParser, 'parse')
 
-    const app = createApp()
-    app.use(fsPlugin, { onBeforeWrite, dryRun: false })
-    app.use(typescriptParser)
+    const fabric = createFabric()
+    fabric.use(fsPlugin, { onBeforeWrite, dryRun: false })
+    fabric.use(typescriptParser)
 
-    await app.addFile({
+    await fabric.addFile({
       baseName: 'index.ts',
       path: '/tmp/index.ts',
       sources: [
@@ -30,7 +30,7 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write({ extension: { '.ts': '.ts' } })
+    await fabric.write({ extension: { '.ts': '.ts' } })
 
     expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.ts', expect.stringContaining('export const x = 1'))
     expect(spy).toHaveBeenCalled()
@@ -40,10 +40,10 @@ describe('createApp', () => {
     const onBeforeWrite = vi.fn()
     const spy = vi.spyOn(defaultParser, 'parse')
 
-    const app = createApp()
-    app.use(fsPlugin, { onBeforeWrite, dryRun: false })
+    const fabric = createFabric()
+    fabric.use(fsPlugin, { onBeforeWrite, dryRun: false })
 
-    await app.addFile({
+    await fabric.addFile({
       baseName: 'index.ts',
       path: '/tmp/index.ts',
       sources: [
@@ -54,7 +54,7 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write()
+    await fabric.write()
 
     expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.ts', 'export const y = 2')
     expect(spy).toHaveBeenCalled()
@@ -63,10 +63,10 @@ describe('createApp', () => {
   test('does not call write when fsPlugin is in dryRun mode', async () => {
     const onBeforeWrite = vi.fn()
 
-    const app = createApp()
-    app.use(fsPlugin, { onBeforeWrite, dryRun: true })
+    const fabric = createFabric()
+    fabric.use(fsPlugin, { onBeforeWrite, dryRun: true })
 
-    await app.addFile({
+    await fabric.addFile({
       baseName: 'index.ts',
       path: '/tmp/index.ts',
       sources: [
@@ -77,12 +77,12 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write({ extension: { '.ts': '.ts' } })
+    await fabric.write({ extension: { '.ts': '.ts' } })
 
     expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.ts', undefined)
   })
 
-  test('creates an app with the fsPlugin and parser for vue', async () => {
+  test('creates an fabric with the fsPlugin and parser for vue', async () => {
     const onBeforeWrite = vi.fn()
 
     const vueParser = createParser({
@@ -96,11 +96,11 @@ describe('createApp', () => {
 
     const spy = vi.spyOn(vueParser, 'parse')
 
-    const app = createApp()
-    app.use(fsPlugin, { onBeforeWrite, dryRun: false })
-    app.use(vueParser)
+    const fabric = createFabric()
+    fabric.use(fsPlugin, { onBeforeWrite, dryRun: false })
+    fabric.use(vueParser)
 
-    await app.addFile({
+    await fabric.addFile({
       baseName: 'index.vue',
       path: '/tmp/index.vue',
       sources: [
@@ -111,7 +111,7 @@ describe('createApp', () => {
       ],
     })
 
-    await app.write({ extension: { '.vue': '.vue' } })
+    await fabric.write({ extension: { '.vue': '.vue' } })
 
     expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.vue', '<script>const test = 2;<script>')
 

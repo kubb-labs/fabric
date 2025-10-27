@@ -2,7 +2,7 @@ import path from 'node:path'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { progressPlugin } from './progressPlugin.ts'
-import { defineApp } from '../defineApp.ts'
+import { defineFabric } from '../defineFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { SingleBar } from 'cli-progress'
@@ -41,12 +41,12 @@ describe('progressPlugin', () => {
   })
 
   test('starts progress bar on process:start with total and initial value 1', async () => {
-    const app = defineApp()()
-    await app.use(progressPlugin)
+    const fabric = defineFabric()()
+    await fabric.use(progressPlugin)
 
     const files = makeFiles(5)
 
-    await app.context.events.emit('process:start', { files })
+    await fabric.context.events.emit('process:start', { files })
 
     expect(startSpy).toHaveBeenCalledWith(5, 0, {
       message: 'Starting...',
@@ -54,15 +54,15 @@ describe('progressPlugin', () => {
   })
 
   test('increments with message on process:progress for each file', async () => {
-    const app = defineApp()()
-    await app.use(progressPlugin)
+    const fabric = defineFabric()()
+    await fabric.use(progressPlugin)
 
     const files = makeFiles(2)
 
-    await app.context.events.emit('process:start', { files })
+    await fabric.context.events.emit('process:start', { files })
 
     for (const file of files) {
-      await app.context.events.emit('process:progress', {
+      await fabric.context.events.emit('process:progress', {
         processed: 0,
         total: files.length,
         percentage: 0,
@@ -79,13 +79,13 @@ describe('progressPlugin', () => {
   })
 
   test('stops progress bar on process:end', async () => {
-    const app = defineApp()()
-    await app.use(progressPlugin)
+    const fabric = defineFabric()()
+    await fabric.use(progressPlugin)
 
     const files = makeFiles(1)
 
-    await app.context.events.emit('process:start', { files })
-    await app.context.events.emit('process:end', { files })
+    await fabric.context.events.emit('process:start', { files })
+    await fabric.context.events.emit('process:end', { files })
 
     expect(stopSpy).toHaveBeenCalledTimes(1)
   })

@@ -1,5 +1,5 @@
 import { Const } from './Const.tsx'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 describe('<Const/>', () => {
@@ -7,9 +7,9 @@ describe('<Const/>', () => {
     const Component = () => {
       return <Const name="data">"blue"</Const>
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -22,9 +22,9 @@ describe('<Const/>', () => {
         </Const>
       )
     }
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })

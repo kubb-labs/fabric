@@ -1,6 +1,6 @@
 import { Indent } from './Indent.tsx'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 
 describe('<Indent/>', () => {
   test('indent string children by default size', async () => {
@@ -16,9 +16,9 @@ describe('<Indent/>', () => {
       )
     }
 
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })
@@ -38,9 +38,9 @@ describe('<Indent/>', () => {
       )
     }
 
-    const app = createApp()
-    app.use(reactPlugin)
-    const output = await app.renderToString(Component)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
 
     expect(output).toMatchSnapshot()
   })

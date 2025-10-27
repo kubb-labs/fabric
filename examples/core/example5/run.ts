@@ -1,9 +1,9 @@
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin, graphPlugin } from '@kubb/fabric-core/plugins'
 
-export const app = createApp()
+export const fabric = createFabric()
 
-app.addFile({
+fabric.addFile({
   baseName: 'testController.ts',
   path: './example5/gen/hooks/controller/testController.ts',
   sources: [
@@ -19,7 +19,7 @@ app.addFile({
   exports: [],
 })
 
-app.addFile({
+fabric.addFile({
   baseName: 'fileController.ts',
   path: './example5/gen/hooks/controller/fileController.ts',
   sources: [
@@ -35,9 +35,9 @@ app.addFile({
   exports: [],
 })
 
-app.use(fsPlugin, {
+fabric.use(fsPlugin, {
   clean: { path: './example5/gen' },
 })
-app.use(graphPlugin, { root: './example5', open: false })
+fabric.use(graphPlugin, { root: './example5', open: false })
 
-app.write()
+fabric.write()

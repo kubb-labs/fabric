@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { File } from '../components/File'
 import { useFile } from './useFile'
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
 
 describe('useFile', () => {
@@ -22,10 +22,10 @@ describe('useFile', () => {
       </File>
     )
 
-    const app = createApp()
-    app.use(reactPlugin)
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
 
-    app.render(Component)
+    fabric.render(Component)
 
     expect(ctx).toBeDefined()
     expect(ctx?.baseName).toBe('index.ts')
