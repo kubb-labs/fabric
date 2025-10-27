@@ -7,11 +7,11 @@ import type { AppContext, AppEvents, AppOptions } from './App.ts'
 
 import type { App } from './index.ts'
 
-type RootRenderFunction<TApp extends App> = (app: TApp) => void | Promise<void>
+type RootRenderFunction<TOptions extends AppOptions> = (app: App<TOptions>) => void | Promise<void>
 
 export type DefineFabric<TOptions> = (options?: TOptions) => App
 
-export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderFunction<App<TOptions>>): DefineFabric<TOptions> {
+export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderFunction<TOptions>): DefineFabric<TOptions> {
   function createFabric(options?: TOptions): App {
     const events = new AsyncEventEmitter<AppEvents>()
     const installedPlugins = new Set<Plugin<any>>()
@@ -38,7 +38,7 @@ export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderF
 
         if (pluginOrParser.type === 'plugin') {
           if (installedPlugins.has(pluginOrParser)) {
-            console.warn('Plugin has already been applied to target app.')
+            console.warn(`Plugin ${pluginOrParser.name} has already been applied to target app.`)
           } else {
             installedPlugins.add(pluginOrParser)
           }
@@ -52,7 +52,7 @@ export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderF
         }
         if (pluginOrParser.type === 'parser') {
           if (installedParsers.has(pluginOrParser)) {
-            console.warn('Parser has already been applied to target app.')
+            console.warn(`Parser ${pluginOrParser.name} has already been applied to target app.`)
           } else {
             installedParsers.add(pluginOrParser)
           }

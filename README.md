@@ -33,16 +33,16 @@ It offers a lightweight layer for file generation while orchestrating the overal
 
 ## Write a TypeScript file
 
-Below is a minimal example showing how `createApp` works together with plugins and parsers via `app.use`.
+Below is a minimal example showing how `createFabric` works together with plugins and parsers via `fabric.use`.
 
 ```ts
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser, createParser } from '@kubb/fabric-core/parsers'
 
-const app = createApp()
+const fabric = createFabric()
 
-app.use(fsPlugin, {
+fabric.use(fsPlugin, {
   dryRun: false,
   onBeforeWrite: (path, data) => {
     console.log('About to write:', path)
@@ -50,9 +50,9 @@ app.use(fsPlugin, {
   clean: { path: './generated' },
 })
 
-app.use(typescriptParser)
+fabric.use(typescriptParser)
 
-await app.addFile({
+await fabric.addFile({
   baseName: 'index.ts',
   path: './generated/index.ts',
   sources: [
@@ -60,27 +60,27 @@ await app.addFile({
   ],
 })
 
-await app.write()
+await fabric.write()
 
 ```
 
 # API Reference
 
 ## Core
-### `createApp(options?): App`
-Returns an app instance with:
-- `app.use(pluginOrParser, ...options) => App` — register plugins and parsers.
-- `app.addFile(...files)` — queue in-memory files to generate.
-- `app.files` — getter with all queued files.
-- `app.context` — internal context holding events, options, FileManager, installed plugins/parsers.
+### `createFabric(options?): Fabric`
+Returns a Fabric instance with:
+- `fabric.use(pluginOrParser, ...options) => Fabric` — register plugins and parsers.
+- `fabric.addFile(...files)` — queue in-memory files to generate.
+- `fabric.files` — getter with all queued files.
+- `fabric.context` — internal context holding events, options, FileManager, installed plugins/parsers.
 
-### `defineApp(instance?): () => App`
-Factory to create your own `createApp` with an optional bootstrap `instance(app)` called on creation.
+### `defineFabric(instance?): () => Fabric`
+Factory to create your own `createFabric` with an optional bootstrap `instance(fabric)` called on creation.
 
-### App events (emitted by the core during processing)
+### Events (emitted by the core during processing)
 - `start`
 - `end`
-- `render { app }`
+- `render { fabric }`
 - `file:add { files }`
 - `write:start { files }`
 - `write:end { files }`
@@ -105,7 +105,7 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
 | onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `process:progress`.            |
 | clean | `{ path: string }`                                                   | — | If provided, removes the directory at `path` before writing any files. |
 
-Injected `app.write` options (via `fsPlugin`):
+Injected `fabric.write` options (via `fsPlugin`):
 
 | Option | Type                             | Default | Description |
 |---|----------------------------------|---|---|
@@ -124,7 +124,7 @@ import { barrelPlugin } from '@kubb/fabric-core/plugins'
 | mode | `'all' \| 'named' \| 'propagate' \| false` | — | Controls how exports are generated: all exports, only named exports, propagate (skip barrels), or disabled. |
 | dryRun | `boolean`                                  | `false` | If true, computes barrels but skips writing. |
 
-Injected `app.writeEntry` parameters (via `barrelPlugin`):
+Injected `fabric.writeEntry` parameters (via `barrelPlugin`):
 
 | Param | Type                                       | Description |
 |---|--------------------------------------------|---|
@@ -180,28 +180,28 @@ Injected methods (via `reactPlugin`):
 
 #### `createPlugin`
 
-Factory to declare a plugin that can be registered via `app.use`.
+Factory to declare a plugin that can be registered via `fabric.use`.
 
-| Field | Required | Description                                                                                                               |
-|---|---|---------------------------------------------------------------------------------------------------------------------------|
-| `name` | Yes | String identifier of your plugin.                                                                                         |
-| `install(app, options)` | Yes | Called when the plugin is registered. You can subscribe to core events and perform side effects here.                     |
-| `inject?(app, options)` | No | Return synchronously the runtime methods/properties to merge into `app` (e.g. `write`, `render`). This must not be async. |
+| Field                      | Required | Description                                                                                                                  |
+|----------------------------|---|------------------------------------------------------------------------------------------------------------------------------|
+| `name`                     | Yes | String identifier of your plugin.                                                                                            |
+| `install(fabric, options)` | Yes | Called when the plugin is registered. You can subscribe to core events and perform side effects here.                        |
+| `inject?(fabric, options)` | No | Return synchronously the runtime methods/properties to merge into `fabric` (e.g. `write`, `render`). This must not be async. |
 
 Example:
 
 ```ts
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { createPlugin } from '@kubb/fabric-core/plugins'
 
 const helloPlugin = createPlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
   name: 'helloPlugin',
-  install(app, options) {
-    app.context.events.on('start', () => {
-      console.log('App started')
+  install(fabric, options) {
+    fabric.context.events.on('start', () => {
+      console.log('Fabric started')
     })
   },
-  inject(app, options) {
+  inject(fabric, options) {
     return {
       sayHello(msg = options?.name ?? 'world') {
         console.log(`Hello ${msg}!`)
@@ -210,9 +210,9 @@ const helloPlugin = createPlugin<{ name?: string }, { sayHello: (msg?: string) =
   },
 })
 
-const app = createApp()
-await app.use(helloPlugin, { name: 'Fabric' })
-app.sayHello() // -> Hello Fabric!
+const fabric = createFabric()
+await fabric.use(helloPlugin, { name: 'Fabric' })
+fabric.sayHello() // -> Hello Fabric!
 ```
 
 ## Parsers
@@ -244,7 +244,7 @@ import { tsxParser } from '@kubb/fabric-core/parsers'
 
 #### `defaultParser`
 
-Fallback parser used when no extension mapping is provided to `app.write`.
+Fallback parser used when no extension mapping is provided to `fabric.write`.
 
 ```
 import { defaultParser } @kubb/fabric-core/parsers`
@@ -255,25 +255,25 @@ import { defaultParser } @kubb/fabric-core/parsers`
 | file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 
 #### `createParser`
-Factory to declare a parser that can be registered via `app.use` and selected by `extNames` during `app.write`.
+Factory to declare a parser that can be registered via `fabric.use` and selected by `extNames` during `fabirc.write`.
 
-| Field | Required | Description                                                                                                     |
-|---|---|-----------------------------------------------------------------------------------------------------------------|
-| `name` | Yes | String identifier of your parser.                                                                               |
-| `extNames` | Yes | List of file extensions this parser can handle (e.g. ['.ts']). Use `undefined` for the default parser fallback. |
-| `install(app, options)` | No | Optional setup when the parser is registered (subscribe to events, set state, etc.).                            |
+| Field                      | Required | Description                                                                                                     |
+|----------------------------|---|-----------------------------------------------------------------------------------------------------------------|
+| `name`                     | Yes | String identifier of your parser.                                                                               |
+| `extNames`                 | Yes | List of file extensions this parser can handle (e.g. ['.ts']). Use `undefined` for the default parser fallback. |
+| `install(fabric, options)` | No | Optional setup when the parser is registered (subscribe to events, set state, etc.).                            |
 | `parse(file, { extname })` | Yes | Must return the final string that will be written for the given file.                                           |
 
 Example:
 
 ```ts
-import { createApp } from '@kubb/fabric-core'
+import { createFabric } from '@kubb/fabric-core'
 import { createParser } from '@kubb/fabric-core/parsers'
 
 const vueParser = createParser<{ banner?: string }>({
   name: 'vueParser',
   extNames: ['.vue'],
-  async install(app, options) {
+  async install(fabric, options) {
     // Optional setup
   },
   async parse(file, { extname }) {
@@ -283,16 +283,16 @@ const vueParser = createParser<{ banner?: string }>({
   },
 })
 
-const app = createApp()
-app.use(vueParser)
-app.use(fsPlugin); // make it possible to write to the filesystem
+const fabric = createFabric()
+fabric.use(vueParser)
+fabric.use(fsPlugin); // make it possible to write to the filesystem
 
-app.write({ extension: { '.vue': '.ts' } })
+fabric.write({ extension: { '.vue': '.ts' } })
 ```
 
 > [!NOTE]
-> - `app.use` accepts both plugins and parsers. The `fsPlugin` handles I/O and adds `app.write`. Parsers decide how files are converted to strings for specific extensions.
-> - When extension mapping is provided to `app.write`, Fabric picks a parser whose `extNames` include the file’s extension. Otherwise, the default parser is used.
+> - `fabric.use` accepts both plugins and parsers. The `fsPlugin` handles I/O and adds `fabric.write`. Parsers decide how files are converted to strings for specific extensions.
+> - When extension mapping is provided to `fabric.write`, Fabric picks a parser whose `extNames` include the file’s extension. Otherwise, the default parser is used.
 
 # Supporting Kubb
 

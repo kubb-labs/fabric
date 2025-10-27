@@ -1,6 +1,6 @@
 import path from 'node:path'
-import { File, createFabric } from '@kubb/react-fabric'
-import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
+import { File, createReactFabric } from '@kubb/react-fabric'
+import { fsPlugin } from '@kubb/react-fabric/plugins'
 
 /**
  * Create a file and append JSX
@@ -22,10 +22,9 @@ function App2() {
 }
 
 async function start() {
-  const fabric = createFabric()
+  const fabric = createReactFabric()
 
   fabric.use(fsPlugin, { clean: { path: path.resolve(__dirname, './gen') } })
-  fabric.use(reactPlugin)
 
   fabric.render(App1)
   fabric.render(App2)

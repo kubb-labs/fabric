@@ -1,9 +1,10 @@
-import Reconciler from 'react-reconciler'
+import Reconciler, { type ReactContext } from 'react-reconciler'
 import { DefaultEventPriority, NoEventPriority } from 'react-reconciler/constants'
 
 import { appendChildNode, createNode, createTextNode, insertBeforeNode, removeChildNode, setAttribute, setTextNodeValue } from './dom.ts'
 import type { KubbNode } from './types'
 import type { DOMElement, DOMNodeAttribute, ElementNames, TextNode } from './types.ts'
+import { createContext } from 'react'
 
 declare module 'react-reconciler' {
   // @ts-expect-error custom override
@@ -119,7 +120,6 @@ export const Renderer = Reconciler({
   removeChildFromContainer(node: DOMElement, removeNode: TextNode) {
     removeChildNode(node, removeNode)
   },
-  resetFormInstance() {},
   commitMount() {},
   commitUpdate(node: DOMElement, _payload, _type, _oldProps: Props, newProps: Props) {
     const { props } = newProps
@@ -140,36 +140,40 @@ export const Renderer = Reconciler({
     currentUpdatePriority = newPriority
   },
   getCurrentUpdatePriority: () => currentUpdatePriority,
-  resolveUpdatePriority: () => currentUpdatePriority || DefaultEventPriority,
+  resolveUpdatePriority() {
+    if (currentUpdatePriority !== NoEventPriority) {
+      return currentUpdatePriority
+    }
+
+    return DefaultEventPriority
+  },
   maySuspendCommit() {
     return false
   },
-  startSuspendingCommit() {},
-  waitForCommitToBeReady() {
-    return null
-  },
-  preloadInstance() {
-    // Return true to indicate it's already loaded
-    return true
-  },
-  suspendInstance() {},
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  NotPendingTransition: undefined,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  HostTransitionContext: createContext(null) as unknown as ReactContext<unknown>,
+  resetFormInstance() {},
+  requestPostPaintCallback() {},
   shouldAttemptEagerTransition() {
     return false
   },
-  NotPendingTransition: undefined,
-  requestPostPaintCallback: function (_callback: (time: number) => void): void {
-    throw new Error('Function not implemented.')
+  trackSchedulerEvent() {},
+  resolveEventType() {
+    return null
   },
-  trackSchedulerEvent: function (): void {
-    throw new Error('Function not implemented.')
+  resolveEventTimeStamp() {
+    return -1.1
   },
-  resolveEventType: function (): null | string {
-    throw new Error('Function not implemented.')
+  preloadInstance() {
+    return true
   },
-  resolveEventTimeStamp: function (): number {
-    throw new Error('Function not implemented.')
+  startSuspendingCommit() {},
+  suspendInstance() {},
+  waitForCommitToBeReady() {
+    return null
   },
-  HostTransitionContext: undefined as any,
 })
 
 export type { FiberRoot } from 'react-reconciler'

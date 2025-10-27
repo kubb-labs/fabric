@@ -108,8 +108,8 @@ export class Runtime {
     ).bind(this)
 
     Renderer.injectIntoDevTools({
-      bundleType: 0, // 0 for PROD, 1 for DEV
-      version: '19.1.1', // should be React version and not Kubb's custom version
+      bundleType: 1, // 0 for PROD, 1 for DEV
+      version: '19.1.0', // should be React version and not Kubb's custom version
       rendererPackageName: 'kubb', // package name
     })
   }

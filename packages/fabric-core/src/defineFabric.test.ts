@@ -32,7 +32,7 @@ declare global {
   }
 }
 
-describe('defineApp', () => {
+describe('defineFabric', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
@@ -74,9 +74,8 @@ describe('defineApp', () => {
 
     fabric.use(plugin, 'opt1', 'opt2')
     expect(install).toHaveBeenCalledTimes(1)
-
     fabric.use(plugin, 'opt1', 'opt2')
-    expect(warnSpy).toHaveBeenCalledWith('Plugin has already been applied to target app.')
+    expect(warnSpy).toHaveBeenCalledWith('Plugin mockPlugin has already been applied to target app.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 
@@ -103,7 +102,7 @@ describe('defineApp', () => {
     expect(install).toHaveBeenCalledTimes(1)
 
     fabric.use(parser, 'a')
-    expect(warnSpy).toHaveBeenCalledWith('Parser has already been applied to target app.')
+    expect(warnSpy).toHaveBeenCalledWith('Parser mockParser has already been applied to target app.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 

@@ -37,6 +37,10 @@
       "import": "./dist/globals.js",
       "require": "./dist/globals.cjs"
     },
+    "./jsx-dev-runtime": {
+      "import": "./dist/jsx-dev-runtime.js",
+      "require": "./dist/jsx-dev-runtime.cjs"
+    },
     "./jsx-runtime": {
       "import": "./dist/jsx-runtime.js",
       "require": "./dist/jsx-runtime.cjs"
@@ -109,10 +113,10 @@
     "indent-string": "^5.0.0",
     "natural-orderby": "^5.0.0",
     "react": "catalog:",
-    "react-devtools-inline": "^7.0.1",
+    "react-devtools-core": "^6.1.2",
     "react-reconciler": "catalog:",
     "signal-exit": "^4.1.0",
-    "ws": "^8.18.3"
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/react": "catalog:",

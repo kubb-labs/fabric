@@ -7,6 +7,7 @@ export default defineConfig({
     devtools: 'src/devtools.ts',
     globals: 'src/globals.ts',
     'jsx-runtime': './src/jsx-runtime.ts',
+    'jsx-dev-runtime': './src/jsx-runtime.ts',
     parsers: 'src/parsers/index.ts',
     plugins: 'src/plugins/index.ts',
   },

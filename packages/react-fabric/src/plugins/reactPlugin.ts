@@ -2,7 +2,7 @@ import { createPlugin } from '@kubb/fabric-core/plugins'
 import { Runtime } from '../Runtime.tsx'
 import { createElement, type ElementType } from 'react'
 
-type Options = {
+export type Options = {
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
