@@ -4,7 +4,7 @@ import pLimit from 'p-limit'
 import type { Parser } from './parsers/types.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { AppEvents, AppMode } from './App.ts'
+import type { FabricEvents, FabricMode } from './Fabric.ts'
 
 export type ProcessFilesProps = {
   parsers?: Set<Parser>
@@ -13,7 +13,7 @@ export type ProcessFilesProps = {
   /**
    * @default 'sequential'
    */
-  mode?: AppMode
+  mode?: FabricMode
 }
 
 type GetParseOptions = {
@@ -22,14 +22,14 @@ type GetParseOptions = {
 }
 
 type Options = {
-  events?: AsyncEventEmitter<AppEvents>
+  events?: AsyncEventEmitter<FabricEvents>
 }
 
 export class FileProcessor {
   #limit = pLimit(100)
-  events: AsyncEventEmitter<AppEvents>
+  events: AsyncEventEmitter<FabricEvents>
 
-  constructor({ events = new AsyncEventEmitter<AppEvents>() }: Options = {}) {
+  constructor({ events = new AsyncEventEmitter<FabricEvents>() }: Options = {}) {
     this.events = events
 
     return this

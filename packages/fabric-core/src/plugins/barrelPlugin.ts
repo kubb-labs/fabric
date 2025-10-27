@@ -27,14 +27,14 @@ type ExtendOptions = {
 // biome-ignore lint/suspicious/noTsIgnore: production ready
 // @ts-ignore
 declare module '@kubb/fabric-core' {
-  interface App {
+  interface Fabric {
     writeEntry(options: WriteEntryOptions): Promise<void>
   }
 }
 
 declare global {
   namespace Kubb {
-    interface App {
+    interface Fabric {
       writeEntry(options: WriteEntryOptions): Promise<void>
     }
   }

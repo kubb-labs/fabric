@@ -6,20 +6,20 @@ import type { FileManager } from './FileManager.ts'
 
 declare global {
   namespace Kubb {
-    interface App {}
+    interface Fabric {}
   }
 }
 
 export type Component = any
 
-export type AppOptions = {
+export type FabricOptions = {
   /**
    * @default 'sequential'
    */
-  mode?: AppMode
+  mode?: FabricMode
 }
 
-export type AppEvents = {
+export type FabricEvents = {
   /**
    * Called in the beginning of the app lifecycle.
    */
@@ -31,7 +31,7 @@ export type AppEvents = {
   /**
    * Called when being rendered
    */
-  render: [{ app: App }]
+  render: [{ fabric: Fabric }]
   /**
    * Called once before processing any files.
    */
@@ -73,32 +73,32 @@ export type AppEvents = {
   'process:end': [{ files: KubbFile.ResolvedFile[] }]
 }
 
-export type AppContext<TOptions extends AppOptions> = {
+export type FabricContext<TOptions extends FabricOptions> = {
   options?: TOptions
-  events: AsyncEventEmitter<AppEvents>
+  events: AsyncEventEmitter<FabricEvents>
   fileManager: FileManager
   installedPlugins: Set<Plugin>
   installedParsers: Set<Parser>
 }
 
-export type AppMode = 'sequential' | 'parallel'
+export type FabricMode = 'sequential' | 'parallel'
 
 type AllOptional<T> = {} extends T ? true : false
 
 export type Install<TOptions = unknown> = TOptions extends any[]
-  ? (app: App, ...options: TOptions) => void | Promise<void>
+  ? (app: Fabric, ...options: TOptions) => void | Promise<void>
   : AllOptional<TOptions> extends true
-    ? (app: App, options: TOptions | undefined) => void | Promise<void>
-    : (app: App, options: TOptions) => void | Promise<void>
+    ? (app: Fabric, options: TOptions | undefined) => void | Promise<void>
+    : (app: Fabric, options: TOptions) => void | Promise<void>
 
 export type Inject<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
-  ? (app: App, ...options: TOptions) => Partial<TAppExtension>
+  ? (app: Fabric, ...options: TOptions) => Partial<TAppExtension>
   : AllOptional<TOptions> extends true
-    ? (app: App, options: TOptions | undefined) => Partial<TAppExtension>
-    : (app: App, options: TOptions) => Partial<TAppExtension>
+    ? (app: Fabric, options: TOptions | undefined) => Partial<TAppExtension>
+    : (app: Fabric, options: TOptions) => Partial<TAppExtension>
 
-export interface App<TOptions extends AppOptions = AppOptions> extends Kubb.App {
-  context: AppContext<TOptions>
+export interface Fabric<TOptions extends FabricOptions = FabricOptions> extends Kubb.Fabric {
+  context: FabricContext<TOptions>
   files: Array<KubbFile.ResolvedFile>
   use<TPluginOptions = unknown, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
     pluginOrParser: Plugin<TPluginOptions, TAppExtension> | Parser<TPluginOptions, TMeta>,

@@ -17,14 +17,14 @@ vi.mock('./FileManager.ts', () => ({
 }))
 
 import { defineFabric } from './defineFabric.ts'
-import type { App } from './App.ts'
+import type { Fabric } from './Fabric.ts'
 import type * as KubbFile from './KubbFile.ts'
 import { createParser } from './parsers'
 import { createPlugin } from './plugins'
 
 declare global {
   namespace Kubb {
-    interface App {
+    interface Fabric {
       installedSync: boolean
       installedAsync: boolean
       hello(): string
@@ -63,7 +63,7 @@ describe('defineFabric', () => {
   test('use installs plugin with correct fabric and options; warns on duplicate', async () => {
     const fabric = defineFabric()()
 
-    const install = vi.fn(function (fabric: App, ...opts: any[]) {
+    const install = vi.fn(function (fabric: Fabric, ...opts: any[]) {
       expect(fabric).toBeDefined()
       expect(opts).toEqual(['opt1', 'opt2'])
     })
@@ -75,14 +75,14 @@ describe('defineFabric', () => {
     fabric.use(plugin, 'opt1', 'opt2')
     expect(install).toHaveBeenCalledTimes(1)
     fabric.use(plugin, 'opt1', 'opt2')
-    expect(warnSpy).toHaveBeenCalledWith('Plugin mockPlugin has already been applied to target app.')
+    expect(warnSpy).toHaveBeenCalledWith('Plugin mockPlugin has already been applied to target fabric.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 
   test('use installs parser with correct fabric and options; warns on duplicate', async () => {
     const fabric = defineFabric()()
 
-    const install = vi.fn(function (fabric: App, ...opts: any[]) {
+    const install = vi.fn(function (fabric: Fabric, ...opts: any[]) {
       expect(fabric).toBeDefined()
       expect(opts).toEqual(['a'])
     })
@@ -102,7 +102,7 @@ describe('defineFabric', () => {
     expect(install).toHaveBeenCalledTimes(1)
 
     fabric.use(parser, 'a')
-    expect(warnSpy).toHaveBeenCalledWith('Parser mockParser has already been applied to target app.')
+    expect(warnSpy).toHaveBeenCalledWith('Parser mockParser has already been applied to target fabric.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 

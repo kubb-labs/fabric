@@ -1,4 +1,4 @@
-import type { Install, Inject } from '../App.ts'
+import type { Install, Inject } from '../Fabric.ts'
 
 export type Plugin<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = {
   name: string

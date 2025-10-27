@@ -3,17 +3,17 @@ import { isFunction } from 'remeda'
 import type { Plugin } from './plugins/types.ts'
 import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { AppContext, AppEvents, AppOptions } from './App.ts'
+import type { FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
 
-import type { App } from './index.ts'
+import type { Fabric } from './index.ts'
 
-type RootRenderFunction<TOptions extends AppOptions> = (app: App<TOptions>) => void | Promise<void>
+type RootRenderFunction<TOptions extends FabricOptions> = (fabric: Fabric<TOptions>) => void | Promise<void>
 
-export type DefineFabric<TOptions> = (options?: TOptions) => App
+export type DefineFabric<TOptions> = (options?: TOptions) => Fabric
 
-export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderFunction<TOptions>): DefineFabric<TOptions> {
-  function createFabric(options?: TOptions): App {
-    const events = new AsyncEventEmitter<AppEvents>()
+export function defineFabric<TOptions extends FabricOptions>(instance?: RootRenderFunction<TOptions>): DefineFabric<TOptions> {
+  function createFabric(options?: TOptions): Fabric {
+    const events = new AsyncEventEmitter<FabricEvents>()
     const installedPlugins = new Set<Plugin<any>>()
     const installedParsers = new Set<Parser<any>>()
     const fileManager = new FileManager({ events })
@@ -23,9 +23,9 @@ export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderF
       fileManager,
       installedPlugins,
       installedParsers,
-    } as AppContext<TOptions>
+    } as FabricContext<TOptions>
 
-    const app = {
+    const fabric = {
       context,
       get files() {
         return fileManager.files
@@ -38,7 +38,7 @@ export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderF
 
         if (pluginOrParser.type === 'plugin') {
           if (installedPlugins.has(pluginOrParser)) {
-            console.warn(`Plugin ${pluginOrParser.name} has already been applied to target app.`)
+            console.warn(`Plugin ${pluginOrParser.name} has already been applied to target fabric.`)
           } else {
             installedPlugins.add(pluginOrParser)
           }
@@ -46,13 +46,13 @@ export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderF
           if (pluginOrParser.inject && isFunction(pluginOrParser.inject)) {
             const injecter = pluginOrParser.inject
 
-            const extraApp = (injecter as any)(app, ...args)
-            Object.assign(app, extraApp)
+            const extraApp = (injecter as any)(fabric, ...args)
+            Object.assign(fabric, extraApp)
           }
         }
         if (pluginOrParser.type === 'parser') {
           if (installedParsers.has(pluginOrParser)) {
-            console.warn(`Parser ${pluginOrParser.name} has already been applied to target app.`)
+            console.warn(`Parser ${pluginOrParser.name} has already been applied to target fabric.`)
           } else {
             installedParsers.add(pluginOrParser)
           }
@@ -61,18 +61,18 @@ export function defineFabric<TOptions extends AppOptions>(instance?: RootRenderF
         if (pluginOrParser && isFunction(pluginOrParser.install)) {
           const installer = pluginOrParser.install
 
-          await (installer as any)(app, ...args)
+          await (installer as any)(fabric, ...args)
         }
 
-        return app
+        return fabric
       },
-    } as App<TOptions>
+    } as Fabric<TOptions>
 
     if (instance) {
-      instance(app)
+      instance(fabric)
     }
 
-    return app
+    return fabric
   }
 
   return createFabric

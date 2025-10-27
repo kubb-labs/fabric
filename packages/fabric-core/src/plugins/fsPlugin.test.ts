@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { write, fsPlugin } from './fsPlugin.ts'
 import fs from 'fs-extra'
-import type { App } from '../App.ts'
+import type { Fabric } from '../Fabric.ts'
 
 describe('write', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')
@@ -38,7 +38,7 @@ describe('write', () => {
       context: {
         events: { on: vi.fn() },
       },
-    } as unknown as App
+    } as unknown as Fabric
 
     await fsPlugin.install(appStub, { clean: { path: cleanDir } })
 
