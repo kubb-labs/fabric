@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.2.1
+
+### Patch Changes
+
+- [`7969e4c`](https://github.com/kubb-labs/fabric/commit/7969e4ca0d8d50bd900cb5f1534d45d83a4a619a) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - rename app to fabric
+
+- Updated dependencies [[`7969e4c`](https://github.com/kubb-labs/fabric/commit/7969e4ca0d8d50bd900cb5f1534d45d83a4a619a)]:
+  - @kubb/fabric-core@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes
