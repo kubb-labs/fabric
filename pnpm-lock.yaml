@@ -118,9 +118,6 @@ importers:
       fs-extra:
         specifier: ^11.3.2
         version: 11.3.2
-      js-runtime:
-        specifier: ^0.0.8
-        version: 0.0.8
       natural-orderby:
         specifier: ^5.0.0
         version: 5.0.0
@@ -130,9 +127,6 @@ importers:
       serve-handler:
         specifier: ^6.1.6
         version: 6.1.6
-      tiny-open:
-        specifier: ^1.2.0
-        version: 1.2.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -170,12 +164,9 @@ importers:
       natural-orderby:
         specifier: ^5.0.0
         version: 5.0.0
-      react:
-        specifier: 'catalog:'
-        version: 19.2.0
       react-devtools-core:
-        specifier: ^6.1.2
-        version: 6.1.5
+        specifier: 6.1.2
+        version: 6.1.2
       react-reconciler:
         specifier: 'catalog:'
         version: 0.32.0(react@19.2.0)
@@ -183,8 +174,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       ws:
-        specifier: ^8.18.0
-        version: 8.18.3
+        specifier: 8.18.0
+        version: 8.18.0
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
@@ -195,6 +186,9 @@ importers:
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
+      react:
+        specifier: 'catalog:'
+        version: 19.2.0
       tsdown:
         specifier: 'catalog:'
         version: 0.15.10(typescript@5.9.3)
@@ -1321,10 +1315,6 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  js-runtime@0.0.8:
-    resolution: {integrity: sha512-/nxfuHRkzajgNgGP/7j2A9y8k54XtTWizq+vEGrWh3eBWlSqFhwgToXHAGZeHX3wRMTC3VFBw1iVeemlX4qxZw==}
-    engines: {node: '>=18', pnpm: '>=8.3.0'}
-
   js-tokens@9.0.1:
     resolution: {integrity: sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ==}
 
@@ -1559,8 +1549,8 @@ packages:
     resolution: {integrity: sha512-kA5WQoNVo4t9lNx2kQNFCxKeBl5IbbSNBl1M/tLkw9WCn+hxNBAW5Qh8gdhs63CJnhjJ2zQWFoqPJP2sK1AV5A==}
     engines: {node: '>= 0.6'}
 
-  react-devtools-core@6.1.5:
-    resolution: {integrity: sha512-ePrwPfxAnB+7hgnEr8vpKxL9cmnp7F322t8oqcPshbIQQhDKgFDW4tjhF2wjVbdXF9O/nyuy3sQWd9JGpiLPvA==}
+  react-devtools-core@6.1.2:
+    resolution: {integrity: sha512-ldFwzufLletzCikNJVYaxlxMLu7swJ3T2VrGfzXlMsVhZhPDKXA38DEROidaYZVgMAmQnIjymrmqto5pyfrwPA==}
 
   react-reconciler@0.32.0:
     resolution: {integrity: sha512-2NPMOzgTlG0ZWdIf3qG+dcbLSoAc/uLfOwckc3ofy5sSK0pLJqnQLpUFxvGcN2rlXSjnVtGeeFLNimCQEj5gOQ==}
@@ -1731,9 +1721,6 @@ packages:
   term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
-
-  tiny-open@1.2.0:
-    resolution: {integrity: sha512-Ibqpncj/mg8TIr1gzwq0cTJLV3kLcueZ3obb5PBw10DSqREYsPB1eI+7tg4DzBf6xptXLyr0juQIxmkPVFTNkQ==}
 
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
@@ -2009,8 +1996,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.18.3:
-    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
+  ws@8.18.0:
+    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -3073,8 +3060,6 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  js-runtime@0.0.8: {}
-
   js-tokens@9.0.1: {}
 
   js-yaml@3.14.1:
@@ -3261,7 +3246,7 @@ snapshots:
 
   range-parser@1.2.0: {}
 
-  react-devtools-core@6.1.5:
+  react-devtools-core@6.1.2:
     dependencies:
       shell-quote: 1.8.3
       ws: 7.5.10
@@ -3471,8 +3456,6 @@ snapshots:
       unconfig: 7.3.3
 
   term-size@2.2.1: {}
-
-  tiny-open@1.2.0: {}
 
   tinybench@2.9.0: {}
 
@@ -3714,7 +3697,7 @@ snapshots:
 
   ws@7.5.10: {}
 
-  ws@8.18.3: {}
+  ws@8.18.0: {}
 
   yaml@2.8.1: {}
 

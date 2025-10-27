@@ -85,11 +85,9 @@
   "dependencies": {
     "cli-progress": "^3.12.0",
     "fs-extra": "^11.3.2",
-    "js-runtime": "^0.0.8",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.2.0",
     "serve-handler": "^6.1.6",
-    "tiny-open": "^1.2.0",
     "typescript": "5.9.3"
   },
   "devDependencies": {

@@ -112,13 +112,13 @@
     "execa": "^9.6.0",
     "indent-string": "^5.0.0",
     "natural-orderby": "^5.0.0",
-    "react": "catalog:",
-    "react-devtools-core": "^6.1.2",
+    "react-devtools-core": "6.1.2",
     "react-reconciler": "catalog:",
     "signal-exit": "^4.1.0",
-    "ws": "^8.18.0"
+    "ws": "8.18.0"
   },
   "devDependencies": {
+    "react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-reconciler": "catalog:",
     "@types/ws": "^8.18.1",

@@ -1,5 +1,4 @@
 import { createPlugin } from './createPlugin.ts'
-import { switcher } from 'js-runtime'
 import fs from 'fs-extra'
 import { resolve } from 'node:path'
 import type * as KubbFile from '../KubbFile.ts'
@@ -25,63 +24,57 @@ type ExtendOptions = {
 }
 
 export async function write(path: string, data: string | undefined, options: { sanity?: boolean } = {}): Promise<string | undefined> {
-  return switcher(
-    {
-      node: async (path, data: string | undefined, { sanity }: { sanity?: boolean }) => {
-        if (!data || data?.trim() === '') {
-          return undefined
-        }
+  if (typeof Bun !== 'undefined') {
+    if (!data || data?.trim() === '') {
+      return undefined
+    }
 
-        try {
-          const oldContent = await fs.readFile(resolve(path), {
-            encoding: 'utf-8',
-          })
-          if (oldContent?.toString() === data?.toString()) {
-            return
-          }
-        } catch (_err) {
-          /* empty */
-        }
+    await Bun.write(resolve(path), data.trim())
 
-        await fs.outputFile(resolve(path), data.trim(), { encoding: 'utf-8' })
+    if (options?.sanity) {
+      const file = Bun.file(resolve(path))
+      const savedData = await file.text()
 
-        if (sanity) {
-          const savedData = await fs.readFile(resolve(path), {
-            encoding: 'utf-8',
-          })
+      if (savedData?.toString() !== data?.toString()) {
+        throw new Error(`Sanity check failed for ${path}\n\nData[${data.length}]:\n${data}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
+      }
 
-          if (savedData?.toString() !== data?.toString()) {
-            throw new Error(`Sanity check failed for ${path}\n\nData[${data.length}]:\n${data}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
-          }
+      return savedData
+    }
 
-          return savedData
-        }
+    return data
+  }
 
-        return data
-      },
-      bun: async (path: string, data: string | undefined, { sanity }: { sanity?: boolean }) => {
-        if (!data || data?.trim() === '') {
-          return undefined
-        }
+  if (!data || data?.trim() === '') {
+    return undefined
+  }
 
-        await Bun.write(resolve(path), data.trim())
+  try {
+    const oldContent = await fs.readFile(resolve(path), {
+      encoding: 'utf-8',
+    })
+    if (oldContent?.toString() === data?.toString()) {
+      return
+    }
+  } catch (_err) {
+    /* empty */
+  }
 
-        if (sanity) {
-          const file = Bun.file(resolve(path))
-          const savedData = await file.text()
+  await fs.outputFile(resolve(path), data.trim(), { encoding: 'utf-8' })
 
-          if (savedData?.toString() !== data?.toString()) {
-            throw new Error(`Sanity check failed for ${path}\n\nData[${data.length}]:\n${data}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
-          }
+  if (options?.sanity) {
+    const savedData = await fs.readFile(resolve(path), {
+      encoding: 'utf-8',
+    })
 
-          return savedData
-        }
+    if (savedData?.toString() !== data?.toString()) {
+      throw new Error(`Sanity check failed for ${path}\n\nData[${data.length}]:\n${data}\n\nSaved[${savedData.length}]:\n${savedData}\n`)
+    }
 
-        return data
-      },
-    },
-    'node',
-  )(path, data, options)
+    return savedData
+  }
+
+  return data
 }
 
 // biome-ignore lint/suspicious/noTsIgnore: production ready
