@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.2.8
+
+### Patch Changes
+
+- [`f32ca33`](https://github.com/kubb-labs/fabric/commit/f32ca33f8c48011336f99c43b12869b7b0cf8cd3) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - better imports
+
+- Updated dependencies [[`f32ca33`](https://github.com/kubb-labs/fabric/commit/f32ca33f8c48011336f99c43b12869b7b0cf8cd3)]:
+  - @kubb/fabric-core@0.2.8
+
 ## 0.2.7
 
 ### Patch Changes

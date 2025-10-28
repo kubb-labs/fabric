@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.8
+
+### Patch Changes
+
+- [`f32ca33`](https://github.com/kubb-labs/fabric/commit/f32ca33f8c48011336f99c43b12869b7b0cf8cd3) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - better imports
+
 ## 0.2.7
 
 ## 0.2.6
