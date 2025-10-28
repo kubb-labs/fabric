@@ -71,8 +71,15 @@
     "!/**/**.test.**",
     "!/**/__tests__/**"
   ],
+  "size-limit": [
+    {
+      "path": "./dist/*.js",
+      "limit": "510 KiB",
+      "gzip": true
+    }
+  ],
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && size-limit",
     "clean": "npx rimraf ./dist",
     "lint": "bun biome lint .",
     "lint:fix": "bun biome lint --fix --unsafe .",
@@ -93,10 +100,7 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
     "@types/fs-extra": "^11.0.4",
-    "@types/serve-handler": "^6.1.4",
-    "remeda": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "@types/serve-handler": "^6.1.4"
   },
   "engines": {
     "node": ">=20"

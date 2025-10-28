@@ -42,6 +42,7 @@
 		"version:canary": "changeset version --snapshot canary"
 	},
 	"devDependencies": {
+    "@size-limit/file": "catalog:",
 		"@biomejs/biome": "^2.3.1",
 		"@changesets/changelog-github": "^0.5.1",
 		"@changesets/cli": "^2.29.7",
@@ -54,7 +55,10 @@
 		"taze": "^19.8.1",
 		"ts-node": "^10.9.2",
 		"turbo": "^2.5.8",
-		"typescript": "catalog:",
+    "remeda": "catalog:",
+    "size-limit": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^4.0.4"
 	},

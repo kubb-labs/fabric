@@ -96,8 +96,15 @@
     "!/**/**.test.**",
     "!/**/__tests__/**"
   ],
+  "size-limit": [
+    {
+      "path": "./dist/*.js",
+      "limit": "510 KiB",
+      "gzip": true
+    }
+  ],
   "scripts": {
-    "build": "tsdown",
+    "build": "tsdown && size-limit",
     "start": "tsdown --watch ./src",
     "clean": "npx rimraf ./dist",
     "lint": "bun biome lint .",
@@ -124,9 +131,7 @@
   "devDependencies": {
     "@types/react-reconciler": "catalog:",
     "@types/ws": "^8.18.1",
-    "@types/react": "catalog:",
-    "tsdown": "catalog:",
-    "typescript": "catalog:"
+    "@types/react": "catalog:"
   },
   "engines": {
     "node": ">=20"
