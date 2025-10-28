@@ -76,3 +76,5 @@ export type KubbExportProps = KubbFile.Export
 export type LineBreakProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLBRElement>, HTMLBRElement>
 
 export type { Params, Param } from './utils/getFunctionParams.ts'
+
+export * from '@kubb/fabric-core/types'
