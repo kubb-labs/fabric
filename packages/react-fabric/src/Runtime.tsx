@@ -1,6 +1,6 @@
 import process from 'node:process'
 import type { ReactNode } from 'react'
-import { ConcurrentRoot } from 'react-reconciler/constants'
+import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { onExit } from 'signal-exit'
 import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'

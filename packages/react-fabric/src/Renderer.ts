@@ -1,5 +1,5 @@
 import Reconciler, { type ReactContext } from 'react-reconciler'
-import { DefaultEventPriority, NoEventPriority } from 'react-reconciler/constants'
+import { DefaultEventPriority, NoEventPriority } from 'react-reconciler/constants.js'
 
 import { appendChildNode, createNode, createTextNode, insertBeforeNode, removeChildNode, setAttribute, setTextNodeValue } from './dom.ts'
 import type { KubbNode } from './types'

@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 import { Root } from '../components/Root'
 import { useLifecycle } from './useLifecycle'
-import { ConcurrentRoot } from 'react-reconciler/constants'
+import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { createNode } from '../dom'
 import { Renderer } from '../Renderer.ts'
 
