@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.2.6
+
+### Patch Changes
+
+- [`ad1571d`](https://github.com/kubb-labs/fabric/commit/ad1571d5eeaaa82cb936650823786d2c5d280a8e) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Add types of react as dependency
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.2.6
+
 ## 0.2.5
 
 ### Patch Changes
