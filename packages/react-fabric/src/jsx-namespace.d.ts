@@ -1,15 +1,14 @@
 import type React from 'react'
-import type { KubbNode, KubbElement } from './types.ts'
 
-import type { KubbExportProps, KubbFileProps, KubbImportProps, KubbSourceProps, KubbTextProps, LineBreakProps } from '@kubb/react-fabric/types'
+import type { KubbNode, KubbElement, KubbExportProps, KubbFileProps, KubbImportProps, KubbSourceProps, KubbTextProps, LineBreakProps } from './types'
 
 export namespace JSX {
+  type ElementType = React.JSX.ElementType
   type Element = KubbElement
 
-  interface ElementClass extends React.ComponentClass<any> {
+  interface ElementClass extends React.JSX.ElementClass {
     render(): KubbNode
   }
-
   interface ElementAttributesProperty {
     props: {}
   }
@@ -18,7 +17,7 @@ export namespace JSX {
     children: {}
   }
 
-  interface IntrinsicElements {
+  interface IntrinsicElements extends React.JSX.IntrinsicElements {
     'kubb-text': KubbTextProps
     'kubb-file': KubbFileProps
     'kubb-source': KubbSourceProps
@@ -26,4 +25,7 @@ export namespace JSX {
     'kubb-export': KubbExportProps
     br: LineBreakProps
   }
+  type LibraryManagedAttributes<C, P> = React.JSX.LibraryManagedAttributes<C, P>
+  interface IntrinsicClassAttributes<T> extends React.JSX.IntrinsicClassAttributes<T> {}
+  interface IntrinsicElements extends React.JSX.IntrinsicElements {}
 }

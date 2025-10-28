@@ -1,4 +1,4 @@
-import './globals.ts'
+// import './globals.ts'
 
 // components
 export { App } from './components/App.tsx'

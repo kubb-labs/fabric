@@ -152,9 +152,6 @@ importers:
       '@kubb/fabric-core':
         specifier: workspace:*
         version: link:../fabric-core
-      '@types/react':
-        specifier: 'catalog:'
-        version: 19.2.2
       dedent:
         specifier: ^1.7.0
         version: 1.7.0
@@ -183,6 +180,9 @@ importers:
         specifier: 8.18.0
         version: 8.18.0
     devDependencies:
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.2
       '@types/react-reconciler':
         specifier: 'catalog:'
         version: 0.32.0(@types/react@19.2.2)
