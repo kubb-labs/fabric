@@ -1,5 +1,5 @@
 import type { KubbFile } from '@kubb/fabric-core/types'
-import type { ReactNode } from 'react'
+import type { ReactNode, JSX } from 'react'
 import type React from 'react'
 type ReactElementNames = 'br' | 'div'
 
@@ -45,6 +45,7 @@ export type DOMElement = {
 type NodeNames = ElementNames | TextName
 
 export type KubbNode = ReactNode
+export type KubbElement = JSX.Element
 
 export type { Key } from 'react'
 

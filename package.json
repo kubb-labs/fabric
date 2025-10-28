@@ -28,7 +28,7 @@
 		"format": "biome format --write ./",
 		"graph": "npx nx graph ",
 		"lint": "biome lint ./packages",
-		"lint:case": "npx case-police --ignore **/plugin-client/** --fix",
+		"lint:case": "npx case-police --fix",
 		"lint:ci": "biome lint ./packages",
 		"lint:fix": "biome lint --write --unsafe ./packages  && bun run lint:case",
 		"release": "changeset publish",
