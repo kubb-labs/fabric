@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.2.4
+
+### Patch Changes
+
+- [`b6952e8`](https://github.com/kubb-labs/fabric/commit/b6952e896ff802dde3e3b6a984a7a36260b4a4a3) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Do not use React bundeld
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.2.4
+
 ## 0.2.3
 
 ### Patch Changes
