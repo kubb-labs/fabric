@@ -1,8 +1,3 @@
-import './globals.ts'
+export type * from './jsx-namespace.d.ts'
 
-import ReactJSXRuntime from 'react/jsx-runtime'
-
-export const Fragment = ReactJSXRuntime.Fragment
-export const jsx = ReactJSXRuntime.jsx
-export const jsxs = ReactJSXRuntime.jsxs
-export const jsxDEV = ReactJSXRuntime.jsx
+export { Fragment, jsx, jsxs } from 'react/jsx-runtime'

@@ -64,6 +64,9 @@
   "types": "./dist/index.d.cts",
   "typesVersions": {
     "*": {
+      "globals": [
+        "./dist/globals.d.ts"
+      ],
       "devtools": [
         "./dist/devtools.d.ts"
       ],
@@ -115,10 +118,10 @@
     "react-devtools-core": "6.1.2",
     "react-reconciler": "catalog:",
     "signal-exit": "^4.1.0",
+    "react": "catalog:",
     "ws": "8.18.0"
   },
   "devDependencies": {
-    "react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-reconciler": "catalog:",
     "@types/ws": "^8.18.1",

@@ -1,52 +1,26 @@
-import type { KubbFile } from '@kubb/fabric-core/types'
+import type { KubbExportProps, KubbFileProps, KubbImportProps, KubbSourceProps, KubbTextProps, LineBreakProps } from './types.ts'
 import type React from 'react'
-import type { KubbNode } from './types.ts'
 
 declare module 'react' {
   namespace JSX {
-    interface IntrinsicElements {
-      'kubb-text': {
-        children?: KubbNode
-      }
-      'kubb-file': {
-        id?: string
-        children?: KubbNode
-        baseName: string
-        path: string
-        override?: boolean
-        meta?: KubbFile.File['meta']
-      }
-      'kubb-source': KubbFile.Source & {
-        children?: KubbNode
-      }
-      'kubb-import': KubbFile.Import
-      'kubb-export': KubbFile.Export
-      br: React.DetailedHTMLProps<React.HTMLAttributes<HTMLBRElement>, HTMLBRElement>
+    interface ElementClass extends React.ComponentClass<any> {
+      render(): React.ReactNode
     }
-  }
-}
-// biome-ignore lint/suspicious/noTsIgnore: not needed
-// @ts-ignore
-declare module '@kubb/react-fabric/jsx-runtime' {
-  namespace JSX {
+
+    interface ElementAttributesProperty {
+      props: {}
+    }
+
+    interface ElementChildrenAttribute {
+      children: {}
+    }
     interface IntrinsicElements {
-      'kubb-text': {
-        children?: KubbNode
-      }
-      'kubb-file': {
-        id?: string
-        children?: KubbNode
-        baseName: string
-        path: string
-        override?: boolean
-        meta?: KubbFile.File['meta']
-      }
-      'kubb-source': KubbFile.Source & {
-        children?: KubbNode
-      }
-      'kubb-import': KubbFile.Import
-      'kubb-export': KubbFile.Export
-      br: React.DetailedHTMLProps<React.HTMLAttributes<HTMLBRElement>, HTMLBRElement>
+      'kubb-text': KubbTextProps
+      'kubb-file': KubbFileProps
+      'kubb-source': KubbSourceProps
+      'kubb-import': KubbImportProps
+      'kubb-export': KubbExportProps
+      br: LineBreakProps
     }
   }
 }

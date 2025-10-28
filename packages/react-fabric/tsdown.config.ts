@@ -7,7 +7,7 @@ export default defineConfig({
     devtools: 'src/devtools.ts',
     globals: 'src/globals.ts',
     'jsx-runtime': './src/jsx-runtime.ts',
-    'jsx-dev-runtime': './src/jsx-runtime.ts',
+    'jsx-dev-runtime': './src/jsx-dev-runtime.ts',
     parsers: 'src/parsers/index.ts',
     plugins: 'src/plugins/index.ts',
   },
@@ -18,5 +18,5 @@ export default defineConfig({
   sourcemap: true,
   shims: true,
   exports: true,
-  noExternal: [/react/, /indent-string/],
+  noExternal: [/indent-string/],
 })

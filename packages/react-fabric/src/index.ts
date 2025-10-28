@@ -1,7 +1,5 @@
 import './globals.ts'
 
-import * as React from 'react'
-
 // components
 export { App } from './components/App.tsx'
 export { Const } from './components/Const.tsx'
@@ -23,11 +21,4 @@ export { createFunctionParams, FunctionParams } from './utils/getFunctionParams.
 export { Runtime } from './Runtime.tsx'
 
 // react helpers
-export const createContext = React.createContext
-export const createElement = React.createElement
-export const useContext = React.useContext
-export const useEffect = React.useEffect
-export const useState = React.useState
-export const useRef = React.useRef
-export const use = React.use
-export const useReducer = React.useReducer
+export { createElement, createContext, useContext, useEffect, useState, useReducer, useRef, use } from 'react'
