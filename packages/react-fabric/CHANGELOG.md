@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.2.9
+
+### Patch Changes
+
+- [`38aaaa6`](https://github.com/kubb-labs/fabric/commit/38aaaa66518a40fb36d89ee798a9f8b58774668b) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - add size checker
+
+- Updated dependencies [[`38aaaa6`](https://github.com/kubb-labs/fabric/commit/38aaaa66518a40fb36d89ee798a9f8b58774668b)]:
+  - @kubb/fabric-core@0.2.9
+
 ## 0.2.8
 
 ### Patch Changes
