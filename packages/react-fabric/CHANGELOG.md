@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.2.7
+
+### Patch Changes
+
+- [`39e7228`](https://github.com/kubb-labs/fabric/commit/39e7228249ff9e67f24b6f30486b56185a2e52cd) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Do not add globals
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.2.7
+
 ## 0.2.6
 
 ### Patch Changes
