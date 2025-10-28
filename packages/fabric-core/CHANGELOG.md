@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.10
+
+### Patch Changes
+
+- [`f79b76b`](https://github.com/kubb-labs/fabric/commit/f79b76bf5daf5f259e4d3c8a53bca64e926206fa) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - update reamd
+
 ## 0.2.9
 
 ### Patch Changes
