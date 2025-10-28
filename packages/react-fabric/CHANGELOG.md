@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.2.5
+
+### Patch Changes
+
+- [`a234cd3`](https://github.com/kubb-labs/fabric/commit/a234cd3232dd9e8f7e4d8956d964d4b3fe25af69) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - add more jsx types
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.2.5
+
 ## 0.2.4
 
 ### Patch Changes
