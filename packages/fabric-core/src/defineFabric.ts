@@ -5,7 +5,7 @@ import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { FabricConfig, FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
 
-import type { Fabric } from './index.ts'
+import type { Fabric } from './Fabric.ts'
 
 type RootRenderFunction<TOptions extends FabricOptions> = (fabric: Fabric<TOptions>) => void | Promise<void>
 
