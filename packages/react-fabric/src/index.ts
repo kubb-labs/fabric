@@ -21,4 +21,4 @@ export { createFunctionParams, FunctionParams } from './utils/getFunctionParams.
 export { Runtime } from './Runtime.tsx'
 
 // react helpers
-export { createElement, createContext, useContext, useEffect, useState, useReducer, useRef, use } from 'react'
+export { Fragment, createElement, createContext, useContext, useEffect, useState, useReducer, useRef, use } from 'react'
