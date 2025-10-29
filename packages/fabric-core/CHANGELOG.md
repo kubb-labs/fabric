@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.12
+
+### Patch Changes
+
+- [`37575f8`](https://github.com/kubb-labs/fabric/commit/37575f814a43f0e729aa6870d4f3760710eb2d97) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Use of config
+
 ## 0.2.11
 
 ## 0.2.10
