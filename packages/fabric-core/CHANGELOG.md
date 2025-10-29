@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.13
+
+### Patch Changes
+
+- [`b1ada8b`](https://github.com/kubb-labs/fabric/commit/b1ada8b0900bbda74bbb180b2f0fbf4085dace52) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Correct export of Fabric type
+
 ## 0.2.12
 
 ### Patch Changes
