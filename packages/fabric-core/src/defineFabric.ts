@@ -3,23 +3,23 @@ import { isFunction } from 'remeda'
 import type { Plugin } from './plugins/types.ts'
 import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
+import type { FabricConfig, FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
 
 import type { Fabric } from './index.ts'
 
 type RootRenderFunction<TOptions extends FabricOptions> = (fabric: Fabric<TOptions>) => void | Promise<void>
 
-export type DefineFabric<TOptions> = (options?: TOptions) => Fabric
+export type DefineFabric<TOptions extends FabricOptions> = (config?: FabricConfig<TOptions>) => Fabric
 
 export function defineFabric<TOptions extends FabricOptions>(instance?: RootRenderFunction<TOptions>): DefineFabric<TOptions> {
-  function createFabric(options?: TOptions): Fabric {
+  function creator(config?: FabricConfig<TOptions>): Fabric {
     const events = new AsyncEventEmitter<FabricEvents>()
     const installedPlugins = new Set<Plugin<any>>()
     const installedParsers = new Set<Parser<any>>()
     const fileManager = new FileManager({ events })
     const context = {
       events,
-      options,
+      config,
       fileManager,
       installedPlugins,
       installedParsers,
@@ -75,5 +75,5 @@ export function defineFabric<TOptions extends FabricOptions>(instance?: RootRend
     return fabric
   }
 
-  return createFabric
+  return creator
 }

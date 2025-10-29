@@ -115,7 +115,7 @@ export const fsPlugin = createPlugin<Options, ExtendOptions>({
         },
       ) {
         await app.context.fileManager.write({
-          mode: app.context.options?.mode,
+          mode: app.context.config?.options?.mode,
           extension: options.extension,
           dryRun,
           parsers: app.context.installedParsers,

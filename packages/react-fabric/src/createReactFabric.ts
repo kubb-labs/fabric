@@ -1,17 +1,17 @@
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
 import type { Options } from './plugins/reactPlugin.ts'
-import type { FabricMode } from '@kubb/fabric-core/types'
+import type { FabricConfig, FabricMode } from '@kubb/fabric-core/types'
 import { open } from './devtools.ts'
 
-export function createReactFabric(options?: Options & { mode?: FabricMode; devtools?: boolean }) {
-  const fabric = createFabric({ mode: options?.mode })
+export function createReactFabric(config?: FabricConfig<Options & { mode?: FabricMode; devtools?: boolean }>) {
+  const fabric = createFabric(config)
 
-  if (options?.devtools) {
+  if (config?.options?.devtools) {
     open()
   }
 
-  fabric.use(reactPlugin, options)
+  fabric.use(reactPlugin, config?.options)
 
   return fabric
 }

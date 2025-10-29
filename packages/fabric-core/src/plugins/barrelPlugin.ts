@@ -196,7 +196,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
         await app.context.fileManager.add(entryFile)
 
         await app.context.fileManager.write({
-          mode: app.context.options?.mode,
+          mode: app.context.config?.options?.mode,
           dryRun: options.dryRun,
           parsers: app.context.installedParsers,
         })

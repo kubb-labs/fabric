@@ -74,7 +74,7 @@ export type FabricEvents = {
 }
 
 export type FabricContext<TOptions extends FabricOptions> = {
-  options?: TOptions
+  config?: FabricConfig<TOptions>
   events: AsyncEventEmitter<FabricEvents>
   fileManager: FileManager
   installedPlugins: Set<Plugin>
@@ -84,6 +84,10 @@ export type FabricContext<TOptions extends FabricOptions> = {
 export type FabricMode = 'sequential' | 'parallel'
 
 type AllOptional<T> = {} extends T ? true : false
+
+export type FabricConfig<TOptions extends FabricOptions> = {
+  options: TOptions
+}
 
 export type Install<TOptions = unknown> = TOptions extends any[]
   ? (app: Fabric, ...options: TOptions) => void | Promise<void>
