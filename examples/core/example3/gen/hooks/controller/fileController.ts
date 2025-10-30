@@ -1,1 +1,1 @@
-export const fileController = 1
+export const fileController = 1;

@@ -11,7 +11,7 @@
         const { nodes, edges } = await res.json()
         const container = document.getElementById('graph')
 
-        const network = new Network(
+        const _network = new Network(
           container,
           { nodes, edges },
           {

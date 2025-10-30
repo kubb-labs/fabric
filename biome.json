@@ -22,7 +22,8 @@
       "!**/.github",
       "!**/.codesandbox",
       "!**/.devcontainer",
-      "!.nx"
+      "!**/gen",
+      "!**/jsx-namespace.d.ts"
     ]
   },
   "formatter": {
