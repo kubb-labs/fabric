@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.14
+
+### Patch Changes
+
+- [`866e5e3`](https://github.com/kubb-labs/fabric/commit/866e5e3c6aa4143fee0a288500edfd6649da6f7a) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - update types to not use fabric react in fabric react
+
 ## 0.2.13
 
 ### Patch Changes
