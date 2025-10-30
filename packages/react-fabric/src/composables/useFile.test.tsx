@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { File } from '../components/File'
 import { useFile } from './useFile'
 import { createFabric } from '@kubb/fabric-core'
-import { reactPlugin } from '@kubb/react-fabric/plugins'
+import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 describe('useFile', () => {
   test('returns current file context when used inside <File />', async () => {

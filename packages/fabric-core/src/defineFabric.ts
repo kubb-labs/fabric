@@ -9,10 +9,10 @@ import type { Fabric } from './Fabric.ts'
 
 type RootRenderFunction<TOptions extends FabricOptions> = (fabric: Fabric<TOptions>) => void | Promise<void>
 
-export type DefineFabric<TOptions extends FabricOptions> = (config?: FabricConfig<TOptions>) => Fabric
+export type DefineFabric<TOptions extends FabricOptions> = (config?: FabricConfig<TOptions>) => Fabric<TOptions>
 
 export function defineFabric<TOptions extends FabricOptions>(instance?: RootRenderFunction<TOptions>): DefineFabric<TOptions> {
-  function creator(config?: FabricConfig<TOptions>): Fabric {
+  function creator(config?: FabricConfig<TOptions>): Fabric<TOptions> {
     const events = new AsyncEventEmitter<FabricEvents>()
     const installedPlugins = new Set<Plugin<any>>()
     const installedParsers = new Set<Parser<any>>()
