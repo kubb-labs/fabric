@@ -38,7 +38,7 @@ Below is a minimal example showing how `createFabric` works together with plugin
 ```ts
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser, createParser } from '@kubb/fabric-core/parsers'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
