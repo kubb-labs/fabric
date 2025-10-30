@@ -63,6 +63,10 @@ await fabric.addFile({
 await fabric.write()
 
 ```
+Creates a file `generated/index.ts` with the following content:
+```ts
+export const x = 1
+```
 
 # API Reference
 
