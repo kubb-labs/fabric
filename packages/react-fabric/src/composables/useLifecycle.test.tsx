@@ -1,9 +1,9 @@
+import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { describe, expect, test, vi } from 'vitest'
 import { Root } from '../components/Root'
-import { useLifecycle } from './useLifecycle'
-import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { createNode } from '../dom'
 import { Renderer } from '../Renderer.ts'
+import { useLifecycle } from './useLifecycle'
 
 describe('useLifecycle', () => {
   test('exit schedules Root.onExit asynchronously', async () => {

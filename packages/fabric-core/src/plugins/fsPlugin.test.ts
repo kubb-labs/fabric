@@ -1,7 +1,7 @@
 import path from 'node:path'
-import { write, fsPlugin } from './fsPlugin.ts'
 import fs from 'fs-extra'
 import type { Fabric } from '../Fabric.ts'
+import { fsPlugin, write } from './fsPlugin.ts'
 
 describe('write', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')

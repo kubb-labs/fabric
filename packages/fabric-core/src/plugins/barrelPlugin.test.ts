@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-
-import { barrelPlugin, getBarrelFiles } from './barrelPlugin.ts'
 import { createFile } from '../createFile.ts'
 import { defineFabric } from '../defineFabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
+import { barrelPlugin, getBarrelFiles } from './barrelPlugin.ts'
 
 const files = [
   createFile({

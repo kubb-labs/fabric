@@ -1,5 +1,5 @@
-import { describe, test, expect } from 'vitest'
-import { createNode, createTextNode, appendChildNode, setAttribute } from '../dom.ts'
+import { describe, expect, test } from 'vitest'
+import { appendChildNode, createNode, createTextNode, setAttribute } from '../dom.ts'
 import { squashSourceNodes } from './squashSourceNodes.ts'
 
 function kubbElement(name: string, attrs: Record<string, any> = {}) {

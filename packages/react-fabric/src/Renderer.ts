@@ -1,10 +1,9 @@
+import { createContext } from 'react'
 import Reconciler, { type ReactContext } from 'react-reconciler'
 import { DefaultEventPriority, NoEventPriority } from 'react-reconciler/constants.js'
-
 import { appendChildNode, createNode, createTextNode, insertBeforeNode, removeChildNode, setAttribute, setTextNodeValue } from './dom.ts'
 import type { KubbNode } from './types'
 import type { DOMElement, DOMNodeAttribute, ElementNames, TextNode } from './types.ts'
-import { createContext } from 'react'
 
 declare module 'react-reconciler' {
   // @ts-expect-error custom override

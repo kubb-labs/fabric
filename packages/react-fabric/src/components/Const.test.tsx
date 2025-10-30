@@ -1,6 +1,6 @@
-import { Const } from './Const.tsx'
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
+import { Const } from './Const.tsx'
 
 describe('<Const/>', () => {
   test('render Const', async () => {

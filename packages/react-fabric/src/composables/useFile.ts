@@ -1,8 +1,6 @@
 import { useContext } from 'react'
-
-import { File } from '../components/File.tsx'
-
 import type { FileContextProps } from '../components/File.tsx'
+import { File } from '../components/File.tsx'
 
 /**
  * `useFile` will return the current file when <File/> is used.

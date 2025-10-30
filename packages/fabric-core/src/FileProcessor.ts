@@ -1,10 +1,9 @@
-import type * as KubbFile from './KubbFile.ts'
 import pLimit from 'p-limit'
-
-import type { Parser } from './parsers/types.ts'
-import { defaultParser } from './parsers/defaultParser.ts'
-import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { FabricEvents, FabricMode } from './Fabric.ts'
+import type * as KubbFile from './KubbFile.ts'
+import { defaultParser } from './parsers/defaultParser.ts'
+import type { Parser } from './parsers/types.ts'
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 export type ProcessFilesProps = {
   parsers?: Set<Parser>

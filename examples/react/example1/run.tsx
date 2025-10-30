@@ -1,10 +1,8 @@
 // import '@kubb/react-fabric/devtools'
 
-import { useEffect, useRef, useState } from '@kubb/react-fabric'
-
-import { createFabric, useLifecycle } from '@kubb/react-fabric'
-import { reactPlugin } from '@kubb/react-fabric/plugins'
 import * as process from 'node:process'
+import { createFabric, useEffect, useLifecycle, useRef, useState } from '@kubb/react-fabric'
+import { reactPlugin } from '@kubb/react-fabric/plugins'
 
 /**
  * Render component that will count down from 5

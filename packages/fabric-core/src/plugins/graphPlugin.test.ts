@@ -1,11 +1,10 @@
 import path from 'node:path'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
-
+import { createFile } from '../createFile.ts'
+import { defineFabric } from '../defineFabric.ts'
+import type * as KubbFile from '../KubbFile.ts'
 import * as GraphPluginModule from './graphPlugin.ts'
 import { graphPlugin } from './graphPlugin.ts'
-import { defineFabric } from '../defineFabric.ts'
-import { createFile } from '../createFile.ts'
-import type * as KubbFile from '../KubbFile.ts'
 
 function makeFiles(count = 3): KubbFile.ResolvedFile[] {
   const files: KubbFile.ResolvedFile[] = [] as any

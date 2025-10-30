@@ -1,6 +1,6 @@
+import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Type } from './Type.tsx'
-import { createFabric } from '@kubb/fabric-core'
 
 describe('<Type/>', () => {
   test('render Type', async () => {

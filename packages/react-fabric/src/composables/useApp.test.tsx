@@ -1,9 +1,8 @@
-import { describe, expect, test } from 'vitest'
-
-import { App } from '../components/App'
-import { useApp } from './useApp'
 import { createFabric } from '@kubb/fabric-core'
+import { describe, expect, test } from 'vitest'
+import { App } from '../components/App'
 import { reactPlugin } from '../plugins/reactPlugin'
+import { useApp } from './useApp'
 
 describe('useApp', () => {
   test('returns meta and exit when used inside <App />', async () => {

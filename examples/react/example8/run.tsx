@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { File, createReactFabric } from '@kubb/react-fabric'
+import { createReactFabric, File } from '@kubb/react-fabric'
 import { fsPlugin } from '@kubb/react-fabric/plugins'
 
 /**

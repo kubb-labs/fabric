@@ -1,12 +1,11 @@
 import { format } from '../mocks/format.ts'
-import { combineImports, combineSources, createFile, combineExports } from './createFile.ts'
-
-import type * as KubbFile from './KubbFile.ts'
+import { combineExports, combineImports, combineSources, createFile } from './createFile.ts'
 import { FileProcessor } from './FileProcessor.ts'
+import type * as KubbFile from './KubbFile.ts'
+import { defaultParser } from './parsers/defaultParser.ts'
+import { tsxParser } from './parsers/tsxParser.ts'
 import type { Parser } from './parsers/types.ts'
 import { typescriptParser } from './parsers/typescriptParser.ts'
-import { tsxParser } from './parsers/tsxParser.ts'
-import { defaultParser } from './parsers/defaultParser.ts'
 
 describe('createFile', () => {
   const parsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])

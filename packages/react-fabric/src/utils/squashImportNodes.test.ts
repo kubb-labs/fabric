@@ -1,7 +1,7 @@
-import { describe, test, expect } from 'vitest'
-import { createNode, createTextNode, appendChildNode, setAttribute } from '../dom.ts'
-import { squashImportNodes } from './squashImportNodes.ts'
 import type { KubbFile } from '@kubb/fabric-core/types'
+import { describe, expect, test } from 'vitest'
+import { appendChildNode, createNode, createTextNode, setAttribute } from '../dom.ts'
+import { squashImportNodes } from './squashImportNodes.ts'
 
 function kubbElement(name: string, attrs: Record<string, any> = {}) {
   const el = createNode(name)

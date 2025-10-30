@@ -25,7 +25,7 @@
 		"generate": "turbo run generate --filter=./examples/* --continue",
 		"postgenerate": "bun run lint:fix && bun run format",
 		"clean": "turbo run clean",
-		"format": "biome format --write ./",
+		"format": "biome format --write ./ && biome check --fix",
 		"graph": "npx nx graph ",
 		"lint": "biome lint ./packages",
 		"lint:case": "npx case-police --fix",

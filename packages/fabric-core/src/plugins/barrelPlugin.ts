@@ -1,11 +1,11 @@
 /** biome-ignore-all lint/suspicious/useIterableCallbackReturn: not needed */
 
-import { createPlugin } from './createPlugin.ts'
-import type * as KubbFile from '../KubbFile.ts'
-import { TreeNode } from '../utils/TreeNode.ts'
 import path from 'node:path'
-import { getRelativePath } from '../utils/getRelativePath.ts'
 import { createFile } from '../createFile.ts'
+import type * as KubbFile from '../KubbFile.ts'
+import { getRelativePath } from '../utils/getRelativePath.ts'
+import { TreeNode } from '../utils/TreeNode.ts'
+import { createPlugin } from './createPlugin.ts'
 
 type Mode = 'all' | 'named' | 'propagate' | false
 

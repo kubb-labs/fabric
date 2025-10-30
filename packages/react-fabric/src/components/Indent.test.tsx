@@ -1,6 +1,6 @@
-import { Indent } from './Indent.tsx'
-import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { createFabric } from '@kubb/fabric-core'
+import { reactPlugin } from '../plugins/reactPlugin.ts'
+import { Indent } from './Indent.tsx'
 
 describe('<Indent/>', () => {
   test('indent string children by default size', async () => {

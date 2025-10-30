@@ -1,6 +1,7 @@
 import type { KubbFile } from '@kubb/fabric-core/types'
-import type { ReactNode, JSX } from 'react'
 import type React from 'react'
+import type { JSX, ReactNode } from 'react'
+
 type ReactElementNames = 'br' | 'div'
 
 export type ElementNames = ReactElementNames | 'kubb-text' | 'kubb-file' | 'kubb-source' | 'kubb-import' | 'kubb-export' | 'kubb-root' | 'kubb-app'
@@ -75,6 +76,5 @@ export type KubbExportProps = KubbFile.Export
 
 export type LineBreakProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLBRElement>, HTMLBRElement>
 
-export type { Params, Param } from './utils/getFunctionParams.ts'
-
 export * from '@kubb/fabric-core/types'
+export type { Param, Params } from './utils/getFunctionParams.ts'

@@ -1,7 +1,7 @@
 import { createFabric } from '@kubb/fabric-core'
+import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { App } from './App.tsx'
 import { Root } from './Root.tsx'
-import { reactPlugin } from '../plugins/reactPlugin.ts'
 
 describe('<App/>', () => {
   test('render App with meta and children', async () => {

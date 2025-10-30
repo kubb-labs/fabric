@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
 
 import { createFabric } from './createFabric.ts'
-import { fsPlugin } from './plugins/fsPlugin.ts'
+import { createParser } from './parsers/createParser.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { typescriptParser } from './parsers/typescriptParser.ts'
-import { createParser } from './parsers/createParser.ts'
+import { fsPlugin } from './plugins/fsPlugin.ts'
 
 describe('createFabric', () => {
   beforeEach(() => {

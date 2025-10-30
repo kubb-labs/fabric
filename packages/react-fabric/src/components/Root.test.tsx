@@ -1,7 +1,7 @@
-import { vi } from 'vitest'
-import { Root } from './Root.tsx'
 import { createFabric } from '@kubb/fabric-core'
+import { vi } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
+import { Root } from './Root.tsx'
 
 function Thrower(): React.ReactNode {
   throw new Error('boom')

@@ -1,10 +1,9 @@
-import { describe, test, expect } from 'vitest'
-
-import { FileProcessor } from './FileProcessor.ts'
-import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
+import { describe, expect, test } from 'vitest'
 import { createFile } from './createFile.ts'
-import type { Parser } from './parsers/types.ts'
+import { FileProcessor } from './FileProcessor.ts'
 import { defaultParser, tsxParser, typescriptParser } from './parsers'
+import type { Parser } from './parsers/types.ts'
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 describe('FileProcessor', () => {
   const parsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])

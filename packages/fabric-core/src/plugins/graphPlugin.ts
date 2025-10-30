@@ -1,13 +1,12 @@
-import { createPlugin } from './createPlugin.ts'
-import type * as KubbFile from '../KubbFile.ts'
-import { type Graph, TreeNode } from '../utils/TreeNode.ts'
-import path from 'node:path'
 import http from 'node:http'
 import type { AddressInfo } from 'node:net'
+import path from 'node:path'
 import handler from 'serve-handler'
-import { open } from '../utils/open.ts'
-
 import { createFile } from '../createFile.ts'
+import type * as KubbFile from '../KubbFile.ts'
+import { open } from '../utils/open.ts'
+import { type Graph, TreeNode } from '../utils/TreeNode.ts'
+import { createPlugin } from './createPlugin.ts'
 
 type Options = {
   root: string

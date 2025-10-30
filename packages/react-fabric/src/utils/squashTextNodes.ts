@@ -1,4 +1,4 @@
-import { createImport, createExport, print } from '@kubb/fabric-core/parsers/typescript'
+import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
 import type { File } from '../components/File.tsx'
 import { nodeNames } from '../dom.ts'

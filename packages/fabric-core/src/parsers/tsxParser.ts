@@ -1,5 +1,5 @@
-import { typescriptParser } from './typescriptParser.ts'
 import { createParser } from './createParser.ts'
+import { typescriptParser } from './typescriptParser.ts'
 
 export const tsxParser = createParser({
   name: 'tsx',

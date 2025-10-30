@@ -1,8 +1,8 @@
-import { expect } from 'vitest'
-import { File } from './File.tsx'
 import { createFabric } from '@kubb/fabric-core'
-import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { expect } from 'vitest'
+import { reactPlugin } from '../plugins/reactPlugin.ts'
+import { File } from './File.tsx'
 
 describe('<File/>', () => {
   test('render text', async () => {

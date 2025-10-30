@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
-import { ref, type Ref } from './ref'
+import { describe, expect, it, vi } from 'vitest'
+import { type Ref, ref } from './ref'
 
 describe('ref', () => {
   it('should create a ref with initial value and expose value getter', () => {

@@ -1,7 +1,7 @@
-import { Presets, SingleBar } from 'cli-progress'
-import { createPlugin } from './createPlugin.ts'
 import { relative } from 'node:path'
 import process from 'node:process'
+import { Presets, SingleBar } from 'cli-progress'
+import { createPlugin } from './createPlugin.ts'
 
 export const progressPlugin = createPlugin({
   name: 'progress',

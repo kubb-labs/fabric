@@ -1,6 +1,6 @@
-import { Function } from './Function.tsx'
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
+import { Function } from './Function.tsx'
 
 describe('<Function/>', () => {
   test('render Function', async () => {

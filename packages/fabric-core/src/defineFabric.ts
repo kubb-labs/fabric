@@ -1,11 +1,9 @@
-import { FileManager } from './FileManager.ts'
 import { isFunction } from 'remeda'
-import type { Plugin } from './plugins/types.ts'
+import type { Fabric, FabricConfig, FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
+import { FileManager } from './FileManager.ts'
 import type { Parser } from './parsers/types.ts'
+import type { Plugin } from './plugins/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
-import type { FabricConfig, FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
-
-import type { Fabric } from './Fabric.ts'
 
 type RootRenderFunction<TOptions extends FabricOptions> = (fabric: Fabric<TOptions>) => void | Promise<void>
 

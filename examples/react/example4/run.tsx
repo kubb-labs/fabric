@@ -1,8 +1,6 @@
-import { useEffect, useState } from '@kubb/react-fabric'
-
 import path from 'node:path'
-import { Const, File, Function, createFabric, useLifecycle } from '@kubb/react-fabric'
-import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
+import { Const, createFabric, File, Function, useEffect, useLifecycle, useState } from '@kubb/react-fabric'
+import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 
 const fetchNames = async (): Promise<string[]> => {
   return new Promise((resolve) => {

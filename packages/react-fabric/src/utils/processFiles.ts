@@ -1,13 +1,12 @@
-import { nodeNames } from '../dom.ts'
-import { squashExportNodes } from './squashExportNodes.ts'
-import { squashImportNodes } from './squashImportNodes.ts'
-import { squashSourceNodes } from './squashSourceNodes.ts'
-
+import type { FileManager } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
 import type React from 'react'
 import type { File } from '../components/File.tsx'
+import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
-import type { FileManager } from '@kubb/fabric-core'
+import { squashExportNodes } from './squashExportNodes.ts'
+import { squashImportNodes } from './squashImportNodes.ts'
+import { squashSourceNodes } from './squashSourceNodes.ts'
 
 export function processFiles(node: DOMElement, fileManager: FileManager) {
   for (let index = 0; index < node.childNodes.length; index++) {

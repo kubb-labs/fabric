@@ -1,6 +1,6 @@
 import path from 'node:path'
-import { File, Function, createFabric } from '@kubb/react-fabric'
-import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
+import { createFabric, File, Function } from '@kubb/react-fabric'
+import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 
 /**
  * Create a file and append JSX

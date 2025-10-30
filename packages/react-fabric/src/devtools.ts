@@ -1,7 +1,6 @@
-import { onExit } from 'signal-exit'
-
-import ws from 'ws'
 import { execa } from 'execa'
+import { onExit } from 'signal-exit'
+import ws from 'ws'
 
 declare global {
   var WebSocket: typeof WebSocket

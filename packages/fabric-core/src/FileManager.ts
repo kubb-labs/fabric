@@ -1,11 +1,11 @@
-import type * as KubbFile from './KubbFile.ts'
-import { Cache } from './utils/Cache.ts'
-import { trimExtName } from './utils/trimExtName.ts'
 import { orderBy } from 'natural-orderby'
 import { createFile } from './createFile.ts'
-import { FileProcessor, type ProcessFilesProps } from './FileProcessor.ts'
-import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { FabricEvents } from './Fabric.ts'
+import { FileProcessor, type ProcessFilesProps } from './FileProcessor.ts'
+import type * as KubbFile from './KubbFile.ts'
+import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
+import { Cache } from './utils/Cache.ts'
+import { trimExtName } from './utils/trimExtName.ts'
 
 function mergeFile<TMeta extends object = object>(a: KubbFile.File<TMeta>, b: KubbFile.File<TMeta>): KubbFile.File<TMeta> {
   return {

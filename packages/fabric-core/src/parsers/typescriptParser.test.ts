@@ -1,6 +1,6 @@
 import type ts from 'typescript'
 
-import { print, createImport, createExport, typescriptParser } from './typescriptParser.ts'
+import { createExport, createImport, print, typescriptParser } from './typescriptParser.ts'
 
 const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
   return print([elements].flat().filter(Boolean))

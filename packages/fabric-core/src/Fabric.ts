@@ -1,8 +1,8 @@
-import type * as KubbFile from './KubbFile.ts'
-import type { Plugin } from './plugins/types.ts'
-import type { Parser } from './parsers/types.ts'
-import type { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 import type { FileManager } from './FileManager.ts'
+import type * as KubbFile from './KubbFile.ts'
+import type { Parser } from './parsers/types.ts'
+import type { Plugin } from './plugins/types.ts'
+import type { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 declare global {
   namespace Kubb {

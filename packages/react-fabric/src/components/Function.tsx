@@ -1,6 +1,6 @@
 import type { JSDoc, Key, KubbNode } from '../types.ts'
-import { Indent } from './Indent.tsx'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import { Indent } from './Indent.tsx'
 
 type Props = {
   key?: Key

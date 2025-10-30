@@ -1,11 +1,10 @@
 import path from 'node:path'
-import { beforeEach, describe, expect, test, vi } from 'vitest'
-
-import { progressPlugin } from './progressPlugin.ts'
-import { defineFabric } from '../defineFabric.ts'
-import { createFile } from '../createFile.ts'
-import type * as KubbFile from '../KubbFile.ts'
 import { SingleBar } from 'cli-progress'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { createFile } from '../createFile.ts'
+import { defineFabric } from '../defineFabric.ts'
+import type * as KubbFile from '../KubbFile.ts'
+import { progressPlugin } from './progressPlugin.ts'
 
 let startSpy: ReturnType<typeof vi.spyOn>
 let incrementSpy: ReturnType<typeof vi.spyOn>

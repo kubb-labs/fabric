@@ -1,6 +1,6 @@
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
 export const fabric = createFabric()
 

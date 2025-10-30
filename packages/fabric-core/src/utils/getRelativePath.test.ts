@@ -1,6 +1,6 @@
 import path from 'node:path'
-import { getRelativePath } from './getRelativePath.ts'
 import fs from 'fs-extra'
+import { getRelativePath } from './getRelativePath.ts'
 
 describe('getRelativePath', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')

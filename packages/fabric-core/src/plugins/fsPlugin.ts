@@ -1,7 +1,7 @@
-import { createPlugin } from './createPlugin.ts'
-import fs from 'fs-extra'
 import { resolve } from 'node:path'
+import fs from 'fs-extra'
 import type * as KubbFile from '../KubbFile.ts'
+import { createPlugin } from './createPlugin.ts'
 
 type WriteOptions = {
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>

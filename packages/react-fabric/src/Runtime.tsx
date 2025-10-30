@@ -1,4 +1,5 @@
 import process from 'node:process'
+import type { FileManager } from '@kubb/fabric-core'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { onExit } from 'signal-exit'
@@ -7,9 +8,8 @@ import { createNode } from './dom.ts'
 import type { FiberRoot } from './Renderer.ts'
 import { Renderer } from './Renderer.ts'
 import type { DOMElement } from './types.ts'
-import { squashTextNodes } from './utils/squashTextNodes.ts'
 import { processFiles } from './utils/processFiles.ts'
-import type { FileManager } from '@kubb/fabric-core'
+import { squashTextNodes } from './utils/squashTextNodes.ts'
 
 type Options = {
   fileManager: FileManager

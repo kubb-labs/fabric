@@ -1,8 +1,7 @@
-import { nodeNames } from '../dom.ts'
-
 import type { KubbFile } from '@kubb/fabric-core/types'
 import type React from 'react'
 import type { File } from '../components/File.tsx'
+import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
 
 export function squashExportNodes(node: DOMElement): Set<KubbFile.ResolvedExport> {

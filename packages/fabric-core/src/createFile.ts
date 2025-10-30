@@ -1,9 +1,9 @@
-import type * as KubbFile from './KubbFile.ts'
-import { trimExtName } from './utils/trimExtName.ts'
 import { createHash } from 'node:crypto'
 import path from 'node:path'
-import { isDeepEqual, uniqueBy } from 'remeda'
 import { orderBy } from 'natural-orderby'
+import { isDeepEqual, uniqueBy } from 'remeda'
+import type * as KubbFile from './KubbFile.ts'
+import { trimExtName } from './utils/trimExtName.ts'
 
 function hashObject(obj: Record<string, unknown>): string {
   const str = JSON.stringify(obj, Object.keys(obj).sort())

@@ -1,6 +1,6 @@
 import path from 'node:path'
-import { Const, File, createFabric } from '@kubb/react-fabric'
-import { reactPlugin, fsPlugin } from '@kubb/react-fabric/plugins'
+import { Const, createFabric, File } from '@kubb/react-fabric'
+import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 
 /**
  * Create 2 files and write them to the file-system
