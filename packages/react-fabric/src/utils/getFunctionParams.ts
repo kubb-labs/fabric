@@ -38,7 +38,7 @@ type ParamItem =
 export type Params = Record<string, Param | undefined>
 
 type Options = {
-  type: 'constructor' | 'call' | 'object' | 'objectValue'
+  type: 'constructor' | 'call' | 'object' | 'objectValue' | 'callback'
   transformName?: (name: string) => string
   transformType?: (type: string) => string
 }
@@ -132,7 +132,12 @@ function parseItem(name: string, item: ParamItem, options: Options): string {
   if (options.type === 'objectValue') {
     return item.value ? `${transformedName}: ${item.value}` : transformedName
   }
-
+  if (options.type === 'callback') {
+    const optionalMarker = item.optional ? '?' : '';
+    const returnType = transformedType ?? 'unknown';
+    const defaultValue = item.default ? ` = () => ${item.default}` : '';
+    return `${transformedName}${optionalMarker}: () => ${returnType}${defaultValue}`;
+  }
   //LEGACY
   if (item.type && options.type === 'constructor') {
     if (item.optional) {
@@ -232,5 +237,9 @@ export class FunctionParams {
 
   toConstructor(): string {
     return getFunctionParams(this.#params, { type: 'constructor' })
+  }
+
+  toCallback(): string {
+    return getFunctionParams(this.#params, { type: 'callback' })
   }
 }
