@@ -133,10 +133,12 @@ function parseItem(name: string, item: ParamItem, options: Options): string {
     return item.value ? `${transformedName}: ${item.value}` : transformedName
   }
   if (options.type === 'callback') {
-    const optionalMarker = item.optional ? '?' : '';
-    const returnType = transformedType ?? 'unknown';
-    const defaultValue = item.default ? ` = () => ${item.default}` : '';
-    return `${transformedName}${optionalMarker}: () => ${returnType}${defaultValue}`;
+    const returnType = transformedType ?? 'unknown'
+    if (item.optional) {
+      return `${transformedName}?: () => ${returnType}`
+    }
+    const defaultValue = item.default ? ` = () => ${item.default}` : ''
+    return `${transformedName}: () => ${returnType}${defaultValue}`
   }
   //LEGACY
   if (item.type && options.type === 'constructor') {
