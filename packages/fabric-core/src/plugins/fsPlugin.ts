@@ -95,30 +95,30 @@ declare global {
 
 export const fsPlugin = createPlugin<Options, ExtendOptions>({
   name: 'fs',
-  install(app, options = {}) {
+  install(ctx, options = {}) {
     if (options.clean) {
       fs.removeSync(options.clean.path)
     }
 
-    app.context.events.on('process:progress', async ({ file, source }) => {
+    ctx.on('process:progress', async ({ file, source }) => {
       if (options.onBeforeWrite) {
         await options.onBeforeWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })
     })
   },
-  inject(app, { dryRun } = {}) {
+  inject(ctx, { dryRun } = {}) {
     return {
       async write(
         options = {
           extension: { '.ts': '.ts' },
         },
       ) {
-        await app.context.fileManager.write({
-          mode: app.context.config?.options?.mode,
+        await ctx.fileManager.write({
+          mode: ctx.config?.options?.mode,
           extension: options.extension,
           dryRun,
-          parsers: app.context.installedParsers,
+          parsers: ctx.installedParsers,
         })
       },
     }

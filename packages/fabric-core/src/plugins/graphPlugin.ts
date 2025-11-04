@@ -86,12 +86,12 @@ async function serve(root: string) {
 
 export const graphPlugin = createPlugin<Options>({
   name: 'graph',
-  install(app, options) {
+  install(ctx, options) {
     if (!options) {
       throw new Error('Graph plugin requires options.root and options.mode')
     }
 
-    app.context.events.on('write:start', async ({ files }) => {
+    ctx.on('write:start', async ({ files }) => {
       const root = options.root
 
       const graph = getGraph({ files, root })
@@ -122,7 +122,7 @@ export const graphPlugin = createPlugin<Options>({
         ],
       })
 
-      await app.context.fileManager.add(graphFile, graphHtmlFile)
+      await ctx.addFile(graphFile, graphHtmlFile)
 
       if (options.open) {
         await serve(root)

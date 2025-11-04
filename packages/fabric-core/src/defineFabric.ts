@@ -16,11 +16,21 @@ export function defineFabric<TOptions extends FabricOptions>(instance?: RootRend
     const installedParsers = new Set<Parser<any>>()
     const fileManager = new FileManager({ events })
     const context = {
-      events,
+      get files() {
+        return fileManager.files
+      },
+      async addFile(...newFiles) {
+        await fileManager.add(...newFiles)
+      },
       config,
       fileManager,
       installedPlugins,
       installedParsers,
+      on: events.on.bind(events),
+      off: events.off.bind(events),
+      onOnce: events.onOnce.bind(events),
+      removeAll: events.removeAll.bind(events),
+      emit: events.emit.bind(events),
     } as FabricContext<TOptions>
 
     const fabric = {
@@ -44,7 +54,7 @@ export function defineFabric<TOptions extends FabricOptions>(instance?: RootRend
           if (pluginOrParser.inject && isFunction(pluginOrParser.inject)) {
             const injecter = pluginOrParser.inject
 
-            const extraApp = (injecter as any)(fabric, ...args)
+            const extraApp = (injecter as any)(context, ...args)
             Object.assign(fabric, extraApp)
           }
         }
@@ -59,7 +69,7 @@ export function defineFabric<TOptions extends FabricOptions>(instance?: RootRend
         if (pluginOrParser && isFunction(pluginOrParser.install)) {
           const installer = pluginOrParser.install
 
-          await (installer as any)(fabric, ...args)
+          await (installer as any)(context, ...args)
         }
 
         return fabric

@@ -45,7 +45,7 @@ describe('progressPlugin', () => {
 
     const files = makeFiles(5)
 
-    await fabric.context.events.emit('process:start', { files })
+    await fabric.context.emit('process:start', { files })
 
     expect(startSpy).toHaveBeenCalledWith(5, 0, {
       message: 'Starting...',
@@ -58,10 +58,10 @@ describe('progressPlugin', () => {
 
     const files = makeFiles(2)
 
-    await fabric.context.events.emit('process:start', { files })
+    await fabric.context.emit('process:start', { files })
 
     for (const file of files) {
-      await fabric.context.events.emit('process:progress', {
+      await fabric.context.emit('process:progress', {
         processed: 0,
         total: files.length,
         percentage: 0,
@@ -83,8 +83,8 @@ describe('progressPlugin', () => {
 
     const files = makeFiles(1)
 
-    await fabric.context.events.emit('process:start', { files })
-    await fabric.context.events.emit('process:end', { files })
+    await fabric.context.emit('process:start', { files })
+    await fabric.context.emit('process:end', { files })
 
     expect(stopSpy).toHaveBeenCalledTimes(1)
   })

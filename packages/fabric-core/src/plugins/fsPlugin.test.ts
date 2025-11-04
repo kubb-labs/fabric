@@ -1,6 +1,6 @@
 import path from 'node:path'
 import fs from 'fs-extra'
-import type { Fabric } from '../Fabric.ts'
+import type { FabricContext } from '../Fabric.ts'
 import { fsPlugin, write } from './fsPlugin.ts'
 
 describe('write', () => {
@@ -34,13 +34,11 @@ describe('write', () => {
     expect(await fs.pathExists(cleanDir)).toBe(true)
     expect(await fs.pathExists(nestedFile)).toBe(true)
 
-    const appStub = {
-      context: {
-        events: { on: vi.fn() },
-      },
-    } as unknown as Fabric
+    const ctxStub = {
+      on: vi.fn(),
+    } as unknown as FabricContext
 
-    await fsPlugin.install(appStub, { clean: { path: cleanDir } })
+    await fsPlugin.install(ctxStub, { clean: { path: cleanDir } })
 
     expect(await fs.pathExists(cleanDir)).toBe(false)
   })

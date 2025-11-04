@@ -73,13 +73,14 @@ export type FabricEvents = {
   'process:end': [{ files: KubbFile.ResolvedFile[] }]
 }
 
-export type FabricContext<TOptions extends FabricOptions> = {
+export type FabricContext<TOptions extends FabricOptions = FabricOptions> = {
   config?: FabricConfig<TOptions>
-  events: AsyncEventEmitter<FabricEvents>
   fileManager: FileManager
+  files: Array<KubbFile.ResolvedFile>
+  addFile(...files: Array<KubbFile.File>): Promise<void>
   installedPlugins: Set<Plugin>
   installedParsers: Set<Parser>
-}
+} & AsyncEventEmitter<FabricEvents>
 
 export type FabricMode = 'sequential' | 'parallel'
 
@@ -90,16 +91,16 @@ export type FabricConfig<TOptions extends FabricOptions> = {
 }
 
 export type Install<TOptions = unknown> = TOptions extends any[]
-  ? (app: Fabric, ...options: TOptions) => void | Promise<void>
+  ? (context: FabricContext, ...options: TOptions) => void | Promise<void>
   : AllOptional<TOptions> extends true
-    ? (app: Fabric, options: TOptions | undefined) => void | Promise<void>
-    : (app: Fabric, options: TOptions) => void | Promise<void>
+    ? (context: FabricContext, options: TOptions | undefined) => void | Promise<void>
+    : (context: FabricContext, options: TOptions) => void | Promise<void>
 
 export type Inject<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
-  ? (app: Fabric, ...options: TOptions) => Partial<TAppExtension>
+  ? (context: FabricContext, ...options: TOptions) => Partial<TAppExtension>
   : AllOptional<TOptions> extends true
-    ? (app: Fabric, options: TOptions | undefined) => Partial<TAppExtension>
-    : (app: Fabric, options: TOptions) => Partial<TAppExtension>
+    ? (context: FabricContext, options: TOptions | undefined) => Partial<TAppExtension>
+    : (context: FabricContext, options: TOptions) => Partial<TAppExtension>
 
 export interface Fabric<TOptions extends FabricOptions = FabricOptions> extends Kubb.Fabric {
   context: FabricContext<TOptions>

@@ -135,7 +135,7 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
 
 export const barrelPlugin = createPlugin<Options, ExtendOptions>({
   name: 'barrel',
-  install(app, options) {
+  install(ctx, options) {
     if (!options) {
       throw new Error('Barrel plugin requires options.root and options.mode')
     }
@@ -144,14 +144,14 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
       return undefined
     }
 
-    app.context.events.on('write:start', async ({ files }) => {
+    ctx.on('write:start', async ({ files }) => {
       const root = options.root
       const barrelFiles = getBarrelFiles({ files, root, mode: options.mode })
 
-      await app.context.fileManager.add(...barrelFiles)
+      await ctx.fileManager.add(...barrelFiles)
     })
   },
-  inject(app, options) {
+  inject(ctx, options) {
     if (!options) {
       throw new Error('Barrel plugin requires options.root and options.mode')
     }
@@ -164,7 +164,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
 
         const rootPath = path.resolve(root, 'index.ts')
 
-        const barrelFiles = app.files.filter((file) => {
+        const barrelFiles = ctx.files.filter((file) => {
           return file.sources.some((source) => source.isIndexable)
         })
 
@@ -193,12 +193,12 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
           sources: [],
         })
 
-        await app.context.fileManager.add(entryFile)
+        await ctx.addFile(entryFile)
 
-        await app.context.fileManager.write({
-          mode: app.context.config?.options?.mode,
+        await ctx.fileManager.write({
+          mode: ctx.config?.options?.mode,
           dryRun: options.dryRun,
-          parsers: app.context.installedParsers,
+          parsers: ctx.installedParsers,
         })
       },
     }

@@ -17,7 +17,7 @@ vi.mock('./FileManager.ts', () => ({
 }))
 
 import { defineFabric } from './defineFabric.ts'
-import type { Fabric } from './Fabric.ts'
+import type { FabricContext } from './Fabric.ts'
 import type * as KubbFile from './KubbFile.ts'
 import { createParser } from './parsers'
 import { createPlugin } from './plugins'
@@ -63,8 +63,8 @@ describe('defineFabric', () => {
   test('use installs plugin with correct fabric and options; warns on duplicate', async () => {
     const fabric = defineFabric()()
 
-    const install = vi.fn(function (fabric: Fabric, ...opts: any[]) {
-      expect(fabric).toBeDefined()
+    const install = vi.fn(function (ctx: FabricContext, ...opts: any[]) {
+      expect(ctx).toBeDefined()
       expect(opts).toEqual(['opt1', 'opt2'])
     })
 
@@ -82,8 +82,8 @@ describe('defineFabric', () => {
   test('use installs parser with correct fabric and options; warns on duplicate', async () => {
     const fabric = defineFabric()()
 
-    const install = vi.fn(function (fabric: Fabric, ...opts: any[]) {
-      expect(fabric).toBeDefined()
+    const install = vi.fn(function (ctx: FabricContext, ...opts: any[]) {
+      expect(ctx).toBeDefined()
       expect(opts).toEqual(['a'])
     })
 
@@ -106,7 +106,7 @@ describe('defineFabric', () => {
     expect(install).toHaveBeenCalledTimes(2)
   })
 
-  test('validate plugin override sync and async', async () => {
+  test('validate plugin override sync', async () => {
     const fabric = defineFabric()()
 
     const plugin = createPlugin({
@@ -127,30 +127,19 @@ describe('defineFabric', () => {
     expect(fabric.write).toBeDefined()
   })
 
-  test('validate plugin install sync and async', async () => {
-    {
-      const fabric = defineFabric()()
-      const plugin = createPlugin({
-        name: 'syncInstall',
-        install(fabric) {
-          fabric.installedSync = true
-        },
-      })
-      fabric.use(plugin)
-      expect(fabric.installedSync).toBe(true)
-    }
-    {
-      const fabric = defineFabric()()
-      const plugin = createPlugin({
-        name: 'asyncInstall',
-        async install(fabric) {
-          await Promise.resolve()
-          fabric.installedAsync = true
-        },
-      })
-      await fabric.use(plugin)
-      expect(fabric.installedAsync).toBe(true)
-    }
+  test('validate plugin install sync', async () => {
+    const fabric = defineFabric()()
+    const plugin = createPlugin({
+      name: 'syncInstall',
+      install() {},
+      inject() {
+        return {
+          installedSync: true,
+        }
+      },
+    })
+    fabric.use(plugin)
+    expect(fabric.installedSync).toBe(true)
   })
 
   test('validate plugin inject sync', async () => {
