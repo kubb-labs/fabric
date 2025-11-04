@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.17
+
+### Patch Changes
+
+- [#36](https://github.com/kubb-labs/fabric/pull/36) [`63206b1`](https://github.com/kubb-labs/fabric/commit/63206b127ba12b44dcdd20e5534829d52d6f1cef) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - resolveName and resolvePath
+
 ## 0.2.16
 
 ### Patch Changes
