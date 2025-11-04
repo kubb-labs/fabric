@@ -33,14 +33,14 @@ export class FileManager {
     return this
   }
 
-  async #resolvePath(file: KubbFile.File): Promise<KubbFile.File> {
-    await this.events.emit('file:resolve:path', { file })
+  #resolvePath(file: KubbFile.File): KubbFile.File {
+    this.events.emit('file:resolve:path', { file })
 
     return file
   }
 
-  async #resolveName(file: KubbFile.File): Promise<KubbFile.File> {
-    await this.events.emit('file:resolve:name', { file })
+  #resolveName(file: KubbFile.File): KubbFile.File {
+    this.events.emit('file:resolve:name', { file })
 
     return file
   }
@@ -62,8 +62,8 @@ export class FileManager {
     for (let file of mergedFiles.values()) {
       const existing = this.#cache.get(file.path)
 
-      file = await this.#resolveName(file)
-      file = await this.#resolvePath(file)
+      file = this.#resolveName(file)
+      file = this.#resolvePath(file)
 
       const merged = existing ? mergeFile(existing, file) : file
       const resolvedFile = createFile(merged)
