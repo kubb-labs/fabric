@@ -22,13 +22,16 @@ export class AsyncEventEmitter<TEvents extends Record<string, any>> {
       return
     }
 
+    const errors: Error[] = []
+
     if (this.#mode === 'sequential') {
       // Run listeners one by one, in order
       for (const listener of listeners) {
         try {
           await listener(...eventArgs)
         } catch (err) {
-          console.error(`Error in listener for "${eventName}":`, err)
+          const error = err instanceof Error ? err : new Error(String(err))
+          errors.push(error)
         }
       }
     } else {
@@ -37,10 +40,19 @@ export class AsyncEventEmitter<TEvents extends Record<string, any>> {
         try {
           await listener(...eventArgs)
         } catch (err) {
-          console.error(`Error in listener for "${eventName}":`, err)
+          const error = err instanceof Error ? err : new Error(String(err))
+          errors.push(error)
         }
       })
       await Promise.all(promises)
+    }
+
+    if (errors.length === 1) {
+      throw errors[0]
+    }
+
+    if (errors.length > 1) {
+      throw new AggregateError(errors, `Errors in async listeners for "${eventName}"`)
     }
   }
 

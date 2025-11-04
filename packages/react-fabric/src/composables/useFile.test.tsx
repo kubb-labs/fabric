@@ -25,7 +25,7 @@ describe('useFile', () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
-    fabric.render(Component)
+    await fabric.render(Component)
 
     expect(ctx).toBeDefined()
     expect(ctx?.baseName).toBe('index.ts')

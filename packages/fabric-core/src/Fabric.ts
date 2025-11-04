@@ -50,10 +50,12 @@ export interface FabricEvents {
 
   /** Called once before any files are processed. */
   'process:start': [{ files: KubbFile.ResolvedFile[] }]
-
-  /** Called when files are added to the FileManager cache. */
+  /**
+   * Called when FileManager is adding files to its cache
+   */
   'file:add': [{ files: KubbFile.ResolvedFile[] }]
-
+  'file:resolve:path': [{ file: KubbFile.File }]
+  'file:resolve:name': [{ file: KubbFile.File }]
   'write:start': [{ files: KubbFile.ResolvedFile[] }]
   'write:end': [{ files: KubbFile.ResolvedFile[] }]
 
@@ -86,7 +88,7 @@ export interface FabricEvents {
  */
 export interface FabricContext<T extends FabricOptions = FabricOptions> extends AsyncEventEmitter<FabricEvents> {
   /** The active Fabric configuration. */
-  config?: FabricConfig<T>
+  config: FabricConfig<T>
 
   /** The internal file manager handling file creation, merging, and writing. */
   fileManager: FileManager
@@ -105,10 +107,7 @@ export interface FabricContext<T extends FabricOptions = FabricOptions> extends 
 /**
  * Base configuration object for Fabric.
  */
-export interface FabricConfig<T extends FabricOptions = FabricOptions> {
-  /** The runtime options used to configure Fabric. */
-  options: T
-}
+export type FabricConfig<T extends FabricOptions = FabricOptions> = T
 
 /**
  * Utility type that checks whether all properties of `T` are optional.

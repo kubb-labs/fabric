@@ -21,12 +21,18 @@ type WriteEntryOptions = {
 }
 
 type ExtendOptions = {
+  /**
+   * `fabric.writeEntry` should be called before `fabric.write`
+   */
   writeEntry(options: WriteEntryOptions): Promise<void>
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
+      /**
+       * `fabric.writeEntry` should be called before `fabric.write`
+       */
       writeEntry(options: WriteEntryOptions): Promise<void>
     }
   }
@@ -188,7 +194,7 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
         await ctx.addFile(entryFile)
 
         await ctx.fileManager.write({
-          mode: ctx.config?.options?.mode,
+          mode: ctx.config.mode,
           dryRun: options.dryRun,
           parsers: ctx.installedParsers,
         })

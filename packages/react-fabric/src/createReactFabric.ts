@@ -6,15 +6,20 @@ import type { Options } from './plugins/reactPlugin.ts'
 import { reactPlugin } from './plugins/reactPlugin.ts'
 
 export function createReactFabric(
-  config?: FabricConfig<Options & { mode?: FabricMode; devtools?: boolean }>,
+  config: FabricConfig<Options & { mode?: FabricMode; devtools?: boolean }> = {},
 ): Fabric<Options & { mode?: FabricMode; devtools?: boolean }> {
-  const fabric = createFabric(config)
+  const fabric = createFabric({ mode: config.mode })
 
-  if (config?.options?.devtools) {
+  if (config.devtools) {
     open()
   }
 
-  fabric.use(reactPlugin, config?.options)
+  fabric.use(reactPlugin, {
+    stdout: config.stdout,
+    stderr: config.stderr,
+    debug: config.debug,
+    stdin: config.stdin,
+  })
 
   return fabric
 }

@@ -23,6 +23,45 @@ describe('FileManager', () => {
     expect(files.length).toBe(2)
   })
 
+  test('fileManager.add resolves path via events', async () => {
+    const events = new AsyncEventEmitter()
+    events.on('file:resolve:path', ({ file }) => {
+      const parsed = path.parse(file.path)
+      const newPath = path.join(parsed.dir, `${parsed.name}.generated${parsed.ext}`)
+
+      file.path = newPath
+      file.baseName = newPath.split('/').pop() as string
+    })
+
+    const fileManager = new FileManager({ events })
+    const [file] = await fileManager.add({
+      path: path.resolve('./src/file1.ts'),
+      baseName: 'file1.ts',
+      sources: [],
+    })
+
+    expect(file!.path).toBe(path.resolve('./src/file1.generated.ts'))
+    expect(file!.baseName).toBe('file1.generated.ts')
+  })
+
+  test('fileManager.add resolves name via events', async () => {
+    const events = new AsyncEventEmitter()
+    events.on('file:resolve:name', ({ file }) => {
+      file.baseName = 'prefix-file1.ts'
+      file.name = 'prefix-file1'
+    })
+
+    const fileManager = new FileManager({ events })
+    const [file] = await fileManager.add({
+      path: path.resolve('./src/file1.ts'),
+      baseName: 'file1.ts',
+      sources: [],
+    })
+
+    expect(file!.name).toBe('prefix-file1')
+    expect(file!.baseName).toBe('prefix-file1.ts')
+  })
+
   test('fileManager.add will return array of files or one file depending on the input', async () => {
     const fileManager = new FileManager()
     const [file, file2] = await fileManager.add(

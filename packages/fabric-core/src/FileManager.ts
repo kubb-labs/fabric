@@ -33,22 +33,26 @@ export class FileManager {
     return this
   }
 
+  async #resolvePath(file: KubbFile.File): Promise<KubbFile.File> {
+    await this.events.emit('file:resolve:path', { file })
+
+    return file
+  }
+
+  async #resolveName(file: KubbFile.File): Promise<KubbFile.File> {
+    await this.events.emit('file:resolve:name', { file })
+
+    return file
+  }
+
   async add(...files: Array<KubbFile.File>) {
     const resolvedFiles: Array<KubbFile.ResolvedFile> = []
 
-    const mergedFiles = new Map<string, KubbFile.File>()
-
-    files.forEach((file) => {
-      const existing = mergedFiles.get(file.path)
-      if (existing) {
-        mergedFiles.set(file.path, mergeFile(existing, file))
-      } else {
-        mergedFiles.set(file.path, file)
-      }
-    })
-
-    for (const file of mergedFiles.values()) {
+    for (let file of files) {
       const existing = this.#cache.get(file.path)
+
+      file = await this.#resolveName(file)
+      file = await this.#resolvePath(file)
 
       const merged = existing ? mergeFile(existing, file) : file
       const resolvedFile = createFile(merged)

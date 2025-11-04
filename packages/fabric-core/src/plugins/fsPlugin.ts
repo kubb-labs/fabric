@@ -107,7 +107,7 @@ export const fsPlugin = createPlugin<Options, ExtendOptions>({
         },
       ) {
         await ctx.fileManager.write({
-          mode: ctx.config?.options?.mode,
+          mode: ctx.config.mode,
           extension: options.extension,
           dryRun,
           parsers: ctx.installedParsers,

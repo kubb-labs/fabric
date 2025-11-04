@@ -4,23 +4,29 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 export const fabric = createFabric()
 
-fabric.addFile({
-  baseName: 'test.ts',
-  path: './example2/gen/test.ts',
-  sources: [
-    {
-      name: 'test',
-      value: 'const test = 1;',
-      isTypeOnly: false,
-      isExportable: true,
-      isIndexable: true,
-    },
-  ],
-  imports: [],
-  exports: [],
-})
+async function run() {
+  await fabric.addFile({
+    baseName: 'test.ts',
+    path: './example2/gen/test.ts',
+    sources: [
+      {
+        name: 'test',
+        value: 'const test = 1;',
+        isTypeOnly: false,
+        isExportable: true,
+        isIndexable: true,
+      },
+    ],
+    imports: [],
+    exports: [],
+  })
 
-fabric.use(fsPlugin, { clean: { path: './example2/gen' } })
-fabric.use(typescriptParser)
+  fabric.use(fsPlugin, { clean: { path: './example2/gen' } })
+  fabric.use(typescriptParser)
 
-fabric.write()
+  console.log(fabric.files)
+
+  await fabric.write()
+}
+
+run()
