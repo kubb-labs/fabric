@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.18
+
+### Patch Changes
+
+- [`5356373`](https://github.com/kubb-labs/fabric/commit/535637325ee50b30be35263122af9f89289bf233) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - preMerged files revert
+
 ## 0.2.17
 
 ### Patch Changes
