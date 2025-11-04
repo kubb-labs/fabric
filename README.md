@@ -130,6 +130,10 @@ import { barrelPlugin } from '@kubb/fabric-core/plugins'
 
 Injected `fabric.writeEntry` parameters (via `barrelPlugin`):
 
+> [!IMPORTANT]
+> `fabric.writeEntry` should be called before `fabric.write`
+
+
 | Param | Type                                       | Description |
 |---|--------------------------------------------|---|
 | root | `string`                                   | Root directory where the entry `index.ts` should be created. |

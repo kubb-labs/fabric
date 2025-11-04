@@ -27,7 +27,7 @@ export type CreateFabric<T extends FabricOptions> = (config?: FabricConfig<T>) =
  * })
  */
 export function defineFabric<T extends FabricOptions>(init?: FabricInitializer<T>): CreateFabric<T> {
-  function create(config?: FabricConfig<T>): Fabric<T> {
+  function create(config: FabricConfig<T> = { mode: 'sequential' } as FabricConfig<T>): Fabric<T> {
     const events = new AsyncEventEmitter<FabricEvents>()
     const installedPlugins = new Set<Plugin<any>>()
     const installedParsers = new Set<Parser<any>>()

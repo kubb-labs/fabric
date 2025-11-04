@@ -40,8 +40,8 @@ describe('FileManager', () => {
       sources: [],
     })
 
-    expect(file.path).toBe(path.resolve('./src/file1.generated.ts'))
-    expect(file.baseName).toBe('file1.generated.ts')
+    expect(file!.path).toBe(path.resolve('./src/file1.generated.ts'))
+    expect(file!.baseName).toBe('file1.generated.ts')
   })
 
   test('fileManager.add resolves name via events', async () => {
@@ -60,8 +60,8 @@ describe('FileManager', () => {
       sources: [],
     })
 
-    expect(file.name).toBe('prefix-file1')
-    expect(file.baseName).toBe('file1.ts')
+    expect(file!.name).toBe('prefix-file1')
+    expect(file!.baseName).toBe('file1.ts')
   })
 
   test('fileManager.add will return array of files or one file depending on the input', async () => {

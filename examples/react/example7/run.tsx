@@ -25,8 +25,7 @@ async function start() {
   fabric.use(progressPlugin)
   fabric.use(graphPlugin, { root: path.resolve(__dirname, './gen'), open: false })
 
-  fabric.render(App)
-
+  await fabric.render(App)
   await fabric.write()
 }
 

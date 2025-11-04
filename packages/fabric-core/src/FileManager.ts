@@ -65,11 +65,7 @@ export class FileManager {
 
     if (!payload.file.baseName) {
       payload.file.baseName = resolvedPathBaseName as KubbFile.BaseName
-    } else if (
-      originalBaseName === originalPathBaseName &&
-      payload.file.baseName === originalBaseName &&
-      resolvedPathBaseName !== originalBaseName
-    ) {
+    } else if (originalBaseName === originalPathBaseName && payload.file.baseName === originalBaseName && resolvedPathBaseName !== originalBaseName) {
       payload.file.baseName = resolvedPathBaseName as KubbFile.BaseName
     }
 
@@ -100,7 +96,7 @@ export class FileManager {
     return payload.file
   }
 
-  async add(...files: Array<KubbFile.File>) {
+  async add(...files: Array<KubbFile.File>): Promise<Array<KubbFile.ResolvedFile>> {
     const resolvedFiles: Array<KubbFile.ResolvedFile> = []
 
     const bufferedFiles = new Map<KubbFile.Path, KubbFile.File>()
