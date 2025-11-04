@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.15
+
+### Patch Changes
+
+- [`739f776`](https://github.com/kubb-labs/fabric/commit/739f77656263855d2331877a4fdcaa87fefec086) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - Better use of ctx in `install`
+
 ## 0.2.14
 
 ### Patch Changes
