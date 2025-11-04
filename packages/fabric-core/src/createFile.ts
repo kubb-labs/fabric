@@ -5,11 +5,6 @@ import { isDeepEqual, uniqueBy } from 'remeda'
 import type * as KubbFile from './KubbFile.ts'
 import { trimExtName } from './utils/trimExtName.ts'
 
-function hashObject(obj: Record<string, unknown>): string {
-  const str = JSON.stringify(obj, Object.keys(obj).sort())
-  return createHash('sha256').update(str).digest('hex')
-}
-
 export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.Source> {
   return uniqueBy(sources, (obj) => [obj.name, obj.isExportable, obj.isTypeOnly] as const)
 }
@@ -65,79 +60,100 @@ export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.
 }
 
 export function combineImports(imports: Array<KubbFile.Import>, exports: Array<KubbFile.Export>, source?: string): Array<KubbFile.Import> {
+  const exportedNameLookup = new Set<string>()
+  for (const item of exports) {
+    const { name } = item
+    if (!name) {
+      continue
+    }
+
+    if (Array.isArray(name)) {
+      for (const value of name) {
+        if (value) {
+          exportedNameLookup.add(value)
+        }
+      }
+      continue
+    }
+
+    exportedNameLookup.add(name)
+  }
+
+  const usageCache = new Map<string, boolean>()
+  const hasImportInSource = (importName: string): boolean => {
+    if (!source) {
+      return true
+    }
+
+    const cached = usageCache.get(importName)
+    if (cached !== undefined) {
+      return cached
+    }
+
+    const isUsed = source.includes(importName) || exportedNameLookup.has(importName)
+    usageCache.set(importName, isUsed)
+
+    return isUsed
+  }
+
   return orderBy(imports, [
     (v) => !!Array.isArray(v.name),
     (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
     (v) => (Array.isArray(v.name) ? orderBy(v.name) : v.name),
-  ]).reduce(
-    (prev, curr) => {
-      let name = Array.isArray(curr.name) ? [...new Set(curr.name)] : curr.name
+  ]).reduce<Array<KubbFile.Import>>((prev, curr) => {
+    let name = Array.isArray(curr.name) ? [...new Set(curr.name)] : curr.name
 
-      const hasImportInSource = (importName: string) => {
-        if (!source) {
-          return true
-        }
+    if (curr.path === curr.root) {
+      // root and path are the same file, remove the "./" import
+      return prev
+    }
 
-        const checker = (name?: string) => {
-          return name && source.includes(name)
-        }
+    // merge all names and check if the importName is being used in the generated source and if not filter those imports out
+    if (Array.isArray(name)) {
+      name = name.filter((item) => (typeof item === 'string' ? hasImportInSource(item) : hasImportInSource(item.propertyName)))
+    }
 
-        return checker(importName) || exports.some(({ name }) => (Array.isArray(name) ? name.some(checker) : checker(name)))
-      }
+    const prevByPath = prev.findLast((imp) => imp.path === curr.path && imp.isTypeOnly === curr.isTypeOnly)
+    const uniquePrev = prev.findLast((imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly === curr.isTypeOnly)
+    const prevByPathNameAndIsTypeOnly = prev.findLast((imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly)
 
-      if (curr.path === curr.root) {
-        // root and path are the same file, remove the "./" import
-        return prev
-      }
+    if (prevByPathNameAndIsTypeOnly) {
+      // we already have an export that has the same path but uses `isTypeOnly` (import type ...)
+      return prev
+    }
 
-      // merge all names and check if the importName is being used in the generated source and if not filter those imports out
-      if (Array.isArray(name)) {
-        name = name.filter((item) => (typeof item === 'string' ? hasImportInSource(item) : hasImportInSource(item.propertyName)))
-      }
+    // already unique enough or name is empty
+    if (uniquePrev || (Array.isArray(name) && !name.length)) {
+      return prev
+    }
 
-      const prevByPath = prev.findLast((imp) => imp.path === curr.path && imp.isTypeOnly === curr.isTypeOnly)
-      const uniquePrev = prev.findLast((imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly === curr.isTypeOnly)
-      const prevByPathNameAndIsTypeOnly = prev.findLast((imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly)
+    // new item, append name
+    if (!prevByPath) {
+      return [
+        ...prev,
+        {
+          ...curr,
+          name,
+        },
+      ]
+    }
 
-      if (prevByPathNameAndIsTypeOnly) {
-        // we already have an export that has the same path but uses `isTypeOnly` (import type ...)
-        return prev
-      }
+    // merge all names when prev and current both have the same isTypeOnly set
+    if (prevByPath && Array.isArray(prevByPath.name) && Array.isArray(name) && prevByPath.isTypeOnly === curr.isTypeOnly) {
+      prevByPath.name = [...new Set([...prevByPath.name, ...name])]
 
-      // already unique enough or name is empty
-      if (uniquePrev || (Array.isArray(name) && !name.length)) {
-        return prev
-      }
+      return prev
+    }
 
-      // new item, append name
-      if (!prevByPath) {
-        return [
-          ...prev,
-          {
-            ...curr,
-            name,
-          },
-        ]
-      }
+    // no import was found in the source, ignore import
+    if (!Array.isArray(name) && name && !hasImportInSource(name)) {
+      return prev
+    }
 
-      // merge all names when prev and current both have the same isTypeOnly set
-      if (prevByPath && Array.isArray(prevByPath.name) && Array.isArray(name) && prevByPath.isTypeOnly === curr.isTypeOnly) {
-        prevByPath.name = [...new Set([...prevByPath.name, ...name])]
-
-        return prev
-      }
-
-      // no import was found in the source, ignore import
-      if (!Array.isArray(name) && name && !hasImportInSource(name)) {
-        return prev
-      }
-
-      return [...prev, curr]
-    },
-    [] as Array<KubbFile.Import>,
-  )
+    return [...prev, curr]
+  }, [])
 }
 
 /**
@@ -156,7 +172,7 @@ export function createFile<TMeta extends object = object>(file: KubbFile.File<TM
 
   return {
     ...file,
-    id: hashObject({ path: file.path }),
+    id: createHash('sha256').update(file.path).digest('hex'),
     name: trimExtName(file.baseName),
     extname,
     imports: imports,

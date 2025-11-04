@@ -22,6 +22,7 @@ type Options = {
 
 export class FileManager {
   #cache = new Cache<KubbFile.ResolvedFile>()
+  #filesCache: Array<KubbFile.ResolvedFile> | null = null
   events: AsyncEventEmitter<FabricEvents>
   processor: FileProcessor
 
@@ -64,6 +65,7 @@ export class FileManager {
   }
 
   flush() {
+    this.#filesCache = null
     this.#cache.flush()
   }
 
@@ -73,21 +75,36 @@ export class FileManager {
 
   deleteByPath(path: KubbFile.Path): void {
     this.#cache.delete(path)
+    this.#filesCache = null
   }
 
   clear(): void {
     this.#cache.clear()
+    this.#filesCache = null
   }
 
   get files(): Array<KubbFile.ResolvedFile> {
+    if (this.#filesCache) {
+      return [...this.#filesCache]
+    }
+
     const cachedKeys = this.#cache.keys()
 
     // order by path length and if file is a barrel file
     const keys = orderBy(cachedKeys, [(v) => v.length, (v) => trimExtName(v).endsWith('index')])
 
-    const files = keys.map((key) => this.#cache.get(key))
+    const files: Array<KubbFile.ResolvedFile> = []
 
-    return files.filter(Boolean)
+    for (const key of keys) {
+      const file = this.#cache.get(key)
+      if (file) {
+        files.push(file)
+      }
+    }
+
+    this.#filesCache = files
+
+    return [...files]
   }
 
   //TODO add test and check if write of FileManager contains the newly added file
