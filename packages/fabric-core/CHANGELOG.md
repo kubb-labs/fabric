@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.2.16
+
+### Patch Changes
+
+- [`3013418`](https://github.com/kubb-labs/fabric/commit/3013418835f87e3f7597bce5e0ee07f4b4e40129) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - Refactor naming for plugins and parsers
+
 ## 0.2.15
 
 ### Patch Changes

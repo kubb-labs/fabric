@@ -75,7 +75,7 @@ describe('defineFabric', () => {
     fabric.use(plugin, 'opt1', 'opt2')
     expect(install).toHaveBeenCalledTimes(1)
     fabric.use(plugin, 'opt1', 'opt2')
-    expect(warnSpy).toHaveBeenCalledWith('Plugin \"mockPlugin\" already applied.')
+    expect(warnSpy).toHaveBeenCalledWith('Plugin "mockPlugin" already applied.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 
@@ -102,7 +102,7 @@ describe('defineFabric', () => {
     expect(install).toHaveBeenCalledTimes(1)
 
     fabric.use(parser, 'a')
-    expect(warnSpy).toHaveBeenCalledWith('Parser \"mockParser\" already applied.')
+    expect(warnSpy).toHaveBeenCalledWith('Parser "mockParser" already applied.')
     expect(install).toHaveBeenCalledTimes(2)
   })
 
