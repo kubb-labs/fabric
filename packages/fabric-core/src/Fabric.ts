@@ -10,31 +10,45 @@ declare global {
   }
 }
 
+/**
+ * Component placeholder type.
+ * May later be extended to support specific runtime renderers.
+ */
 export type Component = any
 
-export type FabricOptions = {
+/**
+ * Defines core runtime options for Fabric.
+ */
+export interface FabricOptions {
   /**
+   * Determines how Fabric processes files.
+   * - `sequential`: files are processed one by one
+   * - `parallel`: files are processed concurrently
+   *
    * @default 'sequential'
    */
   mode?: FabricMode
 }
 
-export type FabricEvents = {
-  /**
-   * Called in the beginning of the app lifecycle.
-   */
+/**
+ * Available modes for file processing.
+ */
+export type FabricMode = 'sequential' | 'parallel'
+
+/**
+ * Event definitions emitted during the Fabric lifecycle.
+ */
+export interface FabricEvents {
+  /** Called at the beginning of the app lifecycle. */
   start: []
-  /**
-   * Called in the end of the app lifecycle.
-   */
+
+  /** Called at the end of the app lifecycle. */
   end: []
-  /**
-   * Called when being rendered
-   */
+
+  /** Called when Fabric is rendering. */
   render: [{ fabric: Fabric }]
-  /**
-   * Called once before processing any files.
-   */
+
+  /** Called once before any files are processed. */
   'process:start': [{ files: KubbFile.ResolvedFile[] }]
   /**
    * Called when FileManager is adding files to its cache
@@ -44,18 +58,15 @@ export type FabricEvents = {
   'file:resolve:name': [{ file: KubbFile.ResolvedFile; value?: string; set(value: string): void }]
   'write:start': [{ files: KubbFile.ResolvedFile[] }]
   'write:end': [{ files: KubbFile.ResolvedFile[] }]
-  /**
-   * Called for each file when processing begins.
-   */
+
+  /** Called for each file when processing begins. */
   'file:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
 
-  /**
-   * Called for each file when processing finishes.
-   */
+  /** Called for each file when processing completes. */
   'file:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
 
   /**
-   * Called periodically (or after each file) to indicate progress.
+   * Called periodically (or per file) to indicate progress.
    * Useful for progress bars or logging.
    */
   'process:progress': [
@@ -68,51 +79,90 @@ export type FabricEvents = {
     },
   ]
 
-  /**
-   * Called once all files have been processed successfully.
-   */
+  /** Called once all files have been processed successfully. */
   'process:end': [{ files: KubbFile.ResolvedFile[] }]
 }
 
-export type FabricContext<TOptions extends FabricOptions = FabricOptions> = {
-  config?: FabricConfig<TOptions>
+/**
+ * Shared context passed to all plugins, parsers, and Fabric internals.
+ */
+export interface FabricContext<T extends FabricOptions = FabricOptions> extends AsyncEventEmitter<FabricEvents> {
+  /** The active Fabric configuration. */
+  config?: FabricConfig<T>
+
+  /** The internal file manager handling file creation, merging, and writing. */
   fileManager: FileManager
-  files: Array<KubbFile.ResolvedFile>
-  addFile(...files: Array<KubbFile.File>): Promise<void>
+
+  /** List of files currently in memory. */
+  files: KubbFile.ResolvedFile[]
+
+  /** Add new files to the file manager. */
+  addFile(...files: KubbFile.File[]): Promise<void>
+
+  /** Track installed plugins and parsers to prevent duplicates. */
   installedPlugins: Set<Plugin>
   installedParsers: Set<Parser>
-} & AsyncEventEmitter<FabricEvents>
-
-export type FabricMode = 'sequential' | 'parallel'
-
-type AllOptional<T> = {} extends T ? true : false
-
-export type FabricConfig<TOptions extends FabricOptions> = {
-  options: TOptions
 }
 
+/**
+ * Base configuration object for Fabric.
+ */
+export interface FabricConfig<T extends FabricOptions = FabricOptions> {
+  /** The runtime options used to configure Fabric. */
+  options: T
+}
+
+/**
+ * Utility type that checks whether all properties of `T` are optional.
+ */
+type AllOptional<T> = {} extends T ? true : false
+
+/**
+ * Defines the signature of a plugin or parser's `install` function.
+ */
 export type Install<TOptions = unknown> = TOptions extends any[]
   ? (context: FabricContext, ...options: TOptions) => void | Promise<void>
   : AllOptional<TOptions> extends true
-    ? (context: FabricContext, options: TOptions | undefined) => void | Promise<void>
+    ? (context: FabricContext, options?: TOptions) => void | Promise<void>
     : (context: FabricContext, options: TOptions) => void | Promise<void>
 
-export type Inject<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
-  ? (context: FabricContext, ...options: TOptions) => Partial<TAppExtension>
+/**
+ * Defines the signature of a plugin or parser's `inject` function.
+ * Returns an object that extends the Fabric instance.
+ */
+export type Inject<TOptions = unknown, TExtension extends Record<string, any> = {}> = TOptions extends any[]
+  ? (context: FabricContext, ...options: TOptions) => Partial<TExtension>
   : AllOptional<TOptions> extends true
-    ? (context: FabricContext, options: TOptions | undefined) => Partial<TAppExtension>
-    : (context: FabricContext, options: TOptions) => Partial<TAppExtension>
+    ? (context: FabricContext, options?: TOptions) => Partial<TExtension>
+    : (context: FabricContext, options: TOptions) => Partial<TExtension>
 
-export interface Fabric<TOptions extends FabricOptions = FabricOptions> extends Kubb.Fabric {
-  context: FabricContext<TOptions>
-  files: Array<KubbFile.ResolvedFile>
-  use<TPluginOptions = unknown, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
-    pluginOrParser: Plugin<TPluginOptions, TAppExtension> | Parser<TPluginOptions, TMeta>,
+/**
+ * The main Fabric runtime interface.
+ * Provides access to the current context, registered plugins, files, and utility methods.
+ */
+export interface Fabric<T extends FabricOptions = FabricOptions> extends Kubb.Fabric {
+  /** The shared context for this Fabric instance. */
+  context: FabricContext<T>
+
+  /** The files managed by this Fabric instance. */
+  files: KubbFile.ResolvedFile[]
+
+  /**
+   * Install a plugin or parser into Fabric.
+   *
+   * @param target - The plugin or parser to install.
+   * @param options - Optional configuration or arguments for the target.
+   * @returns A Fabric instance extended by the plugin (if applicable).
+   */
+  use<TPluginOptions = unknown, TMeta extends object = object, TExtension extends Record<string, any> = {}>(
+    target: Plugin<TPluginOptions, TExtension> | Parser<TPluginOptions, TMeta>,
     ...options: TPluginOptions extends any[]
       ? NoInfer<TPluginOptions>
       : AllOptional<TPluginOptions> extends true
         ? [NoInfer<TPluginOptions>?] // Optional when all props are optional
         : [NoInfer<TPluginOptions>] // Required otherwise
-  ): (this & TAppExtension) | Promise<this & TAppExtension>
-  addFile(...files: Array<KubbFile.File>): Promise<void>
+  ): (this & TExtension) | Promise<this & TExtension>
+
+  /** Add one or more files to the Fabric file manager. */
+  addFile(...files: KubbFile.File[]): Promise<void>
 }

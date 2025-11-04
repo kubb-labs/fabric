@@ -1,2 +1,2 @@
-export { fileController } from "./fileController";
-export { testController } from "./testController";
+export { fileController } from "./fileController.ts";
+export { testController } from "./testController.ts";
