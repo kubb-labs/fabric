@@ -132,10 +132,9 @@ export class Runtime {
           return
         }
 
-        // TODO remove to allow multiple renders
-        this.fileManager.clear()
+        const files = await processFiles(this.#rootNode)
 
-        await processFiles(this.#rootNode, this.fileManager)
+        await this.fileManager.set(files)
 
         if (!this.#options?.debug && !this.#options?.stdout) {
           return

@@ -148,6 +148,37 @@ export class FileManager {
     return resolvedFiles
   }
 
+  async set(files: Array<KubbFile.File>) {
+    this.#cache.clear()
+    this.#filesCache = null
+
+    const bufferedFiles = new Map<KubbFile.Path, KubbFile.File>()
+
+    for (const file of files) {
+      const resolved = await this.#resolveFileInput(file)
+
+      const existing = bufferedFiles.get(resolved.path)
+
+      if (existing) {
+        bufferedFiles.set(resolved.path, mergeFile(existing, resolved))
+      } else {
+        bufferedFiles.set(resolved.path, resolved)
+      }
+    }
+
+    const resolvedFiles: Array<KubbFile.ResolvedFile> = []
+
+    for (const file of bufferedFiles.values()) {
+      const resolvedFile = await this.#resolveFileName(createFile(file))
+      this.#cache.set(resolvedFile.path, resolvedFile)
+      resolvedFiles.push(resolvedFile)
+    }
+
+    await this.events.emit('file:add', { files: resolvedFiles })
+
+    return resolvedFiles
+  }
+
   flush() {
     this.#filesCache = null
     this.#cache.flush()
