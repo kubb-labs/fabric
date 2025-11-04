@@ -23,7 +23,7 @@
     "example7": "bun ./example7/run.tsx",
     "example8": "bun ./example8/run.tsx",
     "clean": "npx rimraf ./dist",
-    "test": "vitest --update",
+    "test": "vitest",
     "typecheck": "echo 'empty'"
   },
   "dependencies": {
