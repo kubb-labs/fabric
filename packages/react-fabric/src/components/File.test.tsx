@@ -85,7 +85,7 @@ describe('<File/>', () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
-    fabric.render(Component)
+    await fabric.render(Component)
     const files = fabric.files
 
     expect(files).toMatchInlineSnapshot('[]')

@@ -8,7 +8,7 @@ import { squashExportNodes } from './squashExportNodes.ts'
 import { squashImportNodes } from './squashImportNodes.ts'
 import { squashSourceNodes } from './squashSourceNodes.ts'
 
-export function processFiles(node: DOMElement, fileManager: FileManager) {
+export async function processFiles(node: DOMElement, fileManager: FileManager) {
   for (let index = 0; index < node.childNodes.length; index++) {
     const childNode = node.childNodes[index]
 
@@ -17,7 +17,7 @@ export function processFiles(node: DOMElement, fileManager: FileManager) {
     }
 
     if (childNode.nodeName !== '#text' && childNode.nodeName !== 'kubb-file' && nodeNames.includes(childNode.nodeName)) {
-      processFiles(childNode, fileManager)
+      await processFiles(childNode, fileManager)
     }
 
     if (childNode.nodeName === 'kubb-file') {
@@ -37,7 +37,7 @@ export function processFiles(node: DOMElement, fileManager: FileManager) {
           banner: attributes.banner,
         }
 
-        fileManager.add(file)
+        await fileManager.add(file)
       }
     }
   }

@@ -29,6 +29,7 @@
     "rootDir": ".",
     "paths": {
       "@kubb/fabric-core/parsers": ["packages/fabric-core/src/parsers/index.ts"],
+      "@kubb/fabric-core/parsers/typescript": ["packages/fabric-core/src/parsers/typescriptParser.ts"],
       "@kubb/fabric-core/plugins": ["packages/fabric-core/src/plugins/index.ts"],
       "@kubb/fabric-core/types": ["packages/fabric-core/src/types.ts"],
       "@kubb/fabric-core": ["packages/fabric-core/src/index.ts"],

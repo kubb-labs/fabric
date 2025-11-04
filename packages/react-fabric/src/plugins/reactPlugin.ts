@@ -36,7 +36,7 @@ export const reactPlugin = createPlugin<Options, ExtendOptions>({
 
     return {
       async render(App) {
-        runtime.render(createElement(App))
+        await runtime.render(createElement(App))
         await ctx.emit('start')
       },
       async renderToString(App) {

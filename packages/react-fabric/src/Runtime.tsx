@@ -118,35 +118,49 @@ export class Runtime {
     return this.#options.fileManager
   }
 
+  #renderPromise: Promise<void> = Promise.resolve()
   resolveExitPromise: () => void = () => {}
   rejectExitPromise: (reason?: Error) => void = () => {}
   unsubscribeExit: () => void = () => {}
-  onRender: () => void = async () => {
-    if (this.#isUnmounted) {
-      return
-    }
+  onRender: () => Promise<void> = () => {
+    const previous = this.#renderPromise
 
-    // TODO remove to allow multiple renders
-    this.fileManager.clear()
+    const task = previous
+      .catch(() => {})
+      .then(async () => {
+        if (this.#isUnmounted) {
+          return
+        }
 
-    processFiles(this.#rootNode, this.fileManager)
+        // TODO remove to allow multiple renders
+        this.fileManager.clear()
 
-    if (!this.#options?.debug && !this.#options?.stdout) {
-      return
-    }
+        await processFiles(this.#rootNode, this.fileManager)
 
-    const output = await this.#getOutput(this.#rootNode)
+        if (!this.#options?.debug && !this.#options?.stdout) {
+          return
+        }
 
-    if (this.#options?.debug) {
-      console.log('Rendering: \n')
-      console.log(output)
-    }
+        const output = await this.#getOutput(this.#rootNode)
 
-    if (this.#options?.stdout && process.env.NODE_ENV !== 'test') {
-      this.#options.stdout.clearLine(0)
-      this.#options.stdout.cursorTo(0)
-      this.#options.stdout.write(output)
-    }
+        if (this.#options?.debug) {
+          console.log('Rendering: \n')
+          console.log(output)
+        }
+
+        if (this.#options?.stdout && process.env.NODE_ENV !== 'test') {
+          this.#options.stdout.clearLine(0)
+          this.#options.stdout.cursorTo(0)
+          this.#options.stdout.write(output)
+        }
+      })
+
+    this.#renderPromise = task.catch((error) => {
+      this.onError(error as Error)
+      throw error
+    })
+
+    return this.#renderPromise
   }
   onError(error: Error): void {
     if (process.env.NODE_ENV === 'test') {
@@ -171,7 +185,7 @@ export class Runtime {
       : text
   }
 
-  render(node: ReactNode): void {
+  async render(node: ReactNode): Promise<void> {
     const element = (
       <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
         {node}
@@ -180,6 +194,7 @@ export class Runtime {
 
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()
+    await this.#renderPromise
   }
 
   async renderToString(node: ReactNode): Promise<string> {
@@ -191,6 +206,8 @@ export class Runtime {
 
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()
+
+    await this.#renderPromise
 
     this.fileManager.clear()
 
