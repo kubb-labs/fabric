@@ -119,6 +119,7 @@ export class Runtime {
   }
 
   #renderPromise: Promise<void> = Promise.resolve()
+  #renderWaiters: Array<{ resolve: () => void; reject: (error: unknown) => void }> = []
   resolveExitPromise: () => void = () => {}
   rejectExitPromise: (reason?: Error) => void = () => {}
   unsubscribeExit: () => void = () => {}
@@ -154,10 +155,17 @@ export class Runtime {
         }
       })
 
-    this.#renderPromise = task.catch((error) => {
-      this.onError(error as Error)
-      throw error
-    })
+    const waiter = this.#renderWaiters.shift()
+
+    this.#renderPromise = task
+      .then(() => {
+        waiter?.resolve()
+      })
+      .catch((error) => {
+        waiter?.reject(error)
+        this.onError(error as Error)
+        throw error
+      })
 
     return this.#renderPromise
   }
@@ -184,6 +192,19 @@ export class Runtime {
       : text
   }
 
+  #waitForNextRender(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.#renderWaiters.push({ resolve, reject: (error: unknown) => reject(error) })
+    })
+  }
+
+  #rejectLatestRenderWaiter(error: unknown): void {
+    const waiter = this.#renderWaiters.pop()
+    if (waiter) {
+      waiter.reject(error)
+    }
+  }
+
   async render(node: ReactNode): Promise<void> {
     const element = (
       <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
@@ -191,9 +212,18 @@ export class Runtime {
       </Root>
     )
 
-    Renderer.updateContainerSync(element, this.#container, null, null)
-    Renderer.flushSyncWork()
-    await this.#renderPromise
+    const waitForRender = this.#waitForNextRender()
+
+    try {
+      Renderer.updateContainerSync(element, this.#container, null, null)
+      Renderer.flushSyncWork()
+    } catch (error) {
+      this.#rejectLatestRenderWaiter(error)
+      void waitForRender.catch(() => {})
+      throw error
+    }
+
+    await waitForRender
   }
 
   async renderToString(node: ReactNode): Promise<string> {
@@ -203,10 +233,18 @@ export class Runtime {
       </Root>
     )
 
-    Renderer.updateContainerSync(element, this.#container, null, null)
-    Renderer.flushSyncWork()
+    const waitForRender = this.#waitForNextRender()
 
-    await this.#renderPromise
+    try {
+      Renderer.updateContainerSync(element, this.#container, null, null)
+      Renderer.flushSyncWork()
+    } catch (error) {
+      this.#rejectLatestRenderWaiter(error)
+      void waitForRender.catch(() => {})
+      throw error
+    }
+
+    await waitForRender
 
     this.fileManager.clear()
 
