@@ -5,22 +5,40 @@ import type { Parser } from './parsers/types.ts'
 import type { Plugin } from './plugins/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
-type RootRenderFunction<TOptions extends FabricOptions> = (fabric: Fabric<TOptions>) => void | Promise<void>
+/**
+ * Function that initializes the root Fabric instance.
+ *
+ * Used for setting up plugins, parsers, or performing side effects
+ * once the Fabric context is ready.
+ */
+type FabricInitializer<T extends FabricOptions> = (fabric: Fabric<T>) => void | Promise<void>
 
-export type DefineFabric<TOptions extends FabricOptions> = (config?: FabricConfig<TOptions>) => Fabric<TOptions>
+/**
+ * A function returned by {@link defineFabric} that creates a Fabric instance.
+ */
+export type CreateFabric<T extends FabricOptions> = (config?: FabricConfig<T>) => Fabric<T>
 
-export function defineFabric<TOptions extends FabricOptions>(instance?: RootRenderFunction<TOptions>): DefineFabric<TOptions> {
-  function creator(config?: FabricConfig<TOptions>): Fabric<TOptions> {
+/**
+ * Defines a new Fabric factory function.
+ *
+ * @example
+ * export const createFabric = defineFabric((fabric) => {
+ *   fabric.use(myPlugin())
+ * })
+ */
+export function defineFabric<T extends FabricOptions>(init?: FabricInitializer<T>): CreateFabric<T> {
+  function create(config?: FabricConfig<T>): Fabric<T> {
     const events = new AsyncEventEmitter<FabricEvents>()
     const installedPlugins = new Set<Plugin<any>>()
     const installedParsers = new Set<Parser<any>>()
     const fileManager = new FileManager({ events })
-    const context = {
+
+    const context: FabricContext<T> = {
       get files() {
         return fileManager.files
       },
-      async addFile(...newFiles) {
-        await fileManager.add(...newFiles)
+      async addFile(...files) {
+        await fileManager.add(...files)
       },
       config,
       fileManager,
@@ -31,57 +49,56 @@ export function defineFabric<TOptions extends FabricOptions>(instance?: RootRend
       onOnce: events.onOnce.bind(events),
       removeAll: events.removeAll.bind(events),
       emit: events.emit.bind(events),
-    } as FabricContext<TOptions>
+    } as FabricContext<T>
 
-    const fabric = {
+    const fabric: Fabric<T> = {
       context,
       get files() {
         return fileManager.files
       },
-      async addFile(...newFiles) {
-        await fileManager.add(...newFiles)
+      async addFile(...files) {
+        await fileManager.add(...files)
       },
       async use(pluginOrParser, ...options) {
-        const args = options
-
         if (pluginOrParser.type === 'plugin') {
           if (installedPlugins.has(pluginOrParser)) {
-            console.warn(`Plugin ${pluginOrParser.name} has already been applied to target fabric.`)
+            console.warn(`Plugin "${pluginOrParser.name}" already applied.`)
           } else {
             installedPlugins.add(pluginOrParser)
           }
 
-          if (pluginOrParser.inject && isFunction(pluginOrParser.inject)) {
+          if (isFunction(pluginOrParser.inject)) {
             const injecter = pluginOrParser.inject
 
-            const extraApp = (injecter as any)(context, ...args)
-            Object.assign(fabric, extraApp)
+            const injected = (injecter as any)(context, ...options)
+            Object.assign(fabric, injected)
           }
         }
+
         if (pluginOrParser.type === 'parser') {
           if (installedParsers.has(pluginOrParser)) {
-            console.warn(`Parser ${pluginOrParser.name} has already been applied to target fabric.`)
+            console.warn(`Parser "${pluginOrParser.name}" already applied.`)
           } else {
             installedParsers.add(pluginOrParser)
           }
         }
 
-        if (pluginOrParser && isFunction(pluginOrParser.install)) {
+        if (isFunction(pluginOrParser.install)) {
           const installer = pluginOrParser.install
 
-          await (installer as any)(context, ...args)
+          await (installer as any)(context, ...options)
         }
 
         return fabric
       },
-    } as Fabric<TOptions>
+    } as Fabric<T>
 
-    if (instance) {
-      instance(fabric)
+    if (init) {
+      init(fabric)
     }
 
     return fabric
   }
 
-  return creator
+  return create
 }
