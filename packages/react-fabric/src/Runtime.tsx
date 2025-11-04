@@ -134,7 +134,7 @@ export class Runtime {
 
         const files = await processFiles(this.#rootNode)
 
-        await this.fileManager.set(files)
+        await this.fileManager.add(...files)
 
         if (!this.#options?.debug && !this.#options?.stdout) {
           return

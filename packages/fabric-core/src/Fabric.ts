@@ -54,8 +54,8 @@ export interface FabricEvents {
    * Called when FileManager is adding files to its cache
    */
   'file:add': [{ files: KubbFile.ResolvedFile[] }]
-  'file:resolve:path': [{ file: KubbFile.File; value?: KubbFile.Path; set(value: KubbFile.Path): void }]
-  'file:resolve:name': [{ file: KubbFile.ResolvedFile; value?: string; set(value: string): void }]
+  'file:resolve:path': [{ file: KubbFile.File }]
+  'file:resolve:name': [{ file: KubbFile.File }]
   'write:start': [{ files: KubbFile.ResolvedFile[] }]
   'write:end': [{ files: KubbFile.ResolvedFile[] }]
 

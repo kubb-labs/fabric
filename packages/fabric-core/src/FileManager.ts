@@ -1,4 +1,3 @@
-import path from 'node:path'
 import { orderBy } from 'natural-orderby'
 import { createFile } from './createFile.ts'
 import type { FabricEvents } from './Fabric.ts'
@@ -34,139 +33,33 @@ export class FileManager {
     return this
   }
 
-  async #resolveFileInput(file: KubbFile.File): Promise<KubbFile.File> {
-    const draft: KubbFile.File = { ...file }
+  async #resolvePath(file: KubbFile.File): Promise<KubbFile.File> {
+    await this.events.emit('file:resolve:path', { file })
 
-    const payload: {
-      file: KubbFile.File
-      value?: KubbFile.Path
-      set(value: KubbFile.Path): void
-    } = {
-      file: draft,
-      value: draft.path,
-      set(value) {
-        payload.value = value
-      },
-    }
-
-    await this.events.emit('file:resolve:path', payload)
-
-    const resolvedPath = payload.value ?? payload.file.path ?? file.path
-
-    if (!resolvedPath) {
-      throw new Error(`FileManager: Unable to resolve path for file ${draft.baseName ?? file.baseName ?? '<unknown>'}`)
-    }
-
-    payload.file.path = resolvedPath
-
-    const originalBaseName = file.baseName
-    const originalPathBaseName = path.basename(file.path)
-    const resolvedPathBaseName = path.basename(resolvedPath)
-
-    if (!payload.file.baseName) {
-      payload.file.baseName = resolvedPathBaseName as KubbFile.BaseName
-    } else if (originalBaseName === originalPathBaseName && payload.file.baseName === originalBaseName && resolvedPathBaseName !== originalBaseName) {
-      payload.file.baseName = resolvedPathBaseName as KubbFile.BaseName
-    }
-
-    return payload.file
+    return file
   }
 
-  async #resolveFileName(file: KubbFile.ResolvedFile): Promise<KubbFile.ResolvedFile> {
-    const draft: KubbFile.ResolvedFile = { ...file }
+  async #resolveName(file: KubbFile.File): Promise<KubbFile.File> {
+    await this.events.emit('file:resolve:name', { file })
 
-    const payload: {
-      file: KubbFile.ResolvedFile
-      value?: string
-      set(value: string): void
-    } = {
-      file: draft,
-      value: draft.name,
-      set(value) {
-        payload.value = value
-      },
-    }
-
-    await this.events.emit('file:resolve:name', payload)
-
-    if (payload.value !== undefined) {
-      payload.file.name = payload.value
-    }
-
-    return payload.file
+    return file
   }
 
-  async add(...files: Array<KubbFile.File>): Promise<Array<KubbFile.ResolvedFile>> {
+  async add(...files: Array<KubbFile.File>) {
     const resolvedFiles: Array<KubbFile.ResolvedFile> = []
 
-    const bufferedFiles = new Map<KubbFile.Path, KubbFile.File>()
-    const renamedPaths = new Map<KubbFile.Path, Set<KubbFile.Path>>()
+    for (let file of files) {
+      const existing = this.#cache.get(file.path)
 
-    for (const file of files) {
-      const resolved = await this.#resolveFileInput(file)
+      file = await this.#resolveName(file)
+      file = await this.#resolvePath(file)
 
-      if (file.path !== resolved.path) {
-        const renamed = renamedPaths.get(resolved.path) ?? new Set<KubbFile.Path>()
-        renamed.add(file.path)
-        renamedPaths.set(resolved.path, renamed)
-      }
-
-      const existing = bufferedFiles.get(resolved.path)
-      if (existing) {
-        bufferedFiles.set(resolved.path, mergeFile(existing, resolved))
-      } else {
-        bufferedFiles.set(resolved.path, resolved)
-      }
-    }
-
-    for (const [pathKey, file] of bufferedFiles.entries()) {
-      const renamed = renamedPaths.get(pathKey)
-      if (renamed) {
-        for (const originalPath of renamed) {
-          if (originalPath !== pathKey) {
-            this.#cache.delete(originalPath)
-          }
-        }
-      }
-
-      const existing = this.#cache.get(pathKey)
       const merged = existing ? mergeFile(existing, file) : file
-      const resolvedFile = await this.#resolveFileName(createFile(merged))
+      const resolvedFile = createFile(merged)
 
       this.#cache.set(resolvedFile.path, resolvedFile)
       this.flush()
 
-      resolvedFiles.push(resolvedFile)
-    }
-
-    await this.events.emit('file:add', { files: resolvedFiles })
-
-    return resolvedFiles
-  }
-
-  async set(files: Array<KubbFile.File>) {
-    this.#cache.clear()
-    this.#filesCache = null
-
-    const bufferedFiles = new Map<KubbFile.Path, KubbFile.File>()
-
-    for (const file of files) {
-      const resolved = await this.#resolveFileInput(file)
-
-      const existing = bufferedFiles.get(resolved.path)
-
-      if (existing) {
-        bufferedFiles.set(resolved.path, mergeFile(existing, resolved))
-      } else {
-        bufferedFiles.set(resolved.path, resolved)
-      }
-    }
-
-    const resolvedFiles: Array<KubbFile.ResolvedFile> = []
-
-    for (const file of bufferedFiles.values()) {
-      const resolvedFile = await this.#resolveFileName(createFile(file))
-      this.#cache.set(resolvedFile.path, resolvedFile)
       resolvedFiles.push(resolvedFile)
     }
 
