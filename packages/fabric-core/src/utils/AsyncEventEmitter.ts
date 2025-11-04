@@ -13,15 +13,26 @@ export class AsyncEventEmitter<TEvents extends Record<string, any>> {
       return undefined
     }
 
+    const errors: Error[] = []
+
     await Promise.all(
       listeners.map(async (listener) => {
         try {
-          return await listener(...eventArgs)
+          await listener(...eventArgs)
         } catch (err) {
-          console.error(`Error in async listener for "${eventName}":`, err)
+          const error = err instanceof Error ? err : new Error(String(err))
+          errors.push(error)
         }
       }),
     )
+
+    if (errors.length === 1) {
+      throw errors[0]
+    }
+
+    if (errors.length > 1) {
+      throw new AggregateError(errors, `Errors in async listeners for "${eventName}"`)
+    }
   }
 
   on<TEventName extends keyof TEvents & string>(eventName: TEventName, handler: (...eventArg: TEvents[TEventName]) => void): void {
