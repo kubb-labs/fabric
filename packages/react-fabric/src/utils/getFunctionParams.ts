@@ -135,7 +135,7 @@ function parseItem(name: string, item: ParamItem, options: Options, parentType?:
     const isObject = (transformedType?.includes('{') && transformedType?.includes('}')) ?? false
 
     if (transformedType === parentType) {
-      if (!TSBasicTypes.includes(transformedType! ?? 'undefined')) {
+      if (transformedType && !TSBasicTypes.includes(transformedType)) {
         return `${transformedName}: { [K in keyof ${transformedType}]: () => ${transformedType}[K] }`
       }
     }
