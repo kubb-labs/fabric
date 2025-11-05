@@ -35,6 +35,8 @@ type ParamItem =
       children?: Params
     })
 
+const TSBasicTypes: string[] = ['number', 'string', 'null', 'undefined', 'bigint', 'boolean', 'symbol'] as const
+
 export type Params = Record<string, Param | undefined>
 
 type Options = {
@@ -65,40 +67,37 @@ function order(items: Array<[key: string, item?: ParamItem]>) {
 }
 
 function parseChild(key: string, item: ParamItem, options: Options): string | null {
-  // @ts-expect-error
-  const entries = order(Object.entries(item.children))
-
+  const entries = order(Object.entries(item.children as Record<string, ParamItem | undefined>))
   const types: string[] = []
   const names: string[] = []
 
   const optional = entries.every(([_key, item]) => item?.optional)
 
   entries.forEach(([key, entryItem]) => {
-    if (entryItem) {
-      const name = parseItem(key, { ...entryItem, type: undefined }, options)
-      if (entryItem.children) {
-        const subTypes = Object.entries(entryItem.children)
-          .map(([key]) => {
-            return key
-          })
-          .join(', ')
+    if (!entryItem) return
+    const name = parseItem(key, { ...entryItem, type: undefined }, options, item.type)
+    if (entryItem.children) {
+      const subTypes = Object.entries(entryItem.children)
+        .map(([key]) => {
+          return key
+        })
+        .join(', ')
 
-        if (subTypes) {
-          names.push(`${name}: { ${subTypes} }`)
-        } else {
-          names.push(name)
-        }
+      if (subTypes) {
+        names.push(`${name}: { ${subTypes} }`)
       } else {
-        if (options.type === 'call' && options.transformName) {
-          names.push(`${key}: ${name}`)
-        } else {
-          names.push(name)
-        }
+        names.push(name)
       }
+    } else {
+      if (options.type === 'call' && options.transformName) {
+        names.push(`${key}: ${name}`)
+      } else {
+        names.push(name)
+      }
+    }
 
-      if (entries.some(([_key, item]) => item?.type)) {
-        types.push(parseItem(key, { ...entryItem, default: undefined }, options))
-      }
+    if (entries.some(([_key, item]) => item?.type)) {
+      types.push(parseItem(key, { ...entryItem, default: undefined }, options, item.type))
     }
   })
 
@@ -117,11 +116,11 @@ function parseChild(key: string, item: ParamItem, options: Options): string | nu
       optional: !item.default ? optional : undefined,
     } as ParamItem,
     options,
+    item.type,
   )
 }
 
-function parseItem(name: string, item: ParamItem, options: Options): string {
-  const acc: string[] = []
+function parseItem(name: string, item: ParamItem, options: Options, parentType?: string): string {
   const transformedName = options.transformName ? options.transformName(name) : name
   const transformedType = options.transformType && item.type ? options.transformType(item.type) : item.type
 
@@ -133,31 +132,49 @@ function parseItem(name: string, item: ParamItem, options: Options): string {
     return item.value ? `${transformedName}: ${item.value}` : transformedName
   }
   if (options.type === 'callback') {
-    const returnType = transformedType ?? 'unknown'
-    if (item.optional) {
-      return `${transformedName}?: () => ${returnType}`
+    const isObject = (transformedType?.includes('{') && transformedType?.includes('}')) ?? false
+
+    if (transformedType === parentType) {
+      if (!TSBasicTypes.includes(transformedType! ?? 'undefined')) {
+        return `${transformedName}: { [K in keyof ${transformedType}]: () => ${transformedType}[K] }`
+      }
     }
-    const defaultValue = item.default ? ` = () => ${item.default}` : ''
-    return `${transformedName}: () => ${returnType}${defaultValue}`
-  }
-  //LEGACY
-  if (item.type && options.type === 'constructor') {
-    if (item.optional) {
-      acc.push(`${transformedName}?: ${transformedType}`)
-    } else {
-      acc.push(`${transformedName}: ${transformedType}${item.default ? ` = ${item.default}` : ''}`)
+    if (item.default) {
+      if (isObject) return transformedType ? `${transformedName}: ${transformedType} = ${item.default}` : `${transformedName} = ${item.default}`
+      return transformedType ? `${transformedName}: () => ${transformedType} = () => ${item.default}` : `${transformedName} = () => ${item.default}`
     }
-  } else if (item.default && options.type === 'constructor') {
-    acc.push(`${transformedName} = ${item.default}`)
-  } else if (item.value) {
-    acc.push(`${transformedName} : ${item.value}`)
-  } else if (item.mode === 'inlineSpread') {
-    acc.push(`... ${transformedName}`)
-  } else {
-    acc.push(transformedName)
+    if (item.optional) {
+      if (isObject) return transformedType ? `${transformedName}?: ${transformedType}` : transformedName
+      return transformedType ? `${transformedName}?: () => ${transformedType}` : transformedName
+    }
+    if (transformedType) {
+      if (isObject) return `${transformedName}: ${transformedType}`
+      return `${transformedName}: () => ${transformedType}`
+    }
+    return transformedName
   }
 
-  return acc[0] as string
+  if (options.type === 'constructor') {
+    if (item.mode === 'inlineSpread') {
+      return `... ${transformedName}`
+    }
+    if (item.value) {
+      return `${transformedName} : ${item.value}`
+    }
+    if (item.default) {
+      return transformedType ? `${transformedName}: ${transformedType} = ${item.default}` : `${transformedName} = ${item.default}`
+    }
+    if (item.optional) {
+      return transformedType ? `${transformedName}?: ${transformedType}` : `${transformedName}`
+    }
+    if (transformedType) {
+      return `${transformedName}: ${transformedType}`
+    }
+
+    return transformedName
+  }
+
+  return transformedName
 }
 
 export function getFunctionParams(params: Params, options: Options): string {
