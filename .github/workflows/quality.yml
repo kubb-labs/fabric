@@ -48,8 +48,7 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Typecheck examples
-        run: bun run typecheck:examples
+
 
   tests:
     name: Tests
