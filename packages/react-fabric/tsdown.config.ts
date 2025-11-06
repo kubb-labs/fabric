@@ -19,4 +19,5 @@ export default defineConfig({
   shims: true,
   exports: true,
   noExternal: [/indent-string/],
+  fixedExtension: false,
 })
