@@ -15,6 +15,7 @@ export class TreeNode<TData = unknown> {
   data: TData
   parent?: TreeNode<TData>
   children: Array<TreeNode<TData>> = []
+  #childrenMap = new Map<string, TreeNode<TData>>()
   #cachedLeaves?: Array<TreeNode<TData>>
 
   constructor(data: TData, parent?: TreeNode<TData>) {
@@ -25,8 +26,16 @@ export class TreeNode<TData = unknown> {
   addChild(data: TData): TreeNode<TData> {
     const child = new TreeNode(data, this)
     this.children.push(child)
+    // Update Map if data has a name property (for BarrelData)
+    if (typeof data === 'object' && data !== null && 'name' in data) {
+      this.#childrenMap.set((data as { name: string }).name, child)
+    }
     this.#cachedLeaves = undefined // invalidate cached leaves
     return child
+  }
+
+  getChildByName(name: string): TreeNode<TData> | undefined {
+    return this.#childrenMap.get(name)
   }
 
   get leaves(): Array<TreeNode<TData>> {
@@ -120,13 +129,7 @@ export class TreeNode<TData = unknown> {
         const isLast = index === parts.length - 1
         currentPath += (currentPath.endsWith('/') ? '' : '/') + part
 
-        let next: TreeNode<BarrelData> | undefined
-        for (const child of current.children) {
-          if ((child.data as BarrelData).name === part) {
-            next = child
-            break
-          }
-        }
+        let next = current.getChildByName(part)
 
         if (!next) {
           next = current.addChild({

@@ -162,32 +162,46 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
 
         const rootPath = path.resolve(root, 'index.ts')
 
-        const barrelFiles = ctx.files.filter((file) => {
-          return file.sources.some((source) => source.isIndexable)
-        })
+        const barrelFiles: Array<KubbFile.ResolvedFile> = []
+        for (const file of ctx.files) {
+          for (const source of file.sources) {
+            if (source.isIndexable) {
+              barrelFiles.push(file)
+
+              break
+            }
+          }
+        }
+
+        const fileTypeCache = new Map<KubbFile.ResolvedFile, boolean>()
+        for (const file of barrelFiles) {
+          fileTypeCache.set(
+            file,
+            file.sources.every((source) => source.isTypeOnly),
+          )
+        }
+
+        const exports: Array<KubbFile.Export> = []
+        for (const file of barrelFiles) {
+          const containsOnlyTypes = fileTypeCache.get(file) ?? false
+
+          for (const source of file.sources) {
+            if (!file.path || !source.isIndexable) {
+              continue
+            }
+
+            exports.push({
+              name: mode === 'all' ? undefined : [source.name],
+              path: getRelativePath(rootPath, file.path),
+              isTypeOnly: mode === 'all' ? containsOnlyTypes : source.isTypeOnly,
+            } as KubbFile.Export)
+          }
+        }
 
         const entryFile = createFile({
           path: rootPath,
           baseName: 'index.ts',
-          exports: barrelFiles
-            .flatMap((file) => {
-              const containsOnlyTypes = file.sources.every((source) => source.isTypeOnly)
-
-              return file.sources
-                ?.map((source) => {
-                  if (!file.path || !source.isIndexable) {
-                    return undefined
-                  }
-
-                  return {
-                    name: mode === 'all' ? undefined : [source.name],
-                    path: getRelativePath(rootPath, file.path),
-                    isTypeOnly: mode === 'all' ? containsOnlyTypes : source.isTypeOnly,
-                  } as KubbFile.Export
-                })
-                .filter(Boolean)
-            })
-            .filter(Boolean),
+          exports,
           sources: [],
         })
 
