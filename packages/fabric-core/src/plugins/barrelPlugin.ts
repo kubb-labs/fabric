@@ -50,6 +50,20 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
     return []
   }
 
+  const indexableSourcesMap = new Map<KubbFile.File, Array<KubbFile.Source>>()
+
+  for (const file of files) {
+    const indexableSources: Array<KubbFile.Source> = []
+    for (const source of file.sources || []) {
+      if (source.isIndexable && source.name) {
+        indexableSources.push(source)
+      }
+    }
+    if (indexableSources.length > 0) {
+      indexableSourcesMap.set(file, indexableSources)
+    }
+  }
+
   const cachedFiles = new Map<KubbFile.Path, KubbFile.File>()
   const dedupe = new Map<KubbFile.Path, Set<string>>()
 
@@ -82,41 +96,40 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
 
     const seen = dedupe.get(barrelPath)!
 
-    // Collect all leaves under the current directory node
-    node.leaves.forEach((leaf) => {
+    for (const leaf of node.leaves) {
       const file = leaf.data.file
-      if (!file) {
-        return
+      if (!file || !file.path) {
+        continue
       }
 
-      const sources = file.sources || []
-      sources.forEach((source) => {
-        if (!file.path || !source.isIndexable || !source.name) {
-          return
-        }
+      const indexableSources = indexableSourcesMap.get(file)
+      if (!indexableSources) {
+        continue
+      }
 
+      for (const source of indexableSources) {
         const key = `${source.name}|${source.isTypeOnly ? '1' : '0'}`
         if (seen.has(key)) {
-          return
+          continue
         }
         seen.add(key)
 
         // Always compute relative path from the parent directory to the file path
         barrelFile!.exports!.push({
-          name: [source.name],
+          name: [source.name!],
           path: getRelativePath(parentPath, file.path),
           isTypeOnly: source.isTypeOnly,
         })
 
         barrelFile!.sources.push({
-          name: source.name,
+          name: source.name!,
           isTypeOnly: source.isTypeOnly,
           value: '', // TODO use parser to generate import
           isExportable: mode === 'all' || mode === 'named',
           isIndexable: mode === 'all' || mode === 'named',
         })
-      })
-    })
+      }
+    }
   })
 
   const result = [...cachedFiles.values()]
