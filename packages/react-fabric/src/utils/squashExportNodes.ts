@@ -5,18 +5,26 @@ import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
 
 export function squashExportNodes(node: DOMElement): Set<KubbFile.ResolvedExport> {
-  let exports = new Set<KubbFile.Export>()
+  const nodeNameSet = new Set(nodeNames)
+  const exports = new Set<KubbFile.ResolvedExport>()
 
-  node.childNodes.filter(Boolean).forEach((childNode) => {
-    if (childNode.nodeName !== '#text' && nodeNames.includes(childNode.nodeName)) {
-      exports = new Set([...exports, ...squashExportNodes(childNode)])
+  const walk = (current: DOMElement): void => {
+    for (const child of current.childNodes) {
+      if (!child) {
+        continue
+      }
+
+      if (child.nodeName !== '#text' && nodeNameSet.has(child.nodeName)) {
+        walk(child)
+      }
+
+      if (child.nodeName === 'kubb-export') {
+        const attributes = child.attributes as React.ComponentProps<typeof File.Export>
+        exports.add(attributes)
+      }
     }
+  }
 
-    if (childNode.nodeName === 'kubb-export') {
-      const attributes = childNode.attributes as React.ComponentProps<typeof File.Export>
-      exports.add(attributes)
-    }
-  })
-
+  walk(node)
   return exports
 }

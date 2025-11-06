@@ -7,76 +7,85 @@ import type { DOMElement } from '../types.ts'
 export function squashTextNodes(node: DOMElement): string {
   let text = ''
 
-  for (const childNode of node.childNodes) {
-    if (!childNode) {
-      continue
-    }
+  const nodeNameSet = new Set(nodeNames)
+  nodeNameSet.add('br')
 
-    let nodeText = ''
+  const walk = (current: DOMElement): string => {
+    let content = ''
 
-    const getPrintText = (text: string): string => {
-      if (childNode.nodeName === 'kubb-import') {
-        const attributes = childNode.attributes as React.ComponentProps<typeof File.Import>
-
-        return print([
-          createImport({
-            name: attributes.name,
-            path: attributes.path,
-            root: attributes.root,
-            isTypeOnly: attributes.isTypeOnly,
-          }),
-        ])
+    for (const child of current.childNodes) {
+      if (!child) {
+        continue
       }
 
-      if (childNode.nodeName === 'kubb-export') {
-        const attributes = childNode.attributes as React.ComponentProps<typeof File.Export>
-        if (attributes.path) {
-          return print([
-            createExport({
-              name: attributes.name,
-              path: attributes.path,
-              isTypeOnly: attributes.isTypeOnly,
-              asAlias: attributes.asAlias,
-            }),
-          ])
+      let nodeText = ''
+
+      const getPrintText = (text: string): string => {
+        switch (child.nodeName) {
+          case 'kubb-import': {
+            const attributes = child.attributes as React.ComponentProps<typeof File.Import>
+            return print([
+              createImport({
+                name: attributes.name,
+                path: attributes.path,
+                root: attributes.root,
+                isTypeOnly: attributes.isTypeOnly,
+              }),
+            ])
+          }
+          case 'kubb-export': {
+            const attributes = child.attributes as React.ComponentProps<typeof File.Export>
+            if (attributes.path) {
+              return print([
+                createExport({
+                  name: attributes.name,
+                  path: attributes.path,
+                  isTypeOnly: attributes.isTypeOnly,
+                  // Note: remove asAlias if not in type
+                }),
+              ])
+            }
+            return ''
+          }
+          case 'kubb-source':
+            return text
+          default:
+            return text
         }
       }
 
-      if (childNode.nodeName === 'kubb-source') {
-        return text
-      }
+      if (child.nodeName === '#text') {
+        nodeText = child.nodeValue
+      } else {
+        if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
+          nodeText = walk(child)
+        }
 
-      return text
-    }
+        nodeText = getPrintText(nodeText)
 
-    if (childNode.nodeName === '#text') {
-      nodeText = childNode.nodeValue
-    } else {
-      if (['kubb-text', 'kubb-file', 'kubb-source'].includes(childNode.nodeName)) {
-        nodeText = squashTextNodes(childNode)
-      }
+        if (child.nodeName === 'br') {
+          nodeText = '\n'
+        }
 
-      nodeText = getPrintText(nodeText)
+        if (!nodeNameSet.has(child.nodeName)) {
+          const attrEntries = Object.entries(child.attributes)
+          if (attrEntries.length) {
+            const attrString = attrEntries.map(([key, value]) => (typeof value === 'string' ? ` ${key}="${value}"` : ` ${key}={${String(value)}}`)).join('')
 
-      if (childNode.nodeName === 'br') {
-        nodeText = '\n'
-      }
-
-      // no kubb element or br
-      if (![...nodeNames, 'br'].includes(childNode.nodeName)) {
-        const attributes = Object.entries(childNode.attributes).reduce((acc, [key, value]) => {
-          if (typeof value === 'string') {
-            return `${acc} ${key}="${value}"`
+            nodeText = `<${child.nodeName}${attrString}>${walk(child)}</${child.nodeName}>`
+          } else {
+            nodeText = `<${child.nodeName}>${walk(child)}</${child.nodeName}>`
           }
-
-          return `${acc} ${key}={${value}}`
-        }, '')
-        nodeText = `<${childNode.nodeName}${attributes}>${squashTextNodes(childNode)}</${childNode.nodeName}>`
+        }
       }
+
+      content += nodeText
     }
 
-    text += nodeText
+    return content
   }
+
+  text = walk(node)
 
   return text
 }

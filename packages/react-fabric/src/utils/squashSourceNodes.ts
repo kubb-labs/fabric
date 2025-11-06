@@ -6,34 +6,39 @@ import type { DOMElement, ElementNames } from '../types.ts'
 import { squashTextNodes } from './squashTextNodes.ts'
 
 export function squashSourceNodes(node: DOMElement, ignores: Array<ElementNames>): Set<KubbFile.Source> {
-  let sources = new Set<KubbFile.Source>()
+  const nodeNameSet = new Set(nodeNames)
+  const ignoreSet = new Set(ignores)
 
-  for (const childNode of node.childNodes) {
-    if (!childNode) {
-      continue
-    }
+  const sources = new Set<KubbFile.Source>()
 
-    if (childNode.nodeName !== '#text' && ignores.includes(childNode.nodeName)) {
-      continue
-    }
+  const walk = (current: DOMElement): void => {
+    for (const child of current.childNodes) {
+      if (!child) {
+        continue
+      }
 
-    if (childNode.nodeName === 'kubb-source') {
-      const attributes = childNode.attributes as React.ComponentProps<typeof File.Source>
-      const value = squashTextNodes(childNode)
+      if (child.nodeName !== '#text' && ignoreSet.has(child.nodeName)) {
+        continue
+      }
 
-      sources.add({
-        ...attributes,
-        // remove end enter
-        value: value.trim().replace(/^\s+|\s+$/g, ''),
-      })
+      if (child.nodeName === 'kubb-source') {
+        const attributes = child.attributes as React.ComponentProps<typeof File.Source>
+        const value = squashTextNodes(child)
 
-      continue
-    }
+        sources.add({
+          ...attributes,
+          // trim whitespace/newlines
+          value: value.trim().replace(/^\s+|\s+$/g, ''),
+        })
+        continue
+      }
 
-    if (childNode.nodeName !== '#text' && nodeNames.includes(childNode.nodeName)) {
-      sources = new Set([...sources, ...squashSourceNodes(childNode, ignores)])
+      if (child.nodeName !== '#text' && nodeNameSet.has(child.nodeName)) {
+        walk(child)
+      }
     }
   }
 
+  walk(node)
   return sources
 }

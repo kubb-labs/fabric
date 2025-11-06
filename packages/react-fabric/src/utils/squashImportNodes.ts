@@ -5,18 +5,26 @@ import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
 
 export function squashImportNodes(node: DOMElement): Set<KubbFile.Import> {
-  let imports = new Set<KubbFile.Import>()
+  const nodeNameSet = new Set(nodeNames)
+  const imports = new Set<KubbFile.Import>()
 
-  node.childNodes.filter(Boolean).forEach((childNode) => {
-    if (childNode.nodeName !== '#text' && nodeNames.includes(childNode.nodeName)) {
-      imports = new Set([...imports, ...squashImportNodes(childNode)])
+  const traverse = (current: DOMElement): void => {
+    for (const child of current.childNodes) {
+      if (!child) {
+        continue
+      }
+
+      if (child.nodeName !== '#text' && nodeNameSet.has(child.nodeName)) {
+        traverse(child)
+      }
+
+      if (child.nodeName === 'kubb-import') {
+        const attributes = child.attributes as React.ComponentProps<typeof File.Import>
+        imports.add(attributes)
+      }
     }
+  }
 
-    if (childNode.nodeName === 'kubb-import') {
-      const attributes = childNode.attributes as React.ComponentProps<typeof File.Import>
-      imports.add(attributes)
-    }
-  })
-
+  traverse(node)
   return imports
 }
