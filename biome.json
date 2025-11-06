@@ -24,7 +24,7 @@
       "!**/.devcontainer",
       "!**/gen",
       "!**/jsx-namespace.d.ts",
-      "!**/ceviz-report.htm"
+      "!**/ceviz-report.html"
     ]
   },
   "formatter": {

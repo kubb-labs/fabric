@@ -2,12 +2,20 @@ import path from 'node:path'
 import { Const, createFabric, File, Function, useEffect, useLifecycle, useState } from '@kubb/react-fabric'
 import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 
-const fetchNames = async (): Promise<string[]> => {
+async function timeout(ms: number): Promise<unknown> {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(['Lily', 'Jan'])
-    }, 2000)
+    const timeout = setTimeout(() => {
+      resolve(timeout)
+    }, ms)
+  }).then((timeout) => {
+    clearTimeout(timeout as NodeJS.Timeout)
   })
+}
+
+const fetchNames = async (): Promise<string[]> => {
+  await timeout(2000)
+
+  return ['Lily', 'Jan']
 }
 
 /**

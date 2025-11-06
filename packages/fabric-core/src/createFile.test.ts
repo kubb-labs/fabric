@@ -8,7 +8,13 @@ import type { Parser } from './parsers/types.ts'
 import { typescriptParser } from './parsers/typescriptParser.ts'
 
 describe('createFile', () => {
-  const parsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])
+  const parsers = new Map<KubbFile.Extname, Parser>([
+    ['.ts', typescriptParser],
+    ['.js', typescriptParser],
+    ['.tsx', tsxParser],
+    ['.jsx', tsxParser],
+    ['.json', defaultParser],
+  ])
   const fileProcessor = new FileProcessor()
   test('if getFileSource is returning code with imports', async () => {
     const code = await fileProcessor.parse(

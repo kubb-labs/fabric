@@ -101,7 +101,7 @@ export interface FabricContext<T extends FabricOptions = FabricOptions> extends 
 
   /** Track installed plugins and parsers to prevent duplicates. */
   installedPlugins: Set<Plugin>
-  installedParsers: Set<Parser>
+  installedParsers: Map<KubbFile.Extname, Parser>
 }
 
 /**

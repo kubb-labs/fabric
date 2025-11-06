@@ -6,7 +6,7 @@ import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 export type ProcessFilesProps = {
-  parsers?: Set<Parser>
+  parsers?: Map<KubbFile.Extname, Parser>
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
   dryRun?: boolean
   /**
@@ -16,7 +16,7 @@ export type ProcessFilesProps = {
 }
 
 type GetParseOptions = {
-  parsers?: Set<Parser>
+  parsers?: Map<KubbFile.Extname, Parser>
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
 }
 
@@ -47,13 +47,7 @@ export class FileProcessor {
       return defaultParser.parse(file, { extname: parseExtName })
     }
 
-    let parser: Parser | undefined
-    for (const item of parsers) {
-      if (item.extNames?.includes(file.extname)) {
-        parser = item
-        break
-      }
-    }
+    const parser = parsers.get(file.extname)
 
     if (!parser) {
       return defaultParser.parse(file, { extname: parseExtName })
@@ -68,25 +62,24 @@ export class FileProcessor {
   ): Promise<KubbFile.ResolvedFile[]> {
     await this.events.emit('process:start', { files })
 
-    let processed = 0
     const total = files.length
+    let processed = 0
 
     const processOne = async (resolvedFile: KubbFile.ResolvedFile, index: number) => {
-      const percentage = (processed / total) * 100
-
       await this.events.emit('file:start', { file: resolvedFile, index, total })
 
       const source = dryRun ? undefined : await this.parse(resolvedFile, { extension, parsers })
 
+      const currentProcessed = ++processed
+      const percentage = (currentProcessed / total) * 100
+
       await this.events.emit('process:progress', {
         file: resolvedFile,
         source,
-        processed,
+        processed: currentProcessed,
         percentage,
         total,
       })
-
-      processed++
 
       await this.events.emit('file:end', { file: resolvedFile, index, total })
     }

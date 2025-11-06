@@ -100,7 +100,7 @@ export class FileManager {
 
   get files(): Array<KubbFile.ResolvedFile> {
     if (this.#filesCache) {
-      return [...this.#filesCache]
+      return this.#filesCache
     }
 
     const cachedKeys = this.#cache.keys()
@@ -119,7 +119,7 @@ export class FileManager {
 
     this.#filesCache = files
 
-    return [...files]
+    return files
   }
 
   //TODO add test and check if write of FileManager contains the newly added file
