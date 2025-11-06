@@ -24,7 +24,6 @@ type Options = {
 
 export class Runtime {
   readonly #options: Options
-  // Ignore last render after unmounting a tree to prevent empty output before exit
   #isUnmounted: boolean
 
   exitPromise?: Promise<void>
@@ -33,70 +32,42 @@ export class Runtime {
 
   constructor(options: Options) {
     this.#options = options
-
     this.#rootNode = createNode('kubb-root')
     this.#rootNode.onRender = this.onRender
     this.#rootNode.onImmediateRender = this.onRender
-
-    // Ignore last render after unmounting a tree to prevent empty output before exit
     this.#isUnmounted = false
     this.unmount.bind(this)
 
+    // Intercept noisy React errors
     const originalError = console.error
     console.error = (data: string | Error) => {
       const message = typeof data === 'string' ? data : data?.message
-
-      if (message?.match(/Encountered two children with the same key/gi)) {
+      if (
+        message?.match(/Encountered two children with the same key/gi) ||
+        message?.match(/React will try to recreat/gi) ||
+        message?.match(/Each child in a list should have a unique/gi) ||
+        message?.match(/The above error occurred in the <KubbErrorBoundary/gi) ||
+        message?.match(/A React Element from an older version of React was render/gi)
+      ) {
         return
       }
-      if (message?.match(/React will try to recreat/gi)) {
-        return
-      }
-      if (message?.match(/Each child in a list should have a unique/gi)) {
-        return
-      }
-      if (message?.match(/The above error occurred in the <KubbErrorBoundary/gi)) {
-        return
-      }
-
-      if (message?.match(/A React Element from an older version of React was render/gi)) {
-        return
-      }
-
       originalError(data)
     }
 
-    // Report when an error was detected in a previous render
-    // https://github.com/pmndrs/react-three-fiber/pull/2261
-    const logRecoverableError =
-      typeof reportError === 'function'
-        ? // In modern browsers, reportError will dispatch an error event,
-          // emulating an uncaught JavaScript error.
-          reportError
-        : // In older browsers and test environments, fallback to console.error.
-          console.error
+    const logRecoverableError = typeof reportError === 'function' ? reportError : console.error
 
     const rootTag = ConcurrentRoot
-    const hydrationCallbacks = null
-    const isStrictMode = false
-    const concurrentUpdatesByDefaultOverride = false
-    const identifierPrefix = 'id'
-    const onUncaughtError = logRecoverableError
-    const onCaughtError = logRecoverableError
-    const onRecoverableError = logRecoverableError
-    const transitionCallbacks = null
-
     this.#container = Renderer.createContainer(
       this.#rootNode,
       rootTag,
-      hydrationCallbacks,
-      isStrictMode,
-      concurrentUpdatesByDefaultOverride,
-      identifierPrefix,
-      onUncaughtError,
-      onCaughtError,
-      onRecoverableError,
-      transitionCallbacks,
+      null,
+      false,
+      false,
+      'id',
+      logRecoverableError,
+      logRecoverableError,
+      logRecoverableError,
+      null,
     )
 
     // Unmount when process exits
@@ -108,9 +79,9 @@ export class Runtime {
     ).bind(this)
 
     Renderer.injectIntoDevTools({
-      bundleType: 1, // 0 for PROD, 1 for DEV
-      version: '19.1.0', // should be React version and not Kubb's custom version
-      rendererPackageName: 'kubb', // package name
+      bundleType: 1,
+      version: '19.1.0',
+      rendererPackageName: 'kubb',
     })
   }
 
@@ -122,6 +93,7 @@ export class Runtime {
   resolveExitPromise: () => void = () => {}
   rejectExitPromise: (reason?: Error) => void = () => {}
   unsubscribeExit: () => void = () => {}
+
   onRender: () => Promise<void> = () => {
     const previous = this.#renderPromise
 
@@ -143,7 +115,7 @@ export class Runtime {
         const output = await this.#getOutput(this.#rootNode)
 
         if (this.#options?.debug) {
-          console.log('Rendering: \n')
+          console.log('Rendering:\n')
           console.log(output)
         }
 
@@ -161,6 +133,7 @@ export class Runtime {
 
     return this.#renderPromise
   }
+
   onError(error: Error): void {
     if (process.env.NODE_ENV === 'test') {
       console.warn(error)
@@ -168,20 +141,30 @@ export class Runtime {
 
     throw error
   }
+
   onExit(error?: Error): void {
     this.unmount(error)
   }
 
+  // ✅ O(1) deduplication for output assembly
   async #getOutput(node: DOMElement): Promise<string> {
     const text = squashTextNodes(node)
     const files = this.fileManager.files
 
-    return files.length
-      ? [...files]
-          .flatMap((file) => [...file.sources].map((item) => item.value))
-          .filter(Boolean)
-          .join('\n\n')
-      : text
+    if (!files.length) {
+      return text
+    }
+
+    const values = new Set<string>()
+    for (const file of files) {
+      for (const source of file.sources) {
+        if (source?.value) {
+          values.add(source.value)
+        }
+      }
+    }
+
+    return [...values].join('\n\n')
   }
 
   async render(node: ReactNode): Promise<void> {
@@ -207,7 +190,6 @@ export class Runtime {
     Renderer.flushSyncWork()
 
     await this.#renderPromise
-
     this.fileManager.clear()
 
     return this.#getOutput(this.#rootNode)
@@ -231,7 +213,6 @@ export class Runtime {
 
     if (error instanceof Error) {
       this.rejectExitPromise(error)
-
       return
     }
 

@@ -10,7 +10,9 @@ export function useLifecycle() {
 
   return {
     exit: () => {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
+        clearTimeout(timeout)
+
         exit()
       }, 0)
     },
