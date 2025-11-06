@@ -1,18 +1,18 @@
 {
   "nodes": [
     {
-      "id": "/Users/stijnvanhulle/GitHub/fabric/examples/react/example7/gen",
-      "label": "/Users/stijnvanhulle/GitHub/fabric/examples/react/example7/gen"
+      "id": "/Users/stijnvanhullem/Git/external/fabric/examples/react/example7/gen",
+      "label": "/Users/stijnvanhullem/Git/external/fabric/examples/react/example7/gen"
     },
     {
-      "id": "/Users/stijnvanhulle/GitHub/fabric/examples/react/example7/gen/HelloWorld.tsx",
+      "id": "/Users/stijnvanhullem/Git/external/fabric/examples/react/example7/gen/HelloWorld.tsx",
       "label": "HelloWorld.tsx"
     }
   ],
   "edges": [
     {
-      "from": "/Users/stijnvanhulle/GitHub/fabric/examples/react/example7/gen",
-      "to": "/Users/stijnvanhulle/GitHub/fabric/examples/react/example7/gen/HelloWorld.tsx"
+      "from": "/Users/stijnvanhullem/Git/external/fabric/examples/react/example7/gen",
+      "to": "/Users/stijnvanhullem/Git/external/fabric/examples/react/example7/gen/HelloWorld.tsx"
     }
   ]
 }
