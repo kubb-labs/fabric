@@ -35,7 +35,9 @@ type ParamItem =
       children?: Params
     })
 
-const TSBasicTypes: string[] = ['number', 'string', 'null', 'undefined', 'bigint', 'boolean', 'symbol'] as const
+const TSBasicTypes = ['number', 'string', 'null', 'undefined', 'bigint', 'boolean', 'symbol'] as const
+
+type ParamEntry = [key: string, item?: ParamItem | undefined]
 
 export type Params = Record<string, Param | undefined>
 
@@ -66,41 +68,55 @@ function order(items: Array<[key: string, item?: ParamItem]>) {
   )
 }
 
+function processEntry(options: Options): ([key, item]: ParamEntry) => string | null {
+  return function ([key, item]: ParamEntry): string | null {
+    if (!item) return null
+
+    if (!item.children) return parseItem(key, item, options)
+    if (Object.keys(item.children).length === 0) return null
+
+    if (item.mode === 'inlineSpread') {
+      return getFunctionParams(item.children, options)
+    }
+
+    return parseChild(key, item, options)
+  }
+}
+
+function processChildEntry(options: Options, entries: ParamEntry[]): ([key, item]: ParamEntry) => { name: string | null; type: string | null } | null {
+  return function ([key, item]: ParamEntry): { name: string | null; type: string | null } | null {
+    if (!item) return null
+
+    const result = { name: null, type: null } as { name: string | null; type: string | null }
+
+    const name = parseItem(key, { ...item, type: undefined }, options, item.type)
+
+    if (!item.children) {
+      result.name = options.type === 'call' && options.transformName ? `${key}: ${name}` : name
+    } else {
+      const subTypes = Object.keys(item.children).join(', ')
+      result.name = subTypes ? `${name}: { ${subTypes} }` : name
+    }
+
+    const anySiblingHasType = entries.some(([_k, entries]) => !!entries?.type)
+    if (anySiblingHasType) {
+      result.type = parseItem(key, { ...item, default: undefined }, options, item.type)
+    }
+
+    return result
+  }
+}
+
 function parseChild(key: string, item: ParamItem, options: Options): string | null {
   const entries = order(Object.entries(item.children as Record<string, ParamItem | undefined>))
-  const types: string[] = []
-  const names: string[] = []
 
   const optional = entries.every(([_key, item]) => item?.optional)
 
-  entries.forEach(([key, entryItem]) => {
-    if (!entryItem) return
-    const name = parseItem(key, { ...entryItem, type: undefined }, options, item.type)
-    if (entryItem.children) {
-      const subTypes = Object.entries(entryItem.children)
-        .map(([key]) => {
-          return key
-        })
-        .join(', ')
+  const childEntryProcessor = processChildEntry(options, entries)
+  const result = entries.map(childEntryProcessor).filter((item): item is { name: string | null; type: string | null } => item !== null)
 
-      if (subTypes) {
-        names.push(`${name}: { ${subTypes} }`)
-      } else {
-        names.push(name)
-      }
-    } else {
-      if (options.type === 'call' && options.transformName) {
-        names.push(`${key}: ${name}`)
-      } else {
-        names.push(name)
-      }
-    }
-
-    if (entries.some(([_key, item]) => item?.type)) {
-      types.push(parseItem(key, { ...entryItem, default: undefined }, options, item.type))
-    }
-  })
-
+  const names = result.map(({ name }) => name).filter(Boolean)
+  const types = result.map(({ type }) => type).filter(Boolean)
   const name = item.mode === 'inline' ? key : names.length ? `{ ${names.join(', ')} }` : undefined
   const type = item.type ? item.type : types.length ? `{ ${types.join('; ')} }` : undefined
 
@@ -135,7 +151,7 @@ function parseItem(name: string, item: ParamItem, options: Options, parentType?:
     const isObject = (transformedType?.includes('{') && transformedType?.includes('}')) ?? false
 
     if (transformedType === parentType) {
-      if (transformedType && !TSBasicTypes.includes(transformedType)) {
+      if (transformedType && !TSBasicTypes.includes(transformedType as (typeof TSBasicTypes)[number])) {
         return `${transformedName}: { [K in keyof ${transformedType}]: () => ${transformedType}[K] }`
       }
     }
@@ -178,35 +194,12 @@ function parseItem(name: string, item: ParamItem, options: Options, parentType?:
 }
 
 export function getFunctionParams(params: Params, options: Options): string {
-  const entries = order(Object.entries(params as Record<string, ParamItem | undefined>))
+  const entries: ParamEntry[] = order(Object.entries(params as Record<string, ParamItem | undefined>))
+  const entryProcessor = processEntry(options)
 
   return entries
-    .reduce((acc, [key, item]) => {
-      if (!item) {
-        return acc
-      }
-
-      if (item.children) {
-        if (Object.keys(item.children).length === 0) {
-          return acc
-        }
-
-        if (item.mode === 'inlineSpread') {
-          return [...acc, getFunctionParams(item.children, options)]
-        }
-
-        const parsedItem = parseChild(key, item, options)
-        if (!parsedItem) {
-          return acc
-        }
-
-        return [...acc, parsedItem]
-      }
-
-      const parsedItem = parseItem(key, item, options)
-
-      return [...acc, parsedItem]
-    }, [] as string[])
+    .map(entryProcessor)
+    .filter((item): item is string => item !== null)
     .join(', ')
 }
 
