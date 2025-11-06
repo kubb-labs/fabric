@@ -30,28 +30,16 @@ export class FileProcessor {
 
   constructor({ events = new AsyncEventEmitter<FabricEvents>() }: Options = {}) {
     this.events = events
+
     return this
-  }
-
-  static #buildParserMap(parsers?: Set<Parser>): Map<KubbFile.Extname, Parser> {
-    const parserMap = new Map<KubbFile.Extname, Parser>()
-    if (!parsers) return parserMap
-
-    for (const parser of parsers) {
-      if (!parser.extNames) continue
-      for (const ext of parser.extNames) {
-        parserMap.set(ext, parser)
-      }
-    }
-
-    return parserMap
   }
 
   async parse(file: KubbFile.ResolvedFile, { parsers, extension }: GetParseOptions = {}): Promise<string> {
     const parseExtName = extension?.[file.extname] || undefined
 
-    if (!parsers || parsers.size === 0) {
-      console.warn('No parsers provided, using default parser.')
+    if (!parsers) {
+      console.warn('No parsers provided, using default parser. If you want to use a specific parser, please provide it in the options.')
+
       return defaultParser.parse(file, { extname: parseExtName })
     }
 
@@ -59,10 +47,19 @@ export class FileProcessor {
       return defaultParser.parse(file, { extname: parseExtName })
     }
 
-    const parserMap = FileProcessor.#buildParserMap(parsers)
-    const parser = parserMap.get(file.extname)
+    let parser: Parser | undefined
+    for (const item of parsers) {
+      if (item.extNames?.includes(file.extname)) {
+        parser = item
+        break
+      }
+    }
 
-    return parser ? parser.parse(file, { extname: parseExtName }) : defaultParser.parse(file, { extname: parseExtName })
+    if (!parser) {
+      return defaultParser.parse(file, { extname: parseExtName })
+    }
+
+    return parser.parse(file, { extname: parseExtName })
   }
 
   async run(
@@ -71,17 +68,15 @@ export class FileProcessor {
   ): Promise<KubbFile.ResolvedFile[]> {
     await this.events.emit('process:start', { files })
 
-    const total = files.length
     let processed = 0
-
-    const parserMap = FileProcessor.#buildParserMap(parsers)
+    const total = files.length
 
     const processOne = async (resolvedFile: KubbFile.ResolvedFile, index: number) => {
       const percentage = (processed / total) * 100
 
       await this.events.emit('file:start', { file: resolvedFile, index, total })
 
-      const source = dryRun ? undefined : await this.parse(resolvedFile, { extension, parsers: new Set(parserMap.values()) })
+      const source = dryRun ? undefined : await this.parse(resolvedFile, { extension, parsers })
 
       await this.events.emit('process:progress', {
         file: resolvedFile,
@@ -92,6 +87,7 @@ export class FileProcessor {
       })
 
       processed++
+
       await this.events.emit('file:end', { file: resolvedFile, index, total })
     }
 
