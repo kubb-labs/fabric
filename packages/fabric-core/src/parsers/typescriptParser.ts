@@ -163,6 +163,9 @@ export const typescriptParser = createParser({
       )
     }
 
-    return [file.banner, print(...importNodes, ...exportNodes), source, file.footer].join('\n')
+    const parts = [file.banner, print(...importNodes, ...exportNodes), source, file.footer].filter(
+      (segment): segment is string => segment != null,
+    )
+    return parts.join('\n')
   },
 })
