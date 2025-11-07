@@ -27,6 +27,9 @@ describe('squashSourceNodes', () => {
     expect([...result]).toMatchInlineSnapshot(`
       [
         {
+          "isExportable": true,
+          "isIndexable": true,
+          "name": "x",
           "value": "export const x = 1",
         },
       ]

@@ -24,7 +24,7 @@ export function squashTextNodes(node: DOMElement): string {
         switch (child.nodeName) {
           case 'kubb-import': {
             const attributes = child.attributes as React.ComponentProps<typeof File.Import>
-            return print([
+            return print(
               createImport({
                 name: attributes.name,
                 path: attributes.path,
@@ -32,19 +32,19 @@ export function squashTextNodes(node: DOMElement): string {
                 isTypeOnly: attributes.isTypeOnly,
                 isNameSpace: attributes.isNameSpace,
               }),
-            ])
+            )
           }
           case 'kubb-export': {
             const attributes = child.attributes as React.ComponentProps<typeof File.Export>
             if (attributes.path) {
-              return print([
+              return print(
                 createExport({
                   name: attributes.name,
                   path: attributes.path,
                   isTypeOnly: attributes.isTypeOnly,
                   asAlias: attributes.asAlias,
                 }),
-              ])
+              )
             }
             return ''
           }

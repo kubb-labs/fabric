@@ -23,11 +23,8 @@ describe('squashImportNodes', () => {
     expect([...result]).toMatchInlineSnapshot(`
       [
         {
-          "isNameSpace": undefined,
-          "isTypeOnly": undefined,
           "name": "React",
           "path": "react",
-          "root": undefined,
         },
       ]
     `)
@@ -51,24 +48,18 @@ describe('squashImportNodes', () => {
     expect([...result]).toMatchInlineSnapshot(`
       [
         {
-          "isNameSpace": undefined,
-          "isTypeOnly": undefined,
           "name": [
             "useState",
           ],
           "path": "react",
-          "root": undefined,
         },
         {
-          "isNameSpace": undefined,
-          "isTypeOnly": undefined,
           "name": [
             {
               "propertyName": "join",
             },
           ],
           "path": "node:path",
-          "root": undefined,
         },
       ]
     `)
