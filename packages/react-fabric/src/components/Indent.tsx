@@ -21,10 +21,6 @@ export function Indent({ size = 2, children }: IndentProps) {
   let brCount = 0
 
   for (const child of childrenArray) {
-    if (!child) {
-      continue
-    }
-
     if (React.isValidElement(child) && child.type === 'br') {
       if (!prevWasBr || brCount < 2) {
         result.push(child)
