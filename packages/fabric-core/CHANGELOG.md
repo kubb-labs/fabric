@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.3.0
+
+### Minor Changes
+
+- [#44](https://github.com/kubb-labs/fabric/pull/44) [`6c50def`](https://github.com/kubb-labs/fabric/commit/6c50def6757c43b3ab0b5806410b8ed305a0022c) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Performance updates
+
 ## 0.2.19
 
 ### Patch Changes
