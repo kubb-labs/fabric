@@ -19,7 +19,13 @@ export function print(...elements: Array<ts.Node>): string {
     noEmitHelpers: true,
   })
 
-  const output = printer.printList(ts.ListFormat.MultiLine, factory.createNodeArray(elements), sourceFile)
+  for (const node of elements) {
+    if (node.kind === ts.SyntaxKind.Unknown) {
+      console.error('⚠️ Unknown node found:', node)
+    }
+  }
+
+  const output = printer.printList(ts.ListFormat.MultiLine, factory.createNodeArray(elements.filter(Boolean)), sourceFile)
 
   return output.replace(/\r\n/g, '\n')
 }
@@ -39,43 +45,38 @@ export function createImport({
 }) {
   const resolvePath = root ? getRelativePath(root, path) : path
 
+  // Namespace or default import
   if (!Array.isArray(name)) {
-    let importPropertyName: ts.Identifier | undefined = factory.createIdentifier(name)
-    let importName: ts.NamedImportBindings | undefined
-
     if (isNameSpace) {
-      importPropertyName = undefined
-      importName = factory.createNamespaceImport(factory.createIdentifier(name))
+      return factory.createImportDeclaration(
+        undefined,
+        factory.createImportClause(isTypeOnly, undefined, factory.createNamespaceImport(factory.createIdentifier(name))),
+        factory.createStringLiteral(resolvePath),
+        undefined,
+      )
     }
 
     return factory.createImportDeclaration(
       undefined,
-      factory.createImportClause(isTypeOnly, importPropertyName, importName),
+      factory.createImportClause(isTypeOnly, factory.createIdentifier(name), undefined),
       factory.createStringLiteral(resolvePath),
       undefined,
     )
   }
 
+  // Named imports
+  const specifiers = name.map((item) => {
+    if (typeof item === 'object') {
+      const { propertyName, name: alias } = item
+      return factory.createImportSpecifier(false, alias ? factory.createIdentifier(propertyName) : undefined, factory.createIdentifier(alias ?? propertyName))
+    }
+
+    return factory.createImportSpecifier(false, undefined, factory.createIdentifier(item))
+  })
+
   return factory.createImportDeclaration(
     undefined,
-    factory.createImportClause(
-      isTypeOnly,
-      undefined,
-      factory.createNamedImports(
-        name.map((item) => {
-          if (typeof item === 'object') {
-            const obj = item as { propertyName: string; name?: string }
-            if (obj.name) {
-              return factory.createImportSpecifier(false, factory.createIdentifier(obj.propertyName), factory.createIdentifier(obj.name))
-            }
-
-            return factory.createImportSpecifier(false, undefined, factory.createIdentifier(obj.propertyName))
-          }
-
-          return factory.createImportSpecifier(false, undefined, factory.createIdentifier(item))
-        }),
-      ),
-    ),
+    factory.createImportClause(isTypeOnly, undefined, factory.createNamedImports(specifiers)),
     factory.createStringLiteral(resolvePath),
     undefined,
   )
@@ -163,9 +164,7 @@ export const typescriptParser = createParser({
       )
     }
 
-    const parts = [file.banner, print(...importNodes, ...exportNodes), source, file.footer].filter(
-      (segment): segment is string => segment != null,
-    )
+    const parts = [file.banner, print(...importNodes, ...exportNodes), source, file.footer].filter((segment): segment is string => segment != null)
     return parts.join('\n')
   },
 })
