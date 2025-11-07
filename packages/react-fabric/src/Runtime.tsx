@@ -146,7 +146,6 @@ export class Runtime {
     this.unmount(error)
   }
 
-  // ✅ O(1) deduplication for output assembly
   async #getOutput(node: DOMElement): Promise<string> {
     const text = squashTextNodes(node)
     const files = this.fileManager.files

@@ -76,22 +76,22 @@ exports[`getBarrelFiles > mode 'all' should produce wildcard exports and mark ba
   {
     "isTypeOnly": undefined,
     "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
     "path": "./sub/d.ts",
   },
   {
     "isTypeOnly": true,
     "name": undefined,
     "path": "./sub/d.ts",
-  },
-  {
-    "isTypeOnly": undefined,
-    "name": undefined,
-    "path": "./sub/index.ts",
-  },
-  {
-    "isTypeOnly": undefined,
-    "name": undefined,
-    "path": "./sub/index.ts",
   },
   {
     "isTypeOnly": undefined,
@@ -143,20 +143,6 @@ exports[`getBarrelFiles > mode 'named' should produce named exports and mark bar
   {
     "isTypeOnly": undefined,
     "name": [
-      "D",
-    ],
-    "path": "./sub/d.ts",
-  },
-  {
-    "isTypeOnly": true,
-    "name": [
-      "E",
-    ],
-    "path": "./sub/d.ts",
-  },
-  {
-    "isTypeOnly": undefined,
-    "name": [
       "world",
     ],
     "path": "./sub/index.ts",
@@ -167,6 +153,20 @@ exports[`getBarrelFiles > mode 'named' should produce named exports and mark bar
       "hello",
     ],
     "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "D",
+    ],
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": true,
+    "name": [
+      "E",
+    ],
+    "path": "./sub/d.ts",
   },
   {
     "isTypeOnly": undefined,
