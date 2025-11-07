@@ -16,7 +16,7 @@ export async function processFiles(node: DOMElement): Promise<Array<KubbFile.Fil
         continue
       }
 
-      if (childNode.nodeName !== '#text' && childNode.nodeName !== 'kubb-file' && nodeNames.includes(childNode.nodeName)) {
+      if (childNode.nodeName !== '#text' && childNode.nodeName !== 'kubb-file' && nodeNames.has(childNode.nodeName)) {
         await walk(childNode)
       }
 

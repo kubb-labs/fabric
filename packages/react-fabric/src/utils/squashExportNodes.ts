@@ -5,7 +5,6 @@ import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
 
 export function squashExportNodes(node: DOMElement): Set<KubbFile.ResolvedExport> {
-  const nodeNameSet = new Set(nodeNames)
   const exports = new Set<KubbFile.ResolvedExport>()
 
   const walk = (current: DOMElement): void => {
@@ -14,7 +13,7 @@ export function squashExportNodes(node: DOMElement): Set<KubbFile.ResolvedExport
         continue
       }
 
-      if (child.nodeName !== '#text' && nodeNameSet.has(child.nodeName)) {
+      if (child.nodeName !== '#text' && nodeNames.has(child.nodeName)) {
         walk(child)
       }
 

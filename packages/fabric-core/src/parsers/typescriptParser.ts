@@ -155,33 +155,39 @@ export const typescriptParser = createParser({
   async parse(file, options = { extname: '.ts' }) {
     const source = file.sources.map((item) => item.value).join('\n\n')
 
-    const importNodes = file.imports
-      .map((item) => {
-        const importPath = item.root ? getRelativePath(item.root, item.path) : item.path
-        const hasExtname = !!path.extname(importPath)
+    const importNodes: Array<ts.ImportDeclaration> = []
+    for (const item of file.imports) {
+      if (!item) continue
+      const importPath = item.root ? getRelativePath(item.root, item.path) : item.path
+      const hasExtname = !!path.extname(importPath)
 
-        return createImport({
-          name: item.name,
-          path: options.extname && hasExtname ? `${trimExtName(importPath)}${options.extname}` : item.root ? trimExtName(importPath) : importPath,
-          isTypeOnly: item.isTypeOnly,
-        })
+      const node = createImport({
+        name: item.name,
+        path: options.extname && hasExtname ? `${trimExtName(importPath)}${options.extname}` : item.root ? trimExtName(importPath) : importPath,
+        isTypeOnly: item.isTypeOnly,
       })
-      .filter(Boolean)
+      if (node) {
+        importNodes.push(node)
+      }
+    }
 
-    const exportNodes = file.exports
-      .map((item) => {
-        const exportPath = item.path
+    const exportNodes: Array<ts.ExportDeclaration> = []
+    for (const item of file.exports) {
+      if (!item) continue
+      const exportPath = item.path
 
-        const hasExtname = !!path.extname(exportPath)
+      const hasExtname = !!path.extname(exportPath)
 
-        return createExport({
-          name: item.name,
-          path: options.extname && hasExtname ? `${trimExtName(item.path)}${options.extname}` : trimExtName(item.path),
-          isTypeOnly: item.isTypeOnly,
-          asAlias: item.asAlias,
-        })
+      const node = createExport({
+        name: item.name,
+        path: options.extname && hasExtname ? `${trimExtName(item.path)}${options.extname}` : trimExtName(item.path),
+        isTypeOnly: item.isTypeOnly,
+        asAlias: item.asAlias,
       })
-      .filter(Boolean)
+      if (node) {
+        exportNodes.push(node)
+      }
+    }
 
     return [file.banner, print([...importNodes, ...exportNodes]), source, file.footer].join('\n')
   },

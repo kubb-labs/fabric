@@ -6,9 +6,7 @@ import type { DOMElement, ElementNames } from '../types.ts'
 import { squashTextNodes } from './squashTextNodes.ts'
 
 export function squashSourceNodes(node: DOMElement, ignores: Array<ElementNames>): Set<KubbFile.Source> {
-  const nodeNameSet = new Set(nodeNames)
   const ignoreSet = new Set(ignores)
-
   const sources = new Set<KubbFile.Source>()
 
   const walk = (current: DOMElement): void => {
@@ -33,7 +31,7 @@ export function squashSourceNodes(node: DOMElement, ignores: Array<ElementNames>
         continue
       }
 
-      if (child.nodeName !== '#text' && nodeNameSet.has(child.nodeName)) {
+      if (child.nodeName !== '#text' && nodeNames.has(child.nodeName)) {
         walk(child)
       }
     }

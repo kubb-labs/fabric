@@ -72,4 +72,4 @@ export const setTextNodeValue = (node: TextNode, text: string): void => {
   node.nodeValue = text
 }
 
-export const nodeNames: Array<ElementNames> = ['kubb-export', 'kubb-file', 'kubb-source', 'kubb-import', 'kubb-text']
+export const nodeNames = new Set<ElementNames>(['kubb-export', 'kubb-file', 'kubb-source', 'kubb-import', 'kubb-text'])
