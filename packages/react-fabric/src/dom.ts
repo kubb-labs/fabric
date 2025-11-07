@@ -3,7 +3,7 @@ import type { DOMElement, DOMNode, DOMNodeAttribute, ElementNames, TextNode } fr
 export const createNode = (nodeName: string): DOMElement => {
   const node: DOMElement = {
     nodeName: nodeName as DOMElement['nodeName'],
-    attributes: new Map(),
+    attributes: {},
     childNodes: [],
     parentNode: undefined,
   }
@@ -49,7 +49,7 @@ export const removeChildNode = (node: DOMElement, removeNode: DOMNode): void => 
 }
 
 export const setAttribute = (node: DOMElement, key: string, value: DOMNodeAttribute): void => {
-  node.attributes.set(key, value)
+  node.attributes[key] = value
 }
 
 export const createTextNode = (text: string): TextNode => {

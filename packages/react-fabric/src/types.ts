@@ -31,7 +31,7 @@ type OutputTransformer = (s: string, index: number) => string
 
 export type DOMElement = {
   nodeName: ElementNames
-  attributes: Map<string, DOMNodeAttribute>
+  attributes: Record<string, DOMNodeAttribute>
   childNodes: DOMNode[]
   internal_transform?: OutputTransformer
 

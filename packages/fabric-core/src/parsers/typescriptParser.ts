@@ -6,11 +6,29 @@ import { createParser } from './createParser.ts'
 
 const { factory } = ts
 
+type PrintOptions = {
+  source?: string
+  baseName?: string
+  scriptKind?: ts.ScriptKind
+}
+
+/**
+ * Escaped new lines in code with block comments so they can be restored by {@link restoreNewLines}
+ */
+const escapeNewLines = (code: string) => code.replace(/\n\n/g, '\n/* :newline: */')
+
+/**
+ * Reverses {@link escapeNewLines} and restores new lines
+ */
+const restoreNewLines = (code: string) => code.replace(/\/\* :newline: \*\//g, '\n')
+
 /**
  * Convert AST TypeScript/TSX nodes to a string based on the TypeScript printer.
+ * Ensures consistent output across environments.
+ * Also works as a formatter when `source` is provided without `elements`.
  */
-export function print(...elements: Array<ts.Node>): string {
-  const sourceFile = ts.createSourceFile('print.tsx', '', ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX)
+export function print(elements: Array<ts.Node> = [], { source = '', baseName = 'print.tsx', scriptKind = ts.ScriptKind.TSX }: PrintOptions = {}): string {
+  const sourceFile = ts.createSourceFile(baseName, escapeNewLines(source), ts.ScriptTarget.ES2022, true, scriptKind)
 
   const printer = ts.createPrinter({
     omitTrailingSemicolon: true,
@@ -19,9 +37,18 @@ export function print(...elements: Array<ts.Node>): string {
     noEmitHelpers: true,
   })
 
-  const output = printer.printList(ts.ListFormat.MultiLine, factory.createNodeArray(elements), sourceFile)
+  let output: string
 
-  return output.replace(/\r\n/g, '\n')
+  if (elements.length > 0) {
+    // Print only provided nodes
+    const nodes = elements.filter(Boolean).sort((a, b) => (a.pos ?? 0) - (b.pos ?? 0))
+    output = printer.printList(ts.ListFormat.MultiLine, factory.createNodeArray(nodes), sourceFile)
+  } else {
+    // Format the whole file
+    output = printer.printFile(sourceFile)
+  }
+
+  return restoreNewLines(output).replace(/\r\n/g, '\n')
 }
 
 export function createImport({
@@ -126,43 +153,42 @@ export const typescriptParser = createParser({
   extNames: ['.ts', '.js'],
   install() {},
   async parse(file, options = { extname: '.ts' }) {
-    const sourceParts: Array<string> = []
-    for (const item of file.sources) {
-      if (item.value) {
-        sourceParts.push(item.value)
-      }
-    }
-    const source = sourceParts.join('\n\n')
+    const source = file.sources.map((item) => item.value).join('\n\n')
 
     const importNodes: Array<ts.ImportDeclaration> = []
     for (const item of file.imports) {
+      if (!item) continue
       const importPath = item.root ? getRelativePath(item.root, item.path) : item.path
       const hasExtname = !!path.extname(importPath)
 
-      importNodes.push(
-        createImport({
-          name: item.name,
-          path: options.extname && hasExtname ? `${trimExtName(importPath)}${options.extname}` : item.root ? trimExtName(importPath) : importPath,
-          isTypeOnly: item.isTypeOnly,
-        }),
-      )
+      const node = createImport({
+        name: item.name,
+        path: options.extname && hasExtname ? `${trimExtName(importPath)}${options.extname}` : item.root ? trimExtName(importPath) : importPath,
+        isTypeOnly: item.isTypeOnly,
+      })
+      if (node) {
+        importNodes.push(node)
+      }
     }
 
     const exportNodes: Array<ts.ExportDeclaration> = []
     for (const item of file.exports) {
+      if (!item) continue
       const exportPath = item.path
+
       const hasExtname = !!path.extname(exportPath)
 
-      exportNodes.push(
-        createExport({
-          name: item.name,
-          path: options.extname && hasExtname ? `${trimExtName(item.path)}${options.extname}` : trimExtName(item.path),
-          isTypeOnly: item.isTypeOnly,
-          asAlias: item.asAlias,
-        }),
-      )
+      const node = createExport({
+        name: item.name,
+        path: options.extname && hasExtname ? `${trimExtName(item.path)}${options.extname}` : trimExtName(item.path),
+        isTypeOnly: item.isTypeOnly,
+        asAlias: item.asAlias,
+      })
+      if (node) {
+        exportNodes.push(node)
+      }
     }
 
-    return [file.banner, print(...importNodes, ...exportNodes), source, file.footer].join('\n')
+    return [file.banner, print([...importNodes, ...exportNodes]), source, file.footer].join('\n')
   },
 })

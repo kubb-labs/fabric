@@ -23,26 +23,28 @@ export function squashTextNodes(node: DOMElement): string {
       const getPrintText = (text: string): string => {
         switch (child.nodeName) {
           case 'kubb-import': {
-            return print(
+            const attributes = child.attributes as React.ComponentProps<typeof File.Import>
+            return print([
               createImport({
-                name: child.attributes.get('name'),
-                path: child.attributes.get('path'),
-                root: child.attributes.get('root'),
-                isTypeOnly: child.attributes.get('isTypeOnly'),
-                isNameSpace: child.attributes.get('isNameSpace'),
-              } as React.ComponentProps<typeof File.Import>),
-            )
+                name: attributes.name,
+                path: attributes.path,
+                root: attributes.root,
+                isTypeOnly: attributes.isTypeOnly,
+                isNameSpace: attributes.isNameSpace,
+              }),
+            ])
           }
           case 'kubb-export': {
-            if (child.attributes.has('path')) {
-              return print(
+            const attributes = child.attributes as React.ComponentProps<typeof File.Export>
+            if (attributes.path) {
+              return print([
                 createExport({
-                  name: child.attributes.get('name'),
-                  path: child.attributes.get('path'),
-                  isTypeOnly: child.attributes.get('isTypeOnly'),
-                  asAlias: child.attributes.get('asAlias'),
-                } as React.ComponentProps<typeof File.Export>),
-              )
+                  name: attributes.name,
+                  path: attributes.path,
+                  isTypeOnly: attributes.isTypeOnly,
+                  asAlias: attributes.asAlias,
+                }),
+              ])
             }
             return ''
           }
@@ -69,9 +71,11 @@ export function squashTextNodes(node: DOMElement): string {
         if (!nodeNameSet.has(child.nodeName)) {
           const attributes = child.attributes
           let attrString = ''
-          const hasAttributes = attributes.size > 0
+          let hasAttributes = false
 
-          for (const [key, value] of attributes) {
+          for (const key of Object.keys(attributes)) {
+            hasAttributes = true
+            const value = attributes[key]
             attrString += typeof value === 'string' ? ` ${key}="${value}"` : ` ${key}={${String(value)}}`
           }
 

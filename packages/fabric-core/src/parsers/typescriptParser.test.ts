@@ -10,7 +10,7 @@ const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
       nodes.push(element)
     }
   }
-  return print(...nodes)
+  return print(nodes)
 }
 
 describe('TypeScript parser', () => {
