@@ -30,6 +30,7 @@ export function squashTextNodes(node: DOMElement): string {
                 path: attributes.path,
                 root: attributes.root,
                 isTypeOnly: attributes.isTypeOnly,
+                isNameSpace: attributes.isNameSpace,
               }),
             ])
           }
@@ -41,7 +42,7 @@ export function squashTextNodes(node: DOMElement): string {
                   name: attributes.name,
                   path: attributes.path,
                   isTypeOnly: attributes.isTypeOnly,
-                  // Note: remove asAlias if not in type
+                  asAlias: attributes.asAlias,
                 }),
               ])
             }
@@ -68,10 +69,17 @@ export function squashTextNodes(node: DOMElement): string {
         }
 
         if (!nodeNameSet.has(child.nodeName)) {
-          const attrEntries = Object.entries(child.attributes)
-          if (attrEntries.length) {
-            const attrString = attrEntries.map(([key, value]) => (typeof value === 'string' ? ` ${key}="${value}"` : ` ${key}={${String(value)}}`)).join('')
+          const attributes = child.attributes
+          let attrString = ''
+          let hasAttributes = false
 
+          for (const key of Object.keys(attributes)) {
+            hasAttributes = true
+            const value = attributes[key]
+            attrString += typeof value === 'string' ? ` ${key}="${value}"` : ` ${key}={${String(value)}}`
+          }
+
+          if (hasAttributes) {
             nodeText = `<${child.nodeName}${attrString}>${walk(child)}</${child.nodeName}>`
           } else {
             nodeText = `<${child.nodeName}>${walk(child)}</${child.nodeName}>`

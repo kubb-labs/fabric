@@ -2,6 +2,16 @@ import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin, progressPlugin } from '@kubb/fabric-core/plugins'
 
+async function timeout(ms: number): Promise<unknown> {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      resolve(timeout)
+    }, ms)
+  }).then((timeout) => {
+    clearTimeout(timeout as NodeJS.Timeout)
+  })
+}
+
 export const fabric = createFabric()
 
 async function run() {
@@ -40,7 +50,7 @@ async function run() {
   fabric.use(fsPlugin, {
     dryRun: true,
     async onBeforeWrite() {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await timeout(200)
     },
     clean: { path: './example4/gen' },
   })
