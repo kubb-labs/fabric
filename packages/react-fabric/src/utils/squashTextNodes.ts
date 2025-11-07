@@ -1,14 +1,10 @@
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
-import type { File } from '../components/File.tsx'
 import { nodeNames } from '../dom.ts'
-import type { DOMElement } from '../types.ts'
+import type { DOMElement, KubbFile } from '../types.ts'
 
 export function squashTextNodes(node: DOMElement): string {
   let text = ''
-
-  const nodeNameSet = new Set(nodeNames)
-  nodeNameSet.add('br')
 
   const walk = (current: DOMElement): string => {
     let content = ''
@@ -23,27 +19,25 @@ export function squashTextNodes(node: DOMElement): string {
       const getPrintText = (text: string): string => {
         switch (child.nodeName) {
           case 'kubb-import': {
-            const attributes = child.attributes as React.ComponentProps<typeof File.Import>
             return print(
               createImport({
-                name: attributes.name,
-                path: attributes.path,
-                root: attributes.root,
-                isTypeOnly: attributes.isTypeOnly,
-                isNameSpace: attributes.isNameSpace,
-              }),
+                name: child.attributes.get('name'),
+                path: child.attributes.get('path'),
+                root: child.attributes.get('root'),
+                isTypeOnly: child.attributes.get('isTypeOnly'),
+                isNameSpace: child.attributes.get('isNameSpace'),
+              } as KubbFile.Import),
             )
           }
           case 'kubb-export': {
-            const attributes = child.attributes as React.ComponentProps<typeof File.Export>
-            if (attributes.path) {
+            if (child.attributes.has('path')) {
               return print(
                 createExport({
-                  name: attributes.name,
-                  path: attributes.path,
-                  isTypeOnly: attributes.isTypeOnly,
-                  asAlias: attributes.asAlias,
-                }),
+                  name: child.attributes.get('name'),
+                  path: child.attributes.get('path'),
+                  isTypeOnly: child.attributes.get('isTypeOnly'),
+                  asAlias: child.attributes.get('asAlias'),
+                } as KubbFile.Export),
               )
             }
             return ''
@@ -68,14 +62,12 @@ export function squashTextNodes(node: DOMElement): string {
           nodeText = '\n'
         }
 
-        if (!nodeNameSet.has(child.nodeName)) {
+        if (!nodeNames.has(child.nodeName)) {
           const attributes = child.attributes
           let attrString = ''
-          let hasAttributes = false
+          const hasAttributes = attributes.size > 0
 
-          for (const key of Object.keys(attributes)) {
-            hasAttributes = true
-            const value = attributes[key]
+          for (const [key, value] of attributes) {
             attrString += typeof value === 'string' ? ` ${key}="${value}"` : ` ${key}={${String(value)}}`
           }
 

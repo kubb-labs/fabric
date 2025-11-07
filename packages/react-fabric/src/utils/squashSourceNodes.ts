@@ -1,6 +1,5 @@
 import type { KubbFile } from '@kubb/fabric-core/types'
-import type React from 'react'
-import type { File } from '../components/File.tsx'
+
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, ElementNames } from '../types.ts'
 import { squashTextNodes } from './squashTextNodes.ts'
@@ -20,14 +19,16 @@ export function squashSourceNodes(node: DOMElement, ignores: Array<ElementNames>
       }
 
       if (child.nodeName === 'kubb-source') {
-        const attributes = child.attributes as React.ComponentProps<typeof File.Source>
         const value = squashTextNodes(child)
 
         sources.add({
-          ...attributes,
+          name: child.attributes.get('name'),
+          isTypeOnly: child.attributes.get('isTypeOnly') ?? false,
+          isExportable: child.attributes.get('isExportable') ?? false,
+          isIndexable: child.attributes.get('isIndexable') ?? false,
           // trim whitespace/newlines
           value: value.trim().replace(/^\s+|\s+$/g, ''),
-        })
+        } as KubbFile.Source)
         continue
       }
 

@@ -1,6 +1,4 @@
 import type { KubbFile } from '@kubb/fabric-core/types'
-import type React from 'react'
-import type { File } from '../components/File.tsx'
 import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
 import { squashExportNodes } from './squashExportNodes.ts'
@@ -11,31 +9,29 @@ export async function processFiles(node: DOMElement): Promise<Array<KubbFile.Fil
   const collected: Array<KubbFile.File> = []
 
   async function walk(current: DOMElement) {
-    for (const childNode of current.childNodes) {
-      if (!childNode) {
+    for (const child of current.childNodes) {
+      if (!child) {
         continue
       }
 
-      if (childNode.nodeName !== '#text' && childNode.nodeName !== 'kubb-file' && nodeNames.has(childNode.nodeName)) {
-        await walk(childNode)
+      if (child.nodeName !== '#text' && child.nodeName !== 'kubb-file' && nodeNames.has(child.nodeName)) {
+        await walk(child)
       }
 
-      if (childNode.nodeName === 'kubb-file') {
-        const attributes = childNode.attributes as React.ComponentProps<typeof File>
-
-        if (attributes.baseName && attributes.path) {
-          const sources = squashSourceNodes(childNode, ['kubb-export', 'kubb-import'])
+      if (child.nodeName === 'kubb-file') {
+        if (child.attributes.has('baseName') && child.attributes.has('path')) {
+          const sources = squashSourceNodes(child, ['kubb-export', 'kubb-import'])
 
           collected.push({
-            baseName: attributes.baseName,
-            path: attributes.path,
+            baseName: child.attributes.get('baseName'),
+            path: child.attributes.get('path'),
+            meta: child.attributes.get('meta') || {},
+            footer: child.attributes.get('footer'),
+            banner: child.attributes.get('banner'),
             sources: [...sources],
-            exports: [...squashExportNodes(childNode)],
-            imports: [...squashImportNodes(childNode)],
-            meta: attributes.meta || {},
-            footer: attributes.footer,
-            banner: attributes.banner,
-          })
+            exports: [...squashExportNodes(child)],
+            imports: [...squashImportNodes(child)],
+          } as KubbFile.File)
         }
       }
     }

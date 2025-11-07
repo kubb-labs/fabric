@@ -29,6 +29,7 @@ describe('squashSourceNodes', () => {
         {
           "isExportable": true,
           "isIndexable": true,
+          "isTypeOnly": false,
           "name": "x",
           "value": "export const x = 1",
         },

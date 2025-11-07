@@ -3,7 +3,7 @@ import type { DOMElement, DOMNode, DOMNodeAttribute, ElementNames, TextNode } fr
 export const createNode = (nodeName: string): DOMElement => {
   const node: DOMElement = {
     nodeName: nodeName as DOMElement['nodeName'],
-    attributes: {},
+    attributes: new Map(),
     childNodes: [],
     parentNode: undefined,
   }
@@ -49,7 +49,7 @@ export const removeChildNode = (node: DOMElement, removeNode: DOMNode): void => 
 }
 
 export const setAttribute = (node: DOMElement, key: string, value: DOMNodeAttribute): void => {
-  node.attributes[key] = value
+  node.attributes.set(key, value)
 }
 
 export const createTextNode = (text: string): TextNode => {
@@ -72,4 +72,4 @@ export const setTextNodeValue = (node: TextNode, text: string): void => {
   node.nodeValue = text
 }
 
-export const nodeNames = new Set<ElementNames>(['kubb-export', 'kubb-file', 'kubb-source', 'kubb-import', 'kubb-text'])
+export const nodeNames = new Set<ElementNames>(['kubb-export', 'kubb-file', 'kubb-source', 'kubb-import', 'kubb-text', 'kubb-root', 'kubb-app', 'br'])
