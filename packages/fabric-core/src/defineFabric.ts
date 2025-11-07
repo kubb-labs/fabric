@@ -1,6 +1,7 @@
 import { isFunction } from 'remeda'
 import type { Fabric, FabricConfig, FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
 import { FileManager } from './FileManager.ts'
+import type * as KubbFile from './KubbFile.ts'
 import type { Parser } from './parsers/types.ts'
 import type { Plugin } from './plugins/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
@@ -30,7 +31,8 @@ export function defineFabric<T extends FabricOptions>(init?: FabricInitializer<T
   function create(config: FabricConfig<T> = { mode: 'sequential' } as FabricConfig<T>): Fabric<T> {
     const events = new AsyncEventEmitter<FabricEvents>()
     const installedPlugins = new Set<Plugin<any>>()
-    const installedParsers = new Set<Parser<any>>()
+    const installedParsers = new Map<KubbFile.Extname, Parser<any>>()
+    const installedParserNames = new Set<string>()
     const fileManager = new FileManager({ events })
 
     const context: FabricContext<T> = {
@@ -76,10 +78,20 @@ export function defineFabric<T extends FabricOptions>(init?: FabricInitializer<T
         }
 
         if (pluginOrParser.type === 'parser') {
-          if (installedParsers.has(pluginOrParser)) {
+          if (installedParserNames.has(pluginOrParser.name)) {
             console.warn(`Parser "${pluginOrParser.name}" already applied.`)
           } else {
-            installedParsers.add(pluginOrParser)
+            installedParserNames.add(pluginOrParser.name)
+          }
+
+          if (pluginOrParser.extNames) {
+            for (const extName of pluginOrParser.extNames) {
+              const existing = installedParsers.get(extName)
+              if (existing && existing.name !== pluginOrParser.name) {
+                console.warn(`Parser "${pluginOrParser.name}" is overriding parser "${existing.name}" for extension "${extName}".`)
+              }
+              installedParsers.set(extName, pluginOrParser)
+            }
           }
         }
 

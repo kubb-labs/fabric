@@ -1,82 +1,91 @@
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
-import type { File } from '../components/File.tsx'
 import { nodeNames } from '../dom.ts'
-import type { DOMElement } from '../types.ts'
+import type { DOMElement, KubbFile } from '../types.ts'
 
 export function squashTextNodes(node: DOMElement): string {
   let text = ''
 
-  for (const childNode of node.childNodes) {
-    if (!childNode) {
-      continue
-    }
+  const walk = (current: DOMElement): string => {
+    let content = ''
 
-    let nodeText = ''
-
-    const getPrintText = (text: string): string => {
-      if (childNode.nodeName === 'kubb-import') {
-        const attributes = childNode.attributes as React.ComponentProps<typeof File.Import>
-
-        return print([
-          createImport({
-            name: attributes.name,
-            path: attributes.path,
-            root: attributes.root,
-            isTypeOnly: attributes.isTypeOnly,
-          }),
-        ])
+    for (const child of current.childNodes) {
+      if (!child) {
+        continue
       }
 
-      if (childNode.nodeName === 'kubb-export') {
-        const attributes = childNode.attributes as React.ComponentProps<typeof File.Export>
-        if (attributes.path) {
-          return print([
-            createExport({
-              name: attributes.name,
-              path: attributes.path,
-              isTypeOnly: attributes.isTypeOnly,
-              asAlias: attributes.asAlias,
-            }),
-          ])
+      let nodeText = ''
+
+      const getPrintText = (text: string): string => {
+        switch (child.nodeName) {
+          case 'kubb-import': {
+            return print(
+              createImport({
+                name: child.attributes.get('name'),
+                path: child.attributes.get('path'),
+                root: child.attributes.get('root'),
+                isTypeOnly: child.attributes.get('isTypeOnly'),
+                isNameSpace: child.attributes.get('isNameSpace'),
+              } as KubbFile.Import),
+            )
+          }
+          case 'kubb-export': {
+            if (child.attributes.has('path')) {
+              return print(
+                createExport({
+                  name: child.attributes.get('name'),
+                  path: child.attributes.get('path'),
+                  isTypeOnly: child.attributes.get('isTypeOnly'),
+                  asAlias: child.attributes.get('asAlias'),
+                } as KubbFile.Export),
+              )
+            }
+            return ''
+          }
+          case 'kubb-source':
+            return text
+          default:
+            return text
         }
       }
 
-      if (childNode.nodeName === 'kubb-source') {
-        return text
-      }
+      if (child.nodeName === '#text') {
+        nodeText = child.nodeValue
+      } else {
+        if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
+          nodeText = walk(child)
+        }
 
-      return text
-    }
+        nodeText = getPrintText(nodeText)
 
-    if (childNode.nodeName === '#text') {
-      nodeText = childNode.nodeValue
-    } else {
-      if (['kubb-text', 'kubb-file', 'kubb-source'].includes(childNode.nodeName)) {
-        nodeText = squashTextNodes(childNode)
-      }
+        if (child.nodeName === 'br') {
+          nodeText = '\n'
+        }
 
-      nodeText = getPrintText(nodeText)
+        if (!nodeNames.has(child.nodeName)) {
+          const attributes = child.attributes
+          let attrString = ''
+          const hasAttributes = attributes.size > 0
 
-      if (childNode.nodeName === 'br') {
-        nodeText = '\n'
-      }
-
-      // no kubb element or br
-      if (![...nodeNames, 'br'].includes(childNode.nodeName)) {
-        const attributes = Object.entries(childNode.attributes).reduce((acc, [key, value]) => {
-          if (typeof value === 'string') {
-            return `${acc} ${key}="${value}"`
+          for (const [key, value] of attributes) {
+            attrString += typeof value === 'string' ? ` ${key}="${value}"` : ` ${key}={${String(value)}}`
           }
 
-          return `${acc} ${key}={${value}}`
-        }, '')
-        nodeText = `<${childNode.nodeName}${attributes}>${squashTextNodes(childNode)}</${childNode.nodeName}>`
+          if (hasAttributes) {
+            nodeText = `<${child.nodeName}${attrString}>${walk(child)}</${child.nodeName}>`
+          } else {
+            nodeText = `<${child.nodeName}>${walk(child)}</${child.nodeName}>`
+          }
+        }
       }
+
+      content += nodeText
     }
 
-    text += nodeText
+    return content
   }
+
+  text = walk(node)
 
   return text
 }

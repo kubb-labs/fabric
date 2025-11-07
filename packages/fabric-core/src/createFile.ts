@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { orderBy } from 'natural-orderby'
-import { isDeepEqual, uniqueBy } from 'remeda'
+import { uniqueBy } from 'remeda'
 import type * as KubbFile from './KubbFile.ts'
 import { trimExtName } from './utils/trimExtName.ts'
 
@@ -10,53 +10,78 @@ export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.
 }
 
 export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.Export> {
-  return orderBy(exports, [
+  const sorted = orderBy(exports, [
     (v) => !!Array.isArray(v.name),
     (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
     (v) => (Array.isArray(v.name) ? orderBy(v.name) : v.name),
-  ]).reduce(
-    (prev, curr) => {
-      const name = curr.name
-      const prevByPath = prev.findLast((imp) => imp.path === curr.path)
-      const prevByPathAndIsTypeOnly = prev.findLast((imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly)
+  ])
 
-      if (prevByPathAndIsTypeOnly) {
-        // we already have an export that has the same path but uses `isTypeOnly` (export type ...)
-        return prev
+  const prev: Array<KubbFile.Export> = []
+  // Map to track items by path for O(1) lookup
+  const pathMap = new Map<string, KubbFile.Export>()
+  // Map to track unique items by path+name+isTypeOnly+asAlias
+  const uniqueMap = new Map<string, KubbFile.Export>()
+  // Map to track items by path+name where isTypeOnly=true (for type-only check)
+  const pathNameTypeTrueMap = new Map<string, KubbFile.Export>()
+
+  for (const curr of sorted) {
+    const name = curr.name
+    const pathKey = curr.path
+    const prevByPath = pathMap.get(pathKey)
+
+    // Create unique key for path+name+isTypeOnly
+    const nameKey = Array.isArray(name) ? JSON.stringify(name) : name || ''
+    const pathNameTypeKey = `${pathKey}:${nameKey}:${curr.isTypeOnly}`
+    // Check if there's already an item with the same path+name but with isTypeOnly=true
+    const pathNameKey = `${pathKey}:${nameKey}`
+    const prevByPathAndIsTypeOnly = pathNameTypeTrueMap.get(pathNameKey)
+
+    if (prevByPathAndIsTypeOnly) {
+      // we already have an export that has the same path and name but uses `isTypeOnly` (export type ...)
+      continue
+    }
+
+    // Create unique key for path+name+isTypeOnly+asAlias
+    const uniqueKey = `${pathNameTypeKey}:${curr.asAlias || ''}`
+    const uniquePrev = uniqueMap.get(uniqueKey)
+
+    // we already have an item that was unique enough or name field is empty or prev asAlias is set but current has no changes
+    if (uniquePrev || (Array.isArray(name) && !name.length) || (prevByPath?.asAlias && !curr.asAlias)) {
+      continue
+    }
+
+    if (!prevByPath) {
+      const newItem = {
+        ...curr,
+        name: Array.isArray(name) ? [...new Set(name)] : name,
       }
-
-      const uniquePrev = prev.findLast(
-        (imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly === curr.isTypeOnly && imp.asAlias === curr.asAlias,
-      )
-
-      // we already have an item that was unique enough or name field is empty or prev asAlias is set but current has no changes
-      if (uniquePrev || (Array.isArray(name) && !name.length) || (prevByPath?.asAlias && !curr.asAlias)) {
-        return prev
+      prev.push(newItem)
+      pathMap.set(pathKey, newItem)
+      uniqueMap.set(uniqueKey, newItem)
+      // Track items with isTypeOnly=true for the type-only check
+      if (newItem.isTypeOnly) {
+        pathNameTypeTrueMap.set(pathNameKey, newItem)
       }
+      continue
+    }
 
-      if (!prevByPath) {
-        return [
-          ...prev,
-          {
-            ...curr,
-            name: Array.isArray(name) ? [...new Set(name)] : name,
-          },
-        ]
-      }
+    // merge all names when prev and current both have the same isTypeOnly set
+    if (prevByPath && Array.isArray(prevByPath.name) && Array.isArray(curr.name) && prevByPath.isTypeOnly === curr.isTypeOnly) {
+      prevByPath.name = [...new Set([...prevByPath.name, ...curr.name])]
+      continue
+    }
 
-      // merge all names when prev and current both have the same isTypeOnly set
-      if (prevByPath && Array.isArray(prevByPath.name) && Array.isArray(curr.name) && prevByPath.isTypeOnly === curr.isTypeOnly) {
-        prevByPath.name = [...new Set([...prevByPath.name, ...curr.name])]
+    prev.push(curr)
+    uniqueMap.set(uniqueKey, curr)
+    // Track items with isTypeOnly=true for the type-only check
+    if (curr.isTypeOnly) {
+      pathNameTypeTrueMap.set(pathNameKey, curr)
+    }
+  }
 
-        return prev
-      }
-
-      return [...prev, curr]
-    },
-    [] as Array<KubbFile.Export>,
-  )
+  return prev
 }
 
 export function combineImports(imports: Array<KubbFile.Import>, exports: Array<KubbFile.Export>, source?: string): Array<KubbFile.Import> {
@@ -96,18 +121,28 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
     return isUsed
   }
 
-  return orderBy(imports, [
+  const sorted = orderBy(imports, [
     (v) => !!Array.isArray(v.name),
     (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
     (v) => (Array.isArray(v.name) ? orderBy(v.name) : v.name),
-  ]).reduce<Array<KubbFile.Import>>((prev, curr) => {
+  ])
+
+  const prev: Array<KubbFile.Import> = []
+  // Map to track items by path+isTypeOnly for O(1) lookup
+  const pathTypeMap = new Map<string, KubbFile.Import>()
+  // Map to track unique items by path+name+isTypeOnly
+  const uniqueMap = new Map<string, KubbFile.Import>()
+  // Map to track items by path+name where isTypeOnly=true (for type-only check)
+  const pathNameTypeTrueMap = new Map<string, KubbFile.Import>()
+
+  for (const curr of sorted) {
     let name = Array.isArray(curr.name) ? [...new Set(curr.name)] : curr.name
 
     if (curr.path === curr.root) {
       // root and path are the same file, remove the "./" import
-      return prev
+      continue
     }
 
     // merge all names and check if the importName is being used in the generated source and if not filter those imports out
@@ -115,45 +150,63 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
       name = name.filter((item) => (typeof item === 'string' ? hasImportInSource(item) : hasImportInSource(item.propertyName)))
     }
 
-    const prevByPath = prev.findLast((imp) => imp.path === curr.path && imp.isTypeOnly === curr.isTypeOnly)
-    const uniquePrev = prev.findLast((imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly === curr.isTypeOnly)
-    const prevByPathNameAndIsTypeOnly = prev.findLast((imp) => imp.path === curr.path && isDeepEqual(imp.name, name) && imp.isTypeOnly)
+    const pathTypeKey = `${curr.path}:${curr.isTypeOnly}`
+    const prevByPath = pathTypeMap.get(pathTypeKey)
+
+    // Create key for name comparison
+    const nameKey = Array.isArray(name) ? JSON.stringify(name) : name || ''
+    const pathNameTypeKey = `${curr.path}:${nameKey}:${curr.isTypeOnly}`
+    const uniquePrev = uniqueMap.get(pathNameTypeKey)
+    // Check if there's already an item with the same path+name but with isTypeOnly=true
+    const pathNameKey = `${curr.path}:${nameKey}`
+    const prevByPathNameAndIsTypeOnly = pathNameTypeTrueMap.get(pathNameKey)
 
     if (prevByPathNameAndIsTypeOnly) {
-      // we already have an export that has the same path but uses `isTypeOnly` (import type ...)
-      return prev
+      // we already have an import that has the same path and name but uses `isTypeOnly` (import type ...)
+      continue
     }
 
     // already unique enough or name is empty
     if (uniquePrev || (Array.isArray(name) && !name.length)) {
-      return prev
+      continue
     }
 
     // new item, append name
     if (!prevByPath) {
-      return [
-        ...prev,
-        {
-          ...curr,
-          name,
-        },
-      ]
+      const newItem = {
+        ...curr,
+        name,
+      }
+      prev.push(newItem)
+      pathTypeMap.set(pathTypeKey, newItem)
+      uniqueMap.set(pathNameTypeKey, newItem)
+      // Track items with isTypeOnly=true for the type-only check
+      if (newItem.isTypeOnly) {
+        pathNameTypeTrueMap.set(pathNameKey, newItem)
+      }
+      continue
     }
 
     // merge all names when prev and current both have the same isTypeOnly set
     if (prevByPath && Array.isArray(prevByPath.name) && Array.isArray(name) && prevByPath.isTypeOnly === curr.isTypeOnly) {
       prevByPath.name = [...new Set([...prevByPath.name, ...name])]
-
-      return prev
+      continue
     }
 
     // no import was found in the source, ignore import
     if (!Array.isArray(name) && name && !hasImportInSource(name)) {
-      return prev
+      continue
     }
 
-    return [...prev, curr]
-  }, [])
+    prev.push(curr)
+    uniqueMap.set(pathNameTypeKey, curr)
+    // Track items with isTypeOnly=true for the type-only check
+    if (curr.isTypeOnly) {
+      pathNameTypeTrueMap.set(pathNameKey, curr)
+    }
+  }
+
+  return prev
 }
 
 /**

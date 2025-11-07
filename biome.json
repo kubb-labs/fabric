@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
   "assist": {
     "enabled": true,
     "actions": {
@@ -23,7 +23,8 @@
       "!**/.codesandbox",
       "!**/.devcontainer",
       "!**/gen",
-      "!**/jsx-namespace.d.ts"
+      "!**/jsx-namespace.d.ts",
+      "!**/ceviz-report.html"
     ]
   },
   "formatter": {

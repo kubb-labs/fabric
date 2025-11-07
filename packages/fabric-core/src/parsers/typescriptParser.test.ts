@@ -3,7 +3,14 @@ import type ts from 'typescript'
 import { createExport, createImport, print, typescriptParser } from './typescriptParser.ts'
 
 const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
-  return print([elements].flat().filter(Boolean))
+  const nodes: Array<ts.Node> = []
+  const elementsArray = Array.isArray(elements) ? elements : [elements]
+  for (const element of elementsArray) {
+    if (element) {
+      nodes.push(element)
+    }
+  }
+  return print(...nodes)
 }
 
 describe('TypeScript parser', () => {

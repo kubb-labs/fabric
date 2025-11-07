@@ -23,6 +23,9 @@ describe('squashExportNodes', () => {
     expect([...result]).toMatchInlineSnapshot(`
       [
         {
+          "asAlias": false,
+          "isTypeOnly": false,
+          "name": undefined,
           "path": "./hello.ts",
         },
       ]
@@ -48,6 +51,7 @@ describe('squashExportNodes', () => {
       [
         {
           "asAlias": true,
+          "isTypeOnly": false,
           "name": [
             "alpha",
             "beta",
@@ -56,6 +60,7 @@ describe('squashExportNodes', () => {
         },
         {
           "asAlias": true,
+          "isTypeOnly": false,
           "name": "ns",
           "path": "./mod.ts",
         },

@@ -14,13 +14,13 @@ type IndentProps = {
 export function Indent({ size = 2, children }: IndentProps) {
   if (!children) return null
 
-  const filtered = React.Children.toArray(children).filter(Boolean)
+  const childrenArray = React.Children.toArray(children)
   const result: React.ReactNode[] = []
 
   let prevWasBr = false
   let brCount = 0
 
-  filtered.forEach((child) => {
+  for (const child of childrenArray) {
     if (React.isValidElement(child) && child.type === 'br') {
       if (!prevWasBr || brCount < 2) {
         result.push(child)
@@ -32,7 +32,7 @@ export function Indent({ size = 2, children }: IndentProps) {
       brCount = 0
       result.push(child)
     }
-  })
+  }
 
   return (
     <>

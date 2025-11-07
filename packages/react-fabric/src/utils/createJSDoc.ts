@@ -1,9 +1,8 @@
 export function createJSDoc({ comments }: { comments: Array<string> }): string {
-  const filteredComments = comments.filter(Boolean)
-
-  if (!filteredComments.length) {
+  const filtered = comments.filter((c) => c.trim())
+  if (!filtered.length) {
     return ''
   }
 
-  return `/**\n * ${filteredComments.join('\n * ')}\n */`
+  return `/**\n * ${filtered.join('\n * ')}\n */`
 }
