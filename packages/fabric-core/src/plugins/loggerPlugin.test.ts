@@ -149,13 +149,17 @@ describe('loggerPlugin', () => {
       await fabric.use(loggerPlugin, { websocket: false, progress: false })
 
       const files = makeFiles(1)
+      const [file] = files
+      if (!file) {
+        throw new Error('Expected at least one file')
+      }
 
       await fabric.context.emit('process:start', { files })
       await fabric.context.emit('process:progress', {
         processed: 1,
         total: 1,
         percentage: 100,
-        file: files[0],
+        file,
       })
       await fabric.context.emit('process:end', { files })
 
