@@ -136,6 +136,9 @@ importers:
       cli-progress:
         specifier: ^3.12.0
         version: 3.12.0
+      consola:
+        specifier: ^3.4.2
+        version: 3.4.2
       fs-extra:
         specifier: ^11.3.2
         version: 11.3.2
@@ -151,6 +154,9 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      ws:
+        specifier: ^8.18.0
+        version: 8.18.0
     devDependencies:
       '@types/cli-progress':
         specifier: ^3.11.6

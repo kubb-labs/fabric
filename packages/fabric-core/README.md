@@ -152,6 +152,23 @@ import { progressPlugin } from '@kubb/fabric-core/plugins'
 | — | — | — | This plugin has no options, it displays a CLI progress bar by listening to core events. |
 
 
+#### `consolePlugin`
+Streams Fabric lifecycle activity as colourful consola logs and websocket messages that you can consume from custom tooling.
+
+```
+import { consolePlugin } from '@kubb/fabric-core/plugins'
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| tag | `string` | `'fabric'` | Tag appended to each consola log entry. |
+| fancy | `boolean` | `true` | Enables consola's fancy output mode for richer formatting. |
+| level | `import('consola').LogLevel` | — | Optional explicit log level passed to `consola.create`. |
+| websocket | `boolean \| { host?: string; port?: number }` | `true` | Toggle or configure the websocket server that broadcasts Fabric events for future GUIs. |
+
+By default the plugin starts a websocket server on an ephemeral port and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with human-friendly messages and broadcast to connected clients, making it easy to build dashboards on top of Fabric.
+
+
 #### `graphPlugin`
 Shows a graph of all files
 
