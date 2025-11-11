@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["vite/client", "bun-types", "../../reset.d.ts"],
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "allowJs": false
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/*.d.ts",
+    "vite.config.ts",
+    "package.json",
+    "tsdown.config.ts"
+  ]
+}

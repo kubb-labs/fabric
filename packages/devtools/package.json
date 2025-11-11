@@ -1,0 +1,75 @@
+{
+  "name": "@kubb/fabric-devtools",
+  "version": "0.1.0",
+  "description": "Devtools plugin for Kubb Fabric that provides a Vite + Vue UI powered by Nuxt UI 3 for the logger plugin.",
+  "keywords": [
+    "kubb",
+    "fabric",
+    "devtools",
+    "vite",
+    "vue",
+    "nuxt-ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kubb-labs/fabric.git",
+    "directory": "packages/devtools"
+  },
+  "license": "MIT",
+  "author": "stijnvanhulle",
+  "type": "module",
+  "sideEffects": [
+    "./dist/index.js"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./plugin": {
+      "import": "./dist/devtoolsPlugin.js",
+      "require": "./dist/devtoolsPlugin.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "files": [
+    "dist",
+    "src/client",
+    "*.d.ts",
+    "*.d.cts",
+    "!*.map",
+    "!**/*.test.*"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "build:ui": "vite build --config ./vite.config.ts",
+    "clean": "npx rimraf ./dist",
+    "dev": "vite --config ./vite.config.ts",
+    "dev:server": "tsdown --watch ./src",
+    "lint": "bun biome lint .",
+    "lint:fix": "bun biome lint --fix --unsafe .",
+    "preview": "vite preview --config ./vite.config.ts",
+    "start": "pnpm dev"
+  },
+  "dependencies": {
+    "@kubb/fabric-core": "workspace:*",
+    "@nuxt/ui": "^3.0.0-rc.1",
+    "@unocss/reset": "^0.61.9",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "vite": "^7.2.1",
+    "vue": "^3.5.23"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

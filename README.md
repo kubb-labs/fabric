@@ -164,6 +164,43 @@ import { graphPlugin } from '@kubb/fabric-core/plugins'
 | open   | `boolean` | false   | Open a webpage with the generated graph       |
 
 
+#### `loggerPlugin`
+Broadcasts Fabric lifecycle events over a WebSocket server. Useful for building dashboards or connecting the devtools UI.
+
+```
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| host | `string` | `'127.0.0.1'` | Hostname to bind the WebSocket server to. |
+| port | `number` | `7071` | Preferred port. Uses a random free port when the preferred port is taken. |
+| path | `string` | `'/__fabric_logger__'` | URL path clients can connect to. |
+| historyLimit | `number` | `250` | Number of most recent events cached and replayed to new clients. |
+
+Injects `fabric.logger`, exposing the active session status (`status`, `endpoint.url`, `clients`, `history`).
+
+#### `devtoolsPlugin`
+Launches a Vite + Vue devtools UI built with Nuxt UI 3 that consumes the logger WebSocket stream.
+
+```
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
+import { devtoolsPlugin } from '@kubb/fabric-devtools'
+
+const fabric = defineFabric()()
+await fabric.use(loggerPlugin, { historyLimit: 500 })
+await fabric.use(devtoolsPlugin, { open: true })
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| host | `string` | `'127.0.0.1'` | Hostname for the devtools UI server. |
+| port | `number` | `5175` | Preferred port for the UI; falls back to any free port when in use. |
+| open | `boolean` | `false` | Automatically opens the UI in the default browser when ready. |
+| loggerUrl | `string` | — | Override the logger WebSocket URL when the logger plugin runs elsewhere. |
+
+Injects `fabric.devtools`, providing the UI status (`status`, `url`, `loggerUrl`, `lastError`).
+
 #### `reactPlugin`
 Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.
 
