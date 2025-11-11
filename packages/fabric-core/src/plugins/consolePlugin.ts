@@ -24,16 +24,6 @@ type WebSocketOptions = {
 
 type Options = {
   /**
-   * Tag applied to each consola log line.
-   * @default 'fabric'
-   */
-  tag?: string
-  /**
-   * Enables fancy consola output.
-   * @default true
-   */
-  fancy?: boolean
-  /**
    * Explicit consola log level.
    */
   level?: LogLevel
@@ -66,14 +56,14 @@ function pluralize(word: string, count: number) {
   return `${count} ${word}${count === 1 ? '' : 's'}`
 }
 
-const defaultTag = 'fabric'
+const defaultTag = 'Fabric'
 
 export const consolePlugin = createPlugin<Options>({
   name: 'console',
   install(ctx, options = {}) {
-    const { tag = defaultTag, fancy = true, level, websocket = true } = options
+    const { level, websocket = true } = options
 
-    const logger = consola.create({ fancy, level }).withTag(tag)
+    const logger = consola.create({ fancy: true, level }).withTag(defaultTag)
 
     let server: http.Server | undefined
     let wss: WebSocketServer | undefined
