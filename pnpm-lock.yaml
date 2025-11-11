@@ -167,6 +167,9 @@ importers:
       '@types/serve-handler':
         specifier: ^6.1.4
         version: 6.1.4
+      '@types/ws':
+        specifier: ^8.5.12
+        version: 8.18.1
 
   packages/react-fabric:
     dependencies:
