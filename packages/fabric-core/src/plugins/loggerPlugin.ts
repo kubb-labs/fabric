@@ -1,6 +1,7 @@
 import http from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { relative } from 'node:path'
+import { Presets, SingleBar } from 'cli-progress'
 import { createConsola, type LogLevel } from 'consola'
 import { WebSocket, WebSocketServer } from 'ws'
 import type { FabricEvents } from '../Fabric.ts'
@@ -27,6 +28,11 @@ type Options = {
    * Explicit consola log level.
    */
   level?: LogLevel
+  /**
+   * Toggle progress bar output.
+   * @default true
+   */
+  progress?: boolean
   /**
    * Toggle or configure the websocket broadcast server.
    * When `true`, a websocket server is started on an ephemeral port.
@@ -58,12 +64,26 @@ function pluralize(word: string, count: number) {
 
 const defaultTag = 'Fabric'
 
-export const consolePlugin = createPlugin<Options>({
-  name: 'console',
+const createProgressBar = () =>
+  new SingleBar(
+    {
+      format: '{bar} {percentage}% | {value}/{total} | {message}',
+      barCompleteChar: '█',
+      barIncompleteChar: '░',
+      hideCursor: true,
+      clearOnComplete: true,
+    },
+    Presets.shades_grey,
+  )
+
+export const loggerPlugin = createPlugin<Options>({
+  name: 'logger',
   install(ctx, options = {}) {
-    const { level, websocket = true } = options
+    const { level, websocket = true, progress = true } = options
 
     const logger = createConsola(level !== undefined ? { level } : {}).withTag(defaultTag)
+
+    const progressBar = progress ? createProgressBar() : undefined
 
     let server: http.Server | undefined
     let wss: WebSocketServer | undefined
@@ -95,18 +115,18 @@ export const consolePlugin = createPlugin<Options>({
           const { host: resolvedHost, port: resolvedPort } = normalizeAddress(addressInfo)
           const url = `ws://${resolvedHost}:${resolvedPort}`
 
-          logger.info(`Console websocket listening on ${url}`)
+          logger.info(`Logger websocket listening on ${url}`)
           broadcast('websocket:ready', { url })
         }
       })
 
       wss.on('connection', socket => {
-        logger.info('Console websocket client connected')
+        logger.info('Logger websocket client connected')
         socket.send(
           JSON.stringify({
             event: 'welcome',
             payload: {
-              message: 'Connected to Fabric console stream',
+              message: 'Connected to Fabric log stream',
               timestamp: Date.now(),
             },
           }),
@@ -114,7 +134,7 @@ export const consolePlugin = createPlugin<Options>({
       })
 
       wss.on('error', error => {
-        logger.error('Console websocket error', error)
+        logger.error('Logger websocket error', error)
       })
     }
 
@@ -154,6 +174,8 @@ export const consolePlugin = createPlugin<Options>({
     ctx.on('process:start', async ({ files }) => {
       logger.start(`Processing ${pluralize('file', files.length)}`)
       broadcast('process:start', { total: files.length, timestamp: Date.now() })
+
+      progressBar?.start(files.length, 0, { message: 'Starting...' })
     })
 
     ctx.on('file:start', async ({ file, index, total }) => {
@@ -175,6 +197,8 @@ export const consolePlugin = createPlugin<Options>({
         percentage,
         file: serializeFile(file),
       })
+
+      progressBar?.increment(1, { message: `Writing ${formatPath(file.path)}` })
     })
 
     ctx.on('file:end', async ({ file, index, total }) => {
@@ -203,11 +227,20 @@ export const consolePlugin = createPlugin<Options>({
     ctx.on('process:end', async ({ files }) => {
       logger.success(`Processed ${pluralize('file', files.length)}`)
       broadcast('process:end', { total: files.length, timestamp: Date.now() })
+
+      if (files.length && progressBar) {
+        progressBar.update(files.length, { message: 'Done ✅' })
+        progressBar.stop()
+      }
     })
 
     ctx.on('end', async () => {
       logger.success('Fabric run completed')
       broadcast('end', { timestamp: Date.now() })
+
+      if (progressBar) {
+        progressBar.stop()
+      }
 
       const closures: Array<Promise<void>> = []
 
@@ -234,7 +267,7 @@ export const consolePlugin = createPlugin<Options>({
 
       if (closures.length) {
         await Promise.allSettled(closures)
-        logger.info('Console websocket closed')
+        logger.info('Logger websocket closed')
       }
     })
   },

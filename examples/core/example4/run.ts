@@ -1,6 +1,6 @@
 import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { fsPlugin, progressPlugin } from '@kubb/fabric-core/plugins'
+import { fsPlugin, loggerPlugin } from '@kubb/fabric-core/plugins'
 
 async function timeout(ms: number): Promise<unknown> {
   return new Promise((resolve) => {
@@ -55,7 +55,7 @@ async function run() {
     clean: { path: './example4/gen' },
   })
   fabric.use(typescriptParser)
-  fabric.use(progressPlugin)
+  fabric.use(loggerPlugin, { progress: true, websocket: false })
 
   await fabric.write()
 }
