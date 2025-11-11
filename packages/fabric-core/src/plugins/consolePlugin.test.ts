@@ -14,18 +14,16 @@ const hoisted = vi.hoisted(() => {
 
   logger.withTag.mockReturnValue(logger)
 
-  const createMock = vi.fn(() => logger)
+  const createConsolaMock = vi.fn(() => logger)
 
-  return { logger, createMock }
+  return { logger, createConsolaMock }
 })
 
 vi.mock('consola', () => ({
-  default: { create: hoisted.createMock },
-  consola: { create: hoisted.createMock },
-  create: hoisted.createMock,
+  createConsola: hoisted.createConsolaMock,
 }))
 
-const { logger, createMock } = hoisted
+const { logger, createConsolaMock } = hoisted
 
 import { consolePlugin } from './consolePlugin.ts'
 
@@ -54,11 +52,7 @@ describe('consolePlugin', () => {
 
     await fabric.use(consolePlugin, { websocket: false })
 
-    expect(createMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        fancy: true,
-      }),
-    )
+    expect(createConsolaMock).toHaveBeenCalledWith({})
     expect(logger.withTag).toHaveBeenCalledWith('Fabric')
   })
 

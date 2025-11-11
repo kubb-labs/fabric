@@ -1,7 +1,7 @@
 import http from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { relative } from 'node:path'
-import consola, { type LogLevel } from 'consola'
+import { createConsola, type LogLevel } from 'consola'
 import { WebSocket, WebSocketServer } from 'ws'
 import type { FabricEvents } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
@@ -63,7 +63,7 @@ export const consolePlugin = createPlugin<Options>({
   install(ctx, options = {}) {
     const { level, websocket = true } = options
 
-    const logger = consola.create({ fancy: true, level }).withTag(defaultTag)
+    const logger = createConsola(level !== undefined ? { level } : {}).withTag(defaultTag)
 
     let server: http.Server | undefined
     let wss: WebSocketServer | undefined

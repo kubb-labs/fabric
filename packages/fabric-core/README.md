@@ -161,10 +161,10 @@ import { consolePlugin } from '@kubb/fabric-core/plugins'
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| level | `import('consola').LogLevel` | — | Optional explicit log level passed to `consola.create`. |
+| level | `import('consola').LogLevel` | — | Optional explicit log level passed to `createConsola`. |
 | websocket | `boolean \| { host?: string; port?: number }` | `true` | Toggle or configure the websocket server that broadcasts Fabric events for future GUIs. |
 
-By default the plugin starts a websocket server on an ephemeral port and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with a `Fabric` tag, using consola's fancy formatting, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
+By default the plugin starts a websocket server on an ephemeral port and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with a `Fabric` tag and broadcast to connected clients—perfect for building dashboards on top of Fabric.
 
 
 #### `graphPlugin`
