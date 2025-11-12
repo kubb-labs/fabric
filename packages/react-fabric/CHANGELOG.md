@@ -1,5 +1,16 @@
 # @kubb/react-fabric
 
+## 0.4.0
+
+### Minor Changes
+
+- [#49](https://github.com/kubb-labs/fabric/pull/49) [`8967dd5`](https://github.com/kubb-labs/fabric/commit/8967dd5fb5edbaf95d02cb3ad7dab7fd0c24c84f) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - react bundeld
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
