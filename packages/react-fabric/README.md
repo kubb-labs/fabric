@@ -139,16 +139,20 @@ Injected `fabric.writeEntry` parameters (via `barrelPlugin`):
 | root | `string`                                   | Root directory where the entry `index.ts` should be created. |
 | mode | `'all' \| 'named' \| 'propagate' \| false` | Controls which export style to use for the entry barrel. |
 
-#### `progressPlugin`
-Shows a CLI progress bar by listening to core events.
+#### `loggerPlugin`
+Streams Fabric lifecycle activity as colourful consola logs, optional progress bars, and websocket messages that you can consume from custom tooling.
 
 ```
-import { progressPlugin } from '@kubb/fabric-core/plugins'
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
 ```
 
-| Option | Type | Default | Description                                                                             |
-|---|---|---|-----------------------------------------------------------------------------------------|
-| — | — | — | This plugin has no options, it displays a CLI progress bar by listening to core events. |
+| Option | Type | Default | Description |
+|---|---|---|---|
+| level | `import('consola').LogLevel` | — | Optional explicit log level passed to `createConsola`. |
+| progress | `boolean` | `true` | Enable/disable the integrated CLI progress bar. |
+| websocket | `boolean \| { host?: string; port?: number }` | `true` | Toggle or configure the websocket server that broadcasts Fabric events for future GUIs. |
+
+By default the plugin displays a progress bar, starts a websocket server on an ephemeral port, and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with a `Fabric` tag, animated in the progress bar, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
 
 
 #### `graphPlugin`
