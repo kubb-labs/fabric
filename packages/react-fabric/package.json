@@ -127,11 +127,11 @@
     "ws": "8.18.0"
   },
   "devDependencies": {
-    "react": "catalog:",
-    "react-reconciler": "catalog:",
     "@types/react": "catalog:",
     "@types/react-reconciler": "catalog:",
-    "@types/ws": "^8.18.1"
+    "@types/ws": "^8.18.1",
+    "react": "catalog:",
+    "react-reconciler": "catalog:"
   },
   "engines": {
     "node": ">=20"
