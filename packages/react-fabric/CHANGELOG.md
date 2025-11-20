@@ -1,5 +1,11 @@
 # @kubb/react-fabric
 
+## 0.5.0
+
+### Minor Changes
+
+- [#51](https://github.com/kubb-labs/fabric/pull/51) [`d47a8ae`](https://github.com/kubb-labs/fabric/commit/d47a8ae2babab94dcde35a0e6586f846bde224c2) Thanks [@devinrhode2](https://github.com/devinrhode2)! - Set react 19.2 peerDep
+
 ## 0.4.0
 
 ### Minor Changes
