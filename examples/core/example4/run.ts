@@ -50,12 +50,12 @@ async function run() {
   fabric.use(fsPlugin, {
     dryRun: true,
     async onBeforeWrite() {
-      await timeout(200)
+      await timeout(1000)
     },
     clean: { path: './example4/gen' },
   })
   fabric.use(typescriptParser)
-  fabric.use(loggerPlugin, { progress: true, websocket: false })
+  fabric.use(loggerPlugin, { progress: true, websocket: true })
 
   await fabric.write()
 }

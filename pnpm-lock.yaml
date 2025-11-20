@@ -155,8 +155,8 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
       ws:
-        specifier: ^8.18.0
-        version: 8.18.0
+        specifier: ^8.18.3
+        version: 8.18.3
     devDependencies:
       '@types/cli-progress':
         specifier: ^3.11.6
@@ -168,7 +168,7 @@ importers:
         specifier: ^6.1.4
         version: 6.1.4
       '@types/ws':
-        specifier: ^8.5.12
+        specifier: ^8.18.1
         version: 8.18.1
 
   packages/react-fabric:
@@ -2407,6 +2407,18 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.18.3:
+    resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   wsl-utils@0.1.0:
     resolution: {integrity: sha512-h3Fbisa2nKGPxCpm89Hk33lBLsnaGBvctQopaBSOW/uIs6FTe1ATyAnKFJrzVs9vpGdsTe73WF3V4lIsk4Gacw==}
     engines: {node: '>=18'}
@@ -4454,6 +4466,8 @@ snapshots:
   ws@7.5.10: {}
 
   ws@8.18.0: {}
+
+  ws@8.18.3: {}
 
   wsl-utils@0.1.0:
     dependencies:

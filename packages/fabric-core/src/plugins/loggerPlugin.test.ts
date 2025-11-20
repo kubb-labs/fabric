@@ -11,6 +11,8 @@ const hoisted = vi.hoisted(() => {
     info: vi.fn(),
     success: vi.fn(),
     error: vi.fn(),
+    pauseLogs: vi.fn(),
+    resumeLogs: vi.fn(),
   }
 
   logger.withTag.mockReturnValue(logger)

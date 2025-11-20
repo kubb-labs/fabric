@@ -120,7 +120,7 @@ export const loggerPlugin = createPlugin<Options>({
         }
       })
 
-      wss.on('connection', socket => {
+      wss.on('connection', (socket) => {
         logger.info('Logger websocket client connected')
         socket.send(
           JSON.stringify({
@@ -133,7 +133,7 @@ export const loggerPlugin = createPlugin<Options>({
         )
       })
 
-      wss.on('error', error => {
+      wss.on('error', (error) => {
         logger.error('Logger websocket error', error)
       })
     }
@@ -175,7 +175,10 @@ export const loggerPlugin = createPlugin<Options>({
       logger.start(`Processing ${pluralize('file', files.length)}`)
       broadcast('process:start', { total: files.length, timestamp: Date.now() })
 
-      progressBar?.start(files.length, 0, { message: 'Starting...' })
+      if (progressBar) {
+        logger.pauseLogs()
+        progressBar.start(files.length, 0, { message: 'Starting...' })
+      }
     })
 
     ctx.on('file:start', async ({ file, index, total }) => {
@@ -198,7 +201,9 @@ export const loggerPlugin = createPlugin<Options>({
         file: serializeFile(file),
       })
 
-      progressBar?.increment(1, { message: `Writing ${formatPath(file.path)}` })
+      if (progressBar) {
+        progressBar.increment(1, { message: `Writing ${formatPath(file.path)}` })
+      }
     })
 
     ctx.on('file:end', async ({ file, index, total }) => {
@@ -228,9 +233,11 @@ export const loggerPlugin = createPlugin<Options>({
       logger.success(`Processed ${pluralize('file', files.length)}`)
       broadcast('process:end', { total: files.length, timestamp: Date.now() })
 
-      if (files.length && progressBar) {
+      if (progressBar) {
         progressBar.update(files.length, { message: 'Done ✅' })
         progressBar.stop()
+
+        logger.resumeLogs()
       }
     })
 
@@ -240,6 +247,7 @@ export const loggerPlugin = createPlugin<Options>({
 
       if (progressBar) {
         progressBar.stop()
+        logger.resumeLogs()
       }
 
       const closures: Array<Promise<void>> = []
@@ -248,8 +256,10 @@ export const loggerPlugin = createPlugin<Options>({
         const wsServer = wss
 
         closures.push(
-          new Promise(resolve => {
-            wsServer.clients.forEach(client => client.close())
+          new Promise((resolve) => {
+            for (const client of wsServer.clients) {
+              client.close()
+            }
             wsServer.close(() => resolve())
           }),
         )
@@ -259,7 +269,7 @@ export const loggerPlugin = createPlugin<Options>({
         const httpServer = server
 
         closures.push(
-          new Promise(resolve => {
+          new Promise((resolve) => {
             httpServer.close(() => resolve())
           }),
         )
