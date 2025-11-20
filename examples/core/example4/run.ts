@@ -55,7 +55,7 @@ async function run() {
     clean: { path: './example4/gen' },
   })
   fabric.use(typescriptParser)
-  fabric.use(loggerPlugin, { progress: true, websocket: true })
+  fabric.use(loggerPlugin, { progress: true, websocket: false })
 
   await fabric.write()
 }

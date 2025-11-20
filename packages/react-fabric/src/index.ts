@@ -1,5 +1,5 @@
 // import './globals.ts'
-import React from 'react'
+import * as React from 'react'
 
 // expose fabric core helpers
 export * from '@kubb/fabric-core'
