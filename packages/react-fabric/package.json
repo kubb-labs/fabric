@@ -1,6 +1,6 @@
 {
   "name": "@kubb/react-fabric",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "React integration for Kubb, providing JSX runtime support and React component generation capabilities for code generation plugins.",
   "keywords": [
     "react",
@@ -122,16 +122,16 @@
     "execa": "^9.6.0",
     "indent-string": "^5.0.0",
     "natural-orderby": "^5.0.0",
-    "react": "catalog:",
     "react-devtools-core": "6.1.2",
-    "react-reconciler": "catalog:",
     "signal-exit": "^4.1.0",
     "ws": "8.18.0"
   },
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-reconciler": "catalog:",
-    "@types/ws": "^8.18.1"
+    "@types/ws": "^8.18.1",
+    "react": "catalog:",
+    "react-reconciler": "catalog:"
   },
   "engines": {
     "node": ">=20"

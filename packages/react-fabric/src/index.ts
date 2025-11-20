@@ -1,10 +1,20 @@
 // import './globals.ts'
+import React from 'react'
 
 // expose fabric core helpers
 export * from '@kubb/fabric-core'
+
 // react helpers
-export { createContext, createElement, Fragment, use, useContext, useEffect, useReducer, useRef, useState } from 'react'
-// components
+export const useState = React.useState
+export const createContext = React.createContext
+export const createElement = React.createElement
+export const Fragment = React.Fragment
+export const use = React.use
+export const useContext = React.useContext
+export const useEffect = React.useEffect
+export const useReducer = React.useReducer
+export const useRef = React.useRef
+// // components
 export { App } from './components/App.tsx'
 export { Const } from './components/Const.tsx'
 export { File } from './components/File.tsx'
