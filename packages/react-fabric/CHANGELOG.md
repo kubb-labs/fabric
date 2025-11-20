@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.4.1
+
+### Patch Changes
+
+- [#52](https://github.com/kubb-labs/fabric/pull/52) [`5e1de31`](https://github.com/kubb-labs/fabric/commit/5e1de310d2a52a0f4404a8f450f07afc19087bb0) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Include React as part of react-fabric
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
