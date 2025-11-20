@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.5.1
+
+### Patch Changes
+
+- [`13c91bb`](https://github.com/kubb-labs/fabric/commit/13c91bb41e76b94d463a67c6870f04cfbe6b77aa) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Correct export with default import of react
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes
