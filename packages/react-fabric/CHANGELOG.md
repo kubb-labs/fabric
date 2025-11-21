@@ -1,5 +1,45 @@
 # @kubb/react-fabric
 
+## 0.5.1
+
+### Patch Changes
+
+- [`13c91bb`](https://github.com/kubb-labs/fabric/commit/13c91bb41e76b94d463a67c6870f04cfbe6b77aa) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Correct export with default import of react
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.5.1
+
+## 0.5.0
+
+### Minor Changes
+
+- [#47](https://github.com/kubb-labs/fabric/pull/47) [`e51dd0e`](https://github.com/kubb-labs/fabric/commit/e51dd0e46c00b58191d988ae55d5d152289e6134) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Update loggerPlugin to support progressbar and websockets
+
+### Patch Changes
+
+- Updated dependencies [[`e51dd0e`](https://github.com/kubb-labs/fabric/commit/e51dd0e46c00b58191d988ae55d5d152289e6134)]:
+  - @kubb/fabric-core@0.5.0
+
+## 0.4.1
+
+### Patch Changes
+
+- [#52](https://github.com/kubb-labs/fabric/pull/52) [`5e1de31`](https://github.com/kubb-labs/fabric/commit/5e1de310d2a52a0f4404a8f450f07afc19087bb0) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Include React as part of react-fabric
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.4.1
+
+## 0.4.0
+
+### Minor Changes
+
+- [#49](https://github.com/kubb-labs/fabric/pull/49) [`8967dd5`](https://github.com/kubb-labs/fabric/commit/8967dd5fb5edbaf95d02cb3ad7dab7fd0c24c84f) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - react bundeld
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes

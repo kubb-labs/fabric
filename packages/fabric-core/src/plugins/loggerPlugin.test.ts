@@ -1,72 +1,173 @@
-import { describe, expect, test } from 'vitest'
-import WebSocket, { type RawData } from 'ws'
+import { SingleBar } from 'cli-progress'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { createFile } from '../createFile.ts'
 import { defineFabric } from '../defineFabric.ts'
-import type { LoggerEventMessage } from './loggerPlugin.ts'
+import type * as KubbFile from '../KubbFile.ts'
+
+const hoisted = vi.hoisted(() => {
+  const logger = {
+    withTag: vi.fn(),
+    start: vi.fn(),
+    info: vi.fn(),
+    success: vi.fn(),
+    error: vi.fn(),
+    pauseLogs: vi.fn(),
+    resumeLogs: vi.fn(),
+  }
+
+  logger.withTag.mockReturnValue(logger)
+
+  const createConsolaMock = vi.fn(() => logger)
+
+  return { logger, createConsolaMock }
+})
+
+vi.mock('consola', () => ({
+  createConsola: hoisted.createConsolaMock,
+}))
+
+const { logger, createConsolaMock } = hoisted
+
 import { loggerPlugin } from './loggerPlugin.ts'
 
+function makeFile(name = 'example'): KubbFile.ResolvedFile {
+  return createFile({
+    path: `src/${name}.ts`,
+    baseName: `${name}.ts`,
+    sources: [
+      {
+        name,
+        value: `export const ${name} = 1`,
+        isExportable: true,
+      },
+    ],
+  })
+}
+
+function makeFiles(count: number): KubbFile.ResolvedFile[] {
+  return Array.from({ length: count }, (_, index) => makeFile(`file${index}`))
+}
+
 describe('loggerPlugin', () => {
-  test('broadcasts Fabric events over WebSocket', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    logger.withTag.mockReturnValue(logger)
+  })
+
+  test('configures consola with Fabric tag', async () => {
     const fabric = defineFabric()()
-    await fabric.use(loggerPlugin, {
-      host: '127.0.0.1',
-      port: 0,
-      path: '/logger',
+
+    await fabric.use(loggerPlugin, { websocket: false })
+
+    expect(createConsolaMock).toHaveBeenCalledWith({})
+    expect(logger.withTag).toHaveBeenCalledWith('Fabric')
+  })
+
+  test('logs key lifecycle events to consola', async () => {
+    const fabric = defineFabric()()
+
+    await fabric.use(loggerPlugin, { websocket: false })
+
+    logger.start.mockClear()
+    logger.info.mockClear()
+    logger.success.mockClear()
+
+    await fabric.context.emit('start')
+    expect(logger.start).toHaveBeenCalledWith('Starting Fabric run')
+
+    logger.start.mockClear()
+
+    const file = makeFile()
+
+    await fabric.context.emit('process:start', { files: [file] })
+    expect(logger.start).toHaveBeenCalledWith('Processing 1 file')
+
+    logger.start.mockClear()
+
+    await fabric.context.emit('process:progress', {
+      processed: 1,
+      total: 1,
+      percentage: 100,
+      file,
     })
+    expect(logger.info).toHaveBeenCalledWith('Progress 100.0% (1/1) → src/example.ts')
 
-    expect(fabric.logger.status).toBe('listening')
-    expect(fabric.logger.endpoint.port).toBeGreaterThan(0)
+    logger.info.mockClear()
 
-      const client = new WebSocket(fabric.logger.endpoint.url)
+    await fabric.context.emit('file:end', { file, index: 0, total: 1 })
+    expect(logger.success).toHaveBeenCalledWith('Finished [1/1] src/example.ts')
 
-      const eventPromise = new Promise<LoggerEventMessage>((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          reject(new Error('Timed out waiting for logger event'))
-        }, 1_000)
-
-        const cleanup = () => {
-          clearTimeout(timeout)
-          client.off('message', onMessage)
-          client.off('error', onError)
-          client.off('close', onClose)
-        }
-
-        const onMessage = (raw: RawData) => {
-          const parsed = JSON.parse(String(raw))
-          if (parsed.type === 'event') {
-            cleanup()
-            resolve(parsed as LoggerEventMessage)
-          }
-        }
-
-        const onError = (error: Error) => {
-          cleanup()
-          reject(error)
-        }
-
-        const onClose = () => {
-          cleanup()
-          reject(new Error('Connection closed before receiving logger event'))
-        }
-
-        client.on('message', onMessage)
-        client.once('error', onError)
-        client.once('close', onClose)
-      })
-
-    await new Promise<void>((resolve) => client.once('open', () => resolve()))
-
-    await fabric.context.emit('process:start', { files: [] as any })
-
-    const eventMessage = await eventPromise
-
-    expect(eventMessage.event).toBe('process:start')
-    expect(Array.isArray(eventMessage.payload)).toBe(true)
-    expect(fabric.logger.history.length).toBeGreaterThan(0)
-    expect(fabric.logger.history.at(-1)?.event).toBe('process:start')
+    logger.success.mockClear()
 
     await fabric.context.emit('end')
-    await new Promise<void>((resolve) => client.once('close', () => resolve()))
+    expect(logger.success).toHaveBeenCalledWith('Fabric run completed')
+  })
 
-    expect(fabric.logger.status).toBe('shutdown')
+  describe('progress option', () => {
+    let startSpy: ReturnType<typeof vi.spyOn>
+    let incrementSpy: ReturnType<typeof vi.spyOn>
+    let stopSpy: ReturnType<typeof vi.spyOn>
+
+    beforeEach(() => {
+      startSpy = vi.spyOn(SingleBar.prototype as any, 'start')
+      incrementSpy = vi.spyOn(SingleBar.prototype as any, 'increment')
+      stopSpy = vi.spyOn(SingleBar.prototype as any, 'stop')
+    })
+
+    afterEach(() => {
+      startSpy.mockRestore()
+      incrementSpy.mockRestore()
+      stopSpy.mockRestore()
+    })
+
+    test('starts and updates progress bar when enabled', async () => {
+      const fabric = defineFabric()()
+
+      await fabric.use(loggerPlugin, { websocket: false })
+
+      const files = makeFiles(2)
+
+      await fabric.context.emit('process:start', { files })
+      expect(startSpy).toHaveBeenCalledWith(2, 0, { message: 'Starting...' })
+
+      for (const file of files) {
+        await fabric.context.emit('process:progress', {
+          processed: 1,
+          total: files.length,
+          percentage: 50,
+          file,
+        })
+      }
+
+      expect(incrementSpy).toHaveBeenCalledTimes(2)
+
+      await fabric.context.emit('process:end', { files })
+      expect(stopSpy).toHaveBeenCalled()
+    })
+
+    test('does not create progress bar when disabled', async () => {
+      const fabric = defineFabric()()
+
+      await fabric.use(loggerPlugin, { websocket: false, progress: false })
+
+      const files = makeFiles(1)
+      const [file] = files
+      if (!file) {
+        throw new Error('Expected at least one file')
+      }
+
+      await fabric.context.emit('process:start', { files })
+      await fabric.context.emit('process:progress', {
+        processed: 1,
+        total: 1,
+        percentage: 100,
+        file,
+      })
+      await fabric.context.emit('process:end', { files })
+
+      expect(startSpy).not.toHaveBeenCalled()
+      expect(incrementSpy).not.toHaveBeenCalled()
+      expect(stopSpy).not.toHaveBeenCalled()
+    })
   })
 })

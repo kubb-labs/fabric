@@ -1,6 +1,6 @@
 {
   "name": "@kubb/fabric-core",
-  "version": "0.3.1",
+  "version": "0.5.1",
   "description": "Core functionality for Kubb's plugin-based code generation system, providing the foundation for transforming OpenAPI specifications.",
   "keywords": [
     "typescript",
@@ -91,12 +91,13 @@
   },
   "dependencies": {
     "cli-progress": "^3.12.0",
+    "consola": "^3.4.2",
     "fs-extra": "^11.3.2",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.2.0",
     "serve-handler": "^6.1.6",
     "typescript": "5.9.3",
-    "ws": "^8.18.0"
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",

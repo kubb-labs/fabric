@@ -1,437 +1,284 @@
-import { Buffer } from 'node:buffer'
-import { randomUUID } from 'node:crypto'
+import http from 'node:http'
 import type { AddressInfo } from 'node:net'
-import { WebSocketServer, type WebSocket } from 'ws'
-import type { FabricContext, FabricEvents } from '../Fabric.ts'
+import { relative } from 'node:path'
+import { Presets, SingleBar } from 'cli-progress'
+import { createConsola, type LogLevel } from 'consola'
+import { WebSocket, WebSocketServer } from 'ws'
+import type { FabricEvents } from '../Fabric.ts'
+import type * as KubbFile from '../KubbFile.ts'
 import { createPlugin } from './createPlugin.ts'
 
-const DEFAULT_HOST = '127.0.0.1'
-const DEFAULT_PORT = 7071
-const DEFAULT_PATH = '/__fabric_logger__'
-const DEFAULT_HISTORY_LIMIT = 250
+type Broadcast = <T = unknown>(event: keyof FabricEvents | string, payload: T) => void
 
-const fabricEventNames = [
-  'start',
-  'end',
-  'process:start',
-  'process:progress',
-  'process:end',
-  'file:add',
-  'file:resolve:path',
-  'file:resolve:name',
-  'file:start',
-  'file:end',
-  'write:start',
-  'write:end',
-] as const satisfies ReadonlyArray<keyof FabricEvents>
-
-type FabricEventName = (typeof fabricEventNames)[number]
-
-export type LoggerPluginOptions = {
+type WebSocketOptions = {
+  /**
+   * Hostname to bind the websocket server to.
+   * @default '127.0.0.1'
+   */
   host?: string
+  /**
+   * Port to bind the websocket server to.
+   * @default 0 (random available port)
+   */
   port?: number
-  path?: string
-  historyLimit?: number
 }
 
-export type LoggerEventMessage = {
-  type: 'event'
-  id: string
-  event: FabricEventName
-  payload: unknown[]
-  timestamp: string
+type Options = {
+  /**
+   * Explicit consola log level.
+   */
+  level?: LogLevel
+  /**
+   * Toggle progress bar output.
+   * @default true
+   */
+  progress?: boolean
+  /**
+   * Toggle or configure the websocket broadcast server.
+   * When `true`, a websocket server is started on an ephemeral port.
+   * When `false`, websocket support is disabled.
+   * When providing an object, the server uses the supplied host and port.
+   * @default true
+   */
+  websocket?: boolean | WebSocketOptions
 }
 
-export type LoggerStatusMessage = {
-  type: 'status'
-  status: 'listening' | 'client-connected' | 'client-disconnected' | 'shutdown' | 'error'
-  timestamp: string
-  details: {
-    clients: number
-    url: string
-  }
-  error?: {
-    message: string
-    stack?: string
-  }
+function normalizeAddress(address: AddressInfo): { host: string; port: number } {
+  const host = address.address === '::' ? '127.0.0.1' : address.address
+
+  return { host, port: address.port }
 }
 
-export type LoggerWelcomeMessage = {
-  type: 'welcome'
-  sessionId: string
-  timestamp: string
-  historySize: number
-  url: string
-}
-
-export type LoggerHistoryMessage = {
-  type: 'history'
-  events: LoggerEventMessage[]
-  timestamp: string
-}
-
-export type LoggerMessage = LoggerEventMessage | LoggerStatusMessage | LoggerWelcomeMessage | LoggerHistoryMessage
-
-export interface LoggerPluginState {
-  sessionId: string
-  status: 'initializing' | 'listening' | 'error' | 'shutdown'
-  clients: number
-  historyLimit: number
-  history: LoggerEventMessage[]
-  endpoint: {
-    host: string
-    port: number
-    path: string
-    url: string
-  }
-  lastError?: {
-    message: string
-    stack?: string
-  }
-}
-
-declare global {
-  namespace Kubb {
-    interface Fabric {
-      logger: LoggerPluginState
-    }
-  }
-}
-
-type ResolvedLoggerPluginOptions = {
-  host: string
-  port: number
-  path: string
-  historyLimit: number
-}
-
-const LOGGER_STATE = Symbol('logger:state')
-
-type ContextWithLoggerState = FabricContext & {
-  [LOGGER_STATE]?: LoggerPluginState
-}
-
-function applyDefaults(options?: LoggerPluginOptions): ResolvedLoggerPluginOptions {
+function serializeFile(file: KubbFile.File | KubbFile.ResolvedFile) {
   return {
-    host: options?.host ?? DEFAULT_HOST,
-    port: options?.port ?? DEFAULT_PORT,
-    path: options?.path ?? DEFAULT_PATH,
-    historyLimit: options?.historyLimit ?? DEFAULT_HISTORY_LIMIT,
+    path: file.path,
+    baseName: file.baseName,
+    name: 'name' in file ? file.name : undefined,
+    extname: 'extname' in file ? file.extname : undefined,
   }
 }
 
-function toWsUrl(host: string, port: number, path: string): string {
-  const normalizedPath = path.startsWith('/') ? path : `/${path}`
-  return `ws://${host}:${port}${normalizedPath}`
+function pluralize(word: string, count: number) {
+  return `${count} ${word}${count === 1 ? '' : 's'}`
 }
 
-function createLoggerState(resolved: ResolvedLoggerPluginOptions): LoggerPluginState {
-  return {
-    sessionId: randomUUID(),
-    status: 'initializing',
-    clients: 0,
-    historyLimit: resolved.historyLimit,
-    history: [],
-    endpoint: {
-      host: resolved.host,
-      port: resolved.port,
-      path: resolved.path,
-      url: toWsUrl(resolved.host, resolved.port, resolved.path),
+const defaultTag = 'Fabric'
+
+const createProgressBar = () =>
+  new SingleBar(
+    {
+      format: '{bar} {percentage}% | {value}/{total} | {message}',
+      barCompleteChar: '█',
+      barIncompleteChar: '░',
+      hideCursor: true,
+      clearOnComplete: true,
     },
-  }
-}
+    Presets.shades_grey,
+  )
 
-function setState(context: FabricContext, state: LoggerPluginState): void {
-  ;(context as ContextWithLoggerState)[LOGGER_STATE] = state
-  ;(context as any).logger = state
-}
+export const loggerPlugin = createPlugin<Options>({
+  name: 'logger',
+  install(ctx, options = {}) {
+    const { level, websocket = true, progress = true } = options
 
-function getState(context: FabricContext): LoggerPluginState | undefined {
-  return (context as ContextWithLoggerState)[LOGGER_STATE]
-}
+    const logger = createConsola(level !== undefined ? { level } : {}).withTag(defaultTag)
 
-function appendHistory(state: LoggerPluginState, message: LoggerEventMessage): void {
-  if (state.historyLimit <= 0) {
-    state.history.splice(0, state.history.length)
-    return
-  }
+    const progressBar = progress ? createProgressBar() : undefined
 
-  state.history.push(message)
-  const overflow = state.history.length - state.historyLimit
-  if (overflow > 0) {
-    state.history.splice(0, overflow)
-  }
-}
+    let server: http.Server | undefined
+    let wss: WebSocketServer | undefined
 
-function toSerializable(value: unknown, seen = new WeakSet<object>()): unknown {
-  if (
-    value === null ||
-    typeof value === 'string' ||
-    typeof value === 'number' ||
-    typeof value === 'boolean'
-  ) {
-    return value
-  }
+    const broadcast: Broadcast = (event, payload) => {
+      if (!wss) {
+        return
+      }
 
-  if (typeof value === 'bigint') {
-    return value.toString()
-  }
+      const message = JSON.stringify({ event, payload })
 
-  if (typeof value === 'symbol') {
-    return value.toString()
-  }
-
-  if (typeof value === 'function' || typeof value === 'undefined') {
-    return undefined
-  }
-
-  if (value instanceof Date) {
-    return value.toISOString()
-  }
-
-  if (value instanceof Error) {
-    return {
-      name: value.name,
-      message: value.message,
-      stack: value.stack,
-    }
-  }
-
-  if (Buffer.isBuffer(value)) {
-    return value.toString('base64')
-  }
-
-  if (value instanceof ArrayBuffer) {
-    return Array.from(new Uint8Array(value))
-  }
-
-  if (ArrayBuffer.isView(value)) {
-    return Array.from(new Uint8Array(value.buffer))
-  }
-
-  if (value instanceof Set) {
-    return Array.from(value, (entry) => toSerializable(entry, seen))
-  }
-
-  if (value instanceof Map) {
-    const result: Record<string, unknown> = {}
-    for (const [key, entry] of value.entries()) {
-      result[String(key)] = toSerializable(entry, seen)
-    }
-    return result
-  }
-
-  if (Array.isArray(value)) {
-    return value.map((entry) => toSerializable(entry, seen))
-  }
-
-  if (typeof value === 'object') {
-    if (seen.has(value)) {
-      return '[Circular]'
-    }
-    seen.add(value)
-    const result: Record<string, unknown> = {}
-    for (const [key, entry] of Object.entries(value)) {
-      const serializable = toSerializable(entry, seen)
-      if (serializable !== undefined) {
-        result[key] = serializable
+      for (const client of wss.clients) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(message)
+        }
       }
     }
-    seen.delete(value)
-    return result
-  }
 
-  return value
-}
+    if (websocket) {
+      const { host = '127.0.0.1', port = 0 } = typeof websocket === 'boolean' ? {} : websocket
 
-function sendMessage(socket: WebSocket, message: LoggerMessage): void {
-  if (socket.readyState !== WebSocket.OPEN) {
-    return
-  }
+      server = http.createServer()
+      wss = new WebSocketServer({ server })
 
-  try {
-    socket.send(JSON.stringify(message))
-  } catch (error) {
-    console.error('[fabric:logger] Failed to send message', error)
-  }
-}
+      server.listen(port, host, () => {
+        const addressInfo = server?.address()
 
-function broadcastMessage(server: WebSocketServer | undefined, message: LoggerMessage): void {
-  if (!server) {
-    return
-  }
+        if (addressInfo && typeof addressInfo === 'object') {
+          const { host: resolvedHost, port: resolvedPort } = normalizeAddress(addressInfo)
+          const url = `ws://${resolvedHost}:${resolvedPort}`
 
-  const payload = JSON.stringify(message)
-  for (const client of server.clients) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(payload)
-    }
-  }
-}
+          logger.info(`Logger websocket listening on ${url}`)
+          broadcast('websocket:ready', { url })
+        }
+      })
 
-function updateEndpoint(state: LoggerPluginState, port: number): void {
-  state.endpoint.port = port
-  state.endpoint.url = toWsUrl(state.endpoint.host, port, state.endpoint.path)
-}
-
-export const loggerPlugin = createPlugin<LoggerPluginOptions, { logger: LoggerPluginState }>({
-  name: 'logger',
-  inject(context, options) {
-    const resolved = applyDefaults(options)
-    const state = createLoggerState(resolved)
-    setState(context, state)
-
-    return {
-      logger: state,
-    }
-  },
-  async install(context, options) {
-    const resolved = applyDefaults(options)
-    let state = getState(context)
-
-    if (!state) {
-      state = createLoggerState(resolved)
-      setState(context, state)
-    } else {
-      state.historyLimit = resolved.historyLimit
-      state.endpoint.host = resolved.host
-      state.endpoint.port = resolved.port
-      state.endpoint.path = resolved.path
-      state.endpoint.url = toWsUrl(resolved.host, resolved.port, resolved.path)
-    }
-
-    let server: WebSocketServer | undefined
-
-    const makeStatusMessage = (status: LoggerStatusMessage['status'], error?: Error): LoggerStatusMessage => ({
-      type: 'status',
-      status,
-      timestamp: new Date().toISOString(),
-      details: {
-        clients: state!.clients,
-        url: state!.endpoint.url,
-      },
-      ...(error
-        ? {
-            error: {
-              message: error.message,
-              stack: error.stack,
+      wss.on('connection', (socket) => {
+        logger.info('Logger websocket client connected')
+        socket.send(
+          JSON.stringify({
+            event: 'welcome',
+            payload: {
+              message: 'Connected to Fabric log stream',
+              timestamp: Date.now(),
             },
-          }
-        : {}),
+          }),
+        )
+      })
+
+      wss.on('error', (error) => {
+        logger.error('Logger websocket error', error)
+      })
+    }
+
+    const formatPath = (path: string) => relative(process.cwd(), path)
+
+    ctx.on('start', async () => {
+      logger.start('Starting Fabric run')
+      broadcast('start', { timestamp: Date.now() })
     })
 
-    const broadcastStatus = (status: LoggerStatusMessage['status'], error?: Error) => {
-      const message = makeStatusMessage(status, error)
-      broadcastMessage(server, message)
-      if (status === 'error' && error) {
-        state!.status = 'error'
-        state!.lastError = {
-          message: error.message,
-          stack: error.stack,
-        }
-      }
-    }
+    ctx.on('render', async () => {
+      logger.info('Rendering application graph')
+      broadcast('render', { timestamp: Date.now() })
+    })
 
-    try {
-      server = new WebSocketServer({
-        host: resolved.host,
-        port: resolved.port,
-        path: resolved.path,
+    ctx.on('file:add', async ({ files }) => {
+      if (!files.length) {
+        return
+      }
+
+      logger.info(`Queued ${pluralize('file', files.length)}`)
+      broadcast('file:add', {
+        files: files.map(serializeFile),
+      })
+    })
+
+    ctx.on('file:resolve:path', async ({ file }) => {
+      logger.info(`Resolving path for ${formatPath(file.path)}`)
+      broadcast('file:resolve:path', { file: serializeFile(file) })
+    })
+
+    ctx.on('file:resolve:name', async ({ file }) => {
+      logger.info(`Resolving name for ${formatPath(file.path)}`)
+      broadcast('file:resolve:name', { file: serializeFile(file) })
+    })
+
+    ctx.on('process:start', async ({ files }) => {
+      logger.start(`Processing ${pluralize('file', files.length)}`)
+      broadcast('process:start', { total: files.length, timestamp: Date.now() })
+
+      if (progressBar) {
+        logger.pauseLogs()
+        progressBar.start(files.length, 0, { message: 'Starting...' })
+      }
+    })
+
+    ctx.on('file:start', async ({ file, index, total }) => {
+      logger.info(`Processing [${index + 1}/${total}] ${formatPath(file.path)}`)
+      broadcast('file:start', {
+        index,
+        total,
+        file: serializeFile(file),
+      })
+    })
+
+    ctx.on('process:progress', async ({ processed, total, percentage, file }) => {
+      const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
+
+      logger.info(`Progress ${formattedPercentage}% (${processed}/${total}) → ${formatPath(file.path)}`)
+      broadcast('process:progress', {
+        processed,
+        total,
+        percentage,
+        file: serializeFile(file),
       })
 
-      await new Promise<void>((resolve, reject) => {
-        server!.once('listening', resolve)
-        server!.once('error', reject)
+      if (progressBar) {
+        progressBar.increment(1, { message: `Writing ${formatPath(file.path)}` })
+      }
+    })
+
+    ctx.on('file:end', async ({ file, index, total }) => {
+      logger.success(`Finished [${index + 1}/${total}] ${formatPath(file.path)}`)
+      broadcast('file:end', {
+        index,
+        total,
+        file: serializeFile(file),
       })
+    })
 
-      const address = server.address() as AddressInfo | null
-      if (address) {
-        updateEndpoint(state, address.port)
-      }
-
-      state.status = 'listening'
-      state.clients = server.clients.size
-
-      console.info(`[fabric:logger] Listening on ${state.endpoint.url}`)
-
-      broadcastStatus('listening')
-
-      const sendHistory = (socket: WebSocket) => {
-        if (state.history.length === 0) {
-          return
-        }
-        const message: LoggerHistoryMessage = {
-          type: 'history',
-          events: state.history,
-          timestamp: new Date().toISOString(),
-        }
-        sendMessage(socket, message)
-      }
-
-      server.on('connection', (socket) => {
-        state.clients = server?.clients.size ?? 0
-        const welcome: LoggerWelcomeMessage = {
-          type: 'welcome',
-          sessionId: state.sessionId,
-          timestamp: new Date().toISOString(),
-          historySize: state.history.length,
-          url: state.endpoint.url,
-        }
-        sendMessage(socket, welcome)
-        sendHistory(socket)
-        broadcastStatus('client-connected')
-
-        socket.on('close', () => {
-          state.clients = server?.clients.size ?? 0
-          broadcastStatus('client-disconnected')
-        })
-
-        socket.on('error', (error) => {
-          console.error('[fabric:logger] Client error', error)
-        })
+    ctx.on('write:start', async ({ files }) => {
+      logger.start(`Writing ${pluralize('file', files.length)} to disk`)
+      broadcast('write:start', {
+        files: files.map(serializeFile),
       })
+    })
 
-      for (const eventName of fabricEventNames) {
-        context.on(eventName, async (...args: any[]) => {
-          const eventMessage: LoggerEventMessage = {
-            type: 'event',
-            id: randomUUID(),
-            event: eventName,
-            payload: args.map((arg) => toSerializable(arg)),
-            timestamp: new Date().toISOString(),
-          }
-          appendHistory(state!, eventMessage)
-          broadcastMessage(server, eventMessage)
-        })
-      }
-
-      context.onOnce('end', async () => {
-        if (state.status !== 'shutdown') {
-          state.status = 'shutdown'
-        }
-        state.clients = 0
-        broadcastStatus('shutdown')
-
-        await new Promise<void>((resolve) => {
-          if (!server) {
-            resolve()
-            return
-          }
-          server.close(() => {
-            resolve()
-          })
-        })
+    ctx.on('write:end', async ({ files }) => {
+      logger.success(`Written ${pluralize('file', files.length)} to disk`)
+      broadcast('write:end', {
+        files: files.map(serializeFile),
       })
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error))
-      state.status = 'error'
-      state.lastError = {
-        message: err.message,
-        stack: err.stack,
+    })
+
+    ctx.on('process:end', async ({ files }) => {
+      logger.success(`Processed ${pluralize('file', files.length)}`)
+      broadcast('process:end', { total: files.length, timestamp: Date.now() })
+
+      if (progressBar) {
+        progressBar.update(files.length, { message: 'Done ✅' })
+        progressBar.stop()
+
+        logger.resumeLogs()
       }
-      broadcastStatus('error', err)
-      console.error('[fabric:logger] Failed to start logger server', err)
-      throw err
-    }
+    })
+
+    ctx.on('end', async () => {
+      logger.success('Fabric run completed')
+      broadcast('end', { timestamp: Date.now() })
+
+      if (progressBar) {
+        progressBar.stop()
+        logger.resumeLogs()
+      }
+
+      const closures: Array<Promise<void>> = []
+
+      if (wss) {
+        const wsServer = wss
+
+        closures.push(
+          new Promise((resolve) => {
+            for (const client of wsServer.clients) {
+              client.close()
+            }
+            wsServer.close(() => resolve())
+          }),
+        )
+      }
+
+      if (server) {
+        const httpServer = server
+
+        closures.push(
+          new Promise((resolve) => {
+            httpServer.close(() => resolve())
+          }),
+        )
+      }
+
+      if (closures.length) {
+        await Promise.allSettled(closures)
+        logger.info('Logger websocket closed')
+      }
+    })
   },
 })

@@ -1,5 +1,17 @@
 # @kubb/fabric-core
 
+## 0.5.1
+
+## 0.5.0
+
+### Minor Changes
+
+- [#47](https://github.com/kubb-labs/fabric/pull/47) [`e51dd0e`](https://github.com/kubb-labs/fabric/commit/e51dd0e46c00b58191d988ae55d5d152289e6134) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Update loggerPlugin to support progressbar and websockets
+
+## 0.4.1
+
+## 0.4.0
+
 ## 0.3.1
 
 ### Patch Changes

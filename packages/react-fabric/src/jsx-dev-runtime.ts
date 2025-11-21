@@ -1,6 +1,9 @@
+import * as React from 'react/jsx-dev-runtime'
 import type { KubbElement, KubbNode } from './types.ts'
 
-export { Fragment, jsxDEV } from 'react/jsx-dev-runtime'
+export const Fragment = React.Fragment
+export const jsxDEV = React.jsxDEV
+
 export type * from './jsx-namespace.d.ts'
 
 export type JSXElement = KubbElement
