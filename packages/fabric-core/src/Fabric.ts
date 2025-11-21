@@ -160,6 +160,12 @@ export interface Fabric<T extends FabricOptions = FabricOptions> extends Kubb.Fa
         : [NoInfer<TPluginOptions>] // Required otherwise
   ): (this & TExtension) | Promise<this & TExtension>
 
-  /** Add one or more files to the Fabric file manager. */
+  /**
+   * Add one or more files to the Fabric file manager.
+   */
   addFile(...files: KubbFile.File[]): Promise<void>
+  /**
+   * Add one or more files to the Fabric file manager and merge the source, imports, exports
+   */
+  upsertFile(...files: KubbFile.File[]): Promise<void>
 }

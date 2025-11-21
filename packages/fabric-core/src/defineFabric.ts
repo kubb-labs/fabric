@@ -61,6 +61,9 @@ export function defineFabric<T extends FabricOptions>(init?: FabricInitializer<T
       async addFile(...files) {
         await fileManager.add(...files)
       },
+      async upsertFile(...files) {
+        await fileManager.upsert(...files)
+      },
       async use(pluginOrParser, ...options) {
         if (pluginOrParser.type === 'plugin') {
           if (installedPlugins.has(pluginOrParser)) {

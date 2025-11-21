@@ -60,6 +60,37 @@ export class FileManager {
     })
 
     for (let file of mergedFiles.values()) {
+      file = this.#resolveName(file)
+      file = this.#resolvePath(file)
+
+      const resolvedFile = createFile(file)
+
+      this.#cache.set(resolvedFile.path, resolvedFile)
+      this.flush()
+
+      resolvedFiles.push(resolvedFile)
+    }
+
+    await this.events.emit('file:add', { files: resolvedFiles })
+
+    return resolvedFiles
+  }
+
+  async upsert(...files: Array<KubbFile.File>) {
+    const resolvedFiles: Array<KubbFile.ResolvedFile> = []
+
+    const mergedFiles = new Map<string, KubbFile.File>()
+
+    files.forEach((file) => {
+      const existing = mergedFiles.get(file.path)
+      if (existing) {
+        mergedFiles.set(file.path, mergeFile(existing, file))
+      } else {
+        mergedFiles.set(file.path, file)
+      }
+    })
+
+    for (let file of mergedFiles.values()) {
       const existing = this.#cache.get(file.path)
 
       file = this.#resolveName(file)
