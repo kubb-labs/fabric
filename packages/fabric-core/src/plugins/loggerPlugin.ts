@@ -8,6 +8,48 @@ import type { FabricEvents } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { createPlugin } from './createPlugin.ts'
 
+/**
+ * WebSocket message types for the logger protocol
+ */
+export interface LoggerEventMessage {
+  type: 'event'
+  id: string
+  event: string
+  payload: unknown[]
+  timestamp: string
+}
+
+export interface LoggerStatusMessage {
+  type: 'status'
+  status: 'starting' | 'ready' | 'error' | 'shutdown'
+  timestamp: string
+  details: {
+    clients: number
+  }
+  error?: {
+    message: string
+    stack?: string
+  }
+}
+
+export interface LoggerHistoryMessage {
+  type: 'history'
+  events: LoggerEventMessage[]
+}
+
+export interface LoggerWelcomeMessage {
+  type: 'welcome'
+  message: string
+  url: string
+  timestamp: string
+}
+
+export type LoggerMessage =
+  | LoggerEventMessage
+  | LoggerStatusMessage
+  | LoggerHistoryMessage
+  | LoggerWelcomeMessage
+
 type Broadcast = <T = unknown>(event: keyof FabricEvents | string, payload: T) => void
 
 type WebSocketOptions = {
@@ -76,8 +118,61 @@ const createProgressBar = () =>
     Presets.shades_grey,
   )
 
-export const loggerPlugin = createPlugin<Options>({
+export interface LoggerPluginState {
+  status: 'idle' | 'starting' | 'ready' | 'error' | 'shutdown'
+  endpoint: {
+    host: string
+    port: number
+    url: string
+  } | null
+  connectedClients: number
+  lastError?: {
+    message: string
+    stack?: string
+  }
+}
+
+declare global {
+  namespace Kubb {
+    interface Fabric {
+      logger: LoggerPluginState
+    }
+  }
+}
+
+const LOGGER_STATE = Symbol('logger:state')
+
+type ContextWithLoggerState = {
+  [LOGGER_STATE]?: LoggerPluginState
+}
+
+function createState(): LoggerPluginState {
+  return {
+    status: 'idle',
+    endpoint: null,
+    connectedClients: 0,
+  }
+}
+
+function setState(ctx: any, state: LoggerPluginState): void {
+  ;(ctx as ContextWithLoggerState)[LOGGER_STATE] = state
+  ctx.logger = state
+}
+
+function getState(ctx: any): LoggerPluginState | undefined {
+  return (ctx as ContextWithLoggerState)[LOGGER_STATE]
+}
+
+export const loggerPlugin = createPlugin<Options, { logger: LoggerPluginState }>({
   name: 'logger',
+  inject(ctx) {
+    const state = createState()
+    setState(ctx, state)
+
+    return {
+      logger: state,
+    }
+  },
   install(ctx, options = {}) {
     const { level, websocket = true, progress = true } = options
 
@@ -87,67 +182,148 @@ export const loggerPlugin = createPlugin<Options>({
 
     let server: http.Server | undefined
     let wss: WebSocketServer | undefined
+    const eventHistory: LoggerEventMessage[] = []
+    const MAX_HISTORY = 500
 
-    const broadcast: Broadcast = (event, payload) => {
+    let state = getState(ctx)
+    if (!state) {
+      state = createState()
+      setState(ctx, state)
+    }
+
+    const sendMessage = (client: WebSocket, message: LoggerMessage) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(message))
+      }
+    }
+
+    const broadcast = (message: LoggerMessage) => {
       if (!wss) {
         return
       }
 
-      const message = JSON.stringify({ event, payload })
-
       for (const client of wss.clients) {
-        if (client.readyState === WebSocket.OPEN) {
-          client.send(message)
+        sendMessage(client, message)
+      }
+    }
+
+    const broadcastEvent = (event: string, payload: unknown) => {
+      const eventMessage: LoggerEventMessage = {
+        type: 'event',
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        event,
+        payload: Array.isArray(payload) ? payload : [payload],
+        timestamp: new Date().toISOString(),
+      }
+
+      eventHistory.push(eventMessage)
+      if (eventHistory.length > MAX_HISTORY) {
+        eventHistory.shift()
+      }
+
+      broadcast(eventMessage)
+    }
+
+    const broadcastStatus = (status: LoggerStatusMessage['status'], error?: Error) => {
+      const statusMessage: LoggerStatusMessage = {
+        type: 'status',
+        status,
+        timestamp: new Date().toISOString(),
+        details: {
+          clients: wss?.clients.size ?? 0,
+        },
+        error: error
+          ? {
+              message: error.message,
+              stack: error.stack,
+            }
+          : undefined,
+      }
+
+      if (state) {
+        state.status = status
+        state.connectedClients = wss?.clients.size ?? 0
+        if (error) {
+          state.lastError = statusMessage.error
         }
       }
+
+      broadcast(statusMessage)
     }
 
     if (websocket) {
       const { host = '127.0.0.1', port = 0 } = typeof websocket === 'boolean' ? {} : websocket
 
       server = http.createServer()
-      wss = new WebSocketServer({ server })
+      wss = new WebSocketServer({ server, path: '/__fabric_logger__' })
 
       server.listen(port, host, () => {
         const addressInfo = server?.address()
 
         if (addressInfo && typeof addressInfo === 'object') {
           const { host: resolvedHost, port: resolvedPort } = normalizeAddress(addressInfo)
-          const url = `ws://${resolvedHost}:${resolvedPort}`
+          const url = `ws://${resolvedHost}:${resolvedPort}/__fabric_logger__`
+
+          if (state) {
+            state.status = 'ready'
+            state.endpoint = {
+              host: resolvedHost,
+              port: resolvedPort,
+              url,
+            }
+          }
 
           logger.info(`Logger websocket listening on ${url}`)
-          broadcast('websocket:ready', { url })
+          broadcastStatus('ready')
         }
       })
 
       wss.on('connection', (socket) => {
         logger.info('Logger websocket client connected')
-        socket.send(
-          JSON.stringify({
-            event: 'welcome',
-            payload: {
-              message: 'Connected to Fabric log stream',
-              timestamp: Date.now(),
-            },
-          }),
-        )
+
+        if (state) {
+          state.connectedClients = wss?.clients.size ?? 0
+        }
+
+        const welcomeMessage: LoggerWelcomeMessage = {
+          type: 'welcome',
+          message: 'Connected to Fabric log stream',
+          url: state?.endpoint?.url ?? '',
+          timestamp: new Date().toISOString(),
+        }
+
+        sendMessage(socket, welcomeMessage)
+
+        const historyMessage: LoggerHistoryMessage = {
+          type: 'history',
+          events: [...eventHistory],
+        }
+
+        sendMessage(socket, historyMessage)
+
+        broadcastStatus('ready')
       })
 
       wss.on('error', (error) => {
         logger.error('Logger websocket error', error)
+        broadcastStatus('error', error as Error)
       })
+
+      if (state) {
+        state.status = 'starting'
+      }
     }
 
     const formatPath = (path: string) => relative(process.cwd(), path)
 
     ctx.on('start', async () => {
       logger.start('Starting Fabric run')
-      broadcast('start', { timestamp: Date.now() })
+      broadcastEvent('start', { timestamp: Date.now() })
     })
 
     ctx.on('render', async () => {
       logger.info('Rendering application graph')
-      broadcast('render', { timestamp: Date.now() })
+      broadcastEvent('render', { timestamp: Date.now() })
     })
 
     ctx.on('file:add', async ({ files }) => {
@@ -156,24 +332,24 @@ export const loggerPlugin = createPlugin<Options>({
       }
 
       logger.info(`Queued ${pluralize('file', files.length)}`)
-      broadcast('file:add', {
+      broadcastEvent('file:add', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('file:resolve:path', async ({ file }) => {
       logger.info(`Resolving path for ${formatPath(file.path)}`)
-      broadcast('file:resolve:path', { file: serializeFile(file) })
+      broadcastEvent('file:resolve:path', { file: serializeFile(file) })
     })
 
     ctx.on('file:resolve:name', async ({ file }) => {
       logger.info(`Resolving name for ${formatPath(file.path)}`)
-      broadcast('file:resolve:name', { file: serializeFile(file) })
+      broadcastEvent('file:resolve:name', { file: serializeFile(file) })
     })
 
     ctx.on('process:start', async ({ files }) => {
       logger.start(`Processing ${pluralize('file', files.length)}`)
-      broadcast('process:start', { total: files.length, timestamp: Date.now() })
+      broadcastEvent('process:start', { total: files.length, timestamp: Date.now() })
 
       if (progressBar) {
         logger.pauseLogs()
@@ -183,7 +359,7 @@ export const loggerPlugin = createPlugin<Options>({
 
     ctx.on('file:start', async ({ file, index, total }) => {
       logger.info(`Processing [${index + 1}/${total}] ${formatPath(file.path)}`)
-      broadcast('file:start', {
+      broadcastEvent('file:start', {
         index,
         total,
         file: serializeFile(file),
@@ -194,7 +370,7 @@ export const loggerPlugin = createPlugin<Options>({
       const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
 
       logger.info(`Progress ${formattedPercentage}% (${processed}/${total}) → ${formatPath(file.path)}`)
-      broadcast('process:progress', {
+      broadcastEvent('process:progress', {
         processed,
         total,
         percentage,
@@ -208,7 +384,7 @@ export const loggerPlugin = createPlugin<Options>({
 
     ctx.on('file:end', async ({ file, index, total }) => {
       logger.success(`Finished [${index + 1}/${total}] ${formatPath(file.path)}`)
-      broadcast('file:end', {
+      broadcastEvent('file:end', {
         index,
         total,
         file: serializeFile(file),
@@ -217,21 +393,21 @@ export const loggerPlugin = createPlugin<Options>({
 
     ctx.on('write:start', async ({ files }) => {
       logger.start(`Writing ${pluralize('file', files.length)} to disk`)
-      broadcast('write:start', {
+      broadcastEvent('write:start', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('write:end', async ({ files }) => {
       logger.success(`Written ${pluralize('file', files.length)} to disk`)
-      broadcast('write:end', {
+      broadcastEvent('write:end', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('process:end', async ({ files }) => {
       logger.success(`Processed ${pluralize('file', files.length)}`)
-      broadcast('process:end', { total: files.length, timestamp: Date.now() })
+      broadcastEvent('process:end', { total: files.length, timestamp: Date.now() })
 
       if (progressBar) {
         progressBar.update(files.length, { message: 'Done ✅' })
@@ -243,12 +419,14 @@ export const loggerPlugin = createPlugin<Options>({
 
     ctx.on('end', async () => {
       logger.success('Fabric run completed')
-      broadcast('end', { timestamp: Date.now() })
+      broadcastEvent('end', { timestamp: Date.now() })
 
       if (progressBar) {
         progressBar.stop()
         logger.resumeLogs()
       }
+
+      broadcastStatus('shutdown')
 
       const closures: Array<Promise<void>> = []
 
@@ -278,6 +456,11 @@ export const loggerPlugin = createPlugin<Options>({
       if (closures.length) {
         await Promise.allSettled(closures)
         logger.info('Logger websocket closed')
+      }
+
+      if (state) {
+        state.status = 'shutdown'
+        state.endpoint = null
       }
     })
   },

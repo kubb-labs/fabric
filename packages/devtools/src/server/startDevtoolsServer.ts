@@ -31,7 +31,7 @@ export async function startDevtoolsServer(options: StartDevtoolsServerOptions): 
       open: options.open,
     },
     optimizeDeps: {
-      include: ['vue', '@nuxt/ui'],
+      include: ['vue'],
     },
     resolve: {
       alias: {

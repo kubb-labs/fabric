@@ -26,7 +26,7 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./plugin": {
+    "./devtoolsPlugin": {
       "import": "./dist/devtoolsPlugin.js",
       "require": "./dist/devtoolsPlugin.cjs"
     },
@@ -56,9 +56,10 @@
   },
   "dependencies": {
     "@kubb/fabric-core": "workspace:*",
-    "@nuxt/ui": "^3.3.7",
-    "@unocss/reset": "^0.61.9",
     "@vitejs/plugin-vue": "^6.0.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "vite": "^7.2.4",
     "vue": "^3.5.24"
   },
