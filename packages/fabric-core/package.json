@@ -102,7 +102,8 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
     "@types/fs-extra": "^11.0.4",
-    "@types/serve-handler": "^6.1.4"
+    "@types/serve-handler": "^6.1.4",
+    "@types/ws": "^8.5.13"
   },
   "engines": {
     "node": ">=20"

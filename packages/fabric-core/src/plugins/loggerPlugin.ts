@@ -4,7 +4,6 @@ import { relative } from 'node:path'
 import { Presets, SingleBar } from 'cli-progress'
 import { createConsola, type LogLevel } from 'consola'
 import { WebSocket, WebSocketServer } from 'ws'
-import type { FabricEvents } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { createPlugin } from './createPlugin.ts'
 
@@ -49,8 +48,6 @@ export type LoggerMessage =
   | LoggerStatusMessage
   | LoggerHistoryMessage
   | LoggerWelcomeMessage
-
-type Broadcast = <T = unknown>(event: keyof FabricEvents | string, payload: T) => void
 
 type WebSocketOptions = {
   /**
@@ -278,7 +275,7 @@ export const loggerPlugin = createPlugin<Options, { logger: LoggerPluginState }>
         }
       })
 
-      wss.on('connection', (socket) => {
+      wss.on('connection', (socket: WebSocket) => {
         logger.info('Logger websocket client connected')
 
         if (state) {
@@ -304,9 +301,9 @@ export const loggerPlugin = createPlugin<Options, { logger: LoggerPluginState }>
         broadcastStatus('ready')
       })
 
-      wss.on('error', (error) => {
+      wss.on('error', (error: Error) => {
         logger.error('Logger websocket error', error)
-        broadcastStatus('error', error as Error)
+        broadcastStatus('error', error)
       })
 
       if (state) {
