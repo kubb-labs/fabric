@@ -9,8 +9,11 @@ export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.
   return uniqueBy(sources, (obj) => {
     // For named sources, deduplicate by name, isExportable, and isTypeOnly
     // For unnamed sources, include the value to avoid deduplicating different code blocks
-    const uniqueId = obj.name !== undefined ? obj.name : obj.value
-    return `${uniqueId}:${obj.isExportable}:${obj.isTypeOnly}`
+    // If both name and value are undefined, use an empty string as the unique identifier
+    const uniqueId = obj.name ?? obj.value ?? ''
+    const isExportable = obj.isExportable ?? false
+    const isTypeOnly = obj.isTypeOnly ?? false
+    return `${uniqueId}:${isExportable}:${isTypeOnly}`
   })
 }
 
