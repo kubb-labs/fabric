@@ -4,7 +4,7 @@ packages:
 
 catalog:
   '@types/node': ^20.19.25
-  '@types/react': ^19.2.6
+  '@types/react': ^19.2.7
   '@types/react-reconciler': 0.32.0
   '@size-limit/file': ^11.2.0
   'size-limit': ^11.2.0
