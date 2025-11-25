@@ -213,16 +213,49 @@ describe('createFile', () => {
         },
         {
           "isTypeOnly": false,
-          "name": "test",
-          "value": "const test = 3",
-        },
-        {
-          "isTypeOnly": false,
           "name": "Test",
           "value": "type Test = 2",
         },
       ]
     `)
+  })
+
+  test('if combineSources deduplicates sources with the same name from different plugins', () => {
+    // This test case represents the issue where buildFormData was being generated twice
+    // when multiple plugins added the same helper function
+    const sources: Array<KubbFile.Source> = [
+      {
+        name: 'buildFormData',
+        isExportable: true,
+        isTypeOnly: false,
+        value: 'export function buildFormData(data: Record<string, unknown>) { return new FormData(); }',
+      },
+      {
+        name: 'buildFormData',
+        isExportable: true,
+        isTypeOnly: false,
+        value: 'export function buildFormData(data: Record<string, unknown>) { return new FormData(); }',
+      },
+    ]
+
+    const result = combineSources(sources)
+    expect(result.length).toBe(1)
+    expect(result[0]?.name).toBe('buildFormData')
+  })
+
+  test('if combineSources keeps sources without names separate even if they have same metadata', () => {
+    // Sources without names should not be deduplicated based on metadata alone
+    const sources: Array<KubbFile.Source> = [
+      {
+        value: 'const file1 = "file1";',
+      },
+      {
+        value: 'const file2 = "file2";',
+      },
+    ]
+
+    const result = combineSources(sources)
+    expect(result.length).toBe(2)
   })
 
   test('if combineExports is filtering out duplicated exports(by path and name)', () => {
