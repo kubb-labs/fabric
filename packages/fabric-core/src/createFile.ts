@@ -6,7 +6,12 @@ import type * as KubbFile from './KubbFile.ts'
 import { trimExtName } from './utils/trimExtName.ts'
 
 export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.Source> {
-  return uniqueBy(sources, (obj) => [obj.name, obj.isExportable, obj.isTypeOnly] as const)
+  return uniqueBy(sources, (obj) => {
+    // For named sources, deduplicate by name, isExportable, and isTypeOnly
+    // For unnamed sources, include the value to avoid deduplicating different code blocks
+    const uniqueId = obj.name !== undefined ? obj.name : obj.value
+    return `${uniqueId}:${obj.isExportable}:${obj.isTypeOnly}`
+  })
 }
 
 export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.Export> {
