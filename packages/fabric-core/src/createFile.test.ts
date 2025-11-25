@@ -258,6 +258,27 @@ describe('createFile', () => {
     expect(result.length).toBe(2)
   })
 
+  test('if combineSources handles sources with both name and value undefined', () => {
+    // Edge case: sources with both name and value undefined should be deduplicated
+    const sources: Array<KubbFile.Source> = [
+      {
+        isExportable: true,
+        isTypeOnly: false,
+      },
+      {
+        isExportable: true,
+        isTypeOnly: false,
+      },
+      {
+        isExportable: false,
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineSources(sources)
+    expect(result.length).toBe(2) // Two unique combinations of isExportable and isTypeOnly
+  })
+
   test('if combineExports is filtering out duplicated exports(by path and name)', () => {
     const exports: Array<KubbFile.Export> = [
       {
