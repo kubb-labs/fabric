@@ -91,7 +91,7 @@ describe('FileManager', () => {
     expect(file2).toBeDefined()
   })
 
-  test('fileManager.add also adds the files to the cache', async () => {
+  test('fileManager.add adds the files to the cache', async () => {
     const fileManager = new FileManager()
     await fileManager.add({
       path: path.resolve('./src/file1.ts'),
@@ -99,6 +99,7 @@ describe('FileManager', () => {
       imports: [{ name: 'path', path: 'node:path' }],
       sources: [
         {
+          name: 'file1',
           value: "const file1 ='file1';",
         },
       ],
@@ -110,7 +111,8 @@ describe('FileManager', () => {
       imports: [{ name: 'fs', path: 'node:fs' }],
       sources: [
         {
-          value: "const file1Bis ='file1Bis';",
+          name: 'file1',
+          value: "const file1 ='file1Bis';",
         },
       ],
     })
@@ -123,7 +125,8 @@ describe('FileManager', () => {
     expect(file?.sources).toMatchInlineSnapshot(`
       [
         {
-          "value": "const file1Bis ='file1Bis';",
+          "name": "file1",
+          "value": "const file1 ='file1Bis';",
         },
       ]
     `)
@@ -137,7 +140,7 @@ describe('FileManager', () => {
     `)
   })
 
-  test('fileManager.upsert also adds the files to the cache', async () => {
+  test('fileManager.upsert adds the files to the cache', async () => {
     const fileManager = new FileManager()
     await fileManager.upsert({
       path: path.resolve('./src/file1.ts'),
