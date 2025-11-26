@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.5.3
+
+### Patch Changes
+
+- [`377eedf`](https://github.com/kubb-labs/fabric/commit/377eedfb03a9377a8ef633774284ba6027c7c8ee) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Reduce duplicated sourceNames
+
 ## 0.5.2
 
 ### Patch Changes
