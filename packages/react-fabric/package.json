@@ -119,7 +119,7 @@
   "dependencies": {
     "@kubb/fabric-core": "workspace:*",
     "dedent": "^1.7.0",
-    "execa": "^9.6.0",
+    "execa": "^9.6.1",
     "indent-string": "^5.0.0",
     "natural-orderby": "^5.0.0",
     "react-devtools-core": "6.1.2",
