@@ -207,7 +207,7 @@ import { definePlugin } from '@kubb/fabric-core/plugins'
 const helloPlugin = definePlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
   name: 'helloPlugin',
   install(fabric, options) {
-    fabric.context.events.on('start', () => {
+    fabric.context.events.on('lifecycle:start', () => {
       console.log('Fabric started')
     })
   },
