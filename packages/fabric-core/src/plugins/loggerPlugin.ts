@@ -190,11 +190,11 @@ export const loggerPlugin = definePlugin<Options>({
       })
     })
 
-    ctx.on('files:processing:progress', async ({ processed, total, percentage, file }) => {
+    ctx.on('files:processing:update', async ({ processed, total, percentage, file }) => {
       const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
 
       logger.info(`Progress ${formattedPercentage}% (${processed}/${total}) → ${formatPath(file.path)}`)
-      broadcast('files:processing:progress', {
+      broadcast('files:processing:update', {
         processed,
         total,
         percentage,
