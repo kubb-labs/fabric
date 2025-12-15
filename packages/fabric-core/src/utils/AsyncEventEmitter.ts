@@ -9,8 +9,9 @@ type Options = {
 /**
  * AsyncEventEmitter that supports both Vue-style callable interfaces and Record types.
  * 
- * @template TEvents - The callable event interface (Vue-style) or Record type
- * @template TEventsRecord - Optional Record type if TEvents is a callable interface
+ * @template TEvents - The event interface (Vue-style callable interface or Record type)
+ * @template TEventsRecord - The Record type mapping event names to argument tuples.
+ *                           Required when TEvents is a callable interface, automatically inferred when TEvents is already a Record.
  */
 export class AsyncEventEmitter<TEvents, TEventsRecord extends Record<string, any[]> = TEvents extends Record<string, any[]> ? TEvents : never> {
   constructor({ maxListener = 100, mode = 'sequential' }: Options = {}) {
