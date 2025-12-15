@@ -1,5 +1,5 @@
 import { isFunction } from 'remeda'
-import type { Fabric, FabricConfig, FabricContext, FabricEvents, FabricOptions } from './Fabric.ts'
+import type { Fabric, FabricConfig, FabricContext, FabricEvents, FabricEventsRecord, FabricOptions } from './Fabric.ts'
 import { FileManager } from './FileManager.ts'
 import type * as KubbFile from './KubbFile.ts'
 import type { Parser } from './parsers/types.ts'
@@ -14,7 +14,7 @@ import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
  * fabric.use(myPlugin())
  */
 export function createFabric<T extends FabricOptions>(config: FabricConfig<T> = { mode: 'sequential' } as FabricConfig<T>): Fabric<T> {
-  const events = new AsyncEventEmitter<FabricEvents>()
+  const events = new AsyncEventEmitter<FabricEventsRecord>()
   const installedPlugins = new Set<Plugin<any>>()
   const installedParsers = new Map<KubbFile.Extname, Parser<any>>()
   const installedParserNames = new Set<string>()

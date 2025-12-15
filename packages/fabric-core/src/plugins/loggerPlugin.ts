@@ -4,11 +4,11 @@ import { relative } from 'node:path'
 import { Presets, SingleBar } from 'cli-progress'
 import { createConsola, type LogLevel } from 'consola'
 import { WebSocket, WebSocketServer } from 'ws'
-import type { FabricEvents } from '../Fabric.ts'
+import type { FabricEventsRecord } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { definePlugin } from './definePlugin.ts'
 
-type Broadcast = <T = unknown>(event: keyof FabricEvents | string, payload: T) => void
+type Broadcast = <T = unknown>(event: keyof FabricEventsRecord | string, payload: T) => void
 
 type WebSocketOptions = {
   /**
