@@ -92,7 +92,7 @@ export interface FabricEvents {
 
 /**
  * Record type mapping event names to their argument tuples.
- * Used internally by AsyncEventEmitter for event handling.
+ * Derived from FabricEvents for backwards compatibility and internal use.
  */
 export type FabricEventsRecord = {
   'lifecycle:start': []
@@ -121,7 +121,7 @@ export type FabricEventsRecord = {
 /**
  * Shared context passed to all plugins, parsers, and Fabric internals.
  */
-export interface FabricContext<T extends FabricOptions = FabricOptions> extends AsyncEventEmitter<FabricEventsRecord> {
+export interface FabricContext<T extends FabricOptions = FabricOptions> extends AsyncEventEmitter<FabricEvents, FabricEventsRecord> {
   /** The active Fabric configuration. */
   config: FabricConfig<T>
 
