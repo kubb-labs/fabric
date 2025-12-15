@@ -1,4 +1,4 @@
-import { createPlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 import { createElement, type ElementType } from 'react'
 import { Runtime } from '../Runtime.tsx'
 
@@ -28,7 +28,7 @@ declare global {
   }
 }
 
-export const reactPlugin = createPlugin<Options, ExtendOptions>({
+export const reactPlugin = definePlugin<Options, ExtendOptions>({
   name: 'react',
   install() {},
   inject(ctx, options = {}) {

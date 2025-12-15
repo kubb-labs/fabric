@@ -5,7 +5,7 @@ import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { getRelativePath } from '../utils/getRelativePath.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
-import { createPlugin } from './createPlugin.ts'
+import { definePlugin } from './definePlugin.ts'
 
 type Mode = 'all' | 'named' | 'propagate' | false
 
@@ -144,7 +144,7 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
   return result
 }
 
-export const barrelPlugin = createPlugin<Options, ExtendOptions>({
+export const barrelPlugin = definePlugin<Options, ExtendOptions>({
   name: 'barrel',
   install(ctx, options) {
     if (!options) {

@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
 import fs from 'fs-extra'
 import type * as KubbFile from '../KubbFile.ts'
-import { createPlugin } from './createPlugin.ts'
+import { definePlugin } from './definePlugin.ts'
 
 type WriteOptions = {
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
@@ -85,7 +85,7 @@ declare global {
   }
 }
 
-export const fsPlugin = createPlugin<Options, ExtendOptions>({
+export const fsPlugin = definePlugin<Options, ExtendOptions>({
   name: 'fs',
   install(ctx, options = {}) {
     if (options.clean) {

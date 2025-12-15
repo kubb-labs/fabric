@@ -1,6 +1,6 @@
-import { createParser } from './createParser.ts'
+import { defineParser } from './defineParser.ts'
 
-export const defaultParser = createParser({
+export const defaultParser = defineParser({
   name: 'default',
   extNames: ['.json'],
   install() {},

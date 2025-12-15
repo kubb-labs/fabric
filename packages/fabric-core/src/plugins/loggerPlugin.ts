@@ -6,7 +6,7 @@ import { createConsola, type LogLevel } from 'consola'
 import { WebSocket, WebSocketServer } from 'ws'
 import type { FabricEvents } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
-import { createPlugin } from './createPlugin.ts'
+import { definePlugin } from './definePlugin.ts'
 
 type Broadcast = <T = unknown>(event: keyof FabricEvents | string, payload: T) => void
 
@@ -76,7 +76,7 @@ const createProgressBar = () =>
     Presets.shades_grey,
   )
 
-export const loggerPlugin = createPlugin<Options>({
+export const loggerPlugin = definePlugin<Options>({
   name: 'logger',
   install(ctx, options = {}) {
     const { level, websocket = true, progress = true } = options
