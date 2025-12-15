@@ -4,7 +4,19 @@ import { createFabric } from './createFabric.ts'
 import { createParser } from './parsers/createParser.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import { typescriptParser } from './parsers/typescriptParser.ts'
+import { createPlugin } from './plugins/createPlugin.ts'
 import { fsPlugin } from './plugins/fsPlugin.ts'
+import type { FabricContext, KubbFile } from './types.ts'
+
+declare global {
+  namespace Kubb {
+    interface Fabric {
+      installedSync: boolean
+      installedAsync: boolean
+      hello(): string
+    }
+  }
+}
 
 describe('createFabric', () => {
   beforeEach(() => {
@@ -116,5 +128,120 @@ describe('createFabric', () => {
     expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.vue', '<script>const test = 2;<script>')
 
     expect(spy).toHaveBeenCalled()
+  })
+
+  test('addFile proxies to FileManager.add', async () => {
+    const fabric = createFabric()
+
+    const file = {
+      path: '/tmp/a.ts',
+      baseName: 'a.ts',
+      sources: [] as any[],
+    } as KubbFile.File
+
+    const spy = vi.spyOn(fabric.context.fileManager, 'add')
+
+    await fabric.addFile(file)
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith(file)
+  })
+
+  test('use installs plugin with correct fabric and options; warns on duplicate', async () => {
+    const fabric = createFabric()
+    const install = vi.fn(function (ctx: FabricContext, ...opts: any[]) {
+      expect(ctx).toBeDefined()
+      expect(opts).toEqual(['opt1', 'opt2'])
+    })
+
+    const plugin = createPlugin({ name: 'mockPlugin', install })
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    fabric.use(plugin, 'opt1', 'opt2')
+    expect(install).toHaveBeenCalledTimes(1)
+    fabric.use(plugin, 'opt1', 'opt2')
+    expect(warnSpy).toHaveBeenCalledWith('Plugin "mockPlugin" already applied.')
+    expect(install).toHaveBeenCalledTimes(2)
+  })
+
+  test('use installs parser with correct fabric and options; warns on duplicate', async () => {
+    const fabric = createFabric()
+    const install = vi.fn(function (ctx: FabricContext, ...opts: any[]) {
+      expect(ctx).toBeDefined()
+      expect(opts).toEqual(['a'])
+    })
+
+    const parser = createParser<any>({
+      name: 'mockParser',
+      extNames: [],
+      install,
+      async parse() {
+        return ''
+      },
+    })
+
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+
+    fabric.use(parser, 'a')
+    expect(install).toHaveBeenCalledTimes(1)
+
+    fabric.use(parser, 'a')
+    expect(warnSpy).toHaveBeenCalledWith('Parser "mockParser" already applied.')
+    expect(install).toHaveBeenCalledTimes(2)
+  })
+
+  test('validate plugin override sync', async () => {
+    const fabric = createFabric()
+    const plugin = createPlugin({
+      name: 'mockPlugin',
+      install() {},
+      inject() {
+        return {
+          write() {
+            return 'test'
+          },
+        }
+      },
+    })
+
+    fabric.use(plugin)
+    await fabric.write()
+
+    expect(fabric.write).toBeDefined()
+  })
+
+  test('validate plugin install sync', async () => {
+    const fabric = createFabric()
+    const plugin = createPlugin({
+      name: 'syncInstall',
+      install() {},
+      inject() {
+        return {
+          installedSync: true,
+        }
+      },
+    })
+    fabric.use(plugin)
+    expect(fabric.installedSync).toBe(true)
+  })
+
+  test('validate plugin inject sync', async () => {
+    const fabric = createFabric()
+    const plugin = createPlugin({
+      name: 'syncInject',
+      install() {},
+      inject() {
+        return {
+          hello() {
+            return 'world'
+          },
+        }
+      },
+    })
+
+    fabric.use(plugin)
+    expect(typeof fabric.hello).toBe('function')
+    expect(fabric.hello()).toBe('world')
   })
 })
