@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { createFabric } from "./createFabric.ts";
-import { createParser } from "./parsers/createParser.ts";
+import { defineParser } from "./parsers/defineParser.ts";
 import { defaultParser } from "./parsers/defaultParser.ts";
 import { typescriptParser } from "./parsers/typescriptParser.ts";
-import { createPlugin } from "./plugins/createPlugin.ts";
+import { definePlugin } from "./plugins/definePlugin.ts";
 import { fsPlugin } from "./plugins/fsPlugin.ts";
 import type { FabricContext, KubbFile } from "./types.ts";
 
@@ -103,7 +103,7 @@ describe("createFabric", () => {
   test("creates an fabric with the fsPlugin and parser for vue", async () => {
     const onBeforeWrite = vi.fn();
 
-    const vueParser = createParser({
+    const vueParser = defineParser({
       name: "vue",
       extNames: [".vue"],
       install() {},
@@ -163,7 +163,7 @@ describe("createFabric", () => {
       expect(opts).toEqual(["opt1", "opt2"]);
     });
 
-    const plugin = createPlugin({ name: "mockPlugin", install });
+    const plugin = definePlugin({ name: "mockPlugin", install });
 
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
@@ -183,7 +183,7 @@ describe("createFabric", () => {
       expect(opts).toEqual(["a"]);
     });
 
-    const parser = createParser<any>({
+    const parser = defineParser<any>({
       name: "mockParser",
       extNames: [],
       install,
@@ -206,7 +206,7 @@ describe("createFabric", () => {
 
   test("validate plugin override sync", async () => {
     const fabric = createFabric();
-    const plugin = createPlugin({
+    const plugin = definePlugin({
       name: "mockPlugin",
       install() {},
       inject() {
@@ -226,7 +226,7 @@ describe("createFabric", () => {
 
   test("validate plugin install sync", async () => {
     const fabric = createFabric();
-    const plugin = createPlugin({
+    const plugin = definePlugin({
       name: "syncInstall",
       install() {},
       inject() {
@@ -241,7 +241,7 @@ describe("createFabric", () => {
 
   test("validate plugin inject sync", async () => {
     const fabric = createFabric();
-    const plugin = createPlugin({
+    const plugin = definePlugin({
       name: "syncInject",
       install() {},
       inject() {
