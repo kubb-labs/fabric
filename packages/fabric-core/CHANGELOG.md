@@ -1,5 +1,16 @@
 # @kubb/fabric-core
 
+## 0.6.0
+
+### Minor Changes
+
+- [#66](https://github.com/kubb-labs/fabric/pull/66) [`5e4c2bf`](https://github.com/kubb-labs/fabric/commit/5e4c2bf73666b14af736bcf553f1bbf63c99564a) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - **BREAKING CHANGE**: Renamed events for consistency:
+  - `files:processing:update` → `file:processing:update` (singular, as it tracks individual file progress)
+  - `file:path:resolving` → `file:resolve:path` (clearer naming)
+  - `file:name:resolving` → `file:resolve:name` (clearer naming)
+
+  Improved FabricEvents documentation with comprehensive JSDoc comments. Each event now includes detailed descriptions, usage guidance, and property documentation. Updated READMEs with corrected event names organized into logical categories (Lifecycle, File Management, File Writing, File Processing) with examples.
+
 ## 0.5.5
 
 ### Patch Changes
