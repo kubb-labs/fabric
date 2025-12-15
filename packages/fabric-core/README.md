@@ -84,18 +84,58 @@ Returns a Fabric instance with:
 - `fabric.context` — internal context holding events, options, FileManager, installed plugins/parsers.
 
 
-### Events (emitted by the core during processing)
-- `lifecycle:start`
-- `lifecycle:end`
-- `lifecycle:render { fabric }`
-- `files:added { files }`
-- `files:writing:start { files }`
-- `files:writing:end { files }`
-- `file:processing:start { file, index, total }`
-- `file:processing:end { file, index, total }`
-- `files:processing:start { files }`
-- `files:processing:update { file, source, processed, percentage, total }`
-- `files:processing:end { files }`
+### Events
+
+Fabric emits events throughout its lifecycle that you can subscribe to for monitoring, logging, and custom processing logic. Events are organized into three main categories:
+
+#### Lifecycle Events
+Application-level events that mark major phases in the Fabric execution:
+
+- **`lifecycle:start`** — Emitted at the beginning of the application lifecycle. Use for initialization tasks.
+- **`lifecycle:end`** — Emitted at the end of the application lifecycle. Use for cleanup and final logging.
+- **`lifecycle:render { fabric }`** — Emitted when rendering components or the application graph. Provides the Fabric instance.
+
+#### File Management Events
+Events related to file addition and resolution:
+
+- **`files:added { files }`** — Emitted when files are added to the FileManager's cache via `addFile()` or `upsertFile()`.
+- **`file:path:resolving { file }`** — Emitted when resolving a file's path. Allows path modification via plugins.
+- **`file:name:resolving { file }`** — Emitted when resolving a file's name. Allows name modification via plugins.
+
+#### File Processing Events
+Events that track file processing and writing operations:
+
+- **`files:processing:start { files }`** — Emitted once before any files are processed.
+- **`file:processing:start { file, index, total }`** — Emitted when an individual file's processing begins.
+- **`files:processing:update { file, source, processed, percentage, total }`** — Emitted periodically to indicate progress. Ideal for progress bars and logging.
+- **`file:processing:end { file, index, total }`** — Emitted when an individual file's processing completes.
+- **`files:processing:end { files }`** — Emitted once all files have been processed successfully.
+- **`files:writing:start { files }`** — Emitted before writing files to disk.
+- **`files:writing:end { files }`** — Emitted after writing files to disk.
+
+**Example usage:**
+
+```ts
+import { createFabric } from '@kubb/fabric-core'
+
+const fabric = createFabric()
+
+// Subscribe to lifecycle events
+fabric.context.on('lifecycle:start', async () => {
+  console.log('Fabric started')
+})
+
+// Track processing progress
+fabric.context.on('files:processing:update', async ({ processed, total, percentage, file }) => {
+  console.log(`Progress: ${percentage.toFixed(1)}% (${processed}/${total})`)
+  console.log(`Current file: ${file.path}`)
+})
+
+// Handle completion
+fabric.context.on('lifecycle:end', async () => {
+  console.log('Fabric completed successfully')
+})
+```
 
 
 ## Plugins
