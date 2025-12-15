@@ -69,7 +69,7 @@ export interface FabricEvents {
    * Called periodically (or per file) to indicate progress.
    * Useful for progress bars or logging.
    */
-  'files:processing:progress': [
+  'files:processing:update': [
     {
       processed: number
       total: number
