@@ -14,7 +14,7 @@ import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
  * fabric.use(myPlugin())
  */
 export function createFabric<T extends FabricOptions>(config: FabricConfig<T> = { mode: 'sequential' } as FabricConfig<T>): Fabric<T> {
-  const events = new AsyncEventEmitter<FabricEvents, FabricEventsRecord>()
+  const events = new AsyncEventEmitter<FabricEventsRecord>()
   const installedPlugins = new Set<Plugin<any>>()
   const installedParsers = new Map<KubbFile.Extname, Parser<any>>()
   const installedParserNames = new Set<string>()
