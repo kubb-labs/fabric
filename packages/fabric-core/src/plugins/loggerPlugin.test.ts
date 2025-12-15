@@ -84,7 +84,7 @@ describe('loggerPlugin', () => {
 
     logger.start.mockClear()
 
-    await fabric.context.emit('files:processing:update', {
+    await fabric.context.emit('file:processing:update', {
       processed: 1,
       total: 1,
       percentage: 100,
@@ -131,7 +131,7 @@ describe('loggerPlugin', () => {
       expect(startSpy).toHaveBeenCalledWith(2, 0, { message: 'Starting...' })
 
       for (const file of files) {
-        await fabric.context.emit('files:processing:update', {
+        await fabric.context.emit('file:processing:update', {
           processed: 1,
           total: files.length,
           percentage: 50,
@@ -157,7 +157,7 @@ describe('loggerPlugin', () => {
       }
 
       await fabric.context.emit('files:processing:start', { files })
-      await fabric.context.emit('files:processing:update', {
+      await fabric.context.emit('file:processing:update', {
         processed: 1,
         total: 1,
         percentage: 100,

@@ -90,8 +90,8 @@ Fabric emits events throughout its lifecycle that plugins and custom code can li
 
 #### File Management Events
 - **`files:added { files }`** — Emitted when files are added to the FileManager cache
-- **`file:path:resolving { file }`** — Emitted during file path resolution (allows modification)
-- **`file:name:resolving { file }`** — Emitted during file name resolution (allows modification)
+- **`file:resolve:path { file }`** — Emitted during file path resolution (allows modification)
+- **`file:resolve:name { file }`** — Emitted during file name resolution (allows modification)
 
 #### File Writing Events
 - **`files:writing:start { files }`** — Emitted before writing files to disk
@@ -101,7 +101,7 @@ Fabric emits events throughout its lifecycle that plugins and custom code can li
 - **`files:processing:start { files }`** — Emitted before processing begins
 - **`file:processing:start { file, index, total }`** — Emitted when each file starts processing
 - **`file:processing:end { file, index, total }`** — Emitted when each file finishes processing
-- **`files:processing:update { file, source, processed, percentage, total }`** — Emitted with progress updates
+- **`file:processing:update { file, source, processed, percentage, total }`** — Emitted with progress updates
 - **`files:processing:end { files }`** — Emitted when all processing completes
 
 #### Listening to Events
@@ -115,7 +115,7 @@ fabric.context.on('lifecycle:start', async () => {
   console.log('Starting Fabric...')
 })
 
-fabric.context.on('files:processing:update', async ({ processed, total, percentage }) => {
+fabric.context.on('file:processing:update', async ({ processed, total, percentage }) => {
   console.log(`Progress: ${percentage.toFixed(1)}% (${processed}/${total})`)
 })
 

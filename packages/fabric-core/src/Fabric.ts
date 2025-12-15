@@ -97,7 +97,7 @@ export interface FabricEvents {
    *
    * @property file - The file whose path is being resolved (mutable)
    */
-  'file:path:resolving': [{ file: KubbFile.File }]
+  'file:resolve:path': [{ file: KubbFile.File }]
 
   /**
    * Emitted during file name resolution, before a file is cached.
@@ -106,7 +106,7 @@ export interface FabricEvents {
    *
    * @property file - The file whose name is being resolved (mutable)
    */
-  'file:name:resolving': [{ file: KubbFile.File }]
+  'file:resolve:name': [{ file: KubbFile.File }]
 
   /**
    * Emitted just before files are written to disk.
@@ -159,7 +159,7 @@ export interface FabricEvents {
    * @property source - Optional parsed source code of the file
    * @property file - The file that was just processed
    */
-  'files:processing:update': [
+  'file:processing:update': [
     {
       processed: number
       total: number

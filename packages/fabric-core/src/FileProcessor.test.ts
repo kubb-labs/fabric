@@ -92,7 +92,7 @@ describe('FileProcessor', () => {
     events.on('file:processing:end', () => {
       fileEnd++
     })
-    events.on('files:processing:update', () => {
+    events.on('file:processing:update', () => {
       progress++
     })
 

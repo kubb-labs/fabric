@@ -163,14 +163,14 @@ export const loggerPlugin = definePlugin<Options>({
       })
     })
 
-    ctx.on('file:path:resolving', async ({ file }) => {
+    ctx.on('file:resolve:path', async ({ file }) => {
       logger.info(`Resolving path for ${formatPath(file.path)}`)
-      broadcast('file:path:resolving', { file: serializeFile(file) })
+      broadcast('file:resolve:path', { file: serializeFile(file) })
     })
 
-    ctx.on('file:name:resolving', async ({ file }) => {
+    ctx.on('file:resolve:name', async ({ file }) => {
       logger.info(`Resolving name for ${formatPath(file.path)}`)
-      broadcast('file:name:resolving', { file: serializeFile(file) })
+      broadcast('file:resolve:name', { file: serializeFile(file) })
     })
 
     ctx.on('files:processing:start', async ({ files }) => {
@@ -195,11 +195,11 @@ export const loggerPlugin = definePlugin<Options>({
       })
     })
 
-    ctx.on('files:processing:update', async ({ processed, total, percentage, file }) => {
+    ctx.on('file:processing:update', async ({ processed, total, percentage, file }) => {
       const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
 
       logger.info(`Progress ${formattedPercentage}% (${processed}/${total}) → ${formatPath(file.path)}`)
-      broadcast('files:processing:update', {
+      broadcast('file:processing:update', {
         processed,
         total,
         percentage,
