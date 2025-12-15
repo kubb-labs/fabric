@@ -83,22 +83,22 @@ Returns a Fabric instance with:
 - `fabric.context` — internal context holding events, options, FileManager, installed plugins/parsers.
 
 ### Events (emitted by the core during processing)
-- `start`
-- `end`
-- `render { fabric }`
-- `file:add { files }`
-- `write:start { files }`
-- `write:end { files }`
-- `file:start { file, index, total }`
-- `file:end { file, index, total }`
-- `process:start { files }`
-- `process:progress { file, source, processed, percentage, total }`
-- `process:end { files }`
+- `lifecycle:start`
+- `lifecycle:end`
+- `lifecycle:render { fabric }`
+- `files:added { files }`
+- `files:writing:start { files }`
+- `files:writing:end { files }`
+- `file:processing:start { file, index, total }`
+- `file:processing:end { file, index, total }`
+- `files:processing:start { files }`
+- `files:processing:progress { file, source, processed, percentage, total }`
+- `files:processing:end { files }`
 
 
 ## Plugins
 #### `fsPlugin`
-Writes files to disk on `process:progress`, supports dry runs and cleaning an output folder before writing.
+Writes files to disk on `files:processing:progress`, supports dry runs and cleaning an output folder before writing.
 
 ```
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -107,7 +107,7 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
 | Option | Type                                                                 | Default | Description                                                           |
 |---|----------------------------------------------------------------------|---|-----------------------------------------------------------------------|
 | dryRun | `boolean`                                                            | `false` | If true, do not write files to disk.               |
-| onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `process:progress`.            |
+| onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `files:processing:progress`.            |
 | clean | `{ path: string }`                                                   | — | If provided, removes the directory at `path` before writing any files. |
 
 Injected `fabric.write` options (via `fsPlugin`):
@@ -117,7 +117,7 @@ Injected `fabric.write` options (via `fsPlugin`):
 | extension | `Record<Extname, Extname \| ''>` | — | Maps input file extensions to output extensions. When set, the matching parser (by extNames) is used. |
 
 #### `barrelPlugin`
-Generates `index.ts` barrel files per folder at `process:end`. `writeEntry` creates a single entry barrel at `root`.
+Generates `index.ts` barrel files per folder at `files:writing:start`. `writeEntry` creates a single entry barrel at `root`.
 
 ```
 import { barrelPlugin } from '@kubb/fabric-core/plugins'
@@ -206,7 +206,7 @@ import { definePlugin } from '@kubb/fabric-core/plugins'
 const helloPlugin = definePlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
   name: 'helloPlugin',
   install(fabric, options) {
-    fabric.context.events.on('start', () => {
+    fabric.context.events.on('lifecycle:start', () => {
       console.log('Fabric started')
     })
   },
