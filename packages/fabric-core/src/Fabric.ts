@@ -40,36 +40,36 @@ export type FabricMode = 'sequential' | 'parallel'
  */
 export interface FabricEvents {
   /** Called at the beginning of the app lifecycle. */
-  start: []
+  'lifecycle:start': []
 
   /** Called at the end of the app lifecycle. */
-  end: []
+  'lifecycle:end': []
 
   /** Called when Fabric is rendering. */
-  render: [{ fabric: Fabric }]
+  'lifecycle:render': [{ fabric: Fabric }]
 
   /** Called once before any files are processed. */
-  'process:start': [{ files: KubbFile.ResolvedFile[] }]
+  'files:processing:start': [{ files: KubbFile.ResolvedFile[] }]
   /**
    * Called when FileManager is adding files to its cache
    */
-  'file:add': [{ files: KubbFile.ResolvedFile[] }]
-  'file:resolve:path': [{ file: KubbFile.File }]
-  'file:resolve:name': [{ file: KubbFile.File }]
-  'write:start': [{ files: KubbFile.ResolvedFile[] }]
-  'write:end': [{ files: KubbFile.ResolvedFile[] }]
+  'files:added': [{ files: KubbFile.ResolvedFile[] }]
+  'file:path:resolving': [{ file: KubbFile.File }]
+  'file:name:resolving': [{ file: KubbFile.File }]
+  'files:writing:start': [{ files: KubbFile.ResolvedFile[] }]
+  'files:writing:end': [{ files: KubbFile.ResolvedFile[] }]
 
   /** Called for each file when processing begins. */
-  'file:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  'file:processing:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
 
   /** Called for each file when processing completes. */
-  'file:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  'file:processing:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
 
   /**
    * Called periodically (or per file) to indicate progress.
    * Useful for progress bars or logging.
    */
-  'process:progress': [
+  'files:processing:progress': [
     {
       processed: number
       total: number
@@ -80,7 +80,7 @@ export interface FabricEvents {
   ]
 
   /** Called once all files have been processed successfully. */
-  'process:end': [{ files: KubbFile.ResolvedFile[] }]
+  'files:processing:end': [{ files: KubbFile.ResolvedFile[] }]
 }
 
 /**
