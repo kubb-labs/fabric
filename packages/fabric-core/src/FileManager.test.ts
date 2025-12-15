@@ -25,7 +25,7 @@ describe('FileManager', () => {
 
   test('fileManager.add resolves path via events', async () => {
     const events = new AsyncEventEmitter()
-    events.on('file:resolve:path', ({ file }) => {
+    events.on('file:path:resolving', ({ file }) => {
       const parsed = path.parse(file.path)
       const newPath = path.join(parsed.dir, `${parsed.name}.generated${parsed.ext}`)
 
@@ -46,7 +46,7 @@ describe('FileManager', () => {
 
   test('fileManager.add resolves name via events', async () => {
     const events = new AsyncEventEmitter()
-    events.on('file:resolve:name', ({ file }) => {
+    events.on('file:name:resolving', ({ file }) => {
       file.baseName = 'prefix-file1.ts'
       file.name = 'prefix-file1'
     })
@@ -261,19 +261,19 @@ describe('FileManager', () => {
       },
     )
 
-    events.on('process:start', () => {
+    events.on('files:processing:start', () => {
       processStart++
     })
-    events.on('process:end', () => {
+    events.on('files:processing:end', () => {
       processEnd++
     })
-    events.on('file:start', () => {
+    events.on('file:processing:start', () => {
       fileStart++
     })
-    events.on('file:end', () => {
+    events.on('file:processing:end', () => {
       fileEnd++
     })
-    events.on('process:progress', () => {
+    events.on('files:processing:progress', () => {
       progress++
     })
 

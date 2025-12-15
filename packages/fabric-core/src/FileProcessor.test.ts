@@ -80,19 +80,19 @@ describe('FileProcessor', () => {
     let fileEnd = 0
     let progress = 0
 
-    events.on('process:start', () => {
+    events.on('files:processing:start', () => {
       processStart++
     })
-    events.on('process:end', () => {
+    events.on('files:processing:end', () => {
       processEnd++
     })
-    events.on('file:start', () => {
+    events.on('file:processing:start', () => {
       fileStart++
     })
-    events.on('file:end', () => {
+    events.on('file:processing:end', () => {
       fileEnd++
     })
-    events.on('process:progress', () => {
+    events.on('files:processing:progress', () => {
       progress++
     })
 

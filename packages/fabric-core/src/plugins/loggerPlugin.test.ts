@@ -72,19 +72,19 @@ describe('loggerPlugin', () => {
     logger.info.mockClear()
     logger.success.mockClear()
 
-    await fabric.context.emit('start')
+    await fabric.context.emit('lifecycle:start')
     expect(logger.start).toHaveBeenCalledWith('Starting Fabric run')
 
     logger.start.mockClear()
 
     const file = makeFile()
 
-    await fabric.context.emit('process:start', { files: [file] })
+    await fabric.context.emit('files:processing:start', { files: [file] })
     expect(logger.start).toHaveBeenCalledWith('Processing 1 file')
 
     logger.start.mockClear()
 
-    await fabric.context.emit('process:progress', {
+    await fabric.context.emit('files:processing:progress', {
       processed: 1,
       total: 1,
       percentage: 100,
@@ -94,12 +94,12 @@ describe('loggerPlugin', () => {
 
     logger.info.mockClear()
 
-    await fabric.context.emit('file:end', { file, index: 0, total: 1 })
+    await fabric.context.emit('file:processing:end', { file, index: 0, total: 1 })
     expect(logger.success).toHaveBeenCalledWith('Finished [1/1] src/example.ts')
 
     logger.success.mockClear()
 
-    await fabric.context.emit('end')
+    await fabric.context.emit('lifecycle:end')
     expect(logger.success).toHaveBeenCalledWith('Fabric run completed')
   })
 
@@ -127,11 +127,11 @@ describe('loggerPlugin', () => {
 
       const files = makeFiles(2)
 
-      await fabric.context.emit('process:start', { files })
+      await fabric.context.emit('files:processing:start', { files })
       expect(startSpy).toHaveBeenCalledWith(2, 0, { message: 'Starting...' })
 
       for (const file of files) {
-        await fabric.context.emit('process:progress', {
+        await fabric.context.emit('files:processing:progress', {
           processed: 1,
           total: files.length,
           percentage: 50,
@@ -141,7 +141,7 @@ describe('loggerPlugin', () => {
 
       expect(incrementSpy).toHaveBeenCalledTimes(2)
 
-      await fabric.context.emit('process:end', { files })
+      await fabric.context.emit('files:processing:end', { files })
       expect(stopSpy).toHaveBeenCalled()
     })
 
@@ -156,14 +156,14 @@ describe('loggerPlugin', () => {
         throw new Error('Expected at least one file')
       }
 
-      await fabric.context.emit('process:start', { files })
-      await fabric.context.emit('process:progress', {
+      await fabric.context.emit('files:processing:start', { files })
+      await fabric.context.emit('files:processing:progress', {
         processed: 1,
         total: 1,
         percentage: 100,
         file,
       })
-      await fabric.context.emit('process:end', { files })
+      await fabric.context.emit('files:processing:end', { files })
 
       expect(startSpy).not.toHaveBeenCalled()
       expect(incrementSpy).not.toHaveBeenCalled()

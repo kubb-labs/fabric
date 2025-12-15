@@ -92,7 +92,7 @@ export const fsPlugin = definePlugin<Options, ExtendOptions>({
       fs.removeSync(options.clean.path)
     }
 
-    ctx.on('process:progress', async ({ file, source }) => {
+    ctx.on('files:processing:progress', async ({ file, source }) => {
       if (options.onBeforeWrite) {
         await options.onBeforeWrite(file.path, source)
       }

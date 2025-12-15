@@ -155,7 +155,7 @@ export const barrelPlugin = definePlugin<Options, ExtendOptions>({
       return undefined
     }
 
-    ctx.on('write:start', async ({ files }) => {
+    ctx.on('files:writing:start', async ({ files }) => {
       const root = options.root
       const barrelFiles = getBarrelFiles({ files, root, mode: options.mode })
 

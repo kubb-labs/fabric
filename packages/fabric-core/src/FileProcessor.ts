@@ -60,20 +60,20 @@ export class FileProcessor {
     files: Array<KubbFile.ResolvedFile>,
     { parsers, mode = 'sequential', dryRun, extension }: ProcessFilesProps = {},
   ): Promise<KubbFile.ResolvedFile[]> {
-    await this.events.emit('process:start', { files })
+    await this.events.emit('files:processing:start', { files })
 
     const total = files.length
     let processed = 0
 
     const processOne = async (resolvedFile: KubbFile.ResolvedFile, index: number) => {
-      await this.events.emit('file:start', { file: resolvedFile, index, total })
+      await this.events.emit('file:processing:start', { file: resolvedFile, index, total })
 
       const source = dryRun ? undefined : await this.parse(resolvedFile, { extension, parsers })
 
       const currentProcessed = ++processed
       const percentage = (currentProcessed / total) * 100
 
-      await this.events.emit('process:progress', {
+      await this.events.emit('files:processing:progress', {
         file: resolvedFile,
         source,
         processed: currentProcessed,
@@ -81,7 +81,7 @@ export class FileProcessor {
         total,
       })
 
-      await this.events.emit('file:end', { file: resolvedFile, index, total })
+      await this.events.emit('file:processing:end', { file: resolvedFile, index, total })
     }
 
     if (mode === 'sequential') {
@@ -101,7 +101,7 @@ export class FileProcessor {
       await Promise.all(promises)
     }
 
-    await this.events.emit('process:end', { files })
+    await this.events.emit('files:processing:end', { files })
 
     return files
   }
