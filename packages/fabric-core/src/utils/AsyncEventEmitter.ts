@@ -6,7 +6,13 @@ type Options = {
   maxListener?: number
 }
 
-export class AsyncEventEmitter<TEvents extends Record<string, any>> {
+/**
+ * AsyncEventEmitter that supports both Vue-style callable interfaces and Record types.
+ * 
+ * @template TEvents - The callable event interface (Vue-style) or Record type
+ * @template TEventsRecord - Optional Record type if TEvents is a callable interface
+ */
+export class AsyncEventEmitter<TEvents, TEventsRecord extends Record<string, any[]> = TEvents extends Record<string, any[]> ? TEvents : never> {
   constructor({ maxListener = 100, mode = 'sequential' }: Options = {}) {
     this.#emitter.setMaxListeners(maxListener)
     this.#mode = mode
@@ -15,8 +21,11 @@ export class AsyncEventEmitter<TEvents extends Record<string, any>> {
   #emitter = new NodeEventEmitter()
   #mode: FabricMode
 
-  async emit<TEventName extends keyof TEvents & string>(eventName: TEventName, ...eventArgs: TEvents[TEventName]): Promise<void> {
-    const listeners = this.#emitter.listeners(eventName) as Array<(...args: TEvents[TEventName]) => any>
+  async emit<TEventName extends keyof TEventsRecord & string>(
+    eventName: TEventName,
+    ...eventArgs: TEventsRecord[TEventName]
+  ): Promise<void> {
+    const listeners = this.#emitter.listeners(eventName) as Array<(...args: TEventsRecord[TEventName]) => any>
 
     if (listeners.length === 0) {
       return
@@ -56,19 +65,28 @@ export class AsyncEventEmitter<TEvents extends Record<string, any>> {
     }
   }
 
-  on<TEventName extends keyof TEvents & string>(eventName: TEventName, handler: (...eventArg: TEvents[TEventName]) => void): void {
+  on<TEventName extends keyof TEventsRecord & string>(
+    eventName: TEventName,
+    handler: (...eventArg: TEventsRecord[TEventName]) => void,
+  ): void {
     this.#emitter.on(eventName, handler as any)
   }
 
-  onOnce<TEventName extends keyof TEvents & string>(eventName: TEventName, handler: (...eventArgs: TEvents[TEventName]) => void): void {
-    const wrapper = (...args: TEvents[TEventName]) => {
+  onOnce<TEventName extends keyof TEventsRecord & string>(
+    eventName: TEventName,
+    handler: (...eventArgs: TEventsRecord[TEventName]) => void,
+  ): void {
+    const wrapper = (...args: TEventsRecord[TEventName]) => {
       this.off(eventName, wrapper)
       handler(...args)
     }
     this.on(eventName, wrapper)
   }
 
-  off<TEventName extends keyof TEvents & string>(eventName: TEventName, handler: (...eventArg: TEvents[TEventName]) => void): void {
+  off<TEventName extends keyof TEventsRecord & string>(
+    eventName: TEventName,
+    handler: (...eventArg: TEventsRecord[TEventName]) => void,
+  ): void {
     this.#emitter.off(eventName, handler as any)
   }
 

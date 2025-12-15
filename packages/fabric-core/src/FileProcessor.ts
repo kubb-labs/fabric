@@ -1,5 +1,5 @@
 import pLimit from 'p-limit'
-import type { FabricEventsRecord, FabricMode } from './Fabric.ts'
+import type { FabricEvents, FabricEventsRecord, FabricMode } from './Fabric.ts'
 import type * as KubbFile from './KubbFile.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import type { Parser } from './parsers/types.ts'
@@ -21,14 +21,14 @@ type GetParseOptions = {
 }
 
 type Options = {
-  events?: AsyncEventEmitter<FabricEventsRecord>
+  events?: AsyncEventEmitter<FabricEvents, FabricEventsRecord>
 }
 
 export class FileProcessor {
   #limit = pLimit(100)
-  events: AsyncEventEmitter<FabricEventsRecord>
+  events: AsyncEventEmitter<FabricEvents, FabricEventsRecord>
 
-  constructor({ events = new AsyncEventEmitter<FabricEventsRecord>() }: Options = {}) {
+  constructor({ events = new AsyncEventEmitter<FabricEvents, FabricEventsRecord>() }: Options = {}) {
     this.events = events
 
     return this
