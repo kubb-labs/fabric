@@ -187,7 +187,7 @@ Injected methods (via `reactPlugin`):
 | `renderToString` | `(App: React.ElementType) => Promise<string> \| string` | Render a React component tree and return the final output as a string (without writing to stdout). |
 | `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
 
-#### `createPlugin`
+#### `definePlugin`
 
 Factory to declare a plugin that can be registered via `fabric.use`.
 
@@ -201,9 +201,9 @@ Example:
 
 ```ts
 import { createFabric } from '@kubb/fabric-core'
-import { createPlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
-const helloPlugin = createPlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
+const helloPlugin = definePlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
   name: 'helloPlugin',
   install(fabric, options) {
     fabric.context.events.on('start', () => {
@@ -263,7 +263,7 @@ import { defaultParser } @kubb/fabric-core/parsers`
 |---|---|---|--------------------------------------------------------------------------|
 | file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 
-#### `createParser`
+#### `defineParser`
 Factory to declare a parser that can be registered via `fabric.use` and selected by `extNames` during `fabirc.write`.
 
 | Field                      | Required | Description                                                                                                     |
@@ -277,9 +277,9 @@ Example:
 
 ```ts
 import { createFabric } from '@kubb/fabric-core'
-import { createParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 
-const vueParser = createParser<{ banner?: string }>({
+const vueParser = defineParser<{ banner?: string }>({
   name: 'vueParser',
   extNames: ['.vue'],
   async install(fabric, options) {
