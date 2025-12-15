@@ -7,10 +7,8 @@ import { WebSocket, WebSocketServer } from 'ws'
 import type { FabricEvents } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { definePlugin } from './definePlugin.ts'
-import type { ExtractEventMap } from '../utils/AsyncEventEmitter.ts'
 
-type Broadcast = <T = unknown>(event: keyof ExtractEventMap<FabricEvents> | string, payload: T) => void
-
+type Broadcast = <T = unknown>(event: keyof FabricEvents | string, payload: T) => void
 type WebSocketOptions = {
   /**
    * Hostname to bind the websocket server to.
@@ -44,7 +42,10 @@ type Options = {
   websocket?: boolean | WebSocketOptions
 }
 
-function normalizeAddress(address: AddressInfo): { host: string; port: number } {
+function normalizeAddress(address: AddressInfo): {
+  host: string
+  port: number
+} {
   const host = address.address === '::' ? '127.0.0.1' : address.address
 
   return { host, port: address.port }
@@ -174,7 +175,10 @@ export const loggerPlugin = definePlugin<Options>({
 
     ctx.on('files:processing:start', async ({ files }) => {
       logger.start(`Processing ${pluralize('file', files.length)}`)
-      broadcast('files:processing:start', { total: files.length, timestamp: Date.now() })
+      broadcast('files:processing:start', {
+        total: files.length,
+        timestamp: Date.now(),
+      })
 
       if (progressBar) {
         logger.pauseLogs()
@@ -203,7 +207,9 @@ export const loggerPlugin = definePlugin<Options>({
       })
 
       if (progressBar) {
-        progressBar.increment(1, { message: `Writing ${formatPath(file.path)}` })
+        progressBar.increment(1, {
+          message: `Writing ${formatPath(file.path)}`,
+        })
       }
     })
 
@@ -232,7 +238,10 @@ export const loggerPlugin = definePlugin<Options>({
 
     ctx.on('files:processing:end', async ({ files }) => {
       logger.success(`Processed ${pluralize('file', files.length)}`)
-      broadcast('files:processing:end', { total: files.length, timestamp: Date.now() })
+      broadcast('files:processing:end', {
+        total: files.length,
+        timestamp: Date.now(),
+      })
 
       if (progressBar) {
         progressBar.update(files.length, { message: 'Done ✅' })
