@@ -7,14 +7,12 @@ describe('defineParser', () => {
     const install = vi.fn()
     const parse = vi.fn().mockResolvedValue('printed')
 
-    const userParser = defineParser({
+    const parser = defineParser({
       name: 'testParser',
       extNames: ['.ts'],
       install,
       parse,
     })
-
-    const parser = defineParser(userParser)
 
     expect(parser.type).toBe('parser')
     expect(parser.name).toBe('testParser')
