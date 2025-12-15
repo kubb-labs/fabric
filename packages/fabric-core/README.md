@@ -119,7 +119,7 @@ Injected `fabric.write` options (via `fsPlugin`):
 | extension | `Record<Extname, Extname \| ''>` | — | Maps input file extensions to output extensions. When set, the matching parser (by extNames) is used. |
 
 #### `barrelPlugin`
-Generates `index.ts` barrel files per folder at `files:writing:start`. `writeEntry` creates a single entry barrel at `root`.
+Generates `index.ts` barrel files per folder when `files:writing:start` is triggered. `writeEntry` creates a single entry barrel at `root`.
 
 ```
 import { barrelPlugin } from '@kubb/fabric-core/plugins'
