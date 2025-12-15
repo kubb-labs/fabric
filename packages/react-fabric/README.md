@@ -98,7 +98,7 @@ Returns a Fabric instance with:
 
 ## Plugins
 #### `fsPlugin`
-Writes files to disk on `files:processing:progress`, supports dry runs and cleaning an output folder before writing.
+Writes files to disk on `files:processing:update`, supports dry runs and cleaning an output folder before writing.
 
 ```
 import { fsPlugin } from '@kubb/fabric-core/plugins'
