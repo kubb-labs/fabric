@@ -91,22 +91,8 @@ export interface FabricEvents {
 }
 
 /**
- * Utility type to convert callable event interface to Record type for AsyncEventEmitter
- */
-type EventsToRecord<T> = T extends {
-  (e: infer E, ...args: infer A): void
-}
-  ? E extends string
-    ? A extends []
-      ? { [K in E]: [] }
-      : A extends [infer P]
-        ? { [K in E]: [P] }
-        : never
-    : never
-  : never
-
-/**
- * Extract all event overloads from FabricEvents into a Record type
+ * Record type mapping event names to their argument tuples.
+ * Used internally by AsyncEventEmitter for event handling.
  */
 export type FabricEventsRecord = {
   'lifecycle:start': []
