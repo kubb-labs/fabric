@@ -37,38 +37,89 @@ export type FabricMode = 'sequential' | 'parallel'
 
 /**
  * Event definitions emitted during the Fabric lifecycle.
+ * Uses Vue-style emit pattern for better type inference.
  */
 export interface FabricEvents {
   /** Called at the beginning of the app lifecycle. */
-  'lifecycle:start': []
+  (e: 'lifecycle:start'): void
 
   /** Called at the end of the app lifecycle. */
-  'lifecycle:end': []
+  (e: 'lifecycle:end'): void
 
   /** Called when Fabric is rendering. */
-  'lifecycle:render': [{ fabric: Fabric }]
+  (e: 'lifecycle:render', payload: { fabric: Fabric }): void
 
   /** Called once before any files are processed. */
-  'files:processing:start': [{ files: KubbFile.ResolvedFile[] }]
+  (e: 'files:processing:start', payload: { files: KubbFile.ResolvedFile[] }): void
+
   /**
    * Called when FileManager is adding files to its cache
    */
-  'files:added': [{ files: KubbFile.ResolvedFile[] }]
-  'file:path:resolving': [{ file: KubbFile.File }]
-  'file:name:resolving': [{ file: KubbFile.File }]
-  'files:writing:start': [{ files: KubbFile.ResolvedFile[] }]
-  'files:writing:end': [{ files: KubbFile.ResolvedFile[] }]
+  (e: 'files:added', payload: { files: KubbFile.ResolvedFile[] }): void
+
+  (e: 'file:path:resolving', payload: { file: KubbFile.File }): void
+
+  (e: 'file:name:resolving', payload: { file: KubbFile.File }): void
+
+  (e: 'files:writing:start', payload: { files: KubbFile.ResolvedFile[] }): void
+
+  (e: 'files:writing:end', payload: { files: KubbFile.ResolvedFile[] }): void
 
   /** Called for each file when processing begins. */
-  'file:processing:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  (e: 'file:processing:start', payload: { file: KubbFile.ResolvedFile; index: number; total: number }): void
 
   /** Called for each file when processing completes. */
-  'file:processing:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  (e: 'file:processing:end', payload: { file: KubbFile.ResolvedFile; index: number; total: number }): void
 
   /**
    * Called periodically (or per file) to indicate progress.
    * Useful for progress bars or logging.
    */
+  (
+    e: 'files:processing:update',
+    payload: {
+      processed: number
+      total: number
+      percentage: number
+      source?: string
+      file: KubbFile.ResolvedFile
+    },
+  ): void
+
+  /** Called once all files have been processed successfully. */
+  (e: 'files:processing:end', payload: { files: KubbFile.ResolvedFile[] }): void
+}
+
+/**
+ * Utility type to convert callable event interface to Record type for AsyncEventEmitter
+ */
+type EventsToRecord<T> = T extends {
+  (e: infer E, ...args: infer A): void
+}
+  ? E extends string
+    ? A extends []
+      ? { [K in E]: [] }
+      : A extends [infer P]
+        ? { [K in E]: [P] }
+        : never
+    : never
+  : never
+
+/**
+ * Extract all event overloads from FabricEvents into a Record type
+ */
+export type FabricEventsRecord = {
+  'lifecycle:start': []
+  'lifecycle:end': []
+  'lifecycle:render': [{ fabric: Fabric }]
+  'files:processing:start': [{ files: KubbFile.ResolvedFile[] }]
+  'files:added': [{ files: KubbFile.ResolvedFile[] }]
+  'file:path:resolving': [{ file: KubbFile.File }]
+  'file:name:resolving': [{ file: KubbFile.File }]
+  'files:writing:start': [{ files: KubbFile.ResolvedFile[] }]
+  'files:writing:end': [{ files: KubbFile.ResolvedFile[] }]
+  'file:processing:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  'file:processing:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
   'files:processing:update': [
     {
       processed: number
@@ -78,15 +129,13 @@ export interface FabricEvents {
       file: KubbFile.ResolvedFile
     },
   ]
-
-  /** Called once all files have been processed successfully. */
   'files:processing:end': [{ files: KubbFile.ResolvedFile[] }]
 }
 
 /**
  * Shared context passed to all plugins, parsers, and Fabric internals.
  */
-export interface FabricContext<T extends FabricOptions = FabricOptions> extends AsyncEventEmitter<FabricEvents> {
+export interface FabricContext<T extends FabricOptions = FabricOptions> extends AsyncEventEmitter<FabricEventsRecord> {
   /** The active Fabric configuration. */
   config: FabricConfig<T>
 
