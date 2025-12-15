@@ -32,13 +32,13 @@ describe('graphPlugin', () => {
     vi.restoreAllMocks()
   })
 
-  test('creates graph.json and graph.html on write:start', async () => {
+  test('creates graph.json and graph.html on files:writing:start', async () => {
     const fabric = createFabric()
     await fabric.use(graphPlugin, { root: 'src', open: false })
 
     const files = makeFiles(2)
 
-    await fabric.context.emit('write:start', { files })
+    await fabric.context.emit('files:writing:start', { files })
 
     const graphJson = fabric.files.find((item) => item.baseName === 'graph.json')
     const graphHtml = fabric.files.find((item) => item.baseName === 'graph.html')
@@ -59,7 +59,7 @@ describe('graphPlugin', () => {
     const addSpy = vi.spyOn(fabric.context.fileManager, 'add')
     vi.spyOn(GraphPluginModule, 'getGraph').mockReturnValue(undefined)
 
-    await fabric.context.emit('write:start', { files })
+    await fabric.context.emit('files:writing:start', { files })
 
     expect(addSpy).not.toHaveBeenCalled()
   })

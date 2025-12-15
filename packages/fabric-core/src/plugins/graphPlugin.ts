@@ -91,7 +91,7 @@ export const graphPlugin = definePlugin<Options>({
       throw new Error('Graph plugin requires options.root and options.mode')
     }
 
-    ctx.on('write:start', async ({ files }) => {
+    ctx.on('files:writing:start', async ({ files }) => {
       const root = options.root
 
       const graph = getGraph({ files, root })
