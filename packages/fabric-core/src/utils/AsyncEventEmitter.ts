@@ -9,6 +9,9 @@ type Options = {
 /**
  * Extracts event map from a callable interface.
  * Converts Vue-style callable interface to a Record type for internal use.
+ * 
+ * Note: Currently supports up to 13 event overloads. If you need more events,
+ * add additional type parameters following the same pattern.
  */
 export type ExtractEventMap<T> = T extends {
   (e: infer E1): void
