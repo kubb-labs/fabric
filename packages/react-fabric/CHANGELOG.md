@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.5.5
+
+### Patch Changes
+
+- [#60](https://github.com/kubb-labs/fabric/pull/60) [`06345d0`](https://github.com/kubb-labs/fabric/commit/06345d0bdfa83dca69c1ddc49414b46e0f60b306) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Correct use of define and create
+
+- Updated dependencies [[`06345d0`](https://github.com/kubb-labs/fabric/commit/06345d0bdfa83dca69c1ddc49414b46e0f60b306)]:
+  - @kubb/fabric-core@0.5.5
+
 ## 0.5.4
 
 ### Patch Changes
