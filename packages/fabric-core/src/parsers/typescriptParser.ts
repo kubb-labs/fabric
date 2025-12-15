@@ -2,7 +2,7 @@ import path from 'node:path'
 import ts from 'typescript'
 import { getRelativePath } from '../utils/getRelativePath.ts'
 import { trimExtName } from '../utils/trimExtName.ts'
-import { createParser } from './createParser.ts'
+import { defineParser } from './defineParser.ts'
 
 const { factory } = ts
 
@@ -122,7 +122,7 @@ export function createExport({
   )
 }
 
-export const typescriptParser = createParser({
+export const typescriptParser = defineParser({
   name: 'typescript',
   extNames: ['.ts', '.js'],
   install() {},

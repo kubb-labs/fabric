@@ -6,7 +6,7 @@ import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { open } from '../utils/open.ts'
 import { type Graph, TreeNode } from '../utils/TreeNode.ts'
-import { createPlugin } from './createPlugin.ts'
+import { definePlugin } from './definePlugin.ts'
 
 type Options = {
   root: string
@@ -84,7 +84,7 @@ async function serve(root: string) {
   })
 }
 
-export const graphPlugin = createPlugin<Options>({
+export const graphPlugin = definePlugin<Options>({
   name: 'graph',
   install(ctx, options) {
     if (!options) {

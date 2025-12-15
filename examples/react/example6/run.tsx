@@ -1,9 +1,9 @@
 import path from 'node:path'
 import { createFabric, File } from '@kubb/react-fabric'
-import { createParser, typescriptParser } from '@kubb/react-fabric/parsers'
+import { defineParser, typescriptParser } from '@kubb/react-fabric/parsers'
 import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 
-const vueParser = createParser({
+const vueParser = defineParser({
   name: 'vue',
   extNames: ['.vue'],
   install() {},
