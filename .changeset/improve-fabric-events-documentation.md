@@ -1,5 +1,5 @@
 ---
-'@kubb/fabric-core': major
+'@kubb/fabric-core': minor
 ---
 
 **BREAKING CHANGE**: Renamed events for consistency:
