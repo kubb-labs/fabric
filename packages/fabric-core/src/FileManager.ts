@@ -34,13 +34,13 @@ export class FileManager {
   }
 
   #resolvePath(file: KubbFile.File): KubbFile.File {
-    this.events.emit('file:path:resolving', { file })
+    this.events.emit('file:resolve:path', { file })
 
     return file
   }
 
   #resolveName(file: KubbFile.File): KubbFile.File {
-    this.events.emit('file:name:resolving', { file })
+    this.events.emit('file:resolve:name', { file })
 
     return file
   }

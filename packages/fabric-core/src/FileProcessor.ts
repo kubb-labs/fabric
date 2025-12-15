@@ -73,7 +73,7 @@ export class FileProcessor {
       const currentProcessed = ++processed
       const percentage = (currentProcessed / total) * 100
 
-      await this.events.emit('files:processing:update', {
+      await this.events.emit('file:processing:update', {
         file: resolvedFile,
         source,
         processed: currentProcessed,

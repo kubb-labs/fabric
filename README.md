@@ -80,17 +80,49 @@ Returns a Fabric instance with:
 
 
 ### Events (emitted by the core during processing)
-- `start`
-- `end`
-- `render { fabric }`
-- `file:add { files }`
-- `write:start { files }`
-- `write:end { files }`
-- `file:start { file, index, total }`
-- `file:end { file, index, total }`
-- `process:start { files }`
-- `process:progress { file, source, processed, percentage, total }`
-- `process:end { files }`
+
+Fabric emits events throughout its lifecycle that plugins and custom code can listen to. These events provide hooks for monitoring progress, transforming files, and performing custom operations.
+
+#### Lifecycle Events
+- **`lifecycle:start`** — Emitted when Fabric begins execution
+- **`lifecycle:end`** — Emitted when Fabric completes execution
+- **`lifecycle:render { fabric }`** — Emitted when rendering starts (with reactPlugin)
+
+#### File Management Events
+- **`files:added { files }`** — Emitted when files are added to the FileManager cache
+- **`file:resolve:path { file }`** — Emitted during file path resolution (allows modification)
+- **`file:resolve:name { file }`** — Emitted during file name resolution (allows modification)
+
+#### File Writing Events
+- **`files:writing:start { files }`** — Emitted before writing files to disk
+- **`files:writing:end { files }`** — Emitted after files are written to disk
+
+#### File Processing Events
+- **`files:processing:start { files }`** — Emitted before processing begins
+- **`file:processing:start { file, index, total }`** — Emitted when each file starts processing
+- **`file:processing:end { file, index, total }`** — Emitted when each file finishes processing
+- **`file:processing:update { file, source, processed, percentage, total }`** — Emitted with progress updates
+- **`files:processing:end { files }`** — Emitted when all processing completes
+
+#### Listening to Events
+
+You can listen to events using the Fabric context:
+
+```ts
+const fabric = createFabric()
+
+fabric.context.on('lifecycle:start', async () => {
+  console.log('Starting Fabric...')
+})
+
+fabric.context.on('file:processing:update', async ({ processed, total, percentage }) => {
+  console.log(`Progress: ${percentage.toFixed(1)}% (${processed}/${total})`)
+})
+
+fabric.context.on('lifecycle:end', async () => {
+  console.log('Fabric completed!')
+})
+```
 
 
 ## Plugins
