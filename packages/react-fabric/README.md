@@ -82,9 +82,6 @@ Returns a Fabric instance with:
 - `fabric.files` — getter with all queued files.
 - `fabric.context` — internal context holding events, options, FileManager, installed plugins/parsers.
 
-### `defineFabric(instance?): () => Fabric`
-Factory to create your own `createFabric` with an optional bootstrap `instance(fabric)` called on creation.
-
 ### Events (emitted by the core during processing)
 - `start`
 - `end`

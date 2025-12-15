@@ -1,7 +1,7 @@
 import { SingleBar } from 'cli-progress'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
-import { defineFabric } from '../defineFabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 
 const hoisted = vi.hoisted(() => {
@@ -55,7 +55,7 @@ describe('loggerPlugin', () => {
   })
 
   test('configures consola with Fabric tag', async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
 
     await fabric.use(loggerPlugin, { websocket: false })
 
@@ -64,7 +64,7 @@ describe('loggerPlugin', () => {
   })
 
   test('logs key lifecycle events to consola', async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
 
     await fabric.use(loggerPlugin, { websocket: false })
 
@@ -121,7 +121,7 @@ describe('loggerPlugin', () => {
     })
 
     test('starts and updates progress bar when enabled', async () => {
-      const fabric = defineFabric()()
+      const fabric = createFabric()
 
       await fabric.use(loggerPlugin, { websocket: false })
 
@@ -146,7 +146,7 @@ describe('loggerPlugin', () => {
     })
 
     test('does not create progress bar when disabled', async () => {
-      const fabric = defineFabric()()
+      const fabric = createFabric()
 
       await fabric.use(loggerPlugin, { websocket: false, progress: false })
 

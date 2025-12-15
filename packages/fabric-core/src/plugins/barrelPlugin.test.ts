@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
-import { defineFabric } from '../defineFabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { barrelPlugin, getBarrelFiles } from './barrelPlugin.ts'
 
@@ -79,7 +79,11 @@ describe('getBarrelFiles', () => {
   })
 
   test("mode 'propagate' should not generate any barrel files", () => {
-    const barrelFiles = getBarrelFiles({ files, root: 'src', mode: 'propagate' })
+    const barrelFiles = getBarrelFiles({
+      files,
+      root: 'src',
+      mode: 'propagate',
+    })
     expect(barrelFiles.length).toBe(0)
   })
 
@@ -94,7 +98,7 @@ describe('barrelPlugin', () => {
     vi.restoreAllMocks()
   })
   test("mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable", async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
 
     await fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
     await fabric.addFile(...files)
@@ -115,7 +119,7 @@ describe('barrelPlugin', () => {
   })
 
   test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
 
     fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
     await fabric.addFile(...files)
@@ -136,7 +140,7 @@ describe('barrelPlugin', () => {
   })
 
   test("mode 'propagate' should not generate any barrel files", async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
 
     await fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
     await fabric.addFile(...files)
@@ -151,7 +155,7 @@ describe('barrelPlugin', () => {
     expect(addSpy).toHaveBeenCalledTimes(0)
   })
   test('mode false should not generate any barrel files', async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
 
     fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
     await fabric.addFile(...files)

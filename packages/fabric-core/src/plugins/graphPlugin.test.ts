@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
-import { defineFabric } from '../defineFabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import * as GraphPluginModule from './graphPlugin.ts'
 import { graphPlugin } from './graphPlugin.ts'
@@ -33,7 +33,7 @@ describe('graphPlugin', () => {
   })
 
   test('creates graph.json and graph.html on write:start', async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
     await fabric.use(graphPlugin, { root: 'src', open: false })
 
     const files = makeFiles(2)
@@ -51,7 +51,7 @@ describe('graphPlugin', () => {
   })
 
   test('does nothing when getGraph returns undefined', async () => {
-    const fabric = defineFabric()()
+    const fabric = createFabric()
     await fabric.use(graphPlugin, { root: 'out' })
 
     const files = makeFiles(1)
