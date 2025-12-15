@@ -94,7 +94,7 @@ Returns a Fabric instance with:
 - `file:processing:start { file, index, total }`
 - `file:processing:end { file, index, total }`
 - `files:processing:start { files }`
-- `files:processing:progress { file, source, processed, percentage, total }`
+- `files:processing:update { file, source, processed, percentage, total }`
 - `files:processing:end { files }`
 
 
@@ -109,7 +109,7 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
 | Option | Type                                                                 | Default | Description                                                           |
 |---|----------------------------------------------------------------------|---|-----------------------------------------------------------------------|
 | dryRun | `boolean`                                                            | `false` | If true, do not write files to disk.               |
-| onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `files:processing:progress`.            |
+| onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `files:processing:update`.            |
 | clean | `{ path: string }`                                                   | — | If provided, removes the directory at `path` before writing any files. |
 
 Injected `fabric.write` options (via `fsPlugin`):
