@@ -26,7 +26,7 @@ jobs:
         uses: ./.github/setup
 
       - name: Build
-        run: bun run build
+        run: pnpm run build
 
   typecheck:
     name: Typecheck
@@ -43,10 +43,10 @@ jobs:
         uses: ./.github/setup
 
       - name: Build
-        run: bun run build
+        run: pnpm run build
 
       - name: Typecheck
-        run: bun run typecheck
+        run: pnpm run typecheck
 
 
 
@@ -65,10 +65,10 @@ jobs:
         uses: ./.github/setup
 
       - name: Build
-        run: bun run build
+        run: pnpm run build
 
       - name: Test
-        run: bun run test
+        run: pnpm run test
 
       - name: Upload coverage reports to Codecov
         if: ${{ !cancelled() }}
@@ -76,9 +76,9 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Test with Bun
-        continue-on-error: true
-        run: bun run test:bun --coverage
+#      - name: Test with Bun
+#        continue-on-error: true
+#        run: bun run test:bun --coverage
 
   linting:
     name: Linting
@@ -95,13 +95,13 @@ jobs:
         uses: ./.github/setup
 
       - name: Build
-        run: bun run build
+        run: pnpm run build
 
       - name: Linting
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
         continue-on-error: true
-        run: bun run lint:ci
+        run: pnpm run lint
 
 
   performance:
@@ -120,7 +120,7 @@ jobs:
 
       - name: Run Ceviz performance analysis
         continue-on-error: true
-        run: bun run perf
+        run: pnpm run perf
 
       - name: Upload Ceviz report
         uses: actions/upload-artifact@v4
@@ -143,7 +143,7 @@ jobs:
         uses: ./.github/setup
 
       - name: Build
-        run: bun run build
+        run: pnpm run build
 
       - name: Publish preview packages
         run: pnpx pkg-pr-new publish --pnpm --owner=stijnvanhulle --repo=https://github.com/kubb-labs/kubb.git './packages/*' --template './examples/*'
