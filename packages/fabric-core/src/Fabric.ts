@@ -67,86 +67,64 @@ export interface FabricEvents {
   /**
    * Emitted when Fabric starts rendering (used with reactPlugin).
    * Provides access to the Fabric instance for render-time operations.
-   *
-   * @property fabric - The current Fabric instance being rendered
    */
-  'lifecycle:render': [{ fabric: Fabric }]
+  'lifecycle:render': [fabric: Fabric]
 
   /**
    * Emitted once before file processing begins.
    * Provides the complete list of files that will be processed.
    * Use this to prepare for batch operations or display initial file counts.
-   *
-   * @property files - Array of all files queued for processing
    */
-  'files:processing:start': [{ files: KubbFile.ResolvedFile[] }]
+  'files:processing:start': [files: Array<KubbFile.ResolvedFile>]
 
   /**
    * Emitted when files are successfully added to the FileManager's internal cache.
    * This happens after files pass through path and name resolution.
    * Use this to track which files have been registered.
-   *
-   * @property files - Array of files that were just added to the cache
    */
-  'files:added': [{ files: KubbFile.ResolvedFile[] }]
+  'files:added': [files: Array<KubbFile.ResolvedFile>]
 
   /**
    * Emitted during file path resolution, before a file is cached.
    * Listeners can modify the file's path property to customize output location.
    * This is called for each file being added via `addFile()` or `upsertFile()`.
-   *
-   * @property file - The file whose path is being resolved (mutable)
    */
-  'file:resolve:path': [{ file: KubbFile.File }]
+  'file:resolve:path': [file: KubbFile.File]
 
   /**
    * Emitted during file name resolution, before a file is cached.
    * Listeners can modify the file's name-related properties to customize naming.
    * This is called for each file being added via `addFile()` or `upsertFile()`.
-   *
-   * @property file - The file whose name is being resolved (mutable)
    */
-  'file:resolve:name': [{ file: KubbFile.File }]
+  'file:resolve:name': [file: KubbFile.File]
 
   /**
    * Emitted just before files are written to disk.
    * Provides all files that will be written in this batch.
    * Use this to perform pre-write operations like creating directories.
-   *
-   * @property files - Array of files about to be written to disk
    */
-  'files:writing:start': [{ files: KubbFile.ResolvedFile[] }]
+  'files:writing:start': [files: Array<KubbFile.ResolvedFile>]
 
   /**
    * Emitted after all files have been successfully written to disk.
    * Provides all files that were written in this batch.
    * Use this for post-write operations like running formatters or reporting.
-   *
-   * @property files - Array of files that were written to disk
    */
-  'files:writing:end': [{ files: KubbFile.ResolvedFile[] }]
+  'files:writing:end': [files: Array<KubbFile.ResolvedFile>]
 
   /**
    * Emitted when an individual file starts being processed.
    * This happens for each file in the queue, before parsing.
    * Use this for per-file setup or detailed logging.
-   *
-   * @property file - The file starting processing
-   * @property index - Zero-based position of this file in the queue
-   * @property total - Total number of files to process
    */
-  'file:processing:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  'file:processing:start': [file: KubbFile.ResolvedFile, index: number, total: number]
 
   /**
    * Emitted when an individual file completes processing.
    * This happens after the file has been parsed and handled.
    * Use this for per-file cleanup or progress tracking.
-   *
-   * @property file - The file that finished processing
-   * @property index - Zero-based position of this file in the queue
-   * @property total - Total number of files to process
    */
-  'file:processing:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  'file:processing:end': [file: KubbFile.ResolvedFile, index: number, total: number]
 
   /**
    * Emitted after each file is processed, providing progress metrics.
@@ -173,10 +151,8 @@ export interface FabricEvents {
    * Emitted once all files have been successfully processed.
    * This marks the completion of the processing phase.
    * Use this to perform batch operations on all processed files.
-   *
-   * @property files - Array of all files that were processed
    */
-  'files:processing:end': [{ files: KubbFile.ResolvedFile[] }]
+  'files:processing:end': [files: Array<KubbFile.ResolvedFile>]
 }
 
 /**

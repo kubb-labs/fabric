@@ -60,13 +60,13 @@ export class FileProcessor {
     files: Array<KubbFile.ResolvedFile>,
     { parsers, mode = 'sequential', dryRun, extension }: ProcessFilesProps = {},
   ): Promise<KubbFile.ResolvedFile[]> {
-    await this.events.emit('files:processing:start', { files })
+    await this.events.emit('files:processing:start', files)
 
     const total = files.length
     let processed = 0
 
     const processOne = async (resolvedFile: KubbFile.ResolvedFile, index: number) => {
-      await this.events.emit('file:processing:start', { file: resolvedFile, index, total })
+      await this.events.emit('file:processing:start', resolvedFile, index, total)
 
       const source = dryRun ? undefined : await this.parse(resolvedFile, { extension, parsers })
 
@@ -81,7 +81,7 @@ export class FileProcessor {
         total,
       })
 
-      await this.events.emit('file:processing:end', { file: resolvedFile, index, total })
+      await this.events.emit('file:processing:end', resolvedFile, index, total)
     }
 
     if (mode === 'sequential') {
@@ -101,7 +101,7 @@ export class FileProcessor {
       await Promise.all(promises)
     }
 
-    await this.events.emit('files:processing:end', { files })
+    await this.events.emit('files:processing:end', files)
 
     return files
   }

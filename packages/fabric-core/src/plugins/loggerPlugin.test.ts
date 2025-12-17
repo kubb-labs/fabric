@@ -79,7 +79,7 @@ describe('loggerPlugin', () => {
 
     const file = makeFile()
 
-    await fabric.context.emit('files:processing:start', { files: [file] })
+    await fabric.context.emit('files:processing:start', [file])
     expect(logger.start).toHaveBeenCalledWith('Processing 1 file')
 
     logger.start.mockClear()
@@ -94,7 +94,7 @@ describe('loggerPlugin', () => {
 
     logger.info.mockClear()
 
-    await fabric.context.emit('file:processing:end', { file, index: 0, total: 1 })
+    await fabric.context.emit('file:processing:end', file, 0, 1)
     expect(logger.success).toHaveBeenCalledWith('Finished [1/1] src/example.ts')
 
     logger.success.mockClear()
@@ -127,7 +127,7 @@ describe('loggerPlugin', () => {
 
       const files = makeFiles(2)
 
-      await fabric.context.emit('files:processing:start', { files })
+      await fabric.context.emit('files:processing:start', files)
       expect(startSpy).toHaveBeenCalledWith(2, 0, { message: 'Starting...' })
 
       for (const file of files) {
@@ -141,7 +141,7 @@ describe('loggerPlugin', () => {
 
       expect(incrementSpy).toHaveBeenCalledTimes(2)
 
-      await fabric.context.emit('files:processing:end', { files })
+      await fabric.context.emit('files:processing:end', files)
       expect(stopSpy).toHaveBeenCalled()
     })
 
@@ -156,14 +156,14 @@ describe('loggerPlugin', () => {
         throw new Error('Expected at least one file')
       }
 
-      await fabric.context.emit('files:processing:start', { files })
+      await fabric.context.emit('files:processing:start', files)
       await fabric.context.emit('file:processing:update', {
         processed: 1,
         total: 1,
         percentage: 100,
         file,
       })
-      await fabric.context.emit('files:processing:end', { files })
+      await fabric.context.emit('files:processing:end', files)
 
       expect(startSpy).not.toHaveBeenCalled()
       expect(incrementSpy).not.toHaveBeenCalled()

@@ -34,13 +34,13 @@ export class FileManager {
   }
 
   #resolvePath(file: KubbFile.File): KubbFile.File {
-    this.events.emit('file:resolve:path', { file })
+    this.events.emit('file:resolve:path', file)
 
     return file
   }
 
   #resolveName(file: KubbFile.File): KubbFile.File {
-    this.events.emit('file:resolve:name', { file })
+    this.events.emit('file:resolve:name', file)
 
     return file
   }
@@ -71,7 +71,7 @@ export class FileManager {
       resolvedFiles.push(resolvedFile)
     }
 
-    await this.events.emit('files:added', { files: resolvedFiles })
+    await this.events.emit('files:added', resolvedFiles)
 
     return resolvedFiles
   }
@@ -105,7 +105,7 @@ export class FileManager {
       resolvedFiles.push(resolvedFile)
     }
 
-    await this.events.emit('files:added', { files: resolvedFiles })
+    await this.events.emit('files:added', resolvedFiles)
 
     return resolvedFiles
   }
@@ -155,13 +155,13 @@ export class FileManager {
 
   //TODO add test and check if write of FileManager contains the newly added file
   async write(options: ProcessFilesProps): Promise<KubbFile.ResolvedFile[]> {
-    await this.events.emit('files:writing:start', { files: this.files })
+    await this.events.emit('files:writing:start', this.files)
 
     const resolvedFiles = await this.processor.run(this.files, options)
 
     this.clear()
 
-    await this.events.emit('files:writing:end', { files: resolvedFiles })
+    await this.events.emit('files:writing:end', resolvedFiles)
 
     return resolvedFiles
   }

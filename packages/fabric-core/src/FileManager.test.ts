@@ -1,5 +1,5 @@
 import path from 'node:path'
-
+import type { FabricEvents } from './Fabric.ts'
 import { FileManager } from './FileManager.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
@@ -24,13 +24,13 @@ describe('FileManager', () => {
   })
 
   test('fileManager.add resolves path via events', async () => {
-    const events = new AsyncEventEmitter()
-    events.on('file:resolve:path', ({ file }) => {
+    const events = new AsyncEventEmitter<FabricEvents>()
+    events.on('file:resolve:path', (file) => {
       const parsed = path.parse(file.path)
       const newPath = path.join(parsed.dir, `${parsed.name}.generated${parsed.ext}`)
 
       file.path = newPath
-      file.baseName = newPath.split('/').pop() as string
+      file.baseName = newPath.split('/').pop() as `${string}.${string}`
     })
 
     const fileManager = new FileManager({ events })
@@ -45,10 +45,10 @@ describe('FileManager', () => {
   })
 
   test('fileManager.add resolves name via events', async () => {
-    const events = new AsyncEventEmitter()
-    events.on('file:resolve:name', ({ file }) => {
+    const events = new AsyncEventEmitter<FabricEvents>()
+    events.on('file:resolve:name', (file) => {
       file.baseName = 'prefix-file1.ts'
-      file.name = 'prefix-file1'
+      file.path = 'prefix-file1'
     })
 
     const fileManager = new FileManager({ events })

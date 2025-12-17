@@ -152,7 +152,7 @@ export const loggerPlugin = definePlugin<Options>({
       broadcast('lifecycle:render', { timestamp: Date.now() })
     })
 
-    ctx.on('files:added', async ({ files }) => {
+    ctx.on('files:added', async (files) => {
       if (!files.length) {
         return
       }
@@ -163,17 +163,17 @@ export const loggerPlugin = definePlugin<Options>({
       })
     })
 
-    ctx.on('file:resolve:path', async ({ file }) => {
+    ctx.on('file:resolve:path', async (file) => {
       logger.info(`Resolving path for ${formatPath(file.path)}`)
       broadcast('file:resolve:path', { file: serializeFile(file) })
     })
 
-    ctx.on('file:resolve:name', async ({ file }) => {
+    ctx.on('file:resolve:name', async (file) => {
       logger.info(`Resolving name for ${formatPath(file.path)}`)
       broadcast('file:resolve:name', { file: serializeFile(file) })
     })
 
-    ctx.on('files:processing:start', async ({ files }) => {
+    ctx.on('files:processing:start', async (files) => {
       logger.start(`Processing ${pluralize('file', files.length)}`)
       broadcast('files:processing:start', {
         total: files.length,
@@ -186,7 +186,7 @@ export const loggerPlugin = definePlugin<Options>({
       }
     })
 
-    ctx.on('file:processing:start', async ({ file, index, total }) => {
+    ctx.on('file:processing:start', async (file, index, total) => {
       logger.info(`Processing [${index + 1}/${total}] ${formatPath(file.path)}`)
       broadcast('file:processing:start', {
         index,
@@ -213,7 +213,7 @@ export const loggerPlugin = definePlugin<Options>({
       }
     })
 
-    ctx.on('file:processing:end', async ({ file, index, total }) => {
+    ctx.on('file:processing:end', async (file, index, total) => {
       logger.success(`Finished [${index + 1}/${total}] ${formatPath(file.path)}`)
       broadcast('file:processing:end', {
         index,
@@ -222,21 +222,21 @@ export const loggerPlugin = definePlugin<Options>({
       })
     })
 
-    ctx.on('files:writing:start', async ({ files }) => {
+    ctx.on('files:writing:start', async (files) => {
       logger.start(`Writing ${pluralize('file', files.length)} to disk`)
       broadcast('files:writing:start', {
         files: files.map(serializeFile),
       })
     })
 
-    ctx.on('files:writing:end', async ({ files }) => {
+    ctx.on('files:writing:end', async (files) => {
       logger.success(`Written ${pluralize('file', files.length)} to disk`)
       broadcast('files:writing:end', {
         files: files.map(serializeFile),
       })
     })
 
-    ctx.on('files:processing:end', async ({ files }) => {
+    ctx.on('files:processing:end', async (files) => {
       logger.success(`Processed ${pluralize('file', files.length)}`)
       broadcast('files:processing:end', {
         total: files.length,

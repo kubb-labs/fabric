@@ -115,7 +115,7 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
         seen.add(key)
 
         // Always compute relative path from the parent directory to the file path
-        barrelFile!.exports!.push({
+        barrelFile.exports!.push({
           name: [source.name!],
           path: getRelativePath(parentPath, file.path),
           isTypeOnly: source.isTypeOnly,
@@ -155,7 +155,7 @@ export const barrelPlugin = definePlugin<Options, ExtendOptions>({
       return undefined
     }
 
-    ctx.on('files:writing:start', async ({ files }) => {
+    ctx.on('files:writing:start', async (files) => {
       const root = options.root
       const barrelFiles = getBarrelFiles({ files, root, mode: options.mode })
 
