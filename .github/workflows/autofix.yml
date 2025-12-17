@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   autofix:
-    name: autofix
+    name: Lint and format
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
