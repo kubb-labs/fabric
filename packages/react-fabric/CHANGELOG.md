@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.7.1
+
+### Patch Changes
+
+- [#69](https://github.com/kubb-labs/fabric/pull/69) [`410a227`](https://github.com/kubb-labs/fabric/commit/410a2276a6986bbbb138c8fd24eaeb89bfb7a9bc) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Update tsdown
+
+- Updated dependencies [[`410a227`](https://github.com/kubb-labs/fabric/commit/410a2276a6986bbbb138c8fd24eaeb89bfb7a9bc)]:
+  - @kubb/fabric-core@0.7.1
+
 ## 0.7.0
 
 ### Patch Changes
