@@ -6,6 +6,9 @@ runs:
   steps:
     - uses: pnpm/action-setup@v4
 
+    - name: Install bun
+      uses: oven-sh/setup-bun@v1
+
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
       with:
