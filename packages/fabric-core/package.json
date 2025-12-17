@@ -23,24 +23,24 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
     },
     "./parsers": {
-      "import": "./dist/parsers.js",
-      "require": "./dist/parsers.cjs"
+      "require": "./dist/parsers.cjs",
+      "import": "./dist/parsers.js"
     },
     "./parsers/typescript": {
-      "import": "./dist/parsers/typescript.js",
-      "require": "./dist/parsers/typescript.cjs"
+      "require": "./dist/parsers/typescript.cjs",
+      "import": "./dist/parsers/typescript.js"
     },
     "./plugins": {
-      "import": "./dist/plugins.js",
-      "require": "./dist/plugins.cjs"
+      "require": "./dist/plugins.cjs",
+      "import": "./dist/plugins.js"
     },
     "./types": {
-      "import": "./dist/types.js",
-      "require": "./dist/types.cjs"
+      "require": "./dist/types.cjs",
+      "import": "./dist/types.js"
     },
     "./package.json": "./package.json"
   },

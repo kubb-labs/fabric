@@ -26,36 +26,36 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
     },
     "./devtools": {
-      "import": "./dist/devtools.js",
-      "require": "./dist/devtools.cjs"
+      "require": "./dist/devtools.cjs",
+      "import": "./dist/devtools.js"
     },
     "./globals": {
-      "import": "./dist/globals.js",
-      "require": "./dist/globals.cjs"
+      "require": "./dist/globals.cjs",
+      "import": "./dist/globals.js"
     },
     "./jsx-dev-runtime": {
-      "import": "./dist/jsx-dev-runtime.js",
-      "require": "./dist/jsx-dev-runtime.cjs"
+      "require": "./dist/jsx-dev-runtime.cjs",
+      "import": "./dist/jsx-dev-runtime.js"
     },
     "./jsx-runtime": {
-      "import": "./dist/jsx-runtime.js",
-      "require": "./dist/jsx-runtime.cjs"
+      "require": "./dist/jsx-runtime.cjs",
+      "import": "./dist/jsx-runtime.js"
     },
     "./parsers": {
-      "import": "./dist/parsers.js",
-      "require": "./dist/parsers.cjs"
+      "require": "./dist/parsers.cjs",
+      "import": "./dist/parsers.js"
     },
     "./plugins": {
-      "import": "./dist/plugins.js",
-      "require": "./dist/plugins.cjs"
+      "require": "./dist/plugins.cjs",
+      "import": "./dist/plugins.js"
     },
     "./types": {
-      "import": "./dist/types.js",
-      "require": "./dist/types.cjs"
+      "require": "./dist/types.cjs",
+      "import": "./dist/types.js"
     },
     "./package.json": "./package.json"
   },
