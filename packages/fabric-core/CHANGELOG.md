@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.7.0
+
+### Minor Changes
+
+- [`771df79`](https://github.com/kubb-labs/fabric/commit/771df79913095ce41ef1fd9ec3d05227bc4b2371) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Better event params
+
 ## 0.6.0
 
 ### Minor Changes
