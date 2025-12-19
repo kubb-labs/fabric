@@ -43,6 +43,32 @@ pnpm run changeset
 npx changeset
 ```
 
+### Testing Standards
+
+When writing tests, please follow these conventions:
+
+- Use `test.each` instead of `it.each` for parameterized tests to maintain consistency across the codebase.
+- You can use either `it` or `test` for individual test cases, but `test.each` is the preferred syntax for data-driven tests.
+
+Example:
+
+```typescript
+// ✅ Good: Use test.each for parameterized tests
+describe('my function', () => {
+  test.each([
+    { input: 1, expected: 2 },
+    { input: 2, expected: 4 },
+  ])('should double $input to $expected', ({ input, expected }) => {
+    expect(double(input)).toBe(expected)
+  })
+})
+
+// ❌ Avoid: Don't use it.each
+describe('my function', () => {
+  it.each([...])('test case', () => { ... })
+})
+```
+
 ### When you're done
 
 When all that's done, it's time to file a pull request to upstream:
