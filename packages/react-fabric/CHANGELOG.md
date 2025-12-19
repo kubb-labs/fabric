@@ -1,5 +1,21 @@
 # @kubb/react-fabric
 
+## 0.7.2
+
+### Patch Changes
+
+- [#71](https://github.com/kubb-labs/fabric/pull/71) [`59b8150`](https://github.com/kubb-labs/fabric/commit/59b81501feb921ca9c9fb04b405ae42910d8d029) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Improve test coverage for existing features
+
+  Added comprehensive test coverage for previously untested or under-tested components:
+  - Added tests for tsxParser, AsyncEventEmitter, dom utilities, open utility, fsPlugin, graphPlugin, and getFunctionParams
+  - Overall statement coverage improved from 78.98% to 83.52%
+  - Overall branch coverage improved from 75.33% to 80.02%
+  - Overall function coverage improved from 69.34% to 74.45%
+  - Added 42 new test cases across 7 files
+
+- Updated dependencies [[`59b8150`](https://github.com/kubb-labs/fabric/commit/59b81501feb921ca9c9fb04b405ae42910d8d029)]:
+  - @kubb/fabric-core@0.7.2
+
 ## 0.7.1
 
 ### Patch Changes
