@@ -1,5 +1,7 @@
 # @kubb/fabric-core
 
+## 0.7.3
+
 ## 0.7.2
 
 ### Patch Changes

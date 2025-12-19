@@ -1,6 +1,6 @@
 {
   "name": "@kubb/react-fabric",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "React integration for Kubb, providing JSX runtime support and React component generation capabilities for code generation plugins.",
   "keywords": [
     "react",
