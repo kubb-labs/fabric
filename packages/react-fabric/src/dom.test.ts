@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import { appendChildNode, createNode, createTextNode, insertBeforeNode, nodeNames, removeChildNode, setAttribute, setTextNodeValue } from './dom.ts'
-import type { DOMElement, TextNode } from './types.ts'
 
 describe('dom utilities', () => {
   describe('createNode', () => {
