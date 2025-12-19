@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { format } from '../mocks/format.ts'
 import { combineExports, combineImports, combineSources, createFile } from './createFile.ts'
 import { FileProcessor } from './FileProcessor.ts'

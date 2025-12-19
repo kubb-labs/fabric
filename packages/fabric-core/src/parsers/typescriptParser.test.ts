@@ -1,4 +1,5 @@
 import type ts from 'typescript'
+import { describe, expect, it } from 'vitest'
 
 import { createExport, createImport, print, typescriptParser } from './typescriptParser.ts'
 

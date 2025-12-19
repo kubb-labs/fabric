@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { describe, expect, it } from 'vitest'
 import type * as KubbFile from '../KubbFile.ts'
 import { TreeNode } from './TreeNode.ts'
 

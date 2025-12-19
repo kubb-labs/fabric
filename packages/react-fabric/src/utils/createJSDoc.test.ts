@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { createJSDoc } from './createJSDoc.ts'
 
 describe('createJsDoc', () => {
