@@ -78,21 +78,51 @@ Returns a Fabric instance with:
 - `fabric.files` — getter with all queued files.
 - `fabric.context` — internal context holding events, options, FileManager, installed plugins/parsers.
 
-### `defineFabric(instance?): () => Fabric`
-Factory to create your own `createFabric` with an optional bootstrap `instance(fabric)` called on creation.
 
 ### Events (emitted by the core during processing)
-- `start`
-- `end`
-- `render { fabric }`
-- `file:add { files }`
-- `write:start { files }`
-- `write:end { files }`
-- `file:start { file, index, total }`
-- `file:end { file, index, total }`
-- `process:start { files }`
-- `process:progress { file, source, processed, percentage, total }`
-- `process:end { files }`
+
+Fabric emits events throughout its lifecycle that plugins and custom code can listen to. These events provide hooks for monitoring progress, transforming files, and performing custom operations.
+
+#### Lifecycle Events
+- **`lifecycle:start`** — Emitted when Fabric begins execution
+- **`lifecycle:end`** — Emitted when Fabric completes execution
+- **`lifecycle:render { fabric }`** — Emitted when rendering starts (with reactPlugin)
+
+#### File Management Events
+- **`files:added { files }`** — Emitted when files are added to the FileManager cache
+- **`file:resolve:path { file }`** — Emitted during file path resolution (allows modification)
+- **`file:resolve:name { file }`** — Emitted during file name resolution (allows modification)
+
+#### File Writing Events
+- **`files:writing:start { files }`** — Emitted before writing files to disk
+- **`files:writing:end { files }`** — Emitted after files are written to disk
+
+#### File Processing Events
+- **`files:processing:start { files }`** — Emitted before processing begins
+- **`file:processing:start { file, index, total }`** — Emitted when each file starts processing
+- **`file:processing:end { file, index, total }`** — Emitted when each file finishes processing
+- **`file:processing:update { file, source, processed, percentage, total }`** — Emitted with progress updates
+- **`files:processing:end { files }`** — Emitted when all processing completes
+
+#### Listening to Events
+
+You can listen to events using the Fabric context:
+
+```ts
+const fabric = createFabric()
+
+fabric.context.on('lifecycle:start', async () => {
+  console.log('Starting Fabric...')
+})
+
+fabric.context.on('file:processing:update', async ({ processed, total, percentage }) => {
+  console.log(`Progress: ${percentage.toFixed(1)}% (${processed}/${total})`)
+})
+
+fabric.context.on('lifecycle:end', async () => {
+  console.log('Fabric completed!')
+})
+```
 
 
 ## Plugins
@@ -130,21 +160,29 @@ import { barrelPlugin } from '@kubb/fabric-core/plugins'
 
 Injected `fabric.writeEntry` parameters (via `barrelPlugin`):
 
+> [!IMPORTANT]
+> `fabric.writeEntry` should be called before `fabric.write`
+
+
 | Param | Type                                       | Description |
 |---|--------------------------------------------|---|
 | root | `string`                                   | Root directory where the entry `index.ts` should be created. |
 | mode | `'all' \| 'named' \| 'propagate' \| false` | Controls which export style to use for the entry barrel. |
 
-#### `progressPlugin`
-Shows a CLI progress bar by listening to core events.
+#### `loggerPlugin`
+Streams Fabric lifecycle activity as colourful consola logs, optional progress bars, and websocket messages that you can consume from custom tooling.
 
 ```
-import { progressPlugin } from '@kubb/fabric-core/plugins'
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
 ```
 
-| Option | Type | Default | Description                                                                             |
-|---|---|---|-----------------------------------------------------------------------------------------|
-| — | — | — | This plugin has no options, it displays a CLI progress bar by listening to core events. |
+| Option | Type | Default | Description |
+|---|---|---|---|
+| level | `import('consola').LogLevel` | — | Optional explicit log level passed to `createConsola`. |
+| progress | `boolean` | `true` | Enable/disable the integrated CLI progress bar. |
+| websocket | `boolean \| { host?: string; port?: number }` | `true` | Toggle or configure the websocket server that broadcasts Fabric events for future GUIs. |
+
+By default the plugin displays a progress bar, starts a websocket server on an ephemeral port, and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with a `Fabric` tag, animated in the progress bar, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
 
 
 #### `graphPlugin`
@@ -182,7 +220,7 @@ Injected methods (via `reactPlugin`):
 | `renderToString` | `(App: React.ElementType) => Promise<string> \| string` | Render a React component tree and return the final output as a string (without writing to stdout). |
 | `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
 
-#### `createPlugin`
+#### `definePlugin`
 
 Factory to declare a plugin that can be registered via `fabric.use`.
 
@@ -196,12 +234,12 @@ Example:
 
 ```ts
 import { createFabric } from '@kubb/fabric-core'
-import { createPlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
-const helloPlugin = createPlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
+const helloPlugin = definePlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
   name: 'helloPlugin',
   install(fabric, options) {
-    fabric.context.events.on('start', () => {
+    fabric.context.events.on('lifecycle:start', () => {
       console.log('Fabric started')
     })
   },
@@ -258,7 +296,7 @@ import { defaultParser } @kubb/fabric-core/parsers`
 |---|---|---|--------------------------------------------------------------------------|
 | file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 
-#### `createParser`
+#### `defineParser`
 Factory to declare a parser that can be registered via `fabric.use` and selected by `extNames` during `fabirc.write`.
 
 | Field                      | Required | Description                                                                                                     |
@@ -272,9 +310,9 @@ Example:
 
 ```ts
 import { createFabric } from '@kubb/fabric-core'
-import { createParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 
-const vueParser = createParser<{ banner?: string }>({
+const vueParser = defineParser<{ banner?: string }>({
   name: 'vueParser',
   extNames: ['.vue'],
   async install(fabric, options) {
@@ -315,6 +353,14 @@ Kubb uses an MIT-licensed open source project with its ongoing development made 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="http://www.stijnvanhulle.be"><img src="https://avatars.githubusercontent.com/u/5904681?v=4?s=100" width="100px;" alt="Stijn Van Hulle"/><br /><sub><b>Stijn Van Hulle</b></sub></a><br /><a href="https://github.com/kubb-labs/fabric/commits?author=stijnvanhulle" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/blackravenx"><img src="https://avatars.githubusercontent.com/u/70589675?v=4?s=100" width="100px;" alt="Max Shy"/><br /><sub><b>Max Shy</b></sub></a><br /><a href="https://github.com/kubb-labs/fabric/commits?author=blackravenx" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->

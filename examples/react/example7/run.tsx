@@ -1,6 +1,16 @@
 import path from 'node:path'
 import { createReactFabric, File } from '@kubb/react-fabric'
-import { fsPlugin, graphPlugin, progressPlugin } from '@kubb/react-fabric/plugins'
+import { fsPlugin, graphPlugin, loggerPlugin } from '@kubb/react-fabric/plugins'
+
+async function timeout(ms: number): Promise<unknown> {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      resolve(timeout)
+    }, ms)
+  }).then((timeout) => {
+    clearTimeout(timeout as NodeJS.Timeout)
+  })
+}
 
 /**
  * Create a file and append JSX
@@ -18,15 +28,14 @@ async function start() {
 
   fabric.use(fsPlugin, {
     async onBeforeWrite() {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await timeout(1000)
     },
     clean: { path: path.resolve(__dirname, './gen') },
   })
-  fabric.use(progressPlugin)
+  fabric.use(loggerPlugin, { progress: true, websocket: false })
   fabric.use(graphPlugin, { root: path.resolve(__dirname, './gen'), open: false })
 
-  fabric.render(App)
-
+  await fabric.render(App)
   await fabric.write()
 }
 

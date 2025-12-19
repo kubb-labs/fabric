@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { format } from '../mocks/format.ts'
 import { combineExports, combineImports, combineSources, createFile } from './createFile.ts'
 import { FileProcessor } from './FileProcessor.ts'
@@ -8,9 +9,15 @@ import type { Parser } from './parsers/types.ts'
 import { typescriptParser } from './parsers/typescriptParser.ts'
 
 describe('createFile', () => {
-  const parsers = new Set<Parser>([typescriptParser, tsxParser, defaultParser])
+  const parsers = new Map<KubbFile.Extname, Parser>([
+    ['.ts', typescriptParser],
+    ['.js', typescriptParser],
+    ['.tsx', tsxParser],
+    ['.jsx', tsxParser],
+    ['.json', defaultParser],
+  ])
   const fileProcessor = new FileProcessor()
-  test('if getFileSource is returning code with imports', async () => {
+  it('should parse file with type-only imports correctly', async () => {
     const code = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
@@ -99,7 +106,7 @@ describe('createFile', () => {
     expect(await format(codeWithDefaultImportOrder)).toMatchSnapshot()
   })
 
-  test('if getFileSource is returning code with imports and default import', async () => {
+  it('should parse file with default imports correctly', async () => {
     const code = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
@@ -122,7 +129,7 @@ describe('createFile', () => {
     expect(await format(code)).toMatchSnapshot()
   })
 
-  test('if getFileSource is returning code with exports and exports as', async () => {
+  it('should parse file with exports and aliased exports correctly', async () => {
     const fileImport = createFile({
       path: './src/models/file1.ts',
       baseName: 'file1.ts',
@@ -179,7 +186,7 @@ describe('createFile', () => {
     expect(await format(await fileProcessor.parse(fileExport, { parsers }))).toMatchSnapshot()
   })
 
-  test('if combineExports is filtering out duplicated sources(by name)', () => {
+  it('should filter out duplicated sources by name in combineSources', () => {
     const sources: Array<KubbFile.Source> = [
       {
         name: 'test',
@@ -207,11 +214,6 @@ describe('createFile', () => {
         },
         {
           "isTypeOnly": false,
-          "name": "test",
-          "value": "const test = 3",
-        },
-        {
-          "isTypeOnly": false,
           "name": "Test",
           "value": "type Test = 2",
         },
@@ -219,7 +221,66 @@ describe('createFile', () => {
     `)
   })
 
-  test('if combineExports is filtering out duplicated exports(by path and name)', () => {
+  it('should deduplicate sources with the same name from different plugins', () => {
+    // This test case represents the issue where buildFormData was being generated twice
+    // when multiple plugins added the same helper function
+    const sources: Array<KubbFile.Source> = [
+      {
+        name: 'buildFormData',
+        isExportable: true,
+        isTypeOnly: false,
+        value: 'export function buildFormData(data: Record<string, unknown>) { return new FormData(); }',
+      },
+      {
+        name: 'buildFormData',
+        isExportable: true,
+        isTypeOnly: false,
+        value: 'export function buildFormData(data: Record<string, unknown>) { return new FormData(); }',
+      },
+    ]
+
+    const result = combineSources(sources)
+    expect(result.length).toBe(1)
+    expect(result[0]?.name).toBe('buildFormData')
+  })
+
+  it('should keep sources without names separate even if they have same metadata', () => {
+    // Sources without names should not be deduplicated based on metadata alone
+    const sources: Array<KubbFile.Source> = [
+      {
+        value: 'const file1 = "file1";',
+      },
+      {
+        value: 'const file2 = "file2";',
+      },
+    ]
+
+    const result = combineSources(sources)
+    expect(result.length).toBe(2)
+  })
+
+  it('should handle sources with both name and value undefined in combineSources', () => {
+    // Edge case: sources with both name and value undefined should be deduplicated
+    const sources: Array<KubbFile.Source> = [
+      {
+        isExportable: true,
+        isTypeOnly: false,
+      },
+      {
+        isExportable: true,
+        isTypeOnly: false,
+      },
+      {
+        isExportable: false,
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineSources(sources)
+    expect(result.length).toBe(2) // Two unique combinations of isExportable and isTypeOnly
+  })
+
+  it('should filter out duplicated exports by path and name in combineExports', () => {
     const exports: Array<KubbFile.Export> = [
       {
         path: './models',
@@ -255,7 +316,7 @@ describe('createFile', () => {
     `)
   })
 
-  test('if combineImports is filtering out duplicated imports(by path and name)', () => {
+  it('should filter out duplicated imports by path and name in combineImports', () => {
     const imports: Array<KubbFile.Import> = [
       {
         path: './models',

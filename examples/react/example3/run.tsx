@@ -35,7 +35,7 @@ async function start() {
   fabric.use(fsPlugin)
   fabric.use(reactPlugin)
 
-  fabric.render(App)
+  await fabric.render(App)
 
   const files = fabric.files
 

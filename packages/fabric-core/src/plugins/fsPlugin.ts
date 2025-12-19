@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
 import fs from 'fs-extra'
 import type * as KubbFile from '../KubbFile.ts'
-import { createPlugin } from './createPlugin.ts'
+import { definePlugin } from './definePlugin.ts'
 
 type WriteOptions = {
   extension?: Record<KubbFile.Extname, KubbFile.Extname | ''>
@@ -77,14 +77,6 @@ export async function write(path: string, data: string | undefined, options: { s
   return data
 }
 
-// biome-ignore lint/suspicious/noTsIgnore: production ready
-// @ts-ignore
-declare module '@kubb/fabric-core' {
-  interface Fabric {
-    write(options?: WriteOptions): Promise<void>
-  }
-}
-
 declare global {
   namespace Kubb {
     interface Fabric {
@@ -93,32 +85,32 @@ declare global {
   }
 }
 
-export const fsPlugin = createPlugin<Options, ExtendOptions>({
+export const fsPlugin = definePlugin<Options, ExtendOptions>({
   name: 'fs',
-  install(app, options = {}) {
+  install(ctx, options = {}) {
     if (options.clean) {
       fs.removeSync(options.clean.path)
     }
 
-    app.context.events.on('process:progress', async ({ file, source }) => {
+    ctx.on('file:processing:update', async ({ file, source }) => {
       if (options.onBeforeWrite) {
         await options.onBeforeWrite(file.path, source)
       }
       await write(file.path, source, { sanity: false })
     })
   },
-  inject(app, { dryRun } = {}) {
+  inject(ctx, { dryRun } = {}) {
     return {
       async write(
         options = {
           extension: { '.ts': '.ts' },
         },
       ) {
-        await app.context.fileManager.write({
-          mode: app.context.config?.options?.mode,
+        await ctx.fileManager.write({
+          mode: ctx.config.mode,
           extension: options.extension,
           dryRun,
-          parsers: app.context.installedParsers,
+          parsers: ctx.installedParsers,
         })
       },
     }

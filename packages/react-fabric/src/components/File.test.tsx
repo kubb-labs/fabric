@@ -1,6 +1,6 @@
 import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { expect } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { File } from './File.tsx'
 
@@ -57,7 +57,7 @@ describe('<File/>', () => {
           ],
           "extname": ".ts",
           "footer": undefined,
-          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
+          "id": "a0af9f865bf637e6736817f4ce552e4cdf7b8c36ea75bc254c1d1f0af744b5bf",
           "imports": [],
           "meta": {},
           "name": "test",
@@ -85,7 +85,7 @@ describe('<File/>', () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
-    fabric.render(Component)
+    await fabric.render(Component)
     const files = fabric.files
 
     expect(files).toMatchInlineSnapshot('[]')
@@ -96,7 +96,7 @@ describe('<File/>', () => {
       return (
         <File baseName="test.ts" path="path">
           <File.Source>
-            <File.Export path={''} name={'test'} />
+            <File.Export path={'./test.ts'} name={'test'} />
           </File.Source>
         </File>
       )
@@ -114,26 +114,26 @@ describe('<File/>', () => {
           "baseName": "test.ts",
           "exports": [
             {
-              "asAlias": undefined,
+              "asAlias": false,
               "isTypeOnly": false,
               "name": "test",
-              "path": "",
+              "path": "./test.ts",
             },
           ],
           "extname": ".ts",
           "footer": undefined,
-          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
+          "id": "a0af9f865bf637e6736817f4ce552e4cdf7b8c36ea75bc254c1d1f0af744b5bf",
           "imports": [],
           "meta": {},
           "name": "test",
           "path": "path",
           "sources": [
             {
-              "isExportable": undefined,
-              "isIndexable": undefined,
-              "isTypeOnly": undefined,
+              "isExportable": false,
+              "isIndexable": false,
+              "isTypeOnly": false,
               "name": undefined,
-              "value": "",
+              "value": "export * from "./test.ts";",
             },
           ],
         },
@@ -191,16 +191,16 @@ describe('<File/>', () => {
           "exports": [],
           "extname": ".ts",
           "footer": undefined,
-          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
+          "id": "a0af9f865bf637e6736817f4ce552e4cdf7b8c36ea75bc254c1d1f0af744b5bf",
           "imports": [],
           "meta": {},
           "name": "test",
           "path": "path",
           "sources": [
             {
-              "isExportable": undefined,
-              "isIndexable": undefined,
-              "isTypeOnly": undefined,
+              "isExportable": false,
+              "isIndexable": false,
+              "isTypeOnly": false,
               "name": undefined,
               "value": "test",
             },
@@ -243,16 +243,16 @@ describe('<File/>', () => {
           "exports": [],
           "extname": ".ts",
           "footer": undefined,
-          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
+          "id": "a0af9f865bf637e6736817f4ce552e4cdf7b8c36ea75bc254c1d1f0af744b5bf",
           "imports": [],
           "meta": {},
           "name": "test",
           "path": "path",
           "sources": [
             {
-              "isExportable": undefined,
-              "isIndexable": undefined,
-              "isTypeOnly": undefined,
+              "isExportable": false,
+              "isIndexable": false,
+              "isTypeOnly": false,
               "name": undefined,
               "value": "<button className="className" type="button" aria-disabled={false} onClick={(e) => console.log(e)}>sdfs</button>",
             },
@@ -290,22 +290,22 @@ describe('<File/>', () => {
           "exports": [],
           "extname": ".ts",
           "footer": undefined,
-          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
+          "id": "a0af9f865bf637e6736817f4ce552e4cdf7b8c36ea75bc254c1d1f0af744b5bf",
           "imports": [],
           "meta": {},
           "name": "test",
           "path": "path",
           "sources": [
             {
-              "isExportable": undefined,
-              "isIndexable": undefined,
-              "isTypeOnly": undefined,
+              "isExportable": false,
+              "isIndexable": false,
+              "isTypeOnly": false,
               "name": undefined,
               "value": "const file = 2;",
             },
             {
               "isExportable": true,
-              "isIndexable": undefined,
+              "isIndexable": false,
               "isTypeOnly": true,
               "name": "test",
               "value": "export const test = 2;",
@@ -356,7 +356,7 @@ describe('<File/>', () => {
     expect(files[0]?.imports).toMatchInlineSnapshot(`
       [
         {
-          "isNameSpace": undefined,
+          "isNameSpace": false,
           "isTypeOnly": false,
           "name": "node",
           "path": "node",
@@ -453,10 +453,10 @@ describe('<File.Import/>', () => {
           "exports": [],
           "extname": ".ts",
           "footer": undefined,
-          "id": "e97f857b92d108e8de1788ef76cd7ff642b0f0ea7e196ba089a852b24b570f30",
+          "id": "a0af9f865bf637e6736817f4ce552e4cdf7b8c36ea75bc254c1d1f0af744b5bf",
           "imports": [
             {
-              "isNameSpace": undefined,
+              "isNameSpace": false,
               "isTypeOnly": false,
               "name": "React",
               "path": "react",
@@ -468,9 +468,9 @@ describe('<File.Import/>', () => {
           "path": "path",
           "sources": [
             {
-              "isExportable": undefined,
-              "isIndexable": undefined,
-              "isTypeOnly": undefined,
+              "isExportable": false,
+              "isIndexable": false,
+              "isTypeOnly": false,
               "name": undefined,
               "value": "import React from "react";",
             },
@@ -508,10 +508,10 @@ describe('<File.Import/>', () => {
           "exports": [],
           "extname": ".ts",
           "footer": undefined,
-          "id": "97e35e44c38e860fc3736792ed817c2b81b7ffd0bd9442bf973c116414ae8e37",
+          "id": "846c73bf0bf8108842e558e5cb3030529a5c7dc3f8c495d10f49b685ecbe96c3",
           "imports": [
             {
-              "isNameSpace": undefined,
+              "isNameSpace": false,
               "isTypeOnly": false,
               "name": "React",
               "path": "react",
@@ -523,9 +523,9 @@ describe('<File.Import/>', () => {
           "path": "path.ts",
           "sources": [
             {
-              "isExportable": undefined,
-              "isIndexable": undefined,
-              "isTypeOnly": undefined,
+              "isExportable": false,
+              "isIndexable": false,
+              "isTypeOnly": false,
               "name": undefined,
               "value": "test",
             },

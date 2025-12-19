@@ -1,6 +1,6 @@
 {
   "name": "@kubb/fabric-core",
-  "version": "0.2.14",
+  "version": "0.7.2",
   "description": "Core functionality for Kubb's plugin-based code generation system, providing the foundation for transforming OpenAPI specifications.",
   "keywords": [
     "typescript",
@@ -23,24 +23,24 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
     },
     "./parsers": {
-      "import": "./dist/parsers.js",
-      "require": "./dist/parsers.cjs"
+      "require": "./dist/parsers.cjs",
+      "import": "./dist/parsers.js"
     },
     "./parsers/typescript": {
-      "import": "./dist/parsers/typescript.js",
-      "require": "./dist/parsers/typescript.cjs"
+      "require": "./dist/parsers/typescript.cjs",
+      "import": "./dist/parsers/typescript.js"
     },
     "./plugins": {
-      "import": "./dist/plugins.js",
-      "require": "./dist/plugins.cjs"
+      "require": "./dist/plugins.cjs",
+      "import": "./dist/plugins.js"
     },
     "./types": {
-      "import": "./dist/types.js",
-      "require": "./dist/types.cjs"
+      "require": "./dist/types.cjs",
+      "import": "./dist/types.js"
     },
     "./package.json": "./package.json"
   },
@@ -81,8 +81,8 @@
   "scripts": {
     "build": "tsdown && size-limit",
     "clean": "npx rimraf ./dist",
-    "lint": "bun biome lint .",
-    "lint:fix": "bun biome lint --fix --unsafe .",
+    "lint": "pnpm biome lint .",
+    "lint:fix": "pnpm biome lint --fix --unsafe .",
     "release": "pnpm publish --no-git-check",
     "release:canary": "bash ../../.github/canary.sh && node ../../scripts/build.js canary && pnpm publish --no-git-check",
     "start": "tsdown --watch ./src",
@@ -91,16 +91,19 @@
   },
   "dependencies": {
     "cli-progress": "^3.12.0",
+    "consola": "^3.4.2",
     "fs-extra": "^11.3.2",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.2.0",
     "serve-handler": "^6.1.6",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
     "@types/fs-extra": "^11.0.4",
-    "@types/serve-handler": "^6.1.4"
+    "@types/serve-handler": "^6.1.4",
+    "@types/ws": "^8.18.1"
   },
   "engines": {
     "node": ">=20"

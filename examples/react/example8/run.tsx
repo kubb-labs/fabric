@@ -26,8 +26,8 @@ async function start() {
 
   fabric.use(fsPlugin, { clean: { path: path.resolve(__dirname, './gen') } })
 
-  fabric.render(App1)
-  fabric.render(App2)
+  await fabric.render(App1)
+  await fabric.render(App2)
 
   await fabric.write()
 }

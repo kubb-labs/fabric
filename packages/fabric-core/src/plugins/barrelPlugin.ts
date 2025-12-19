@@ -5,7 +5,7 @@ import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { getRelativePath } from '../utils/getRelativePath.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
-import { createPlugin } from './createPlugin.ts'
+import { definePlugin } from './definePlugin.ts'
 
 type Mode = 'all' | 'named' | 'propagate' | false
 
@@ -21,20 +21,18 @@ type WriteEntryOptions = {
 }
 
 type ExtendOptions = {
+  /**
+   * `fabric.writeEntry` should be called before `fabric.write`
+   */
   writeEntry(options: WriteEntryOptions): Promise<void>
-}
-
-// biome-ignore lint/suspicious/noTsIgnore: production ready
-// @ts-ignore
-declare module '@kubb/fabric-core' {
-  interface Fabric {
-    writeEntry(options: WriteEntryOptions): Promise<void>
-  }
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
+      /**
+       * `fabric.writeEntry` should be called before `fabric.write`
+       */
       writeEntry(options: WriteEntryOptions): Promise<void>
     }
   }
@@ -50,6 +48,20 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
   // Do not generate when propagating or disabled
   if (mode === 'propagate' || mode === false) {
     return []
+  }
+
+  const indexableSourcesMap = new Map<KubbFile.File, Array<KubbFile.Source>>()
+
+  for (const file of files) {
+    const indexableSources: Array<KubbFile.Source> = []
+    for (const source of file.sources || []) {
+      if (source.isIndexable && source.name) {
+        indexableSources.push(source)
+      }
+    }
+    if (indexableSources.length > 0) {
+      indexableSourcesMap.set(file, indexableSources)
+    }
   }
 
   const cachedFiles = new Map<KubbFile.Path, KubbFile.File>()
@@ -84,41 +96,40 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
 
     const seen = dedupe.get(barrelPath)!
 
-    // Collect all leaves under the current directory node
-    node.leaves.forEach((leaf) => {
+    for (const leaf of node.leaves) {
       const file = leaf.data.file
-      if (!file) {
-        return
+      if (!file || !file.path) {
+        continue
       }
 
-      const sources = file.sources || []
-      sources.forEach((source) => {
-        if (!file.path || !source.isIndexable || !source.name) {
-          return
-        }
+      const indexableSources = indexableSourcesMap.get(file)
+      if (!indexableSources) {
+        continue
+      }
 
+      for (const source of indexableSources) {
         const key = `${source.name}|${source.isTypeOnly ? '1' : '0'}`
         if (seen.has(key)) {
-          return
+          continue
         }
         seen.add(key)
 
         // Always compute relative path from the parent directory to the file path
-        barrelFile!.exports!.push({
-          name: [source.name],
+        barrelFile.exports!.push({
+          name: [source.name!],
           path: getRelativePath(parentPath, file.path),
           isTypeOnly: source.isTypeOnly,
         })
 
         barrelFile!.sources.push({
-          name: source.name,
+          name: source.name!,
           isTypeOnly: source.isTypeOnly,
           value: '', // TODO use parser to generate import
           isExportable: mode === 'all' || mode === 'named',
           isIndexable: mode === 'all' || mode === 'named',
         })
-      })
-    })
+      }
+    }
   })
 
   const result = [...cachedFiles.values()]
@@ -133,9 +144,9 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
   return result
 }
 
-export const barrelPlugin = createPlugin<Options, ExtendOptions>({
+export const barrelPlugin = definePlugin<Options, ExtendOptions>({
   name: 'barrel',
-  install(app, options) {
+  install(ctx, options) {
     if (!options) {
       throw new Error('Barrel plugin requires options.root and options.mode')
     }
@@ -144,14 +155,14 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
       return undefined
     }
 
-    app.context.events.on('write:start', async ({ files }) => {
+    ctx.on('files:writing:start', async (files) => {
       const root = options.root
       const barrelFiles = getBarrelFiles({ files, root, mode: options.mode })
 
-      await app.context.fileManager.add(...barrelFiles)
+      await ctx.fileManager.add(...barrelFiles)
     })
   },
-  inject(app, options) {
+  inject(ctx, options) {
     if (!options) {
       throw new Error('Barrel plugin requires options.root and options.mode')
     }
@@ -164,41 +175,55 @@ export const barrelPlugin = createPlugin<Options, ExtendOptions>({
 
         const rootPath = path.resolve(root, 'index.ts')
 
-        const barrelFiles = app.files.filter((file) => {
-          return file.sources.some((source) => source.isIndexable)
-        })
+        const barrelFiles: Array<KubbFile.ResolvedFile> = []
+        for (const file of ctx.files) {
+          for (const source of file.sources) {
+            if (source.isIndexable) {
+              barrelFiles.push(file)
+
+              break
+            }
+          }
+        }
+
+        const fileTypeCache = new Map<KubbFile.ResolvedFile, boolean>()
+        for (const file of barrelFiles) {
+          fileTypeCache.set(
+            file,
+            file.sources.every((source) => source.isTypeOnly),
+          )
+        }
+
+        const exports: Array<KubbFile.Export> = []
+        for (const file of barrelFiles) {
+          const containsOnlyTypes = fileTypeCache.get(file) ?? false
+
+          for (const source of file.sources) {
+            if (!file.path || !source.isIndexable) {
+              continue
+            }
+
+            exports.push({
+              name: mode === 'all' ? undefined : [source.name],
+              path: getRelativePath(rootPath, file.path),
+              isTypeOnly: mode === 'all' ? containsOnlyTypes : source.isTypeOnly,
+            } as KubbFile.Export)
+          }
+        }
 
         const entryFile = createFile({
           path: rootPath,
           baseName: 'index.ts',
-          exports: barrelFiles
-            .flatMap((file) => {
-              const containsOnlyTypes = file.sources.every((source) => source.isTypeOnly)
-
-              return file.sources
-                ?.map((source) => {
-                  if (!file.path || !source.isIndexable) {
-                    return undefined
-                  }
-
-                  return {
-                    name: mode === 'all' ? undefined : [source.name],
-                    path: getRelativePath(rootPath, file.path),
-                    isTypeOnly: mode === 'all' ? containsOnlyTypes : source.isTypeOnly,
-                  } as KubbFile.Export
-                })
-                .filter(Boolean)
-            })
-            .filter(Boolean),
+          exports,
           sources: [],
         })
 
-        await app.context.fileManager.add(entryFile)
+        await ctx.addFile(entryFile)
 
-        await app.context.fileManager.write({
-          mode: app.context.config?.options?.mode,
+        await ctx.fileManager.write({
+          mode: ctx.config.mode,
           dryRun: options.dryRun,
-          parsers: app.context.installedParsers,
+          parsers: ctx.installedParsers,
         })
       },
     }

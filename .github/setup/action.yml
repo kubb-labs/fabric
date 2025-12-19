@@ -6,12 +6,21 @@ runs:
   steps:
     - uses: pnpm/action-setup@v4
 
+    - name: Install bun
+      uses: oven-sh/setup-bun@v1
+
     - name: Setup Node.js environment
       uses: actions/setup-node@v3
       with:
         node-version: 20
         cache: "pnpm"
         registry-url: "https://registry.npmjs.org"
+
+#    - name: Install safe chain
+#      shell: bash
+#      run: |
+#        npm i -g @aikidosec/safe-chain
+#        safe-chain setup-ci
 
     - name: Install bun
       uses: oven-sh/setup-bun@v1

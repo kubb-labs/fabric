@@ -1,22 +1,33 @@
 import type { KubbFile } from '@kubb/fabric-core/types'
-import type React from 'react'
-import type { File } from '../components/File.tsx'
+
 import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
 
 export function squashImportNodes(node: DOMElement): Set<KubbFile.Import> {
-  let imports = new Set<KubbFile.Import>()
+  const imports = new Set<KubbFile.Import>()
 
-  node.childNodes.filter(Boolean).forEach((childNode) => {
-    if (childNode.nodeName !== '#text' && nodeNames.includes(childNode.nodeName)) {
-      imports = new Set([...imports, ...squashImportNodes(childNode)])
+  const walk = (current: DOMElement): void => {
+    for (const child of current.childNodes) {
+      if (!child) {
+        continue
+      }
+
+      if (child.nodeName !== '#text' && nodeNames.has(child.nodeName)) {
+        walk(child)
+      }
+
+      if (child.nodeName === 'kubb-import') {
+        imports.add({
+          name: child.attributes.get('name'),
+          path: child.attributes.get('path'),
+          root: child.attributes.get('root'),
+          isTypeOnly: child.attributes.get('isTypeOnly') ?? false,
+          isNameSpace: child.attributes.get('isNameSpace') ?? false,
+        } as KubbFile.Import)
+      }
     }
+  }
 
-    if (childNode.nodeName === 'kubb-import') {
-      const attributes = childNode.attributes as React.ComponentProps<typeof File.Import>
-      imports.add(attributes)
-    }
-  })
-
+  walk(node)
   return imports
 }

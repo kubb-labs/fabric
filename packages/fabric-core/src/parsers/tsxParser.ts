@@ -1,7 +1,7 @@
-import { createParser } from './createParser.ts'
+import { defineParser } from './defineParser.ts'
 import { typescriptParser } from './typescriptParser.ts'
 
-export const tsxParser = createParser({
+export const tsxParser = defineParser({
   name: 'tsx',
   extNames: ['.tsx', '.jsx'],
   install() {},

@@ -12,7 +12,9 @@ permissions:
   packages: write
   pull-requests: write
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release:
@@ -21,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -29,10 +31,10 @@ jobs:
         uses: ./.github/setup
 
       - name: Build
-        run: bun run build
+        run: pnpm run build
 
       - name: Test
-        run: bun run test
+        run: pnpm run test
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -44,7 +46,7 @@ jobs:
         uses: changesets/action@v1
         if: ${{ github.event.inputs.tag == '' }}
         with:
-          publish: bun release
+          publish: pnpm release
           commit: "ci(changesets): version packages"
           setupGitUser: false
         env:
@@ -57,8 +59,8 @@ jobs:
         if: steps.changesets.outputs.published != 'true'
         run: |
           git checkout main
-          bun version:canary
-          bun release:canary --tag ${{ inputs.tag || 'canary' }}
+          pnpm version:canary
+          pnpm release:canary --tag ${{ inputs.tag || 'canary' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

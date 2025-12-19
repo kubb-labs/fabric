@@ -14,14 +14,14 @@
   "sideEffects": false,
   "scripts": {
     "generate": "bun run main.ts",
-    "example1": "bun ./example1/run.tsx",
-    "example2": "bun ./example2/run.tsx",
-    "example3": "bun ./example3/run.tsx",
-    "example4": "bun ./example4/run.tsx",
-    "example5": "bun ./example5/run.tsx",
-    "example6": "bun ./example6/run.tsx",
-    "example7": "bun ./example7/run.tsx",
-    "example8": "bun ./example8/run.tsx",
+    "example1": "bun ./example1/run.ts",
+    "example2": "bun ./example2/run.ts",
+    "example3": "bun ./example3/run.ts",
+    "example4": "bun ./example4/run.ts",
+    "example5": "bun ./example5/run.ts",
+    "example6": "bun ./example6/run.ts",
+    "example7": "bun ./example7/run.ts",
+    "example8": "bun ./example8/run.ts",
     "clean": "npx rimraf ./dist",
     "test": "vitest",
     "typecheck": "echo 'empty'"
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "vite": "^7.1.12"
+    "vite": "^7.3.0"
   },
   "packageManager": "pnpm@10.18.3",
   "engines": {

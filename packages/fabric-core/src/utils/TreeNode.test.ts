@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { describe, expect, it } from 'vitest'
 import type * as KubbFile from '../KubbFile.ts'
 import { TreeNode } from './TreeNode.ts'
 
@@ -26,14 +27,14 @@ describe('TreeNode', () => {
   const tree = TreeNode.fromFiles(files, 'src/')
   const treeWindows = TreeNode.fromFiles(files, 'src\\')
 
-  test('if schemas folder contains x files and y folders', () => {
+  it('should create tree structure with correct number of files and folders', () => {
     expect(tree).toBeDefined()
     expect(treeWindows).toBeDefined()
 
     expect(tree).toMatchSnapshot()
   })
 
-  test('if leaves are rendered correctly', () => {
+  it('should render leaves correctly with proper paths', () => {
     expect(tree?.leaves.length).toBe(3)
 
     tree?.leaves.forEach((leave) => {
@@ -50,14 +51,14 @@ describe('TreeNode', () => {
       }
     })
   })
-  test('if `find` is executed correctly', () => {
+  it('should execute findDeep correctly to locate specific nodes', () => {
     const helloTS = tree?.leaves.find((leave) => leave.data.name === 'hello.ts')
 
     expect(tree?.findDeep).toBeDefined()
     expect(tree?.findDeep((item) => item.data === helloTS?.data)?.data.name).toEqual('hello.ts')
   })
 
-  test('if `foreach` is executed correctly', () => {
+  it('should execute forEach correctly and iterate over all nodes', () => {
     const items: TreeNode<{ name: string }>['data'][] = []
 
     tree?.forEach((treeNode) => {
@@ -77,7 +78,7 @@ describe('TreeNode', () => {
     `)
   })
 
-  test('if TreeNode.toGraph renders a graph correctly', () => {
+  it('should render graph correctly using TreeNode.toGraph', () => {
     expect(tree).toBeDefined()
 
     expect(TreeNode.toGraph(tree!)).toMatchSnapshot()

@@ -1,5 +1,119 @@
 # @kubb/fabric-core
 
+## 0.7.2
+
+### Patch Changes
+
+- [#71](https://github.com/kubb-labs/fabric/pull/71) [`59b8150`](https://github.com/kubb-labs/fabric/commit/59b81501feb921ca9c9fb04b405ae42910d8d029) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Improve test coverage for existing features
+
+  Added comprehensive test coverage for previously untested or under-tested components:
+  - Added tests for tsxParser, AsyncEventEmitter, dom utilities, open utility, fsPlugin, graphPlugin, and getFunctionParams
+  - Overall statement coverage improved from 78.98% to 83.52%
+  - Overall branch coverage improved from 75.33% to 80.02%
+  - Overall function coverage improved from 69.34% to 74.45%
+  - Added 42 new test cases across 7 files
+
+## 0.7.1
+
+### Patch Changes
+
+- [#69](https://github.com/kubb-labs/fabric/pull/69) [`410a227`](https://github.com/kubb-labs/fabric/commit/410a2276a6986bbbb138c8fd24eaeb89bfb7a9bc) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Update tsdown
+
+## 0.7.0
+
+### Minor Changes
+
+- [`771df79`](https://github.com/kubb-labs/fabric/commit/771df79913095ce41ef1fd9ec3d05227bc4b2371) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Better event params
+
+## 0.6.0
+
+### Minor Changes
+
+- [#66](https://github.com/kubb-labs/fabric/pull/66) [`5e4c2bf`](https://github.com/kubb-labs/fabric/commit/5e4c2bf73666b14af736bcf553f1bbf63c99564a) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - **BREAKING CHANGE**: Renamed events for consistency:
+  - `files:processing:update` → `file:processing:update` (singular, as it tracks individual file progress)
+  - `file:path:resolving` → `file:resolve:path` (clearer naming)
+  - `file:name:resolving` → `file:resolve:name` (clearer naming)
+
+  Improved FabricEvents documentation with comprehensive JSDoc comments. Each event now includes detailed descriptions, usage guidance, and property documentation. Updated READMEs with corrected event names organized into logical categories (Lifecycle, File Management, File Writing, File Processing) with examples.
+
+## 0.5.5
+
+### Patch Changes
+
+- [#60](https://github.com/kubb-labs/fabric/pull/60) [`06345d0`](https://github.com/kubb-labs/fabric/commit/06345d0bdfa83dca69c1ddc49414b46e0f60b306) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Correct use of define and create
+
+## 0.5.4
+
+### Patch Changes
+
+- [`35ac47c`](https://github.com/kubb-labs/fabric/commit/35ac47c8528b2ecca8fbe91d592261072903ead6) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Update packages
+
+## 0.5.3
+
+### Patch Changes
+
+- [`377eedf`](https://github.com/kubb-labs/fabric/commit/377eedfb03a9377a8ef633774284ba6027c7c8ee) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Reduce duplicated sourceNames
+
+## 0.5.2
+
+### Patch Changes
+
+- [`3e9c031`](https://github.com/kubb-labs/fabric/commit/3e9c031e8424f80dd65b3784ed4a294e3be17eaf) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Upsert possibility
+
+## 0.5.1
+
+## 0.5.0
+
+### Minor Changes
+
+- [#47](https://github.com/kubb-labs/fabric/pull/47) [`e51dd0e`](https://github.com/kubb-labs/fabric/commit/e51dd0e46c00b58191d988ae55d5d152289e6134) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Update loggerPlugin to support progressbar and websockets
+
+## 0.4.1
+
+## 0.4.0
+
+## 0.3.1
+
+### Patch Changes
+
+- [`4780364`](https://github.com/kubb-labs/fabric/commit/478036455e4f305bd2f95ec4bed9e1a7df734595) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Correct print
+
+## 0.3.0
+
+### Minor Changes
+
+- [#44](https://github.com/kubb-labs/fabric/pull/44) [`6c50def`](https://github.com/kubb-labs/fabric/commit/6c50def6757c43b3ab0b5806410b8ed305a0022c) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Performance updates
+
+## 0.2.19
+
+### Patch Changes
+
+- [`96840a9`](https://github.com/kubb-labs/fabric/commit/96840a96a6fd9388f60d26711cd9d54cb8c1a63d) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - revert resolvePath/resolvename async
+
+## 0.2.18
+
+### Patch Changes
+
+- [`5356373`](https://github.com/kubb-labs/fabric/commit/535637325ee50b30be35263122af9f89289bf233) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - preMerged files revert
+
+## 0.2.17
+
+### Patch Changes
+
+- [#36](https://github.com/kubb-labs/fabric/pull/36) [`63206b1`](https://github.com/kubb-labs/fabric/commit/63206b127ba12b44dcdd20e5534829d52d6f1cef) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - resolveName and resolvePath
+
+## 0.2.16
+
+### Patch Changes
+
+- [`3013418`](https://github.com/kubb-labs/fabric/commit/3013418835f87e3f7597bce5e0ee07f4b4e40129) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - Refactor naming for plugins and parsers
+
+## 0.2.15
+
+### Patch Changes
+
+- [`739f776`](https://github.com/kubb-labs/fabric/commit/739f77656263855d2331877a4fdcaa87fefec086) Thanks [@stijnvanhullem](https://github.com/stijnvanhullem)! - Better use of ctx in `install`
+
 ## 0.2.14
 
 ### Patch Changes

@@ -10,54 +10,134 @@ declare global {
   }
 }
 
+/**
+ * Component placeholder type.
+ * May later be extended to support specific runtime renderers.
+ */
 export type Component = any
 
-export type FabricOptions = {
+/**
+ * Defines core runtime options for Fabric.
+ */
+export interface FabricOptions {
   /**
+   * Determines how Fabric processes files.
+   * - `sequential`: files are processed one by one
+   * - `parallel`: files are processed concurrently
+   *
    * @default 'sequential'
    */
   mode?: FabricMode
 }
 
-export type FabricEvents = {
-  /**
-   * Called in the beginning of the app lifecycle.
-   */
-  start: []
-  /**
-   * Called in the end of the app lifecycle.
-   */
-  end: []
-  /**
-   * Called when being rendered
-   */
-  render: [{ fabric: Fabric }]
-  /**
-   * Called once before processing any files.
-   */
-  'process:start': [{ files: KubbFile.ResolvedFile[] }]
-  /**
-   * Called when FileManager is adding files to its cache
-   */
+/**
+ * Available modes for file processing.
+ */
+export type FabricMode = 'sequential' | 'parallel'
 
-  'file:add': [{ files: KubbFile.ResolvedFile[] }]
-  'write:start': [{ files: KubbFile.ResolvedFile[] }]
-  'write:end': [{ files: KubbFile.ResolvedFile[] }]
+/**
+ * Event definitions emitted during the Fabric lifecycle.
+ *
+ * These events allow plugins and external code to hook into different stages
+ * of the file generation process. All events are asynchronous and can be
+ * listened to using `fabric.context.on()` or `fabric.context.onOnce()`.
+ *
+ * @example
+ * ```ts
+ * fabric.context.on('lifecycle:start', async () => {
+ *   console.log('Fabric started!')
+ * })
+ * ```
+ */
+export interface FabricEvents {
   /**
-   * Called for each file when processing begins.
+   * Emitted when the Fabric application lifecycle begins.
+   * This is typically the first event fired when starting a Fabric run.
+   * Use this to perform initial setup or logging.
    */
-  'file:start': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  'lifecycle:start': []
 
   /**
-   * Called for each file when processing finishes.
+   * Emitted when the Fabric application lifecycle completes.
+   * This is typically the last event fired after all processing is done.
+   * Use this for cleanup tasks or final reporting.
    */
-  'file:end': [{ file: KubbFile.ResolvedFile; index: number; total: number }]
+  'lifecycle:end': []
 
   /**
-   * Called periodically (or after each file) to indicate progress.
-   * Useful for progress bars or logging.
+   * Emitted when Fabric starts rendering (used with reactPlugin).
+   * Provides access to the Fabric instance for render-time operations.
    */
-  'process:progress': [
+  'lifecycle:render': [fabric: Fabric]
+
+  /**
+   * Emitted once before file processing begins.
+   * Provides the complete list of files that will be processed.
+   * Use this to prepare for batch operations or display initial file counts.
+   */
+  'files:processing:start': [files: Array<KubbFile.ResolvedFile>]
+
+  /**
+   * Emitted when files are successfully added to the FileManager's internal cache.
+   * This happens after files pass through path and name resolution.
+   * Use this to track which files have been registered.
+   */
+  'files:added': [files: Array<KubbFile.ResolvedFile>]
+
+  /**
+   * Emitted during file path resolution, before a file is cached.
+   * Listeners can modify the file's path property to customize output location.
+   * This is called for each file being added via `addFile()` or `upsertFile()`.
+   */
+  'file:resolve:path': [file: KubbFile.File]
+
+  /**
+   * Emitted during file name resolution, before a file is cached.
+   * Listeners can modify the file's name-related properties to customize naming.
+   * This is called for each file being added via `addFile()` or `upsertFile()`.
+   */
+  'file:resolve:name': [file: KubbFile.File]
+
+  /**
+   * Emitted just before files are written to disk.
+   * Provides all files that will be written in this batch.
+   * Use this to perform pre-write operations like creating directories.
+   */
+  'files:writing:start': [files: Array<KubbFile.ResolvedFile>]
+
+  /**
+   * Emitted after all files have been successfully written to disk.
+   * Provides all files that were written in this batch.
+   * Use this for post-write operations like running formatters or reporting.
+   */
+  'files:writing:end': [files: Array<KubbFile.ResolvedFile>]
+
+  /**
+   * Emitted when an individual file starts being processed.
+   * This happens for each file in the queue, before parsing.
+   * Use this for per-file setup or detailed logging.
+   */
+  'file:processing:start': [file: KubbFile.ResolvedFile, index: number, total: number]
+
+  /**
+   * Emitted when an individual file completes processing.
+   * This happens after the file has been parsed and handled.
+   * Use this for per-file cleanup or progress tracking.
+   */
+  'file:processing:end': [file: KubbFile.ResolvedFile, index: number, total: number]
+
+  /**
+   * Emitted after each file is processed, providing progress metrics.
+   * This is the primary event for implementing progress bars or tracking.
+   * Plugins like fsPlugin use this to write files to disk.
+   *
+   * @property processed - Number of files processed so far
+   * @property total - Total number of files to process
+   * @property percentage - Completion percentage (0-100)
+   * @property source - Optional parsed source code of the file
+   * @property file - The file that was just processed
+   */
+  'file:processing:update': [
     {
       processed: number
       total: number
@@ -68,49 +148,96 @@ export type FabricEvents = {
   ]
 
   /**
-   * Called once all files have been processed successfully.
+   * Emitted once all files have been successfully processed.
+   * This marks the completion of the processing phase.
+   * Use this to perform batch operations on all processed files.
    */
-  'process:end': [{ files: KubbFile.ResolvedFile[] }]
+  'files:processing:end': [files: Array<KubbFile.ResolvedFile>]
 }
 
-export type FabricContext<TOptions extends FabricOptions> = {
-  config?: FabricConfig<TOptions>
-  events: AsyncEventEmitter<FabricEvents>
+/**
+ * Shared context passed to all plugins, parsers, and Fabric internals.
+ */
+export interface FabricContext<T extends FabricOptions = FabricOptions> extends AsyncEventEmitter<FabricEvents> {
+  /** The active Fabric configuration. */
+  config: FabricConfig<T>
+
+  /** The internal file manager handling file creation, merging, and writing. */
   fileManager: FileManager
+
+  /** List of files currently in memory. */
+  files: KubbFile.ResolvedFile[]
+
+  /** Add new files to the file manager. */
+  addFile(...files: KubbFile.File[]): Promise<void>
+
+  /** Track installed plugins and parsers to prevent duplicates. */
   installedPlugins: Set<Plugin>
-  installedParsers: Set<Parser>
+  installedParsers: Map<KubbFile.Extname, Parser>
 }
 
-export type FabricMode = 'sequential' | 'parallel'
+/**
+ * Base configuration object for Fabric.
+ */
+export type FabricConfig<T extends FabricOptions = FabricOptions> = T
 
+/**
+ * Utility type that checks whether all properties of `T` are optional.
+ */
 type AllOptional<T> = {} extends T ? true : false
 
-export type FabricConfig<TOptions extends FabricOptions> = {
-  options: TOptions
-}
-
+/**
+ * Defines the signature of a plugin or parser's `install` function.
+ */
 export type Install<TOptions = unknown> = TOptions extends any[]
-  ? (app: Fabric, ...options: TOptions) => void | Promise<void>
+  ? (context: FabricContext, ...options: TOptions) => void | Promise<void>
   : AllOptional<TOptions> extends true
-    ? (app: Fabric, options: TOptions | undefined) => void | Promise<void>
-    : (app: Fabric, options: TOptions) => void | Promise<void>
+    ? (context: FabricContext, options?: TOptions) => void | Promise<void>
+    : (context: FabricContext, options: TOptions) => void | Promise<void>
 
-export type Inject<TOptions = unknown, TAppExtension extends Record<string, any> = {}> = TOptions extends any[]
-  ? (app: Fabric, ...options: TOptions) => Partial<TAppExtension>
+/**
+ * Defines the signature of a plugin or parser's `inject` function.
+ * Returns an object that extends the Fabric instance.
+ */
+export type Inject<TOptions = unknown, TExtension extends Record<string, any> = {}> = TOptions extends any[]
+  ? (context: FabricContext, ...options: TOptions) => Partial<TExtension>
   : AllOptional<TOptions> extends true
-    ? (app: Fabric, options: TOptions | undefined) => Partial<TAppExtension>
-    : (app: Fabric, options: TOptions) => Partial<TAppExtension>
+    ? (context: FabricContext, options?: TOptions) => Partial<TExtension>
+    : (context: FabricContext, options: TOptions) => Partial<TExtension>
 
-export interface Fabric<TOptions extends FabricOptions = FabricOptions> extends Kubb.Fabric {
-  context: FabricContext<TOptions>
-  files: Array<KubbFile.ResolvedFile>
-  use<TPluginOptions = unknown, TMeta extends object = object, TAppExtension extends Record<string, any> = {}>(
-    pluginOrParser: Plugin<TPluginOptions, TAppExtension> | Parser<TPluginOptions, TMeta>,
+/**
+ * The main Fabric runtime interface.
+ * Provides access to the current context, registered plugins, files, and utility methods.
+ */
+export interface Fabric<T extends FabricOptions = FabricOptions> extends Kubb.Fabric {
+  /** The shared context for this Fabric instance. */
+  context: FabricContext<T>
+
+  /** The files managed by this Fabric instance. */
+  files: KubbFile.ResolvedFile[]
+
+  /**
+   * Install a plugin or parser into Fabric.
+   *
+   * @param target - The plugin or parser to install.
+   * @param options - Optional configuration or arguments for the target.
+   * @returns A Fabric instance extended by the plugin (if applicable).
+   */
+  use<TPluginOptions = unknown, TMeta extends object = object, TExtension extends Record<string, any> = {}>(
+    target: Plugin<TPluginOptions, TExtension> | Parser<TPluginOptions, TMeta>,
     ...options: TPluginOptions extends any[]
       ? NoInfer<TPluginOptions>
       : AllOptional<TPluginOptions> extends true
         ? [NoInfer<TPluginOptions>?] // Optional when all props are optional
         : [NoInfer<TPluginOptions>] // Required otherwise
-  ): (this & TAppExtension) | Promise<this & TAppExtension>
-  addFile(...files: Array<KubbFile.File>): Promise<void>
+  ): (this & TExtension) | Promise<this & TExtension>
+
+  /**
+   * Add one or more files to the Fabric file manager.
+   */
+  addFile(...files: KubbFile.File[]): Promise<void>
+  /**
+   * Add one or more files to the Fabric file manager and merge the source, imports, exports
+   */
+  upsertFile(...files: KubbFile.File[]): Promise<void>
 }

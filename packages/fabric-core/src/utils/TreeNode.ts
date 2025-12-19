@@ -15,6 +15,7 @@ export class TreeNode<TData = unknown> {
   data: TData
   parent?: TreeNode<TData>
   children: Array<TreeNode<TData>> = []
+  #childrenMap = new Map<string, TreeNode<TData>>()
   #cachedLeaves?: Array<TreeNode<TData>>
 
   constructor(data: TData, parent?: TreeNode<TData>) {
@@ -25,20 +26,35 @@ export class TreeNode<TData = unknown> {
   addChild(data: TData): TreeNode<TData> {
     const child = new TreeNode(data, this)
     this.children.push(child)
+    // Update Map if data has a name property (for BarrelData)
+    if (typeof data === 'object' && data !== null && 'name' in data) {
+      this.#childrenMap.set((data as { name: string }).name, child)
+    }
     this.#cachedLeaves = undefined // invalidate cached leaves
     return child
+  }
+
+  getChildByName(name: string): TreeNode<TData> | undefined {
+    return this.#childrenMap.get(name)
   }
 
   get leaves(): Array<TreeNode<TData>> {
     if (this.#cachedLeaves) return this.#cachedLeaves
     if (this.children.length === 0) return [this]
 
-    const stack: Array<TreeNode<TData>> = [...this.children]
     const result: Array<TreeNode<TData>> = []
+    const stack: Array<TreeNode<TData>> = [...this.children]
+    const visited = new Set<TreeNode<TData>>()
 
-    for (const node of stack) {
-      if (node.children.length) {
-        for (const child of node.children) stack.push(child)
+    while (stack.length > 0) {
+      const node = stack.pop()!
+      if (visited.has(node)) {
+        continue
+      }
+      visited.add(node)
+
+      if (node.children.length > 0) {
+        stack.push(...node.children)
       } else {
         result.push(node)
       }
@@ -51,12 +67,15 @@ export class TreeNode<TData = unknown> {
   forEach(callback: (node: TreeNode<TData>) => void): this {
     const stack: Array<TreeNode<TData>> = [this]
 
-    for (const node of stack) {
+    for (let i = 0; i < stack.length; i++) {
+      const node = stack[i]!
       callback(node)
-      if (node.children.length) {
-        for (const child of node.children) stack.push(child)
+
+      if (node.children.length > 0) {
+        stack.push(...node.children)
       }
     }
+
     return this
   }
 
@@ -71,19 +90,28 @@ export class TreeNode<TData = unknown> {
     const nodes: Array<{ id: string; label: string }> = []
     const edges: Array<{ from: string; to: string }> = []
 
-    root.forEach((node) => {
+    const stack: Array<TreeNode<BarrelData>> = [root]
+
+    for (let i = 0; i < stack.length; i++) {
+      const node = stack[i]!
+
       nodes.push({
         id: node.data.path,
         label: node.data.name,
       })
 
-      for (const child of node.children) {
-        edges.push({
-          from: node.data.path,
-          to: child.data.path,
-        })
+      const children = node.children
+      if (children.length > 0) {
+        for (let j = 0, len = children.length; j < len; j++) {
+          const child = children[j]!
+          edges.push({
+            from: node.data.path,
+            to: child.data.path,
+          })
+          stack.push(child)
+        }
       }
-    })
+    }
 
     return { nodes, edges }
   }
@@ -93,11 +121,15 @@ export class TreeNode<TData = unknown> {
     const normalizedRoot = normalizePath(rootFolder)
     const rootPrefix = normalizedRoot.endsWith('/') ? normalizedRoot : `${normalizedRoot}/`
 
-    const filteredFiles = files.filter((file) => {
-      const filePath = normalizePath(file.path)
-
-      return !filePath.endsWith('.json') && (!rootFolder || filePath.startsWith(rootPrefix))
-    })
+    const normalizedPaths = new Map<KubbFile.File, string>()
+    const filteredFiles: Array<KubbFile.File> = []
+    for (const file of files) {
+      const filePath = normalizedPaths.get(file) ?? normalizePath(file.path)
+      normalizedPaths.set(file, filePath)
+      if (!filePath.endsWith('.json') && (!rootFolder || filePath.startsWith(rootPrefix))) {
+        filteredFiles.push(file)
+      }
+    }
 
     if (filteredFiles.length === 0) {
       return null
@@ -110,7 +142,8 @@ export class TreeNode<TData = unknown> {
     })
 
     for (const file of filteredFiles) {
-      const relPath = normalizePath(file.path).slice(rootPrefix.length)
+      const filePath = normalizedPaths.get(file)!
+      const relPath = filePath.slice(rootPrefix.length)
       const parts = relPath.split('/')
 
       let current = treeNode
@@ -120,13 +153,7 @@ export class TreeNode<TData = unknown> {
         const isLast = index === parts.length - 1
         currentPath += (currentPath.endsWith('/') ? '' : '/') + part
 
-        let next: TreeNode<BarrelData> | undefined
-        for (const child of current.children) {
-          if ((child.data as BarrelData).name === part) {
-            next = child
-            break
-          }
-        }
+        let next = current.getChildByName(part)
 
         if (!next) {
           next = current.addChild({

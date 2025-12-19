@@ -88,8 +88,6 @@ export type Path = string
 
 export type AdvancedPath<T extends BaseName = BaseName> = `${BasePath}${T}`
 
-export type OptionalPath = Path | undefined | null
-
 export type File<TMeta extends object = object> = {
   /**
    * Name to be used to create the path

@@ -1,5 +1,5 @@
 import { createFabric } from '@kubb/fabric-core'
-import { vi } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Root } from './Root.tsx'
 

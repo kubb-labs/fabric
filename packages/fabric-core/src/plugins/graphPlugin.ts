@@ -6,7 +6,7 @@ import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
 import { open } from '../utils/open.ts'
 import { type Graph, TreeNode } from '../utils/TreeNode.ts'
-import { createPlugin } from './createPlugin.ts'
+import { definePlugin } from './definePlugin.ts'
 
 type Options = {
   root: string
@@ -84,14 +84,14 @@ async function serve(root: string) {
   })
 }
 
-export const graphPlugin = createPlugin<Options>({
+export const graphPlugin = definePlugin<Options>({
   name: 'graph',
-  install(app, options) {
+  install(ctx, options) {
     if (!options) {
       throw new Error('Graph plugin requires options.root and options.mode')
     }
 
-    app.context.events.on('write:start', async ({ files }) => {
+    ctx.on('files:writing:start', async (files) => {
       const root = options.root
 
       const graph = getGraph({ files, root })
@@ -122,7 +122,7 @@ export const graphPlugin = createPlugin<Options>({
         ],
       })
 
-      await app.context.fileManager.add(graphFile, graphHtmlFile)
+      await ctx.addFile(graphFile, graphHtmlFile)
 
       if (options.open) {
         await serve(root)

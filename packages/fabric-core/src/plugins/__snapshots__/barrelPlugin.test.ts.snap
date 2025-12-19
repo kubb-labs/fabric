@@ -1,31 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`barrelPlugin > mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable 1`] = `
-[
-  {
-    "isTypeOnly": false,
-    "name": undefined,
-    "path": "./a.ts",
-  },
-  {
-    "isTypeOnly": false,
-    "name": undefined,
-    "path": "./sub/d.ts",
-  },
-  {
-    "isTypeOnly": false,
-    "name": undefined,
-    "path": "./sub/index.ts",
-  },
-  {
-    "isTypeOnly": false,
-    "name": undefined,
-    "path": "./sub/sub2/b.ts",
-  },
-]
-`;
-
-exports[`barrelPlugin > mode 'named' should produce named exports and mark barrel sources indexable/exportable 1`] = `
+exports[`barrelPlugin > should produce named exports and mark barrel sources indexable/exportable when mode is 'named' 1`] = `
 [
   {
     "isTypeOnly": true,
@@ -66,155 +41,180 @@ exports[`barrelPlugin > mode 'named' should produce named exports and mark barre
 ]
 `;
 
-exports[`getBarrelFiles > mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable 1`] = `
+exports[`barrelPlugin > should produce wildcard exports and mark barrel sources indexable/exportable when mode is 'all' 1`] = `
 [
   {
-    "isTypeOnly": undefined,
+    "isTypeOnly": false,
     "name": undefined,
     "path": "./a.ts",
   },
   {
-    "isTypeOnly": undefined,
+    "isTypeOnly": false,
     "name": undefined,
+    "path": "./sub/d.ts",
+  },
+  {
+    "isTypeOnly": false,
+    "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": false,
+    "name": undefined,
+    "path": "./sub/sub2/b.ts",
+  },
+]
+`;
+
+exports[`getBarrelFiles > should produce named exports and mark barrel sources indexable/exportable when mode is 'named' 1`] = `
+[
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "A",
+    ],
+    "path": "./a.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "world",
+    ],
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "hello",
+    ],
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": [
+      "D",
+    ],
     "path": "./sub/d.ts",
   },
   {
     "isTypeOnly": true,
-    "name": undefined,
+    "name": [
+      "E",
+    ],
     "path": "./sub/d.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": undefined,
-    "path": "./sub/index.ts",
-  },
-  {
-    "isTypeOnly": undefined,
-    "name": undefined,
-    "path": "./sub/index.ts",
-  },
-  {
-    "isTypeOnly": undefined,
-    "name": undefined,
+    "name": [
+      "b",
+    ],
     "path": "./sub/sub2/b.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": undefined,
+    "name": [
+      "b",
+    ],
     "path": "./sub2/b.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": undefined,
+    "name": [
+      "D",
+    ],
     "path": "./d.ts",
   },
   {
     "isTypeOnly": true,
-    "name": undefined,
+    "name": [
+      "E",
+    ],
     "path": "./d.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": undefined,
+    "name": [
+      "world",
+    ],
     "path": "./index.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": undefined,
+    "name": [
+      "hello",
+    ],
     "path": "./index.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": undefined,
+    "name": [
+      "b",
+    ],
     "path": "./b.ts",
   },
 ]
 `;
 
-exports[`getBarrelFiles > mode 'named' should produce named exports and mark barrel sources indexable/exportable 1`] = `
+exports[`getBarrelFiles > should produce wildcard exports and mark barrel sources indexable/exportable when mode is 'all' 1`] = `
 [
   {
     "isTypeOnly": undefined,
-    "name": [
-      "A",
-    ],
+    "name": undefined,
     "path": "./a.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": [
-      "D",
-    ],
+    "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
+    "path": "./sub/index.ts",
+  },
+  {
+    "isTypeOnly": undefined,
+    "name": undefined,
     "path": "./sub/d.ts",
   },
   {
     "isTypeOnly": true,
-    "name": [
-      "E",
-    ],
+    "name": undefined,
     "path": "./sub/d.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": [
-      "world",
-    ],
-    "path": "./sub/index.ts",
-  },
-  {
-    "isTypeOnly": undefined,
-    "name": [
-      "hello",
-    ],
-    "path": "./sub/index.ts",
-  },
-  {
-    "isTypeOnly": undefined,
-    "name": [
-      "b",
-    ],
+    "name": undefined,
     "path": "./sub/sub2/b.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": [
-      "b",
-    ],
+    "name": undefined,
     "path": "./sub2/b.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": [
-      "D",
-    ],
+    "name": undefined,
     "path": "./d.ts",
   },
   {
     "isTypeOnly": true,
-    "name": [
-      "E",
-    ],
+    "name": undefined,
     "path": "./d.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": [
-      "world",
-    ],
+    "name": undefined,
     "path": "./index.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": [
-      "hello",
-    ],
+    "name": undefined,
     "path": "./index.ts",
   },
   {
     "isTypeOnly": undefined,
-    "name": [
-      "b",
-    ],
+    "name": undefined,
     "path": "./b.ts",
   },
 ]

@@ -1,4 +1,5 @@
 import { createFabric } from '@kubb/fabric-core'
+import { describe, expect, test } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { App } from './App.tsx'
 import { Root } from './Root.tsx'

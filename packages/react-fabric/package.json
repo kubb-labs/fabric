@@ -1,6 +1,6 @@
 {
   "name": "@kubb/react-fabric",
-  "version": "0.2.14",
+  "version": "0.7.2",
   "description": "React integration for Kubb, providing JSX runtime support and React component generation capabilities for code generation plugins.",
   "keywords": [
     "react",
@@ -26,36 +26,36 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
     },
     "./devtools": {
-      "import": "./dist/devtools.js",
-      "require": "./dist/devtools.cjs"
+      "require": "./dist/devtools.cjs",
+      "import": "./dist/devtools.js"
     },
     "./globals": {
-      "import": "./dist/globals.js",
-      "require": "./dist/globals.cjs"
+      "require": "./dist/globals.cjs",
+      "import": "./dist/globals.js"
     },
     "./jsx-dev-runtime": {
-      "import": "./dist/jsx-dev-runtime.js",
-      "require": "./dist/jsx-dev-runtime.cjs"
+      "require": "./dist/jsx-dev-runtime.cjs",
+      "import": "./dist/jsx-dev-runtime.js"
     },
     "./jsx-runtime": {
-      "import": "./dist/jsx-runtime.js",
-      "require": "./dist/jsx-runtime.cjs"
+      "require": "./dist/jsx-runtime.cjs",
+      "import": "./dist/jsx-runtime.js"
     },
     "./parsers": {
-      "import": "./dist/parsers.js",
-      "require": "./dist/parsers.cjs"
+      "require": "./dist/parsers.cjs",
+      "import": "./dist/parsers.js"
     },
     "./plugins": {
-      "import": "./dist/plugins.js",
-      "require": "./dist/plugins.cjs"
+      "require": "./dist/plugins.cjs",
+      "import": "./dist/plugins.js"
     },
     "./types": {
-      "import": "./dist/types.js",
-      "require": "./dist/types.cjs"
+      "require": "./dist/types.cjs",
+      "import": "./dist/types.js"
     },
     "./package.json": "./package.json"
   },
@@ -107,8 +107,8 @@
     "build": "tsdown && size-limit",
     "start": "tsdown --watch ./src",
     "clean": "npx rimraf ./dist",
-    "lint": "bun biome lint .",
-    "lint:fix": "bun biome lint --fix --unsafe .",
+    "lint": "pnpm biome lint .",
+    "lint:fix": "pnpm biome lint --fix --unsafe .",
     "release": "pnpm publish --no-git-check",
     "release:canary": "bash ../../.github/canary.sh && node ../../scripts/build.js canary && pnpm publish --no-git-check -tag canary",
     "start:devtools": "npx react-devtools",
@@ -118,20 +118,20 @@
   },
   "dependencies": {
     "@kubb/fabric-core": "workspace:*",
-    "dedent": "^1.7.0",
-    "execa": "^9.6.0",
+    "dedent": "^1.7.1",
+    "execa": "^9.6.1",
     "indent-string": "^5.0.0",
     "natural-orderby": "^5.0.0",
-    "react": "catalog:",
     "react-devtools-core": "6.1.2",
-    "react-reconciler": "catalog:",
     "signal-exit": "^4.1.0",
     "ws": "8.18.0"
   },
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-reconciler": "catalog:",
-    "@types/ws": "^8.18.1"
+    "@types/ws": "^8.18.1",
+    "react": "catalog:",
+    "react-reconciler": "catalog:"
   },
   "engines": {
     "node": ">=20"

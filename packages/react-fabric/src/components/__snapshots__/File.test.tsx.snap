@@ -12,17 +12,17 @@ exports[`<File/> > render multiple Files 1`] = `
 exports[`<File/> > render multiple Files 2`] = `
 [
   {
-    "isExportable": undefined,
-    "isIndexable": undefined,
-    "isTypeOnly": undefined,
+    "isExportable": false,
+    "isIndexable": false,
+    "isTypeOnly": false,
     "name": undefined,
     "value": "const test = 1;
             import node from "node";",
   },
   {
-    "isExportable": undefined,
-    "isIndexable": undefined,
-    "isTypeOnly": undefined,
+    "isExportable": false,
+    "isIndexable": false,
+    "isTypeOnly": false,
     "name": undefined,
     "value": "const test2 = 2;",
   },

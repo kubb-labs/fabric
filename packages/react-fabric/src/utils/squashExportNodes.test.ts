@@ -1,5 +1,5 @@
 import type { KubbFile } from '@kubb/fabric-core/types'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { appendChildNode, createNode, setAttribute } from '../dom.ts'
 import { squashExportNodes } from './squashExportNodes.ts'
 
@@ -12,7 +12,7 @@ function kubbElement(name: string, attrs: Record<string, any> = {}) {
 }
 
 describe('squashExportNodes', () => {
-  test('collects simple re-export (export * from path)', () => {
+  it('should collect simple re-export (export * from path)', () => {
     const root = createNode('kubb-root')
 
     const exp = kubbElement('kubb-export', { path: './hello.ts' } satisfies KubbFile.Export)
@@ -23,13 +23,16 @@ describe('squashExportNodes', () => {
     expect([...result]).toMatchInlineSnapshot(`
       [
         {
+          "asAlias": false,
+          "isTypeOnly": false,
+          "name": undefined,
           "path": "./hello.ts",
         },
       ]
     `)
   })
 
-  test('collects nested kubb-export with names and asAlias', () => {
+  it('should collect nested kubb-export with names and asAlias', () => {
     const root = createNode('kubb-root')
     const file = kubbElement('kubb-file', { baseName: 'index.ts', path: '/project/src/index.ts' })
     const text = kubbElement('kubb-text')
@@ -48,6 +51,7 @@ describe('squashExportNodes', () => {
       [
         {
           "asAlias": true,
+          "isTypeOnly": false,
           "name": [
             "alpha",
             "beta",
@@ -56,6 +60,7 @@ describe('squashExportNodes', () => {
         },
         {
           "asAlias": true,
+          "isTypeOnly": false,
           "name": "ns",
           "path": "./mod.ts",
         },
@@ -63,7 +68,7 @@ describe('squashExportNodes', () => {
     `)
   })
 
-  test('ignores regular elements', () => {
+  it('should ignore regular elements', () => {
     const root = createNode('kubb-root')
     const div = kubbElement('div', { id: 'x' })
     appendChildNode(root, div)

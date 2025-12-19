@@ -1,4 +1,4 @@
-import { createPlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 import { createElement, type ElementType } from 'react'
 import { Runtime } from '../Runtime.tsx'
 
@@ -13,50 +13,40 @@ export type Options = {
 }
 
 type ExtendOptions = {
-  render(App: ElementType): Promise<void> | void
-  renderToString(App: ElementType): Promise<string> | string
+  render(App: ElementType): Promise<void>
+  renderToString(App: ElementType): Promise<string>
   waitUntilExit(): Promise<void>
-}
-
-// biome-ignore lint/suspicious/noTsIgnore: production ready
-// @ts-ignore
-declare module '@kubb/fabric-core' {
-  interface Fabric {
-    render(App: ElementType): Promise<void> | void
-    renderToString(App: ElementType): Promise<string> | string
-    waitUntilExit(): Promise<void>
-  }
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(App: ElementType): Promise<void> | void
-      renderToString(App: ElementType): Promise<string> | string
+      render(App: ElementType): Promise<void>
+      renderToString(App: ElementType): Promise<string>
       waitUntilExit(): Promise<void>
     }
   }
 }
 
-export const reactPlugin = createPlugin<Options, ExtendOptions>({
+export const reactPlugin = definePlugin<Options, ExtendOptions>({
   name: 'react',
   install() {},
-  inject(app, options = {}) {
-    const runtime = new Runtime({ fileManager: app.context.fileManager, ...options })
+  inject(ctx, options = {}) {
+    const runtime = new Runtime({ fileManager: ctx.fileManager, ...options })
 
     return {
       async render(App) {
-        runtime.render(createElement(App))
-        await app.context.events.emit('start')
+        await runtime.render(createElement(App))
+        await ctx.emit('lifecycle:start')
       },
       async renderToString(App) {
-        await app.context.events.emit('start')
+        await ctx.emit('lifecycle:start')
         return runtime.renderToString(createElement(App))
       },
       async waitUntilExit() {
         await runtime.waitUntilExit()
 
-        await app.context.events.emit('end')
+        await ctx.emit('lifecycle:end')
       },
     }
   },

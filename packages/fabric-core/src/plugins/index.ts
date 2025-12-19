@@ -1,5 +1,5 @@
 export { barrelPlugin } from './barrelPlugin.ts'
-export { createPlugin } from './createPlugin.ts'
+export { definePlugin } from './definePlugin.ts'
 export { fsPlugin } from './fsPlugin.ts'
 export { graphPlugin } from './graphPlugin.ts'
-export { progressPlugin } from './progressPlugin.ts'
+export { loggerPlugin } from './loggerPlugin.ts'

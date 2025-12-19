@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { appendChildNode, createNode, createTextNode, setAttribute } from '../dom.ts'
 import { squashSourceNodes } from './squashSourceNodes.ts'
 
@@ -11,7 +11,7 @@ function kubbElement(name: string, attrs: Record<string, any> = {}) {
 }
 
 describe('squashSourceNodes', () => {
-  test('extracts sources with trimmed value', () => {
+  it('should extract sources with trimmed value', () => {
     const root = createNode('kubb-root')
     const file = kubbElement('kubb-file', { baseName: 'index.ts', path: '/project/src/index.ts' })
 
@@ -29,6 +29,7 @@ describe('squashSourceNodes', () => {
         {
           "isExportable": true,
           "isIndexable": true,
+          "isTypeOnly": false,
           "name": "x",
           "value": "export const x = 1",
         },

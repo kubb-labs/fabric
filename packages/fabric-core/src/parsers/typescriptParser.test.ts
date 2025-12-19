@@ -1,13 +1,21 @@
 import type ts from 'typescript'
+import { describe, expect, it } from 'vitest'
 
 import { createExport, createImport, print, typescriptParser } from './typescriptParser.ts'
 
 const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
-  return print([elements].flat().filter(Boolean))
+  const nodes: Array<ts.Node> = []
+  const elementsArray = Array.isArray(elements) ? elements : [elements]
+  for (const element of elementsArray) {
+    if (element) {
+      nodes.push(element)
+    }
+  }
+  return print(...nodes)
 }
 
 describe('TypeScript parser', () => {
-  test('createImport', async () => {
+  it('should create various import statement types correctly', async () => {
     expect(
       formatTS(
         createImport({
@@ -71,7 +79,7 @@ describe('TypeScript parser', () => {
     `)
   })
 
-  test('createExport', async () => {
+  it('should create various export statement types correctly', async () => {
     expect(
       formatTS(
         createExport({
@@ -121,7 +129,7 @@ describe('TypeScript parser', () => {
     }
   })
 
-  test('typescriptParser.print combines banner/imports/exports/sources/footer and respects extname', async () => {
+  it('should combine banner, imports, exports, sources, and footer with proper extension handling', async () => {
     const file = {
       path: '/project/src/index.ts',
       extname: '.ts',
