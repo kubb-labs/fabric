@@ -1,5 +1,5 @@
 import { SingleBar } from 'cli-progress'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'

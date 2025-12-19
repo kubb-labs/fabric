@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import type * as KubbFile from '../KubbFile.ts'
 import { tsxParser } from './tsxParser.ts'
 

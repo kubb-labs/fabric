@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { describe, expect, it } from 'vitest'
 import type { FabricEvents } from './Fabric.ts'
 import { FileManager } from './FileManager.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'

@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { describe, expect, it, vi } from 'vitest'
 import fs from 'fs-extra'
 import type { FabricContext } from '../Fabric.ts'
 import { fsPlugin, write } from './fsPlugin.ts'

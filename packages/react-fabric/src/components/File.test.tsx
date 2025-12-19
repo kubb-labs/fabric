@@ -1,6 +1,6 @@
 import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { expect } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { File } from './File.tsx'
 
