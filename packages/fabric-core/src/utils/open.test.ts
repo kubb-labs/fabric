@@ -97,16 +97,16 @@ describe('open utility', () => {
 
   it('should handle process failure', async () => {
     const { spawn } = await import('node:child_process')
+    const EventEmitter = require('node:events')
     
-    vi.mocked(spawn).mockImplementationOnce((bin, args, options) => {
-      const EventEmitter = require('node:events')
-      const process = new EventEmitter()
+    vi.mocked(spawn).mockImplementationOnce(() => {
+      const childProcess = new EventEmitter()
       
       setTimeout(() => {
-        process.emit('close', 1) // non-zero exit code
+        childProcess.emit('close', 1) // non-zero exit code
       }, 10)
       
-      return process as any
+      return childProcess as ReturnType<typeof spawn>
     })
 
     Object.defineProperty(process, 'platform', {

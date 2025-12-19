@@ -1,9 +1,13 @@
+import type * as KubbFile from '../KubbFile.ts'
 import { tsxParser } from './tsxParser.ts'
 
 describe('tsxParser', () => {
   test('should parse TSX file with JSX syntax', async () => {
-    const file = {
+    const file: KubbFile.ResolvedFile = {
+      id: 'test-component',
       path: '/project/src/Component.tsx',
+      baseName: 'Component.tsx',
+      name: 'Component',
       extname: '.tsx',
       banner: '// Component banner',
       footer: '// Component footer',
@@ -15,9 +19,9 @@ describe('tsxParser', () => {
       ],
       exports: [],
       meta: {},
-    } as any
+    }
 
-    const output = await tsxParser.parse(file, { extname: '.tsx' as any })
+    const output = await tsxParser.parse(file, { extname: '.tsx' })
     
     expect(output).toContain('// Component banner')
     expect(output).toContain('import React from "react"')
@@ -26,8 +30,11 @@ describe('tsxParser', () => {
   })
 
   test('should handle TSX file with default extname', async () => {
-    const file = {
+    const file: KubbFile.ResolvedFile = {
+      id: 'test-app',
       path: '/project/src/App.tsx',
+      baseName: 'App.tsx',
+      name: 'App',
       extname: '.tsx',
       sources: [
         { value: 'const App = () => <h1>App</h1>' },
@@ -35,9 +42,9 @@ describe('tsxParser', () => {
       imports: [],
       exports: [],
       meta: {},
-    } as any
+    }
 
-    const output = await tsxParser.parse(file, { extname: '.tsx' as any })
+    const output = await tsxParser.parse(file, { extname: '.tsx' })
     
     expect(output).toContain('const App = () => <h1>App</h1>')
   })

@@ -7,7 +7,7 @@ import * as GraphPluginModule from './graphPlugin.ts'
 import { graphPlugin } from './graphPlugin.ts'
 
 function makeFiles(count = 3): KubbFile.ResolvedFile[] {
-  const files: KubbFile.ResolvedFile[] = [] as any
+  const files: KubbFile.ResolvedFile[] = []
   for (let i = 0; i < count; i++) {
     files.push(
       createFile({

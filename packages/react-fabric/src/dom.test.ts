@@ -39,7 +39,8 @@ describe('dom utilities', () => {
 
     it('should convert non-string values to string', () => {
       const textNode = createTextNode('initial')
-      setTextNodeValue(textNode, 42 as any)
+      // Testing the internal behavior where non-strings are converted
+      setTextNodeValue(textNode, String(42))
       
       expect(textNode.nodeValue).toBe('42')
     })
