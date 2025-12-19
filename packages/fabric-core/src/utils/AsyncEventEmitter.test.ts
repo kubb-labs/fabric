@@ -45,16 +45,16 @@ describe('AsyncEventEmitter', () => {
     const spy = vi.fn()
 
     emitter.on('test', async () => {
-      await new Promise(resolve => setTimeout(resolve, 10))
+      await new Promise((resolve) => setTimeout(resolve, 10))
       spy(1)
     })
     emitter.on('test', async () => {
-      await new Promise(resolve => setTimeout(resolve, 5))
+      await new Promise((resolve) => setTimeout(resolve, 5))
       spy(2)
     })
 
     await emitter.emit('test')
-    
+
     expect(spy).toHaveBeenCalledTimes(2)
     expect(spy).toHaveBeenCalledWith(1)
     expect(spy).toHaveBeenCalledWith(2)
@@ -62,7 +62,7 @@ describe('AsyncEventEmitter', () => {
 
   it('should handle parallel mode with errors', async () => {
     const emitter = new AsyncEventEmitter<Events>({ mode: 'parallel' })
-    
+
     emitter.on('test', async () => {
       throw new Error('parallel error 1')
     })
@@ -92,11 +92,11 @@ describe('AsyncEventEmitter', () => {
     const spy = vi.fn()
 
     emitter.onOnce('test', async () => spy())
-    
+
     await emitter.emit('test')
     await emitter.emit('test')
     await emitter.emit('test')
-    
+
     expect(spy).toHaveBeenCalledTimes(1)
   })
 
@@ -106,12 +106,12 @@ describe('AsyncEventEmitter', () => {
 
     emitter.on('test', async () => spy())
     emitter.on('test', async () => spy())
-    
+
     await emitter.emit('test')
     expect(spy).toHaveBeenCalledTimes(2)
 
     emitter.removeAll()
-    
+
     await emitter.emit('test')
     expect(spy).toHaveBeenCalledTimes(2)
   })

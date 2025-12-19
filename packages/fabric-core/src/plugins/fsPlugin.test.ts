@@ -26,13 +26,13 @@ describe('write', () => {
 
   test('should not write empty or whitespace-only content', async () => {
     const emptyFilePath = path.resolve(mocksPath, './empty.js')
-    
+
     const result1 = await write(emptyFilePath, '')
     expect(result1).toBeUndefined()
-    
+
     const result2 = await write(emptyFilePath, '   ')
     expect(result2).toBeUndefined()
-    
+
     const result3 = await write(emptyFilePath, undefined)
     expect(result3).toBeUndefined()
   })
@@ -43,7 +43,7 @@ describe('write', () => {
 
     const result = await write(sanityFilePath, text, { sanity: true })
     expect(result).toBe(text)
-    
+
     // Clean up
     await fs.remove(sanityFilePath)
   })
@@ -58,7 +58,7 @@ describe('write', () => {
     const text = `export const test = 'sanity'  \n  `
 
     await expect(write(sanityFilePath, text, { sanity: true })).rejects.toThrow('Sanity check failed')
-    
+
     // Clean up
     await fs.remove(sanityFilePath)
   })
@@ -85,7 +85,7 @@ describe('write', () => {
   test('should call onBeforeWrite callback', async () => {
     const onBeforeWriteMock = vi.fn()
     const testFilePath = path.resolve(mocksPath, './onbeforewrite-test.js')
-    
+
     const ctxStub = {
       on: vi.fn((event, handler) => {
         if (event === 'file:processing:update') {
@@ -98,7 +98,7 @@ describe('write', () => {
     await fsPlugin.install(ctxStub, { onBeforeWrite: onBeforeWriteMock })
 
     expect(onBeforeWriteMock).toHaveBeenCalledWith(testFilePath, 'test content')
-    
+
     // Clean up
     await fs.remove(testFilePath).catch(() => {})
   })

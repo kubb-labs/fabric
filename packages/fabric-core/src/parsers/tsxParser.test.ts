@@ -11,18 +11,14 @@ describe('tsxParser', () => {
       extname: '.tsx',
       banner: '// Component banner',
       footer: '// Component footer',
-      sources: [
-        { value: 'export const MyComponent = () => <div>Hello</div>' },
-      ],
-      imports: [
-        { name: 'React', path: 'react' },
-      ],
+      sources: [{ value: 'export const MyComponent = () => <div>Hello</div>' }],
+      imports: [{ name: 'React', path: 'react' }],
       exports: [],
       meta: {},
     }
 
     const output = await tsxParser.parse(file, { extname: '.tsx' })
-    
+
     expect(output).toContain('// Component banner')
     expect(output).toContain('import React from "react"')
     expect(output).toContain('export const MyComponent = () => <div>Hello</div>')
@@ -36,16 +32,14 @@ describe('tsxParser', () => {
       baseName: 'App.tsx',
       name: 'App',
       extname: '.tsx',
-      sources: [
-        { value: 'const App = () => <h1>App</h1>' },
-      ],
+      sources: [{ value: 'const App = () => <h1>App</h1>' }],
       imports: [],
       exports: [],
       meta: {},
     }
 
     const output = await tsxParser.parse(file, { extname: '.tsx' })
-    
+
     expect(output).toContain('const App = () => <h1>App</h1>')
   })
 })

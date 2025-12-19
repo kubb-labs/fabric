@@ -6,12 +6,12 @@ vi.mock('node:child_process', () => ({
   spawn: vi.fn((_bin, _args, _options) => {
     const EventEmitter = require('node:events')
     const process = new EventEmitter()
-    
+
     // Simulate successful process completion
     setTimeout(() => {
       process.emit('close', 0)
     }, 10)
-    
+
     return process
   }),
 }))
@@ -98,14 +98,14 @@ describe('open utility', () => {
   it('should handle process failure', async () => {
     const { spawn } = await import('node:child_process')
     const EventEmitter = require('node:events')
-    
+
     vi.mocked(spawn).mockImplementationOnce(() => {
       const childProcess = new EventEmitter()
-      
+
       setTimeout(() => {
         childProcess.emit('close', 1) // non-zero exit code
       }, 10)
-      
+
       return childProcess as ReturnType<typeof spawn>
     })
 

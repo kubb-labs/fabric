@@ -66,7 +66,7 @@ describe('graphPlugin', () => {
 
   test('throws error when options are not provided', async () => {
     const fabric = createFabric()
-    
+
     await expect(async () => {
       // @ts-expect-error - testing error case
       await fabric.use(graphPlugin)
@@ -75,12 +75,12 @@ describe('graphPlugin', () => {
 
   test('serves graph when open option is true', async () => {
     const fabric = createFabric()
-    
+
     // Mock the serve function to avoid actual server start
     vi.mock('../utils/open.ts', () => ({
       open: vi.fn().mockResolvedValue(true),
     }))
-    
+
     await fabric.use(graphPlugin, { root: 'src', open: true })
 
     const files = makeFiles(2)

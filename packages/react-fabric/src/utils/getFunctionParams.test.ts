@@ -31,13 +31,13 @@ describe('[params] getFunctionParams with transformers', () => {
       test: { type: 'string', optional: false },
       count: { type: 'number', optional: true },
     }
-    
+
     const result = getFunctionParams(params, {
       type: 'constructor',
       transformName: (name) => name.toUpperCase(),
       transformType: (type) => `Custom${type.charAt(0).toUpperCase()}${type.slice(1)}`,
     })
-    
+
     expect(result).toContain('TEST')
     expect(result).toContain('COUNT')
   })
@@ -57,7 +57,7 @@ describe('[params] getFunctionParams with transformers', () => {
         },
       },
     }
-    
+
     const result = getFunctionParams(params, { type: 'object' })
     expect(result).toBeDefined()
     expect(result).toContain('child1')
