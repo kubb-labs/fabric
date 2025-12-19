@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, test, vi } from 'vitest'
 import { AsyncEventEmitter } from './AsyncEventEmitter.ts'
 
 type Events = {
@@ -6,7 +6,13 @@ type Events = {
 }
 
 describe('AsyncEventEmitter', () => {
-  it('resolves when listeners succeed', async () => {
+  it('should return undefined when no listeners are registered', async () => {
+    const emitter = new AsyncEventEmitter<Events>()
+
+    await expect(emitter.emit('test')).resolves.toBeUndefined()
+  })
+
+  test('resolves when listeners succeed', async () => {
     const emitter = new AsyncEventEmitter<Events>()
     const spy = vi.fn()
 
@@ -18,7 +24,7 @@ describe('AsyncEventEmitter', () => {
     expect(spy).toHaveBeenCalledTimes(1)
   })
 
-  it('rethrows single listener error', async () => {
+  test('rethrows single listener error', async () => {
     const emitter = new AsyncEventEmitter<Events>()
     emitter.on('test', async () => {
       throw new Error('boom')
@@ -27,7 +33,7 @@ describe('AsyncEventEmitter', () => {
     await expect(emitter.emit('test')).rejects.toThrow('boom')
   })
 
-  it('aggregates multiple listener errors', async () => {
+  test('aggregates multiple listener errors', async () => {
     const emitter = new AsyncEventEmitter<Events>()
     emitter.on('test', async () => {
       throw new Error('first')
