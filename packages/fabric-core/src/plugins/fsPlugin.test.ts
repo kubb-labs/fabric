@@ -50,10 +50,12 @@ describe('write', () => {
 
   test('should throw error when sanity check fails', async () => {
     const sanityFilePath = path.resolve(mocksPath, './sanity-fail.js')
-    const text = `export const test = 'sanity'  \n  `  // Data with trailing whitespace
-
-    // Write the file first with different content (trimmed version won't match)
-    await fs.outputFile(sanityFilePath, 'different content', { encoding: 'utf-8' })
+    // This test verifies the sanity check behavior. The write function trims data before writing,
+    // but compares the original (untrimmed) data with the saved (trimmed) data.
+    // So if we pass data with trailing whitespace, the sanity check will fail because:
+    // - Original data: "export const test = 'sanity'  \n  " (length: 33)
+    // - Saved data: "export const test = 'sanity'" (length: 28, trimmed)
+    const text = `export const test = 'sanity'  \n  `
 
     await expect(write(sanityFilePath, text, { sanity: true })).rejects.toThrow('Sanity check failed')
     
