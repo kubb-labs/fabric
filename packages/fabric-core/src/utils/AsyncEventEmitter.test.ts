@@ -6,6 +6,12 @@ type Events = {
 }
 
 describe('AsyncEventEmitter', () => {
+  it('should return undefined when no listeners are registered', async () => {
+    const emitter = new AsyncEventEmitter<Events>()
+
+    await expect(emitter.emit('test')).resolves.toBeUndefined()
+  })
+
   it('resolves when listeners succeed', async () => {
     const emitter = new AsyncEventEmitter<Events>()
     const spy = vi.fn()
