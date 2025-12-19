@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`graphPlugin > creates graph.json and graph.html on files:writing:start 1`] = `
+exports[`graphPlugin > should create graph.json and graph.html on files:writing:start event 1`] = `
 [
   {
     "name": "graph",
@@ -34,7 +34,7 @@ exports[`graphPlugin > creates graph.json and graph.html on files:writing:start 
 ]
 `;
 
-exports[`graphPlugin > creates graph.json and graph.html on files:writing:start 2`] = `
+exports[`graphPlugin > should create graph.json and graph.html on files:writing:start event 2`] = `
 [
   {
     "name": "graph",

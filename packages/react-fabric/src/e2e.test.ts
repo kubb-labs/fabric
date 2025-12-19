@@ -28,7 +28,7 @@ describe('e2e', () => {
     vi.restoreAllMocks()
   })
 
-  test('render delegates to Runtime.render', async () => {
+  test('should delegate rendering to Runtime.render', async () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
@@ -37,7 +37,7 @@ describe('e2e', () => {
     expect(hoisted.instance.render).toHaveBeenCalledTimes(1)
   })
 
-  test('renderToString returns runtime result', async () => {
+  test('should return runtime result from renderToString', async () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
@@ -45,7 +45,7 @@ describe('e2e', () => {
     expect(hoisted.instance.renderToString).toHaveBeenCalledTimes(1)
   })
 
-  test('waitUntilExit delegated from runtime', async () => {
+  test('should delegate waitUntilExit to runtime', async () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 

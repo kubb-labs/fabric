@@ -12,7 +12,7 @@ function kubbElement(name: string, attrs: Record<string, any> = {}) {
 }
 
 describe('squashExportNodes', () => {
-  test('collects simple re-export (export * from path)', () => {
+  test('should collect simple re-export (export * from path)', () => {
     const root = createNode('kubb-root')
 
     const exp = kubbElement('kubb-export', { path: './hello.ts' } satisfies KubbFile.Export)
@@ -32,7 +32,7 @@ describe('squashExportNodes', () => {
     `)
   })
 
-  test('collects nested kubb-export with names and asAlias', () => {
+  test('should collect nested kubb-export with names and asAlias', () => {
     const root = createNode('kubb-root')
     const file = kubbElement('kubb-file', { baseName: 'index.ts', path: '/project/src/index.ts' })
     const text = kubbElement('kubb-text')
@@ -68,7 +68,7 @@ describe('squashExportNodes', () => {
     `)
   })
 
-  test('ignores regular elements', () => {
+  test('should ignore regular elements', () => {
     const root = createNode('kubb-root')
     const div = kubbElement('div', { id: 'x' })
     appendChildNode(root, div)

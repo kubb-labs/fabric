@@ -11,7 +11,7 @@ function kubbElement(name: string, attrs: Record<string, any> = {}) {
 }
 
 describe('squashSourceNodes', () => {
-  test('extracts sources with trimmed value', () => {
+  test('should extract sources with trimmed value', () => {
     const root = createNode('kubb-root')
     const file = kubbElement('kubb-file', { baseName: 'index.ts', path: '/project/src/index.ts' })
 
