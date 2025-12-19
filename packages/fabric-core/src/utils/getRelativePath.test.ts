@@ -12,7 +12,7 @@ describe('getRelativePath', () => {
     await fs.remove(folderPath)
   })
 
-  test('should return correct relative path for Linux and macOS', async () => {
+  it('should return correct relative path for Linux and macOS', async () => {
     const testFile = path.resolve(folderPath, 'test.js')
     await fs.outputFile(testFile, 'test', { encoding: 'utf-8' })
 
@@ -28,7 +28,7 @@ describe('getRelativePath', () => {
 
     await fs.remove(testFile)
   })
-  test('should return correct relative path for Windows', async () => {
+  it('should return correct relative path for Windows', async () => {
     const testFile = path.resolve(folderPath, 'test.js')
     await fs.outputFile(testFile, 'test', { encoding: 'utf-8' })
 

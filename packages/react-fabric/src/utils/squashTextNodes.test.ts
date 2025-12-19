@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { appendChildNode, createNode, createTextNode, setAttribute } from '../dom.ts'
 import { squashTextNodes } from './squashTextNodes.ts'
 
@@ -11,7 +11,7 @@ function kubbElement(name: string, attrs: Record<string, any> = {}) {
 }
 
 describe('squashTextNodes', () => {
-  test('should concatenate plain text nodes', () => {
+  it('should concatenate plain text nodes', () => {
     const text = createNode('kubb-text')
     appendChildNode(text, createTextNode('Hello'))
     appendChildNode(text, createTextNode(' '))
@@ -20,7 +20,7 @@ describe('squashTextNodes', () => {
     expect(squashTextNodes(text)).toMatchInlineSnapshot(`"Hello World"`)
   })
 
-  test('should print kubb-import and kubb-export nodes using TypeScript printer', () => {
+  it('should print kubb-import and kubb-export nodes using TypeScript printer', () => {
     const text = createNode('kubb-text')
 
     const imp = kubbElement('kubb-import', { name: 'React', path: 'react' })
@@ -36,7 +36,7 @@ describe('squashTextNodes', () => {
     `)
   })
 
-  test('should pass through kubb-source content and convert br to newline', () => {
+  it('should pass through kubb-source content and convert br to newline', () => {
     const text = createNode('kubb-text')
     const source = kubbElement('kubb-source')
     const br = createNode('br')
@@ -52,7 +52,7 @@ describe('squashTextNodes', () => {
     `)
   })
 
-  test('should serialize regular elements with attributes and nested content', () => {
+  it('should serialize regular elements with attributes and nested content', () => {
     const text = createNode('kubb-text')
     const div = kubbElement('div', { id: 'x', count: 5 })
     appendChildNode(div, createTextNode('inner'))

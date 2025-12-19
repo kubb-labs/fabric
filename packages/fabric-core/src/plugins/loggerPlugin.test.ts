@@ -1,5 +1,5 @@
 import { SingleBar } from 'cli-progress'
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
@@ -54,7 +54,7 @@ describe('loggerPlugin', () => {
     logger.withTag.mockReturnValue(logger)
   })
 
-  test('should configure consola with Fabric tag', async () => {
+  it('should configure consola with Fabric tag', async () => {
     const fabric = createFabric()
 
     await fabric.use(loggerPlugin, { websocket: false })
@@ -63,7 +63,7 @@ describe('loggerPlugin', () => {
     expect(logger.withTag).toHaveBeenCalledWith('Fabric')
   })
 
-  test('should log key lifecycle events to consola', async () => {
+  it('should log key lifecycle events to consola', async () => {
     const fabric = createFabric()
 
     await fabric.use(loggerPlugin, { websocket: false })
@@ -120,7 +120,7 @@ describe('loggerPlugin', () => {
       stopSpy.mockRestore()
     })
 
-    test('should start and update progress bar when enabled', async () => {
+    it('should start and update progress bar when enabled', async () => {
       const fabric = createFabric()
 
       await fabric.use(loggerPlugin, { websocket: false })
@@ -145,7 +145,7 @@ describe('loggerPlugin', () => {
       expect(stopSpy).toHaveBeenCalled()
     })
 
-    test('should not create progress bar when disabled', async () => {
+    it('should not create progress bar when disabled', async () => {
       const fabric = createFabric()
 
       await fabric.use(loggerPlugin, { websocket: false, progress: false })

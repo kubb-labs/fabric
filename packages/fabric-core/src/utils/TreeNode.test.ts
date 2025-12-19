@@ -26,14 +26,14 @@ describe('TreeNode', () => {
   const tree = TreeNode.fromFiles(files, 'src/')
   const treeWindows = TreeNode.fromFiles(files, 'src\\')
 
-  test('should create tree structure with correct number of files and folders', () => {
+  it('should create tree structure with correct number of files and folders', () => {
     expect(tree).toBeDefined()
     expect(treeWindows).toBeDefined()
 
     expect(tree).toMatchSnapshot()
   })
 
-  test('should render leaves correctly with proper paths', () => {
+  it('should render leaves correctly with proper paths', () => {
     expect(tree?.leaves.length).toBe(3)
 
     tree?.leaves.forEach((leave) => {
@@ -50,14 +50,14 @@ describe('TreeNode', () => {
       }
     })
   })
-  test('should execute findDeep correctly to locate specific nodes', () => {
+  it('should execute findDeep correctly to locate specific nodes', () => {
     const helloTS = tree?.leaves.find((leave) => leave.data.name === 'hello.ts')
 
     expect(tree?.findDeep).toBeDefined()
     expect(tree?.findDeep((item) => item.data === helloTS?.data)?.data.name).toEqual('hello.ts')
   })
 
-  test('should execute forEach correctly and iterate over all nodes', () => {
+  it('should execute forEach correctly and iterate over all nodes', () => {
     const items: TreeNode<{ name: string }>['data'][] = []
 
     tree?.forEach((treeNode) => {
@@ -77,7 +77,7 @@ describe('TreeNode', () => {
     `)
   })
 
-  test('should render graph correctly using TreeNode.toGraph', () => {
+  it('should render graph correctly using TreeNode.toGraph', () => {
     expect(tree).toBeDefined()
 
     expect(TreeNode.toGraph(tree!)).toMatchSnapshot()

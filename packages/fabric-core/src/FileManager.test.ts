@@ -4,7 +4,7 @@ import { FileManager } from './FileManager.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 describe('FileManager', () => {
-  test('should add files to cache when using fileManager.add', async () => {
+  it('should add files to cache when using fileManager.add', async () => {
     const fileManager = new FileManager()
     await fileManager.add({
       path: path.resolve('./src/file1.ts'),
@@ -23,7 +23,7 @@ describe('FileManager', () => {
     expect(files.length).toBe(2)
   })
 
-  test('should resolve path via events when using fileManager.add', async () => {
+  it('should resolve path via events when using fileManager.add', async () => {
     const events = new AsyncEventEmitter<FabricEvents>()
     events.on('file:resolve:path', (file) => {
       const parsed = path.parse(file.path)
@@ -44,7 +44,7 @@ describe('FileManager', () => {
     expect(file!.baseName).toBe('file1.generated.ts')
   })
 
-  test('should resolve name via events when using fileManager.add', async () => {
+  it('should resolve name via events when using fileManager.add', async () => {
     const events = new AsyncEventEmitter<FabricEvents>()
     events.on('file:resolve:name', (file) => {
       file.baseName = 'prefix-file1.ts'
@@ -62,7 +62,7 @@ describe('FileManager', () => {
     expect(file!.baseName).toBe('prefix-file1.ts')
   })
 
-  test('should return array of files when using fileManager.add with multiple files', async () => {
+  it('should return array of files when using fileManager.add with multiple files', async () => {
     const fileManager = new FileManager()
     const [file, file2] = await fileManager.add(
       {
@@ -91,7 +91,7 @@ describe('FileManager', () => {
     expect(file2).toBeDefined()
   })
 
-  test('should merge files with the same path when using fileManager.add', async () => {
+  it('should merge files with the same path when using fileManager.add', async () => {
     const fileManager = new FileManager()
     await fileManager.add({
       path: path.resolve('./src/file1.ts'),
@@ -140,7 +140,7 @@ describe('FileManager', () => {
     `)
   })
 
-  test('should append sources and merge imports when using fileManager.upsert', async () => {
+  it('should append sources and merge imports when using fileManager.upsert', async () => {
     const fileManager = new FileManager()
     await fileManager.upsert({
       path: path.resolve('./src/file1.ts'),
@@ -192,7 +192,7 @@ describe('FileManager', () => {
       ]
     `)
   })
-  test('should create correct file graph structure', async () => {
+  it('should create correct file graph structure', async () => {
     const fileManager = new FileManager()
     await fileManager.add({
       path: path.resolve('./src/file1.ts'),
@@ -222,7 +222,7 @@ describe('FileManager', () => {
     expect(files.length).toBe(4)
   })
 
-  test('should remove file from cache by path when using fileManager.deleteByPath', async () => {
+  it('should remove file from cache by path when using fileManager.deleteByPath', async () => {
     const fileManager = new FileManager()
     const filePath = path.resolve('./src/file1.ts')
     await fileManager.add({
@@ -239,7 +239,7 @@ describe('FileManager', () => {
     expect(expectedRemovedFile).toBeUndefined()
   })
 
-  test('should emit lifecycle events when running fileManager.processor.run', async () => {
+  it('should emit lifecycle events when running fileManager.processor.run', async () => {
     const events = new AsyncEventEmitter()
     const fileManager = new FileManager({ events })
     let processStart = 0

@@ -1,5 +1,5 @@
 import type { KubbFile } from '@kubb/fabric-core/types'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { appendChildNode, createNode, createTextNode, setAttribute } from '../dom.ts'
 import { squashImportNodes } from './squashImportNodes.ts'
 
@@ -12,7 +12,7 @@ function kubbElement(name: string, attrs: Record<string, any> = {}) {
 }
 
 describe('squashImportNodes', () => {
-  test('should collect simple kubb-import nodes', () => {
+  it('should collect simple kubb-import nodes', () => {
     const root = createNode('kubb-root')
 
     const imp = kubbElement('kubb-import', { name: 'React', path: 'react' } satisfies KubbFile.Import)
@@ -33,7 +33,7 @@ describe('squashImportNodes', () => {
     `)
   })
 
-  test('should collect nested kubb-import nodes inside kubb-text and kubb-file', () => {
+  it('should collect nested kubb-import nodes inside kubb-text and kubb-file', () => {
     const root = createNode('kubb-root')
     const file = kubbElement('kubb-file', { baseName: 'index.ts', path: '/project/src/index.ts' })
     const text = kubbElement('kubb-text')
@@ -74,7 +74,7 @@ describe('squashImportNodes', () => {
     `)
   })
 
-  test('should ignore regular elements and text nodes', () => {
+  it('should ignore regular elements and text nodes', () => {
     const root = createNode('kubb-root')
     const div = kubbElement('div', { id: 'x' })
     appendChildNode(div, createTextNode('hello'))

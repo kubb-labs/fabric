@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { createFile } from './createFile.ts'
 import { FileProcessor } from './FileProcessor.ts'
 import type * as KubbFile from './KubbFile.ts'
@@ -15,7 +15,7 @@ describe('FileProcessor', () => {
     ['.json', defaultParser],
   ])
 
-  test('parse() uses TypeScript parser for .ts', async () => {
+  it('should use TypeScript parser for .ts files', async () => {
     const processor = new FileProcessor()
 
     const file = createFile({
@@ -41,7 +41,7 @@ describe('FileProcessor', () => {
     expect(code).toContain('export type X = A')
   })
 
-  test('parse() uses default parser for .json', async () => {
+  it('should use default parser for .json files', async () => {
     const processor = new FileProcessor()
 
     const file = createFile({
@@ -57,7 +57,7 @@ describe('FileProcessor', () => {
     expect(code.includes('import ')).toBe(false)
   })
 
-  test('run() emits lifecycle events (simple)', async () => {
+  it('should emit lifecycle events when running processor', async () => {
     const events = new AsyncEventEmitter()
     const processor = new FileProcessor({ events })
 

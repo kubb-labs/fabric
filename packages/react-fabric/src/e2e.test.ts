@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const hoisted = vi.hoisted(() => {
   const instance = {
@@ -28,7 +28,7 @@ describe('e2e', () => {
     vi.restoreAllMocks()
   })
 
-  test('should delegate rendering to Runtime.render', async () => {
+  it('should delegate rendering to Runtime.render', async () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
@@ -37,7 +37,7 @@ describe('e2e', () => {
     expect(hoisted.instance.render).toHaveBeenCalledTimes(1)
   })
 
-  test('should return runtime result from renderToString', async () => {
+  it('should return runtime result from renderToString', async () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
@@ -45,7 +45,7 @@ describe('e2e', () => {
     expect(hoisted.instance.renderToString).toHaveBeenCalledTimes(1)
   })
 
-  test('should delegate waitUntilExit to runtime', async () => {
+  it('should delegate waitUntilExit to runtime', async () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 

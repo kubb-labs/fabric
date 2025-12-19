@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createFabric } from './createFabric.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
@@ -23,7 +23,7 @@ describe('createFabric', () => {
     vi.restoreAllMocks()
   })
 
-  test('creates an fabric with the fsPlugin and calls write on progress', async () => {
+  it('should create a fabric with the fsPlugin and call write on progress', async () => {
     const onBeforeWrite = vi.fn()
     const spy = vi.spyOn(typescriptParser, 'parse')
 
@@ -48,7 +48,7 @@ describe('createFabric', () => {
     expect(spy).toHaveBeenCalled()
   })
 
-  test('call default parser when no extension are set', async () => {
+  it('should call default parser when no extensions are set', async () => {
     const onBeforeWrite = vi.fn()
     const spy = vi.spyOn(defaultParser, 'parse')
 
@@ -72,7 +72,7 @@ describe('createFabric', () => {
     expect(spy).toHaveBeenCalled()
   })
 
-  test('does not call write when fsPlugin is in dryRun mode', async () => {
+  it('should not call write when fsPlugin is in dryRun mode', async () => {
     const onBeforeWrite = vi.fn()
 
     const fabric = createFabric()
@@ -94,7 +94,7 @@ describe('createFabric', () => {
     expect(onBeforeWrite).toHaveBeenCalledWith('/tmp/index.ts', undefined)
   })
 
-  test('creates an fabric with the fsPlugin and parser for vue', async () => {
+  it('should create a fabric with the fsPlugin and parser for vue', async () => {
     const onBeforeWrite = vi.fn()
 
     const vueParser = defineParser({
@@ -130,7 +130,7 @@ describe('createFabric', () => {
     expect(spy).toHaveBeenCalled()
   })
 
-  test('addFile proxies to FileManager.add', async () => {
+  it('should proxy addFile to FileManager.add', async () => {
     const fabric = createFabric()
 
     const file = {
@@ -147,7 +147,7 @@ describe('createFabric', () => {
     expect(spy).toHaveBeenCalledWith(file)
   })
 
-  test('use installs plugin with correct fabric and options; warns on duplicate', async () => {
+  it('should install plugin with correct fabric and options and warn on duplicate', async () => {
     const fabric = createFabric()
     const install = vi.fn(function (ctx: FabricContext, ...opts: any[]) {
       expect(ctx).toBeDefined()
@@ -165,7 +165,7 @@ describe('createFabric', () => {
     expect(install).toHaveBeenCalledTimes(2)
   })
 
-  test('use installs parser with correct fabric and options; warns on duplicate', async () => {
+  it('should install parser with correct fabric and options and warn on duplicate', async () => {
     const fabric = createFabric()
     const install = vi.fn(function (ctx: FabricContext, ...opts: any[]) {
       expect(ctx).toBeDefined()
@@ -191,7 +191,7 @@ describe('createFabric', () => {
     expect(install).toHaveBeenCalledTimes(2)
   })
 
-  test('validate plugin override sync', async () => {
+  it('should validate plugin override sync', async () => {
     const fabric = createFabric()
     const plugin = definePlugin({
       name: 'mockPlugin',
@@ -211,7 +211,7 @@ describe('createFabric', () => {
     expect(fabric.write).toBeDefined()
   })
 
-  test('validate plugin install sync', async () => {
+  it('should validate plugin install sync', async () => {
     const fabric = createFabric()
     const plugin = definePlugin({
       name: 'syncInstall',
@@ -226,7 +226,7 @@ describe('createFabric', () => {
     expect(fabric.installedSync).toBe(true)
   })
 
-  test('validate plugin inject sync', async () => {
+  it('should validate plugin inject sync', async () => {
     const fabric = createFabric()
     const plugin = definePlugin({
       name: 'syncInject',
