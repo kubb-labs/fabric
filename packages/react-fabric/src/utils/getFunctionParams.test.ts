@@ -26,7 +26,7 @@ describe('[params] getFunctionParams objectValue', () => {
 })
 
 describe('[params] getFunctionParams with transformers', () => {
-  test('should transform names in constructor mode', () => {
+  it('should transform names in constructor mode', () => {
     const params = {
       test: { type: 'string', optional: false },
       count: { type: 'number', optional: true },
@@ -42,12 +42,12 @@ describe('[params] getFunctionParams with transformers', () => {
     expect(result).toContain('COUNT')
   })
 
-  test('should handle empty params', () => {
+  it('should handle empty params', () => {
     const result = getFunctionParams({}, { type: 'call' })
     expect(result).toBe('')
   })
 
-  test('should handle nested params', () => {
+  it('should handle nested params', () => {
     const params = {
       parent: {
         type: 'object',

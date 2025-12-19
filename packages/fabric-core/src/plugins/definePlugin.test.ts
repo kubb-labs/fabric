@@ -1,9 +1,9 @@
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { definePlugin } from './definePlugin.ts'
 
 describe('definePlugin', () => {
-  test('returns a plugin object with type and provided properties', () => {
+  it('should return a plugin object with type and provided properties', () => {
     const install = vi.fn()
 
     const userPlugin = {

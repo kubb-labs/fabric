@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
@@ -32,7 +32,7 @@ describe('graphPlugin', () => {
     vi.restoreAllMocks()
   })
 
-  test('should create graph.json and graph.html on files:writing:start event', async () => {
+  it('should create graph.json and graph.html on files:writing:start event', async () => {
     const fabric = createFabric()
     await fabric.use(graphPlugin, { root: 'src', open: false })
 
@@ -50,7 +50,7 @@ describe('graphPlugin', () => {
     expect(graphHtml?.sources).toMatchSnapshot()
   })
 
-  test('should do nothing when getGraph returns undefined', async () => {
+  it('should do nothing when getGraph returns undefined', async () => {
     const fabric = createFabric()
     await fabric.use(graphPlugin, { root: 'out' })
 
@@ -64,7 +64,7 @@ describe('graphPlugin', () => {
     expect(addSpy).not.toHaveBeenCalled()
   })
 
-  test('should throw error when options are not provided', async () => {
+  it('should throw error when options are not provided', async () => {
     const fabric = createFabric()
 
     await expect(async () => {
@@ -73,7 +73,7 @@ describe('graphPlugin', () => {
     }).rejects.toThrow('Graph plugin requires options.root and options.mode')
   })
 
-  test('should serve graph when open option is true', async () => {
+  it('should serve graph when open option is true', async () => {
     const fabric = createFabric()
 
     // Mock the serve function to avoid actual server start

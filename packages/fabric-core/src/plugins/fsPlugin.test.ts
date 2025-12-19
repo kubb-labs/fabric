@@ -7,7 +7,7 @@ describe('write', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')
   const filePath = path.resolve(mocksPath, './hellowWorld.js')
 
-  test('should create a file in the mocks folder', async () => {
+  it('should create a file in the mocks folder', async () => {
     const text = `export const hallo = 'world'`
 
     await write(filePath, text)
@@ -17,14 +17,14 @@ describe('write', () => {
     expect(file).toBe(text)
   })
 
-  test('should not write if file content is the same', async () => {
+  it('should not write if file content is the same', async () => {
     const text = `export const hallo = 'world'`
 
     await write(filePath, text)
     await write(filePath, text)
   })
 
-  test('should not write empty or whitespace-only content', async () => {
+  it('should not write empty or whitespace-only content', async () => {
     const emptyFilePath = path.resolve(mocksPath, './empty.js')
 
     const result1 = await write(emptyFilePath, '')
@@ -37,7 +37,7 @@ describe('write', () => {
     expect(result3).toBeUndefined()
   })
 
-  test('should perform sanity check when enabled', async () => {
+  it('should perform sanity check when enabled', async () => {
     const sanityFilePath = path.resolve(mocksPath, './sanity.js')
     const text = `export const test = 'sanity'`
 
@@ -48,7 +48,7 @@ describe('write', () => {
     await fs.remove(sanityFilePath)
   })
 
-  test('should throw error when sanity check fails', async () => {
+  it('should throw error when sanity check fails', async () => {
     const sanityFilePath = path.resolve(mocksPath, './sanity-fail.js')
     // This test verifies the sanity check behavior. The write function trims data before writing,
     // but compares the original (untrimmed) data with the saved (trimmed) data.
@@ -63,7 +63,7 @@ describe('write', () => {
     await fs.remove(sanityFilePath)
   })
 
-  test('should clean directory at the beginning of plugin generation', async () => {
+  it('should clean directory at the beginning of plugin generation', async () => {
     const cleanDir = path.resolve(mocksPath, './tmp-clean')
     const nestedFile = path.resolve(cleanDir, 'test.txt')
 
@@ -82,7 +82,7 @@ describe('write', () => {
     expect(await fs.pathExists(cleanDir)).toBe(false)
   })
 
-  test('should call onBeforeWrite callback', async () => {
+  it('should call onBeforeWrite callback', async () => {
     const onBeforeWriteMock = vi.fn()
     const testFilePath = path.resolve(mocksPath, './onbeforewrite-test.js')
 
@@ -103,7 +103,7 @@ describe('write', () => {
     await fs.remove(testFilePath).catch(() => {})
   })
 
-  test('should not clean if clean option is not provided', async () => {
+  it('should not clean if clean option is not provided', async () => {
     const ctxStub = {
       on: vi.fn(),
     } as unknown as FabricContext

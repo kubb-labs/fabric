@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
@@ -52,7 +52,7 @@ describe('getBarrelFiles', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
-  test("mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable", () => {
+  it("should produce wildcard exports and mark barrel sources indexable/exportable when mode is 'all'", () => {
     const barrelFiles = getBarrelFiles({ files, root: 'src', mode: 'all' })
 
     expect(barrelFiles.flatMap((item) => item.exports)).toMatchSnapshot()
@@ -65,7 +65,7 @@ describe('getBarrelFiles', () => {
     expect(rootIndex.exports?.length).toBe(6)
   })
 
-  test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", () => {
+  it("should produce named exports and mark barrel sources indexable/exportable when mode is 'named'", () => {
     const barrelFiles = getBarrelFiles({ files, root: 'src', mode: 'named' })
 
     expect(barrelFiles.flatMap((item) => item.exports)).toMatchSnapshot()
@@ -78,7 +78,7 @@ describe('getBarrelFiles', () => {
     expect(rootIndex.exports?.length).toBe(6)
   })
 
-  test("mode 'propagate' should not generate any barrel files", () => {
+  it("should not generate any barrel files when mode is 'propagate'", () => {
     const barrelFiles = getBarrelFiles({
       files,
       root: 'src',
@@ -87,7 +87,7 @@ describe('getBarrelFiles', () => {
     expect(barrelFiles.length).toBe(0)
   })
 
-  test('mode false should not generate any barrel files', () => {
+  it('should not generate any barrel files when mode is false', () => {
     const barrelFiles = getBarrelFiles({ files, root: 'src', mode: false })
     expect(barrelFiles.length).toBe(0)
   })
@@ -97,7 +97,7 @@ describe('barrelPlugin', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
   })
-  test("mode 'all' should produce wildcard exports and mark barrel sources indexable/exportable", async () => {
+  it("should produce wildcard exports and mark barrel sources indexable/exportable when mode is 'all'", async () => {
     const fabric = createFabric()
 
     await fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
@@ -118,7 +118,7 @@ describe('barrelPlugin', () => {
     expect(file.exports).toMatchSnapshot()
   })
 
-  test("mode 'named' should produce named exports and mark barrel sources indexable/exportable", async () => {
+  it("should produce named exports and mark barrel sources indexable/exportable when mode is 'named'", async () => {
     const fabric = createFabric()
 
     fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
@@ -139,7 +139,7 @@ describe('barrelPlugin', () => {
     expect(file.exports).toMatchSnapshot()
   })
 
-  test("mode 'propagate' should not generate any barrel files", async () => {
+  it("should not generate any barrel files when mode is 'propagate'", async () => {
     const fabric = createFabric()
 
     await fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })
@@ -154,7 +154,7 @@ describe('barrelPlugin', () => {
 
     expect(addSpy).toHaveBeenCalledTimes(0)
   })
-  test('mode false should not generate any barrel files', async () => {
+  it('should not generate any barrel files when mode is false', async () => {
     const fabric = createFabric()
 
     fabric.use(barrelPlugin, { mode: 'propagate', root: 'src' })

@@ -1,9 +1,9 @@
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { defineParser } from './defineParser.ts'
 
 describe('defineParser', () => {
-  test('returns a parser object with type and provided properties', async () => {
+  it('should return a parser object with type and provided properties', async () => {
     const install = vi.fn()
     const parse = vi.fn().mockResolvedValue('printed')
 
