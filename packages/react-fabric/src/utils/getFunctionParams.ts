@@ -35,14 +35,10 @@ type ParamItem =
       children?: Params
     })
 
-const TSBasicTypes = ['number', 'string', 'null', 'undefined', 'bigint', 'boolean', 'symbol'] as const
-
-type ParamEntry = [key: string, item?: ParamItem | undefined]
-
 export type Params = Record<string, Param | undefined>
 
 type Options = {
-  type: 'constructor' | 'call' | 'object' | 'objectValue' | 'callback'
+  type: 'constructor' | 'call' | 'object' | 'objectValue'
   transformName?: (name: string) => string
   transformType?: (type: string) => string
 }
@@ -68,55 +64,44 @@ function order(items: Array<[key: string, item?: ParamItem]>) {
   )
 }
 
-function processEntry(options: Options): ([key, item]: ParamEntry) => string | null {
-  return function ([key, item]: ParamEntry): string | null {
-    if (!item) return null
-
-    if (!item.children) return parseItem(key, item, options)
-    if (Object.keys(item.children).length === 0) return null
-
-    if (item.mode === 'inlineSpread') {
-      return getFunctionParams(item.children, options)
-    }
-
-    return parseChild(key, item, options)
-  }
-}
-
-function processChildEntry(options: Options, entries: ParamEntry[]): ([key, item]: ParamEntry) => { name: string | null; type: string | null } | null {
-  return function ([key, item]: ParamEntry): { name: string | null; type: string | null } | null {
-    if (!item) return null
-
-    const result = { name: null, type: null } as { name: string | null; type: string | null }
-
-    const name = parseItem(key, { ...item, type: undefined }, options, item.type)
-
-    if (!item.children) {
-      result.name = options.type === 'call' && options.transformName ? `${key}: ${name}` : name
-    } else {
-      const subTypes = Object.keys(item.children).join(', ')
-      result.name = subTypes ? `${name}: { ${subTypes} }` : name
-    }
-
-    const anySiblingHasType = entries.some(([_k, entries]) => !!entries?.type)
-    if (anySiblingHasType) {
-      result.type = parseItem(key, { ...item, default: undefined }, options, item.type)
-    }
-
-    return result
-  }
-}
-
 function parseChild(key: string, item: ParamItem, options: Options): string | null {
-  const entries = order(Object.entries(item.children as Record<string, ParamItem | undefined>))
+  // @ts-expect-error
+  const entries = order(Object.entries(item.children))
+
+  const types: string[] = []
+  const names: string[] = []
 
   const optional = entries.every(([_key, item]) => item?.optional)
 
-  const childEntryProcessor = processChildEntry(options, entries)
-  const result = entries.map(childEntryProcessor).filter((item): item is { name: string | null; type: string | null } => item !== null)
+  entries.forEach(([key, entryItem]) => {
+    if (entryItem) {
+      const name = parseItem(key, { ...entryItem, type: undefined }, options)
+      if (entryItem.children) {
+        const subTypes = Object.entries(entryItem.children)
+          .map(([key]) => {
+            return key
+          })
+          .join(', ')
 
-  const names = result.map(({ name }) => name).filter(Boolean)
-  const types = result.map(({ type }) => type).filter(Boolean)
+        if (subTypes) {
+          names.push(`${name}: { ${subTypes} }`)
+        } else {
+          names.push(name)
+        }
+      } else {
+        if (options.type === 'call' && options.transformName) {
+          names.push(`${key}: ${name}`)
+        } else {
+          names.push(name)
+        }
+      }
+
+      if (entries.some(([_key, item]) => item?.type)) {
+        types.push(parseItem(key, { ...entryItem, default: undefined }, options))
+      }
+    }
+  })
+
   const name = item.mode === 'inline' ? key : names.length ? `{ ${names.join(', ')} }` : undefined
   const type = item.type ? item.type : types.length ? `{ ${types.join('; ')} }` : undefined
 
@@ -132,11 +117,11 @@ function parseChild(key: string, item: ParamItem, options: Options): string | nu
       optional: !item.default ? optional : undefined,
     } as ParamItem,
     options,
-    item.type,
   )
 }
 
-function parseItem(name: string, item: ParamItem, options: Options, parentType?: string): string {
+function parseItem(name: string, item: ParamItem, options: Options): string {
+  const acc: string[] = []
   const transformedName = options.transformName ? options.transformName(name) : name
   const transformedType = options.transformType && item.type ? options.transformType(item.type) : item.type
 
@@ -147,59 +132,57 @@ function parseItem(name: string, item: ParamItem, options: Options, parentType?:
   if (options.type === 'objectValue') {
     return item.value ? `${transformedName}: ${item.value}` : transformedName
   }
-  if (options.type === 'callback') {
-    const isObject = (transformedType?.includes('{') && transformedType?.includes('}')) ?? false
 
-    if (transformedType === parentType) {
-      if (transformedType && !TSBasicTypes.includes(transformedType as (typeof TSBasicTypes)[number])) {
-        return `${transformedName}: { [K in keyof ${transformedType}]: () => ${transformedType}[K] }`
-      }
-    }
-    if (item.default) {
-      if (isObject) return transformedType ? `${transformedName}: ${transformedType} = ${item.default}` : `${transformedName} = ${item.default}`
-      return transformedType ? `${transformedName}: () => ${transformedType} = () => ${item.default}` : `${transformedName} = () => ${item.default}`
-    }
+  //LEGACY
+  if (item.type && options.type === 'constructor') {
     if (item.optional) {
-      if (isObject) return transformedType ? `${transformedName}?: ${transformedType}` : transformedName
-      return transformedType ? `${transformedName}?: () => ${transformedType}` : transformedName
+      acc.push(`${transformedName}?: ${transformedType}`)
+    } else {
+      acc.push(`${transformedName}: ${transformedType}${item.default ? ` = ${item.default}` : ''}`)
     }
-    if (transformedType) {
-      if (isObject) return `${transformedName}: ${transformedType}`
-      return `${transformedName}: () => ${transformedType}`
-    }
-    return transformedName
+  } else if (item.default && options.type === 'constructor') {
+    acc.push(`${transformedName} = ${item.default}`)
+  } else if (item.value) {
+    acc.push(`${transformedName} : ${item.value}`)
+  } else if (item.mode === 'inlineSpread') {
+    acc.push(`... ${transformedName}`)
+  } else {
+    acc.push(transformedName)
   }
 
-  if (options.type === 'constructor') {
-    if (item.mode === 'inlineSpread') {
-      return `... ${transformedName}`
-    }
-    if (item.value) {
-      return `${transformedName} : ${item.value}`
-    }
-    if (item.default) {
-      return transformedType ? `${transformedName}: ${transformedType} = ${item.default}` : `${transformedName} = ${item.default}`
-    }
-    if (item.optional) {
-      return transformedType ? `${transformedName}?: ${transformedType}` : `${transformedName}`
-    }
-    if (transformedType) {
-      return `${transformedName}: ${transformedType}`
-    }
-
-    return transformedName
-  }
-
-  return transformedName
+  return acc[0] as string
 }
 
 export function getFunctionParams(params: Params, options: Options): string {
-  const entries: ParamEntry[] = order(Object.entries(params as Record<string, ParamItem | undefined>))
-  const entryProcessor = processEntry(options)
+  const entries = order(Object.entries(params as Record<string, ParamItem | undefined>))
 
   return entries
-    .map(entryProcessor)
-    .filter((item): item is string => item !== null)
+    .reduce((acc, [key, item]) => {
+      if (!item) {
+        return acc
+      }
+
+      if (item.children) {
+        if (Object.keys(item.children).length === 0) {
+          return acc
+        }
+
+        if (item.mode === 'inlineSpread') {
+          return [...acc, getFunctionParams(item.children, options)]
+        }
+
+        const parsedItem = parseChild(key, item, options)
+        if (!parsedItem) {
+          return acc
+        }
+
+        return [...acc, parsedItem]
+      }
+
+      const parsedItem = parseItem(key, item, options)
+
+      return [...acc, parsedItem]
+    }, [] as string[])
     .join(', ')
 }
 
@@ -249,9 +232,5 @@ export class FunctionParams {
 
   toConstructor(): string {
     return getFunctionParams(this.#params, { type: 'constructor' })
-  }
-
-  toCallback(): string {
-    return getFunctionParams(this.#params, { type: 'callback' })
   }
 }
