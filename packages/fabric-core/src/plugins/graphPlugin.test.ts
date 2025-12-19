@@ -63,4 +63,32 @@ describe('graphPlugin', () => {
 
     expect(addSpy).not.toHaveBeenCalled()
   })
+
+  test('throws error when options are not provided', async () => {
+    const fabric = createFabric()
+    
+    await expect(async () => {
+      // @ts-expect-error - testing error case
+      await fabric.use(graphPlugin)
+    }).rejects.toThrow('Graph plugin requires options.root and options.mode')
+  })
+
+  test('serves graph when open option is true', async () => {
+    const fabric = createFabric()
+    
+    // Mock the serve function to avoid actual server start
+    vi.mock('../utils/open.ts', () => ({
+      open: vi.fn().mockResolvedValue(true),
+    }))
+    
+    await fabric.use(graphPlugin, { root: 'src', open: true })
+
+    const files = makeFiles(2)
+
+    // This will trigger the serve function
+    await fabric.context.emit('files:writing:start', files)
+
+    // Just ensure it doesn't crash when open is true
+    expect(fabric.files.length).toBeGreaterThan(0)
+  })
 })

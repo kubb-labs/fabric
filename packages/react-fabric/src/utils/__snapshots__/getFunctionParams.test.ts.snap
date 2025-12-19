@@ -67,3 +67,71 @@ exports[`[params] getFunctionParams constructor (Function) > 'string' 1`] = `"na
 exports[`[params] getFunctionParams constructor (Function) > 'undefined children param' 1`] = `""`;
 
 exports[`[params] getFunctionParams constructor (Function) > 'undefined' 1`] = `""`;
+
+exports[`[params] getFunctionParams object > 'default string' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams object > 'empty children param' 1`] = `"{ age }"`;
+
+exports[`[params] getFunctionParams object > 'empty' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams object > 'name and address' 1`] = `"name, address"`;
+
+exports[`[params] getFunctionParams object > 'name[optional] age, address[optional]…' 1`] = `"age, name, address, country"`;
+
+exports[`[params] getFunctionParams object > 'name[optional], age[optional] and add…' 1`] = `"address, name, age"`;
+
+exports[`[params] getFunctionParams object > 'optional string' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams object > 'params[with name] with age, address[o…' 1`] = `"{ age, country, address }"`;
+
+exports[`[params] getFunctionParams object > 'params[without name and default] with…' 1`] = `"{ address, age, country }"`;
+
+exports[`[params] getFunctionParams object > 'params[without name and mode inline] …' 1`] = `"data"`;
+
+exports[`[params] getFunctionParams object > 'params[without name and mode inline] …' 2`] = `"data"`;
+
+exports[`[params] getFunctionParams object > 'params[without name and mode inlineSp…' 1`] = `"address, age, country"`;
+
+exports[`[params] getFunctionParams object > 'params[without name] with age, addres…' 1`] = `"{ age, country, address }"`;
+
+exports[`[params] getFunctionParams object > 'params[without name] with age[optiona…' 1`] = `"{ address, age, country }"`;
+
+exports[`[params] getFunctionParams object > 'string' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams object > 'undefined children param' 1`] = `""`;
+
+exports[`[params] getFunctionParams object > 'undefined' 1`] = `""`;
+
+exports[`[params] getFunctionParams objectValue > 'default string' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams objectValue > 'empty children param' 1`] = `"{ age }"`;
+
+exports[`[params] getFunctionParams objectValue > 'empty' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams objectValue > 'name and address' 1`] = `"name, address"`;
+
+exports[`[params] getFunctionParams objectValue > 'name[optional] age, address[optional]…' 1`] = `"age, name, address, country"`;
+
+exports[`[params] getFunctionParams objectValue > 'name[optional], age[optional] and add…' 1`] = `"address, name, age"`;
+
+exports[`[params] getFunctionParams objectValue > 'optional string' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams objectValue > 'params[with name] with age, address[o…' 1`] = `"{ age, country, address }"`;
+
+exports[`[params] getFunctionParams objectValue > 'params[without name and default] with…' 1`] = `"{ address, age, country }"`;
+
+exports[`[params] getFunctionParams objectValue > 'params[without name and mode inline] …' 1`] = `"data"`;
+
+exports[`[params] getFunctionParams objectValue > 'params[without name and mode inline] …' 2`] = `"data"`;
+
+exports[`[params] getFunctionParams objectValue > 'params[without name and mode inlineSp…' 1`] = `"address, age, country"`;
+
+exports[`[params] getFunctionParams objectValue > 'params[without name] with age, addres…' 1`] = `"{ age, country, address }"`;
+
+exports[`[params] getFunctionParams objectValue > 'params[without name] with age[optiona…' 1`] = `"{ address, age, country }"`;
+
+exports[`[params] getFunctionParams objectValue > 'string' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams objectValue > 'undefined children param' 1`] = `""`;
+
+exports[`[params] getFunctionParams objectValue > 'undefined' 1`] = `""`;
