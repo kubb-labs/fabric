@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.7.3
+
+### Patch Changes
+
+- [#33](https://github.com/kubb-labs/fabric/pull/33) [`03dc56c`](https://github.com/kubb-labs/fabric/commit/03dc56c42b606bcd34f9dc053912c52f46ac5497) Thanks [@blackravenx](https://github.com/blackravenx)! - add support for callback type in getFunctionParams utility
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.7.3
+
 ## 0.7.2
 
 ### Patch Changes
