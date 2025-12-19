@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.7.4
+
+### Patch Changes
+
+- [`be4a479`](https://github.com/kubb-labs/fabric/commit/be4a47992b54824e40e638f7c72b34f46a8afcd8) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Revert previous change for callback
+
+- Updated dependencies [[`be4a479`](https://github.com/kubb-labs/fabric/commit/be4a47992b54824e40e638f7c72b34f46a8afcd8)]:
+  - @kubb/fabric-core@0.7.4
+
 ## 0.7.3
 
 ### Patch Changes
