@@ -3,7 +3,7 @@ import { open } from './open.ts'
 
 // Mock child_process spawn
 vi.mock('node:child_process', () => ({
-  spawn: vi.fn((bin, args, options) => {
+  spawn: vi.fn((_bin, _args, _options) => {
     const EventEmitter = require('node:events')
     const process = new EventEmitter()
     
