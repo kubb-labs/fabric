@@ -54,7 +54,7 @@ describe('loggerPlugin', () => {
     logger.withTag.mockReturnValue(logger)
   })
 
-  test('configures consola with Fabric tag', async () => {
+  test('should configure consola with Fabric tag', async () => {
     const fabric = createFabric()
 
     await fabric.use(loggerPlugin, { websocket: false })
@@ -63,7 +63,7 @@ describe('loggerPlugin', () => {
     expect(logger.withTag).toHaveBeenCalledWith('Fabric')
   })
 
-  test('logs key lifecycle events to consola', async () => {
+  test('should log key lifecycle events to consola', async () => {
     const fabric = createFabric()
 
     await fabric.use(loggerPlugin, { websocket: false })
@@ -120,7 +120,7 @@ describe('loggerPlugin', () => {
       stopSpy.mockRestore()
     })
 
-    test('starts and updates progress bar when enabled', async () => {
+    test('should start and update progress bar when enabled', async () => {
       const fabric = createFabric()
 
       await fabric.use(loggerPlugin, { websocket: false })
@@ -145,7 +145,7 @@ describe('loggerPlugin', () => {
       expect(stopSpy).toHaveBeenCalled()
     })
 
-    test('does not create progress bar when disabled', async () => {
+    test('should not create progress bar when disabled', async () => {
       const fabric = createFabric()
 
       await fabric.use(loggerPlugin, { websocket: false, progress: false })

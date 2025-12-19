@@ -16,7 +16,7 @@ describe('createFile', () => {
     ['.json', defaultParser],
   ])
   const fileProcessor = new FileProcessor()
-  test('if getFileSource is returning code with imports', async () => {
+  test('should parse file with type-only imports correctly', async () => {
     const code = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
@@ -105,7 +105,7 @@ describe('createFile', () => {
     expect(await format(codeWithDefaultImportOrder)).toMatchSnapshot()
   })
 
-  test('if getFileSource is returning code with imports and default import', async () => {
+  test('should parse file with default imports correctly', async () => {
     const code = await fileProcessor.parse(
       createFile({
         baseName: 'test.ts',
@@ -128,7 +128,7 @@ describe('createFile', () => {
     expect(await format(code)).toMatchSnapshot()
   })
 
-  test('if getFileSource is returning code with exports and exports as', async () => {
+  test('should parse file with exports and aliased exports correctly', async () => {
     const fileImport = createFile({
       path: './src/models/file1.ts',
       baseName: 'file1.ts',
@@ -185,7 +185,7 @@ describe('createFile', () => {
     expect(await format(await fileProcessor.parse(fileExport, { parsers }))).toMatchSnapshot()
   })
 
-  test('if combineExports is filtering out duplicated sources(by name)', () => {
+  test('should filter out duplicated sources by name in combineSources', () => {
     const sources: Array<KubbFile.Source> = [
       {
         name: 'test',
@@ -220,7 +220,7 @@ describe('createFile', () => {
     `)
   })
 
-  test('if combineSources deduplicates sources with the same name from different plugins', () => {
+  test('should deduplicate sources with the same name from different plugins', () => {
     // This test case represents the issue where buildFormData was being generated twice
     // when multiple plugins added the same helper function
     const sources: Array<KubbFile.Source> = [
@@ -243,7 +243,7 @@ describe('createFile', () => {
     expect(result[0]?.name).toBe('buildFormData')
   })
 
-  test('if combineSources keeps sources without names separate even if they have same metadata', () => {
+  test('should keep sources without names separate even if they have same metadata', () => {
     // Sources without names should not be deduplicated based on metadata alone
     const sources: Array<KubbFile.Source> = [
       {
@@ -258,7 +258,7 @@ describe('createFile', () => {
     expect(result.length).toBe(2)
   })
 
-  test('if combineSources handles sources with both name and value undefined', () => {
+  test('should handle sources with both name and value undefined in combineSources', () => {
     // Edge case: sources with both name and value undefined should be deduplicated
     const sources: Array<KubbFile.Source> = [
       {
@@ -279,7 +279,7 @@ describe('createFile', () => {
     expect(result.length).toBe(2) // Two unique combinations of isExportable and isTypeOnly
   })
 
-  test('if combineExports is filtering out duplicated exports(by path and name)', () => {
+  test('should filter out duplicated exports by path and name in combineExports', () => {
     const exports: Array<KubbFile.Export> = [
       {
         path: './models',
@@ -315,7 +315,7 @@ describe('createFile', () => {
     `)
   })
 
-  test('if combineImports is filtering out duplicated imports(by path and name)', () => {
+  test('should filter out duplicated imports by path and name in combineImports', () => {
     const imports: Array<KubbFile.Import> = [
       {
         path: './models',

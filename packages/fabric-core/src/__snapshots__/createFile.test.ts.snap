@@ -1,6 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`createFile > if getFileSource is returning code with exports and exports as 1`] = `
+exports[`createFile > should parse file with default imports correctly 1`] = `
+"import type Pets from './Pets.ts'
+
+export type Pet = Pets
+"
+`;
+
+exports[`createFile > should parse file with exports and aliased exports correctly 1`] = `
 "import type Dog from './Dog.ts'
 import type { Pets, Lily } from './Pets.ts'
 
@@ -9,20 +16,20 @@ type Test = Pets | Lily | Dog
 "
 `;
 
-exports[`createFile > if getFileSource is returning code with exports and exports as 2`] = `
+exports[`createFile > should parse file with exports and aliased exports correctly 2`] = `
 "export type * as Dog from './Dog'
 export type { Pets, Lily } from './Pets'
 "
 `;
 
-exports[`createFile > if getFileSource is returning code with imports 1`] = `
+exports[`createFile > should parse file with type-only imports correctly 1`] = `
 "import type { Pets } from './Pets.ts'
 
 export type Pet = Pets
 "
 `;
 
-exports[`createFile > if getFileSource is returning code with imports 2`] = `
+exports[`createFile > should parse file with type-only imports correctly 2`] = `
 "import client from './Pets.ts'
 import React from './React.ts'
 import type { Pets, Cat } from './Pets.ts'
@@ -32,19 +39,12 @@ const test = [client, React]
 "
 `;
 
-exports[`createFile > if getFileSource is returning code with imports 3`] = `
+exports[`createFile > should parse file with type-only imports correctly 3`] = `
 "import client from './Pets.ts'
 import React from './React.ts'
 import type { Pets, Cat } from './Pets.ts'
 
 export type Pet = Pets | Cat
 const test = [client, React]
-"
-`;
-
-exports[`createFile > if getFileSource is returning code with imports and default import 1`] = `
-"import type Pets from './Pets.ts'
-
-export type Pet = Pets
 "
 `;

@@ -1,51 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`TreeNode > if TreeNode.toGraph renders a graph correctly 1`] = `
-{
-  "edges": [
-    {
-      "from": "src/",
-      "to": "src/test.ts",
-    },
-    {
-      "from": "src/",
-      "to": "src/sub",
-    },
-    {
-      "from": "src/sub",
-      "to": "src/sub/hello.ts",
-    },
-    {
-      "from": "src/sub",
-      "to": "src/sub/world.ts",
-    },
-  ],
-  "nodes": [
-    {
-      "id": "src/",
-      "label": "src/",
-    },
-    {
-      "id": "src/test.ts",
-      "label": "test.ts",
-    },
-    {
-      "id": "src/sub",
-      "label": "sub",
-    },
-    {
-      "id": "src/sub/hello.ts",
-      "label": "hello.ts",
-    },
-    {
-      "id": "src/sub/world.ts",
-      "label": "world.ts",
-    },
-  ],
-}
-`;
-
-exports[`TreeNode > if schemas folder contains x files and y folders 1`] = `
+exports[`TreeNode > should create tree structure with correct number of files and folders 1`] = `
 TreeNode {
   "children": [
     TreeNode {
@@ -107,5 +62,50 @@ TreeNode {
     "path": "src/",
   },
   "parent": undefined,
+}
+`;
+
+exports[`TreeNode > should render graph correctly using TreeNode.toGraph 1`] = `
+{
+  "edges": [
+    {
+      "from": "src/",
+      "to": "src/test.ts",
+    },
+    {
+      "from": "src/",
+      "to": "src/sub",
+    },
+    {
+      "from": "src/sub",
+      "to": "src/sub/hello.ts",
+    },
+    {
+      "from": "src/sub",
+      "to": "src/sub/world.ts",
+    },
+  ],
+  "nodes": [
+    {
+      "id": "src/",
+      "label": "src/",
+    },
+    {
+      "id": "src/test.ts",
+      "label": "test.ts",
+    },
+    {
+      "id": "src/sub",
+      "label": "sub",
+    },
+    {
+      "id": "src/sub/hello.ts",
+      "label": "hello.ts",
+    },
+    {
+      "id": "src/sub/world.ts",
+      "label": "world.ts",
+    },
+  ],
 }
 `;

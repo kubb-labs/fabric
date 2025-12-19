@@ -7,7 +7,7 @@ describe('write', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')
   const filePath = path.resolve(mocksPath, './hellowWorld.js')
 
-  test('if write is creating a file in the mocks folder', async () => {
+  test('should create a file in the mocks folder', async () => {
     const text = `export const hallo = 'world'`
 
     await write(filePath, text)
@@ -17,7 +17,7 @@ describe('write', () => {
     expect(file).toBe(text)
   })
 
-  test('do not write if file content is the same', async () => {
+  test('should not write if file content is the same', async () => {
     const text = `export const hallo = 'world'`
 
     await write(filePath, text)
@@ -63,7 +63,7 @@ describe('write', () => {
     await fs.remove(sanityFilePath)
   })
 
-  test('clean at the beginning of the plugin generation', async () => {
+  test('should clean directory at the beginning of plugin generation', async () => {
     const cleanDir = path.resolve(mocksPath, './tmp-clean')
     const nestedFile = path.resolve(cleanDir, 'test.txt')
 

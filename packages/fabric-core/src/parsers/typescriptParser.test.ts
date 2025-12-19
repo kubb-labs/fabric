@@ -14,7 +14,7 @@ const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
 }
 
 describe('TypeScript parser', () => {
-  test('createImport', async () => {
+  test('should create various import statement types correctly', async () => {
     expect(
       formatTS(
         createImport({
@@ -78,7 +78,7 @@ describe('TypeScript parser', () => {
     `)
   })
 
-  test('createExport', async () => {
+  test('should create various export statement types correctly', async () => {
     expect(
       formatTS(
         createExport({
@@ -128,7 +128,7 @@ describe('TypeScript parser', () => {
     }
   })
 
-  test('typescriptParser.print combines banner/imports/exports/sources/footer and respects extname', async () => {
+  test('should combine banner, imports, exports, sources, and footer with proper extension handling', async () => {
     const file = {
       path: '/project/src/index.ts',
       extname: '.ts',

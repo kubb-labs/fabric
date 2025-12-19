@@ -12,7 +12,7 @@ function kubbElement(name: string, attrs: Record<string, any> = {}) {
 }
 
 describe('squashImportNodes', () => {
-  test('collects simple kubb-import nodes', () => {
+  test('should collect simple kubb-import nodes', () => {
     const root = createNode('kubb-root')
 
     const imp = kubbElement('kubb-import', { name: 'React', path: 'react' } satisfies KubbFile.Import)
@@ -33,7 +33,7 @@ describe('squashImportNodes', () => {
     `)
   })
 
-  test('collects nested kubb-import nodes inside kubb-text and kubb-file', () => {
+  test('should collect nested kubb-import nodes inside kubb-text and kubb-file', () => {
     const root = createNode('kubb-root')
     const file = kubbElement('kubb-file', { baseName: 'index.ts', path: '/project/src/index.ts' })
     const text = kubbElement('kubb-text')
@@ -74,7 +74,7 @@ describe('squashImportNodes', () => {
     `)
   })
 
-  test('ignores regular elements and text nodes', () => {
+  test('should ignore regular elements and text nodes', () => {
     const root = createNode('kubb-root')
     const div = kubbElement('div', { id: 'x' })
     appendChildNode(div, createTextNode('hello'))
