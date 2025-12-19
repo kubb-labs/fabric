@@ -65,3 +65,9 @@ describe('[params] getFunctionParams with transformers', () => {
     expect(result).toContain('child2')
   })
 })
+
+describe('[params] getFunctionParams callback (Function.Callback)', () => {
+  test.each(mockParams)('$name', async ({ params }) => {
+    expect(getFunctionParams(params, { type: 'callback' })).toMatchSnapshot()
+  })
+})

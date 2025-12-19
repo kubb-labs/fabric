@@ -34,6 +34,40 @@ exports[`[params] getFunctionParams call(Function.Call) > 'undefined children pa
 
 exports[`[params] getFunctionParams call(Function.Call) > 'undefined' 1`] = `""`;
 
+exports[`[params] getFunctionParams callback (Function.Callback) > 'default string' 1`] = `"name: () => string = () => test"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'empty children param' 1`] = `"{ age }"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'empty' 1`] = `"name"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'name and address' 1`] = `"name: () => string, address: () => string"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'name[optional] age, address[optional]…' 1`] = `"age: () => number, name?: () => string, address?: () => string, country: () => string = () => "Belgium""`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'name[optional], age[optional] and add…' 1`] = `"address: () => string, name?: () => string, age?: () => number"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'optional string' 1`] = `"name?: () => string"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'params[with name] with age, address[o…' 1`] = `"{ age, country, address }: { [K in keyof Data]: () => Data[K] }"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'params[without name and default] with…' 1`] = `"{ address, age = () => 90, country = () => 'Belgium' }: { address?: () => string; age?: () => number; country?: () => string } = {}"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'params[without name and mode inline] …' 1`] = `"data?: { address?: () => string; age?: () => number; country?: () => string }"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'params[without name and mode inline] …' 2`] = `"data: { address: () => string; age: () => number; country: () => string }"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'params[without name and mode inlineSp…' 1`] = `"address: () => string, age: () => number = () => 20, country: () => string = () => "Belgium""`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'params[without name] with age, addres…' 1`] = `"{ age, country, address }: { age: () => number; country: () => string; address?: () => string }"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'params[without name] with age[optiona…' 1`] = `"{ address, age = () => 20, country = () => "Belgium" }?: { address?: () => string; age?: () => number; country?: () => string }"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'string' 1`] = `"name: () => string"`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'undefined children param' 1`] = `""`;
+
+exports[`[params] getFunctionParams callback (Function.Callback) > 'undefined' 1`] = `""`;
+
 exports[`[params] getFunctionParams constructor (Function) > 'default string' 1`] = `"name: string = test"`;
 
 exports[`[params] getFunctionParams constructor (Function) > 'empty children param' 1`] = `"{ age }"`;
