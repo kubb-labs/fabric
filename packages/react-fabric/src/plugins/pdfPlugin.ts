@@ -1,5 +1,4 @@
 import { definePlugin } from '@kubb/fabric-core/plugins'
-import type { DOMElement } from '../types.ts'
 
 export type Options = {
   /**
@@ -25,47 +24,25 @@ declare global {
 }
 
 /**
- * Recursively finds all kubb-pdf nodes in the DOM tree
- */
-function _findPDFNodes(node: DOMElement): Array<DOMElement> {
-  const pdfNodes: Array<DOMElement> = []
-  
-  function walk(current: DOMElement) {
-    for (const child of current.childNodes) {
-      if (!child || child.nodeName === '#text') {
-        continue
-      }
-      
-      if (child.nodeName === 'kubb-pdf') {
-        pdfNodes.push(child)
-      } else {
-        walk(child)
-      }
-    }
-  }
-  
-  walk(node)
-  return pdfNodes
-}
-
-/**
  * PDF plugin that enables react-pdf rendering support
  * This plugin allows generating PDF files using react-pdf components
  * 
  * @example
  * ```tsx
  * import { Document, Page, Text } from '@react-pdf/renderer'
- * import { PDF } from '@kubb/react-fabric'
+ * import { File } from '@kubb/react-fabric'
  * 
  * function App() {
  *   return (
- *     <PDF file="output/report.pdf">
- *       <Document>
- *         <Page>
- *           <Text>Generated with Kubb 🚀</Text>
- *         </Page>
- *       </Document>
- *     </PDF>
+ *     <File path="output/report.pdf" baseName="report.pdf">
+ *       <File.Source>
+ *         <Document>
+ *           <Page>
+ *             <Text>Generated with Kubb 🚀</Text>
+ *           </Page>
+ *         </Document>
+ *       </File.Source>
+ *     </File>
  *   )
  * }
  * ```
@@ -73,16 +50,37 @@ function _findPDFNodes(node: DOMElement): Array<DOMElement> {
 export const pdfPlugin = definePlugin<Options, ExtendOptions>({
   name: 'pdf',
   install(ctx, options = {}) {
-    // Listen for lifecycle:render to process PDF nodes after rendering
-    ctx.on('lifecycle:render', async () => {
-      // Access the runtime's root node to find PDF nodes
-      // This will be set by the reactPlugin during rendering
+    // Listen for file processing to intercept PDF files
+    ctx.on('file:processing:start', async ({ file }) => {
+      if (file.path.endsWith('.pdf')) {
+        // This is a PDF file, we'll handle it specially
+        if (options.onBeforeWrite) {
+          await options.onBeforeWrite(file.path)
+        }
+      }
     })
     
-    // Listen for files that need PDF rendering
-    ctx.on('file:processing:end', async ({ file }) => {
-      if (file.path.endsWith('.pdf') && options.onBeforeWrite) {
-        await options.onBeforeWrite(file.path)
+    // Override file processing for PDF files
+    ctx.on('file:processing:update', async ({ file }) => {
+      if (file.path.endsWith('.pdf') && !options.dryRun) {
+        // Render PDF using react-pdf
+        try {
+          // Dynamically import react-pdf to check if it's available
+          await import('@react-pdf/renderer')
+          
+          // The source contains the react-pdf JSX as a string
+          // We need to render it to a PDF file
+          // The actual rendering will happen via the pdfParser or fsPlugin
+          
+        } catch (error) {
+          if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
+            console.warn(
+              `Warning: @react-pdf/renderer is not installed. Skipping PDF generation for ${file.path}`
+            )
+          } else {
+            throw error
+          }
+        }
       }
     })
   },

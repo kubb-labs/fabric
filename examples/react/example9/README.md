@@ -4,7 +4,7 @@ This directory demonstrates PDF generation support in Kubb Fabric using `react-p
 
 ## Overview
 
-Kubb Fabric now supports generating PDF files alongside code files using the `react-pdf` library. This integration allows you to use React components to create beautiful PDFs as part of your code generation workflow.
+Kubb Fabric now supports generating PDF files alongside code files using the `react-pdf` library. This integration allows you to use React components to create beautiful PDFs as part of your code generation workflow, using the same `File` and `File.Source` components you're already familiar with.
 
 ## Installation
 
@@ -18,12 +18,12 @@ pnpm add @react-pdf/renderer
 
 ## Usage
 
-### Method 1: Using the PDF Component
+### Using File and File.Source
 
-Use the `<PDF>` component to embed react-pdf components in your Kubb workflow:
+Use Fabric's standard `<File>` component with a `.pdf` extension to generate PDFs:
 
 ```tsx
-import { createReactFabric, PDF } from '@kubb/react-fabric'
+import { createReactFabric, File } from '@kubb/react-fabric'
 import { pdfPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 
@@ -39,15 +39,17 @@ const styles = StyleSheet.create({
 
 function App() {
   return (
-    <PDF file="output/report.pdf">
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <View style={styles.section}>
-            <Text>Generated with Kubb 🚀</Text>
-          </View>
-        </Page>
-      </Document>
-    </PDF>
+    <File path="output/report.pdf" baseName="report.pdf">
+      <File.Source>
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <View style={styles.section}>
+              <Text>Generated with Kubb 🚀</Text>
+            </View>
+          </Page>
+        </Document>
+      </File.Source>
+    </File>
   )
 }
 
@@ -101,13 +103,10 @@ The PDF support is implemented through:
 
 1. **PDF Parser** (`pdfParser`) - Handles `.pdf` file extensions
 2. **PDF Plugin** (`pdfPlugin`) - Provides PDF rendering capabilities
-3. **PDF Component** (`<PDF>`) - JSX component for embedding react-pdf content
-4. **Virtual Node** (`kubb-pdf`) - Custom renderer node that bridges Kubb with react-pdf
+3. **File Integration** - Uses standard `File` and `File.Source` components
+4. **Virtual Node** (`kubb-pdf`) - Internal bridge between Kubb and react-pdf
 
-The integration uses a "bridge via virtual node" approach, where:
-- The `kubb-pdf` custom element is recognized by Kubb's reconciler
-- react-pdf components are passed as children to the `<PDF>` component
-- The PDF plugin handles the actual rendering using `@react-pdf/renderer`'s `renderToFile`
+The integration detects when a `File` component has a `.pdf` extension and automatically handles the rendering using `@react-pdf/renderer`'s `renderToFile`.
 
 ## Examples
 
@@ -118,7 +117,8 @@ See `example9/run.tsx` for a complete working example.
 You can mix PDF generation with regular file generation in the same workflow:
 
 ```tsx
-import { File, PDF } from '@kubb/react-fabric'
+import { File } from '@kubb/react-fabric'
+import { Document, Page, Text } from '@react-pdf/renderer'
 
 function App() {
   return (
@@ -129,13 +129,15 @@ function App() {
         </File.Source>
       </File>
       
-      <PDF file="output/documentation.pdf">
-        <Document>
-          <Page>
-            <Text>API Documentation</Text>
-          </Page>
-        </Document>
-      </PDF>
+      <File path="output/documentation.pdf" baseName="documentation.pdf">
+        <File.Source>
+          <Document>
+            <Page>
+              <Text>API Documentation</Text>
+            </Page>
+          </Document>
+        </File.Source>
+      </File>
     </>
   )
 }

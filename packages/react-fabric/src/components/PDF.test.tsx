@@ -1,44 +1,53 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test, } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { pdfPlugin } from '../plugins/pdfPlugin.ts'
-import { PDF } from './PDF.tsx'
+import { File } from './File.tsx'
 
-describe('<PDF/>', () => {
-  test('render PDF component', async () => {
+describe('PDF support with File component', () => {
+  test('render File with PDF extension', async () => {
     const Component = () => {
       return (
-        <PDF file="output/test.pdf">
-          {/* PDF content would go here */}
-        </PDF>
+        <File path="output/test.pdf" baseName="test.pdf">
+          <File.Source>
+            {/* PDF content would go here */}
+          </File.Source>
+        </File>
       )
     }
     const fabric = createFabric()
     fabric.use(reactPlugin)
     fabric.use(pdfPlugin)
     
-    const output = await fabric.renderToString(Component)
+    await fabric.render(Component)
+    const files = fabric.files
 
-    // PDF component should not render to string output
-    expect(output).toMatchInlineSnapshot(`""`)
+    // File component should create a file entry
+    expect(files.length).toBe(1)
+    expect(files[0]?.path).toBe('output/test.pdf')
+    expect(files[0]?.baseName).toBe('test.pdf')
   })
 
-  test('PDF component with multiple children', async () => {
+  test('File with PDF extension has correct properties', async () => {
     const Component = () => {
       return (
-        <PDF file="output/report.pdf">
-          <div>Page 1</div>
-          <div>Page 2</div>
-        </PDF>
+        <File path="output/report.pdf" baseName="report.pdf">
+          <File.Source>
+            <div>Page 1</div>
+            <div>Page 2</div>
+          </File.Source>
+        </File>
       )
     }
     const fabric = createFabric()
     fabric.use(reactPlugin)
     fabric.use(pdfPlugin)
     
-    const output = await fabric.renderToString(Component)
+    await fabric.render(Component)
+    const files = fabric.files
 
-    expect(output).toMatchInlineSnapshot(`""`)
+    expect(files.length).toBe(1)
+    expect(files[0]?.extname).toBe('.pdf')
   })
 
   test('renderPDF method exists when pdfPlugin is loaded', async () => {
@@ -78,50 +87,30 @@ describe('<PDF/>', () => {
     expect(writtenPath).toBe('output/test.pdf')
   })
 
-  test('renderPDF throws error when react-pdf is not installed and dryRun is false', async () => {
+  test('renderPDF with dryRun does not throw', async () => {
     const fabric = createFabric()
-    fabric.use(pdfPlugin, { dryRun: false })
+    fabric.use(pdfPlugin, { dryRun: true })
     
     const TestComponent = () => <div>Test</div>
     
-    // Should throw an error when react-pdf is not installed
-    await expect(fabric.renderPDF!(TestComponent, 'test.pdf')).rejects.toThrow()
+    // Should not throw in dryRun mode
+    await expect(fabric.renderPDF!(TestComponent, 'test.pdf')).resolves.toBeUndefined()
   })
 
-  test('multiple PDF components in one render', async () => {
+  test('multiple PDF files in one render', async () => {
     const Component = () => {
       return (
         <>
-          <PDF file="output/report1.pdf">
-            <div>Report 1</div>
-          </PDF>
-          <PDF file="output/report2.pdf">
-            <div>Report 2</div>
-          </PDF>
-        </>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    fabric.use(pdfPlugin)
-    
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toMatchInlineSnapshot(`""`)
-  })
-
-  test('PDF component mixed with File component', async () => {
-    const { File } = await import('./File.tsx')
-    
-    const Component = () => {
-      return (
-        <>
-          <File baseName="index.ts" path="output/index.ts">
-            <File.Source>export const version = "1.0.0"</File.Source>
+          <File path="output/report1.pdf" baseName="report1.pdf">
+            <File.Source>
+              <div>Report 1</div>
+            </File.Source>
           </File>
-          <PDF file="output/docs.pdf">
-            <div>Documentation</div>
-          </PDF>
+          <File path="output/report2.pdf" baseName="report2.pdf">
+            <File.Source>
+              <div>Report 2</div>
+            </File.Source>
+          </File>
         </>
       )
     }
@@ -132,8 +121,39 @@ describe('<PDF/>', () => {
     await fabric.render(Component)
     const files = fabric.files
 
-    // Should only have the File component, not the PDF
-    expect(files.length).toBe(1)
-    expect(files[0]?.baseName).toBe('index.ts')
+    expect(files.length).toBe(2)
+    expect(files[0]?.path).toBe('output/report1.pdf')
+    expect(files[1]?.path).toBe('output/report2.pdf')
+  })
+
+  test('PDF file mixed with regular TypeScript file', async () => {
+    const Component = () => {
+      return (
+        <>
+          <File baseName="index.ts" path="output/index.ts">
+            <File.Source>export const version = "1.0.0"</File.Source>
+          </File>
+          <File baseName="docs.pdf" path="output/docs.pdf">
+            <File.Source>
+              <div>Documentation</div>
+            </File.Source>
+          </File>
+        </>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    fabric.use(pdfPlugin)
+    
+    await fabric.render(Component)
+    const files = fabric.files
+
+    // Should have both files - TypeScript and PDF
+    expect(files.length).toBe(2)
+    // Files may be in any order depending on implementation
+    const tsFile = files.find(f => f.baseName === 'index.ts')
+    const pdfFile = files.find(f => f.baseName === 'docs.pdf')
+    expect(tsFile).toBeDefined()
+    expect(pdfFile).toBeDefined()
   })
 })

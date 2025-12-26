@@ -1,36 +1,37 @@
 import path from 'node:path'
-import { createReactFabric, PDF } from '@kubb/react-fabric'
+import { createReactFabric, File } from '@kubb/react-fabric'
 import { pdfPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 
 /**
  * PDF Generation Example
  * 
  * This example demonstrates how to use the PDF plugin with react-pdf
- * to generate PDF files alongside regular code files.
+ * to generate PDF files alongside regular code files using File and File.Source.
  * 
  * Note: This example requires @react-pdf/renderer to be installed:
  * npm install @react-pdf/renderer
  */
 
 async function start() {
-  // Example 1: Using the PDF component with react-pdf
+  // Example: Using File and File.Source with react-pdf
   // This will work when @react-pdf/renderer is installed
   function AppWithPDF() {
-    // Dynamic import to avoid hard dependency
-    // In a real app, you would import these at the top level
+    const pdfPath = path.resolve(__dirname, 'gen/report.pdf')
+    
     return (
-      <PDF file={path.resolve(__dirname, 'gen/report.pdf')}>
-        {/* 
-          Here you would place react-pdf components:
-          
-          <Document>
-            <Page>
-              <Text>Generated with Kubb 🚀</Text>
-            </Page>
-          </Document>
-        */}
-        <></>
-      </PDF>
+      <File path={pdfPath} baseName="report.pdf">
+        <File.Source>
+          {/* 
+            Here you would place react-pdf components:
+            
+            <Document>
+              <Page>
+                <Text>Generated with Kubb 🚀</Text>
+              </Page>
+            </Document>
+          */}
+        </File.Source>
+      </File>
     )
   }
 
@@ -49,11 +50,8 @@ async function start() {
   console.log('\nNote: Install @react-pdf/renderer to enable PDF generation:')
   console.log('  npm install @react-pdf/renderer\n')
   
-  // Example 2: Using renderPDF directly
-  if (fabric.renderPDF) {
-    console.log('✓ PDF plugin is loaded and ready')
-    console.log('  Use fabric.renderPDF(Component, "path.pdf") to generate PDFs\n')
-  }
+  console.log('✓ PDF plugin is loaded and ready')
+  console.log('  Use File component with .pdf extension to generate PDFs\n')
 
   // Render the app
   await fabric.render(AppWithPDF)

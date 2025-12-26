@@ -222,7 +222,7 @@ Injected methods (via `reactPlugin`):
 | `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
 
 #### `pdfPlugin`
-Enables PDF file generation using react-pdf components. Allows generating beautiful PDFs alongside code files.
+Enables PDF file generation using react-pdf components. Allows generating beautiful PDFs alongside code files using Fabric's standard `File` and `File.Source` components.
 
 ```
 import { pdfPlugin } from '@kubb/react-fabric/plugins'
@@ -245,24 +245,27 @@ Injected methods (via `pdfPlugin`):
 Example:
 
 ```tsx
-import { createReactFabric, PDF } from '@kubb/react-fabric'
-import { pdfPlugin } from '@kubb/react-fabric/plugins'
+import { createReactFabric, File } from '@kubb/react-fabric'
+import { pdfPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
 import { Document, Page, Text } from '@react-pdf/renderer'
 
 function App() {
   return (
-    <PDF file="output/report.pdf">
-      <Document>
-        <Page>
-          <Text>Generated with Kubb 🚀</Text>
-        </Page>
-      </Document>
-    </PDF>
+    <File path="output/report.pdf" baseName="report.pdf">
+      <File.Source>
+        <Document>
+          <Page>
+            <Text>Generated with Kubb 🚀</Text>
+          </Page>
+        </Document>
+      </File.Source>
+    </File>
   )
 }
 
 const fabric = createReactFabric()
 fabric.use(pdfPlugin)
+fabric.use(reactPlugin)
 
 await fabric.render(App)
 ```
