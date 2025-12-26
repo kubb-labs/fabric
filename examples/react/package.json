@@ -22,6 +22,7 @@
     "example6": "bun ./example6/run.tsx",
     "example7": "bun ./example7/run.tsx",
     "example8": "bun ./example8/run.tsx",
+    "example9": "bun ./example9/run.tsx",
     "clean": "npx rimraf ./dist",
     "test": "vitest",
     "typecheck": "echo 'empty'"

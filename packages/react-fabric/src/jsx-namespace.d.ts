@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import type { KubbNode, KubbElement, KubbExportProps, KubbFileProps, KubbImportProps, KubbSourceProps, KubbTextProps, LineBreakProps } from './types'
+import type { KubbNode, KubbElement, KubbExportProps, KubbFileProps, KubbImportProps, KubbSourceProps, KubbTextProps, LineBreakProps, KubbPDFProps } from './types'
 
 export namespace JSX {
   type ElementType = React.JSX.ElementType
@@ -23,6 +23,7 @@ export namespace JSX {
     'kubb-source': KubbSourceProps
     'kubb-import': KubbImportProps
     'kubb-export': KubbExportProps
+    'kubb-pdf': KubbPDFProps
     br: LineBreakProps
   }
   type LibraryManagedAttributes<C, P> = React.JSX.LibraryManagedAttributes<C, P>

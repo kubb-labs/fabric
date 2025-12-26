@@ -133,6 +133,14 @@
     "react": "catalog:",
     "react-reconciler": "catalog:"
   },
+  "peerDependencies": {
+    "@react-pdf/renderer": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-pdf/renderer": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": ">=20"
   },
