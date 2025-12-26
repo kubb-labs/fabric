@@ -61,6 +61,7 @@ function pluralize(word: string, count: number) {
 }
 
 const defaultTag = 'Fabric'
+const DEFAULT_PROGRESS_BAR_SIZE = 30
 
 export const loggerPlugin = definePlugin<Options>({
   name: 'logger',
@@ -186,7 +187,7 @@ export const loggerPlugin = definePlugin<Options>({
         state.progressBar = clack.progress({
           style: 'block',
           max: files.length,
-          size: 30,
+          size: DEFAULT_PROGRESS_BAR_SIZE,
         })
         state.progressBar.start(`Processing ${files.length} files`)
       }
@@ -213,6 +214,7 @@ export const loggerPlugin = definePlugin<Options>({
       })
 
       if (state.progressBar) {
+        // undefined = auto-increment by 1
         state.progressBar.advance(undefined, `Writing ${formatPath(file.path)}`)
       }
     })
