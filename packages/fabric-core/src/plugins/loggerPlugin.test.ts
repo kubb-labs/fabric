@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
@@ -54,7 +54,7 @@ vi.mock('picocolors', () => ({
   },
 }))
 
-const { progressMock, spinnerMock, log, intro, outro } = hoisted
+const { progressMock, log, intro, outro } = hoisted
 
 import { loggerPlugin } from './loggerPlugin.ts'
 
