@@ -27,7 +27,7 @@ declare global {
 /**
  * Recursively finds all kubb-pdf nodes in the DOM tree
  */
-function findPDFNodes(node: DOMElement): Array<DOMElement> {
+function _findPDFNodes(node: DOMElement): Array<DOMElement> {
   const pdfNodes: Array<DOMElement> = []
   
   function walk(current: DOMElement) {
@@ -74,7 +74,7 @@ export const pdfPlugin = definePlugin<Options, ExtendOptions>({
   name: 'pdf',
   install(ctx, options = {}) {
     // Listen for lifecycle:render to process PDF nodes after rendering
-    ctx.on('lifecycle:render', async ({ fabric: fabricInstance }) => {
+    ctx.on('lifecycle:render', async () => {
       // Access the runtime's root node to find PDF nodes
       // This will be set by the reactPlugin during rendering
     })
@@ -86,7 +86,7 @@ export const pdfPlugin = definePlugin<Options, ExtendOptions>({
       }
     })
   },
-  inject(fabric, options = {}) {
+  inject(_fabric, options = {}) {
     return {
       async renderPDF(component, filePath) {
         // Call onBeforeWrite callback if provided

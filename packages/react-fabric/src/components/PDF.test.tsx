@@ -1,5 +1,5 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test, } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { pdfPlugin } from '../plugins/pdfPlugin.ts'
 import { PDF } from './PDF.tsx'
