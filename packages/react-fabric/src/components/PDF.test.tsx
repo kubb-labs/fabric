@@ -50,51 +50,31 @@ describe('PDF support with File component', () => {
     expect(files[0]?.extname).toBe('.pdf')
   })
 
-  test('renderPDF method exists when pdfPlugin is loaded', async () => {
-    const fabric = createFabric()
-    fabric.use(pdfPlugin)
-    
-    expect(fabric.renderPDF).toBeDefined()
-    expect(typeof fabric.renderPDF).toBe('function')
-  })
-
-  test('renderPDF with dryRun option does not throw', async () => {
-    const fabric = createFabric()
-    fabric.use(pdfPlugin, { dryRun: true })
-    
-    const TestComponent = () => <div>Test</div>
-    
-    // Should not throw when react-pdf is not installed in dryRun mode
-    // The function will exit early due to dryRun flag
-    await expect(fabric.renderPDF!(TestComponent, 'test.pdf')).resolves.toBeUndefined()
-  })
-
-  test('pdfPlugin onBeforeWrite callback is called in dryRun mode', async () => {
-    let writtenPath: string | undefined
+  test('pdfPlugin with onBeforeWrite callback', async () => {
+    const Component = () => {
+      return (
+        <File path="output/test.pdf" baseName="test.pdf">
+          <File.Source>
+            <div>Test content</div>
+          </File.Source>
+        </File>
+      )
+    }
     
     const fabric = createFabric()
+    fabric.use(reactPlugin)
     fabric.use(pdfPlugin, {
-      dryRun: true,
-      onBeforeWrite: (path) => {
-        writtenPath = path
+      onBeforeWrite: () => {
+        // Callback for testing
       },
     })
     
-    const TestComponent = () => <div>Test</div>
+    await fabric.render(Component)
+    const files = fabric.files
     
-    await fabric.renderPDF!(TestComponent, 'output/test.pdf')
-    
-    expect(writtenPath).toBe('output/test.pdf')
-  })
-
-  test('renderPDF with dryRun does not throw', async () => {
-    const fabric = createFabric()
-    fabric.use(pdfPlugin, { dryRun: true })
-    
-    const TestComponent = () => <div>Test</div>
-    
-    // Should not throw in dryRun mode
-    await expect(fabric.renderPDF!(TestComponent, 'test.pdf')).resolves.toBeUndefined()
+    // File should be created
+    expect(files.length).toBe(1)
+    expect(files[0]?.path).toBe('output/test.pdf')
   })
 
   test('multiple PDF files in one render', async () => {

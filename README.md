@@ -222,7 +222,7 @@ Injected methods (via `reactPlugin`):
 | `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
 
 #### `pdfPlugin`
-Enables PDF file generation using react-pdf components. Allows generating beautiful PDFs alongside code files using Fabric's standard `File` and `File.Source` components.
+Enables PDF file generation using react-pdf components. Allows generating beautiful PDFs alongside code files using Fabric's standard `File` and `File.Source` components. The plugin automatically handles PDF generation when it detects files with `.pdf` extension.
 
 ```
 import { pdfPlugin } from '@kubb/react-fabric/plugins'
@@ -235,12 +235,6 @@ import { pdfPlugin } from '@kubb/react-fabric/plugins'
 
 > [!NOTE]
 > Requires `@react-pdf/renderer` to be installed: `npm install @react-pdf/renderer`
-
-Injected methods (via `pdfPlugin`):
-
-| Method | Signature | Description |
-|---|---|---|
-| `renderPDF` | `(component: React.ComponentType, file: string) => Promise<void>` | Render a react-pdf component to a PDF file. |
 
 Example:
 

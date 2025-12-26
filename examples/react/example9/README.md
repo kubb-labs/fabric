@@ -60,34 +60,6 @@ fabric.use(reactPlugin)
 await fabric.render(App)
 ```
 
-### Method 2: Using renderPDF Method
-
-For more control, use the `renderPDF` method directly:
-
-```tsx
-import { createReactFabric } from '@kubb/react-fabric'
-import { pdfPlugin } from '@kubb/react-fabric/plugins'
-import { Document, Page, Text } from '@react-pdf/renderer'
-
-function MyPDFDocument() {
-  return (
-    <Document>
-      <Page>
-        <Text>Hello PDF!</Text>
-      </Page>
-    </Document>
-  )
-}
-
-const fabric = createReactFabric()
-fabric.use(pdfPlugin, {
-  dryRun: false,
-  onBeforeWrite: (path) => console.log('Writing:', path),
-})
-
-await fabric.renderPDF(MyPDFDocument, 'output.pdf')
-```
-
 ## Plugin Options
 
 The `pdfPlugin` accepts the following options:

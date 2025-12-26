@@ -11,21 +11,9 @@ export type Options = {
   onBeforeWrite?: (path: string) => void | Promise<void>
 }
 
-type ExtendOptions = {
-  renderPDF(component: React.ComponentType, file: string): Promise<void>
-}
-
-declare global {
-  namespace Kubb {
-    interface Fabric {
-      renderPDF?(component: React.ComponentType, file: string): Promise<void>
-    }
-  }
-}
-
 /**
  * PDF plugin that enables react-pdf rendering support
- * This plugin allows generating PDF files using react-pdf components
+ * This plugin automatically detects .pdf files and renders them using react-pdf
  * 
  * @example
  * ```tsx
@@ -47,7 +35,7 @@ declare global {
  * }
  * ```
  */
-export const pdfPlugin = definePlugin<Options, ExtendOptions>({
+export const pdfPlugin = definePlugin<Options, {}>({
   name: 'pdf',
   install(ctx, options = {}) {
     // Listen for file processing to intercept PDF files
@@ -84,34 +72,7 @@ export const pdfPlugin = definePlugin<Options, ExtendOptions>({
       }
     })
   },
-  inject(_fabric, options = {}) {
-    return {
-      async renderPDF(component, filePath) {
-        // Call onBeforeWrite callback if provided
-        if (options.onBeforeWrite) {
-          await options.onBeforeWrite(filePath)
-        }
-        
-        // Exit early if dryRun is enabled
-        if (options.dryRun) {
-          return
-        }
-        
-        // Dynamically import react-pdf to avoid hard dependency
-        try {
-          const { renderToFile } = await import('@react-pdf/renderer')
-          const { createElement } = await import('react')
-          
-          await renderToFile(createElement(component), filePath)
-        } catch (error) {
-          if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
-            throw new Error(
-              'react-pdf is not installed. Please install it with: npm install @react-pdf/renderer'
-            )
-          }
-          throw error
-        }
-      },
-    }
+  inject() {
+    return {}
   },
 })
