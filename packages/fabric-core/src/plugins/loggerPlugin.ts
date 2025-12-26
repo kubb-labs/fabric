@@ -1,8 +1,8 @@
 import http from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { relative } from 'node:path'
-import { Presets, SingleBar } from 'cli-progress'
-import { createConsola, type LogLevel } from 'consola'
+import * as clack from '@clack/prompts'
+import pc from 'picocolors'
 import { WebSocket, WebSocketServer } from 'ws'
 import type { FabricEvents } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
@@ -23,10 +23,6 @@ type WebSocketOptions = {
 }
 
 type Options = {
-  /**
-   * Explicit consola log level.
-   */
-  level?: LogLevel
   /**
    * Toggle progress bar output.
    * @default true
@@ -66,26 +62,32 @@ function pluralize(word: string, count: number) {
 
 const defaultTag = 'Fabric'
 
-const createProgressBar = () =>
-  new SingleBar(
-    {
-      format: '{bar} {percentage}% | {value}/{total} | {message}',
-      barCompleteChar: '█',
-      barIncompleteChar: '░',
-      hideCursor: true,
-      clearOnComplete: true,
-    },
-    Presets.shades_grey,
-  )
-
 export const loggerPlugin = definePlugin<Options>({
   name: 'logger',
   install(ctx, options = {}) {
-    const { level, websocket = true, progress = true } = options
+    const { websocket = true, progress = true } = options
 
-    const logger = createConsola(level !== undefined ? { level } : {}).withTag(defaultTag)
+    const state = {
+      spinner: clack.spinner(),
+      isSpinning: false,
+      progressBar: undefined as ReturnType<typeof clack.progress> | undefined,
+    }
 
-    const progressBar = progress ? createProgressBar() : undefined
+    function startSpinner(text?: string) {
+      state.spinner.start(text)
+      state.isSpinning = true
+    }
+
+    function stopSpinner(text?: string) {
+      if (state.isSpinning) {
+        state.spinner.stop(text)
+        state.isSpinning = false
+      }
+    }
+
+    function formatPath(path: string) {
+      return relative(process.cwd(), path)
+    }
 
     let server: http.Server | undefined
     let wss: WebSocketServer | undefined
@@ -117,13 +119,13 @@ export const loggerPlugin = definePlugin<Options>({
           const { host: resolvedHost, port: resolvedPort } = normalizeAddress(addressInfo)
           const url = `ws://${resolvedHost}:${resolvedPort}`
 
-          logger.info(`Logger websocket listening on ${url}`)
+          clack.log.info(`${pc.blue('ℹ')} Logger websocket listening on ${url}`)
           broadcast('websocket:ready', { url })
         }
       })
 
       wss.on('connection', (socket) => {
-        logger.info('Logger websocket client connected')
+        clack.log.info(`${pc.blue('ℹ')} Logger websocket client connected`)
         socket.send(
           JSON.stringify({
             event: 'welcome',
@@ -136,19 +138,17 @@ export const loggerPlugin = definePlugin<Options>({
       })
 
       wss.on('error', (error) => {
-        logger.error('Logger websocket error', error)
+        clack.log.error(`${pc.red('✗')} Logger websocket error: ${error.message}`)
       })
     }
 
-    const formatPath = (path: string) => relative(process.cwd(), path)
-
     ctx.on('lifecycle:start', async () => {
-      logger.start('Starting Fabric run')
+      clack.intro(`${pc.blue(defaultTag)} ${pc.dim('Starting run')}`)
       broadcast('lifecycle:start', { timestamp: Date.now() })
     })
 
     ctx.on('lifecycle:render', async () => {
-      logger.info('Rendering application graph')
+      clack.log.info(`${pc.blue('ℹ')} Rendering application graph`)
       broadcast('lifecycle:render', { timestamp: Date.now() })
     })
 
@@ -157,37 +157,43 @@ export const loggerPlugin = definePlugin<Options>({
         return
       }
 
-      logger.info(`Queued ${pluralize('file', files.length)}`)
+      clack.log.info(`${pc.blue('ℹ')} Queued ${pluralize('file', files.length)}`)
       broadcast('files:added', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('file:resolve:path', async (file) => {
-      logger.info(`Resolving path for ${formatPath(file.path)}`)
+      clack.log.step(`Resolving path for ${pc.dim(formatPath(file.path))}`)
       broadcast('file:resolve:path', { file: serializeFile(file) })
     })
 
     ctx.on('file:resolve:name', async (file) => {
-      logger.info(`Resolving name for ${formatPath(file.path)}`)
+      clack.log.step(`Resolving name for ${pc.dim(formatPath(file.path))}`)
       broadcast('file:resolve:name', { file: serializeFile(file) })
     })
 
     ctx.on('files:processing:start', async (files) => {
-      logger.start(`Processing ${pluralize('file', files.length)}`)
+      stopSpinner()
+      
+      clack.log.step(`Processing ${pc.green(pluralize('file', files.length))}`)
       broadcast('files:processing:start', {
         total: files.length,
         timestamp: Date.now(),
       })
 
-      if (progressBar) {
-        logger.pauseLogs()
-        progressBar.start(files.length, 0, { message: 'Starting...' })
+      if (progress) {
+        state.progressBar = clack.progress({
+          style: 'block',
+          max: files.length,
+          size: 30,
+        })
+        state.progressBar.start(`Processing ${files.length} files`)
       }
     })
 
     ctx.on('file:processing:start', async (file, index, total) => {
-      logger.info(`Processing [${index + 1}/${total}] ${formatPath(file.path)}`)
+      clack.log.step(`Processing ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       broadcast('file:processing:start', {
         index,
         total,
@@ -198,7 +204,7 @@ export const loggerPlugin = definePlugin<Options>({
     ctx.on('file:processing:update', async ({ processed, total, percentage, file }) => {
       const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
 
-      logger.info(`Progress ${formattedPercentage}% (${processed}/${total}) → ${formatPath(file.path)}`)
+      clack.log.step(`Progress ${pc.green(`${formattedPercentage}%`)} ${pc.dim(`(${processed}/${total})`)} → ${formatPath(file.path)}`)
       broadcast('file:processing:update', {
         processed,
         total,
@@ -206,15 +212,13 @@ export const loggerPlugin = definePlugin<Options>({
         file: serializeFile(file),
       })
 
-      if (progressBar) {
-        progressBar.increment(1, {
-          message: `Writing ${formatPath(file.path)}`,
-        })
+      if (state.progressBar) {
+        state.progressBar.advance(undefined, `Writing ${formatPath(file.path)}`)
       }
     })
 
     ctx.on('file:processing:end', async (file, index, total) => {
-      logger.success(`Finished [${index + 1}/${total}] ${formatPath(file.path)}`)
+      clack.log.success(`${pc.green('✓')} Finished ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       broadcast('file:processing:end', {
         index,
         total,
@@ -223,42 +227,43 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('files:writing:start', async (files) => {
-      logger.start(`Writing ${pluralize('file', files.length)} to disk`)
+      startSpinner(`Writing ${pluralize('file', files.length)} to disk`)
       broadcast('files:writing:start', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('files:writing:end', async (files) => {
-      logger.success(`Written ${pluralize('file', files.length)} to disk`)
+      stopSpinner(`${pc.green('✓')} Written ${pluralize('file', files.length)} to disk`)
       broadcast('files:writing:end', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('files:processing:end', async (files) => {
-      logger.success(`Processed ${pluralize('file', files.length)}`)
+      if (state.progressBar) {
+        state.progressBar.stop(`${pc.green('✓')} Processed ${pluralize('file', files.length)}`)
+        state.progressBar = undefined
+      } else {
+        clack.log.success(`${pc.green('✓')} Processed ${pluralize('file', files.length)}`)
+      }
+      
       broadcast('files:processing:end', {
         total: files.length,
         timestamp: Date.now(),
       })
-
-      if (progressBar) {
-        progressBar.update(files.length, { message: 'Done ✅' })
-        progressBar.stop()
-
-        logger.resumeLogs()
-      }
     })
 
     ctx.on('lifecycle:end', async () => {
-      logger.success('Fabric run completed')
-      broadcast('lifecycle:end', { timestamp: Date.now() })
-
-      if (progressBar) {
-        progressBar.stop()
-        logger.resumeLogs()
+      stopSpinner()
+      
+      if (state.progressBar) {
+        state.progressBar.stop()
+        state.progressBar = undefined
       }
+
+      clack.outro(`${pc.green('✓')} ${defaultTag} run completed`)
+      broadcast('lifecycle:end', { timestamp: Date.now() })
 
       const closures: Array<Promise<void>> = []
 
@@ -287,7 +292,7 @@ export const loggerPlugin = definePlugin<Options>({
 
       if (closures.length) {
         await Promise.allSettled(closures)
-        logger.info('Logger websocket closed')
+        clack.log.info(`${pc.blue('ℹ')} Logger websocket closed`)
       }
     })
   },
