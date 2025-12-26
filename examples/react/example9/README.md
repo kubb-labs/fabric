@@ -4,7 +4,10 @@ This directory demonstrates PDF generation support in Kubb Fabric using `react-p
 
 ## Overview
 
-Kubb Fabric now supports generating PDF files alongside code files using the `react-pdf` library. This integration allows you to use React components to create beautiful PDFs as part of your code generation workflow, using the same `File` and `File.Source` components you're already familiar with.
+Kubb Fabric now supports generating PDF files alongside code files using the `react-pdf` library. This integration allows you to use React components to create beautiful PDFs as part of your code generation workflow. There are two ways to generate PDFs:
+
+1. **File-based approach** - Uses standard `File` and `File.Source` components
+2. **PDF component approach** - Uses a dedicated `PDF` component with `useEffect` for direct rendering
 
 ## Installation
 
@@ -18,9 +21,9 @@ pnpm add @react-pdf/renderer
 
 ## Usage
 
-### Using File and File.Source
+### Method 1: Using File and File.Source (String-based)
 
-Use Fabric's standard `<File>` component with a `.pdf` extension to generate PDFs:
+Use Fabric's standard `<File>` component with a `.pdf` extension:
 
 ```tsx
 import { createReactFabric, File } from '@kubb/react-fabric'
@@ -59,6 +62,47 @@ fabric.use(reactPlugin)
 
 await fabric.render(App)
 ```
+
+### Method 2: Using the PDF Component (Direct rendering)
+
+Use the `<PDF>` component which uses `useEffect` to directly render PDFs:
+
+```tsx
+import { createReactFabric, PDF } from '@kubb/react-fabric'
+import { reactPlugin } from '@kubb/react-fabric/plugins'
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 30,
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+  },
+})
+
+function App() {
+  return (
+    <PDF file="output/report.pdf">
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.section}>
+            <Text>Generated with Kubb 🚀</Text>
+          </View>
+        </Page>
+      </Document>
+    </PDF>
+  )
+}
+
+const fabric = createReactFabric()
+fabric.use(reactPlugin)
+
+await fabric.render(App)
+```
+
+The PDF component uses `useEffect` to dynamically import `@react-pdf/renderer` and call `renderToFile` directly with the React element tree.
 
 ## Plugin Options
 

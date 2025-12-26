@@ -11,9 +11,17 @@ export type Options = {
   onBeforeWrite?: (path: string) => void | Promise<void>
 }
 
+type PDFMeta = {
+  /**
+   * The react-pdf component tree as a string for rendering
+   */
+  pdfComponentTree?: string
+}
+
 /**
  * PDF plugin that enables react-pdf rendering support
- * This plugin automatically detects .pdf files and renders them using react-pdf
+ * This plugin automatically detects .pdf files and stores their component tree
+ * for the pdfParser to render using react-pdf
  * 
  * @example
  * ```tsx
@@ -38,28 +46,36 @@ export type Options = {
 export const pdfPlugin = definePlugin<Options, {}>({
   name: 'pdf',
   install(ctx, options = {}) {
+    // Store PDF component trees for later rendering
+    const pdfComponentTrees = new Map<string, string>()
+    
     // Listen for file processing to intercept PDF files
-    ctx.on('file:processing:start', async ({ file }) => {
+    ctx.on('file:processing:start', async (file) => {
       if (file.path.endsWith('.pdf')) {
         // This is a PDF file, we'll handle it specially
         if (options.onBeforeWrite) {
           await options.onBeforeWrite(file.path)
         }
+        
+        // Store the component tree from sources
+        // The sources contain the react-pdf JSX as strings
+        const componentTree = file.sources.map((source) => source.value).join('\n')
+        pdfComponentTrees.set(file.path, componentTree)
+        
+        // Add to file meta for parser to access
+        if (!file.meta) {
+          file.meta = {}
+        }
+        (file.meta as PDFMeta).pdfComponentTree = componentTree
       }
     })
     
-    // Override file processing for PDF files
+    // Check if react-pdf is available
     ctx.on('file:processing:update', async ({ file }) => {
       if (file.path.endsWith('.pdf') && !options.dryRun) {
-        // Render PDF using react-pdf
+        // Verify react-pdf is available
         try {
-          // Dynamically import react-pdf to check if it's available
           await import('@react-pdf/renderer')
-          
-          // The source contains the react-pdf JSX as a string
-          // We need to render it to a PDF file
-          // The actual rendering will happen via the pdfParser or fsPlugin
-          
         } catch (error) {
           if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
             console.warn(

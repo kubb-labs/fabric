@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import type { Key, KubbNode } from '../types.ts'
 
 type Props = {
@@ -15,8 +16,8 @@ type Props = {
 /**
  * PDF component that bridges Kubb with react-pdf
  * 
- * This component allows you to embed react-pdf components within Kubb's file generation system.
- * When rendered, it triggers react-pdf's renderToFile to generate a PDF.
+ * This component uses useEffect to dynamically import react-pdf and render
+ * the PDF file directly from the React component tree.
  * 
  * @example
  * ```tsx
@@ -37,7 +38,18 @@ type Props = {
  * ```
  */
 export function PDF({ children, file }: Props) {
-  return <kubb-pdf file={file}>{children}</kubb-pdf>
+  useEffect(() => {
+    // Dynamically import and render PDF
+    import('@react-pdf/renderer').then(({ renderToFile }) => {
+      // Render the children to a PDF file
+      renderToFile(children as React.ReactElement, file).catch((error) => {
+        console.error(`Failed to generate PDF ${file}:`, error)
+      })
+    })
+  }, [children, file])
+  
+  // Return null - this component doesn't render anything visible
+  return null
 }
 
 PDF.displayName = 'KubbPDF'
