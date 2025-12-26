@@ -89,18 +89,22 @@ export const pdfPlugin = definePlugin<Options, ExtendOptions>({
   inject(fabric, options = {}) {
     return {
       async renderPDF(component, filePath) {
+        // Call onBeforeWrite callback if provided
+        if (options.onBeforeWrite) {
+          await options.onBeforeWrite(filePath)
+        }
+        
+        // Exit early if dryRun is enabled
+        if (options.dryRun) {
+          return
+        }
+        
         // Dynamically import react-pdf to avoid hard dependency
         try {
           const { renderToFile } = await import('@react-pdf/renderer')
           const { createElement } = await import('react')
           
-          if (!options.dryRun) {
-            if (options.onBeforeWrite) {
-              await options.onBeforeWrite(filePath)
-            }
-            
-            await renderToFile(createElement(component), filePath)
-          }
+          await renderToFile(createElement(component), filePath)
         } catch (error) {
           if ((error as NodeJS.ErrnoException).code === 'MODULE_NOT_FOUND') {
             throw new Error(
