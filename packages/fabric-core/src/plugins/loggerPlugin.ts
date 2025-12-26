@@ -175,7 +175,7 @@ export const loggerPlugin = definePlugin<Options>({
 
     ctx.on('files:processing:start', async (files) => {
       stopSpinner()
-      
+
       clack.log.step(`Processing ${pc.green(pluralize('file', files.length))}`)
       broadcast('files:processing:start', {
         total: files.length,
@@ -247,7 +247,7 @@ export const loggerPlugin = definePlugin<Options>({
       } else {
         clack.log.success(`${pc.green('✓')} Processed ${pluralize('file', files.length)}`)
       }
-      
+
       broadcast('files:processing:end', {
         total: files.length,
         timestamp: Date.now(),
@@ -256,7 +256,7 @@ export const loggerPlugin = definePlugin<Options>({
 
     ctx.on('lifecycle:end', async () => {
       stopSpinner()
-      
+
       if (state.progressBar) {
         state.progressBar.stop()
         state.progressBar = undefined
