@@ -1,32 +1,60 @@
-import { SingleBar } from 'cli-progress'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createFabric } from '../createFabric.ts'
 import { createFile } from '../createFile.ts'
 import type * as KubbFile from '../KubbFile.ts'
 
 const hoisted = vi.hoisted(() => {
-  const logger = {
-    withTag: vi.fn(),
+  const progressMock = {
     start: vi.fn(),
+    advance: vi.fn(),
+    stop: vi.fn(),
+  }
+
+  const spinnerMock = {
+    start: vi.fn(),
+    stop: vi.fn(),
+    message: vi.fn(),
+  }
+
+  const log = {
     info: vi.fn(),
     success: vi.fn(),
     error: vi.fn(),
-    pauseLogs: vi.fn(),
-    resumeLogs: vi.fn(),
+    warn: vi.fn(),
+    step: vi.fn(),
+    message: vi.fn(),
   }
 
-  logger.withTag.mockReturnValue(logger)
-
-  const createConsolaMock = vi.fn(() => logger)
-
-  return { logger, createConsolaMock }
+  return {
+    progressMock,
+    spinnerMock,
+    log,
+    intro: vi.fn(),
+    outro: vi.fn(),
+    spinner: vi.fn(() => spinnerMock),
+    progress: vi.fn(() => progressMock),
+  }
 })
 
-vi.mock('consola', () => ({
-  createConsola: hoisted.createConsolaMock,
+vi.mock('@clack/prompts', () => ({
+  intro: hoisted.intro,
+  outro: hoisted.outro,
+  spinner: hoisted.spinner,
+  progress: hoisted.progress,
+  log: hoisted.log,
 }))
 
-const { logger, createConsolaMock } = hoisted
+vi.mock('picocolors', () => ({
+  default: {
+    blue: (str: string) => str,
+    green: (str: string) => str,
+    red: (str: string) => str,
+    yellow: (str: string) => str,
+    dim: (str: string) => str,
+  },
+}))
+
+const { progressMock, spinnerMock, log, intro, outro } = hoisted
 
 import { loggerPlugin } from './loggerPlugin.ts'
 
@@ -51,38 +79,38 @@ function makeFiles(count: number): KubbFile.ResolvedFile[] {
 describe('loggerPlugin', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    logger.withTag.mockReturnValue(logger)
   })
 
-  it('should configure consola with Fabric tag', async () => {
+  it('should use clack for logging', async () => {
     const fabric = createFabric()
 
     await fabric.use(loggerPlugin, { websocket: false })
-
-    expect(createConsolaMock).toHaveBeenCalledWith({})
-    expect(logger.withTag).toHaveBeenCalledWith('Fabric')
-  })
-
-  it('should log key lifecycle events to consola', async () => {
-    const fabric = createFabric()
-
-    await fabric.use(loggerPlugin, { websocket: false })
-
-    logger.start.mockClear()
-    logger.info.mockClear()
-    logger.success.mockClear()
 
     await fabric.context.emit('lifecycle:start')
-    expect(logger.start).toHaveBeenCalledWith('Starting Fabric run')
+    expect(intro).toHaveBeenCalledWith(expect.stringContaining('Fabric'))
 
-    logger.start.mockClear()
+    await fabric.context.emit('lifecycle:end')
+    expect(outro).toHaveBeenCalledWith(expect.stringContaining('Fabric run completed'))
+  })
+
+  it('should log key lifecycle events with clack', async () => {
+    const fabric = createFabric()
+
+    await fabric.use(loggerPlugin, { websocket: false })
+
+    log.step.mockClear()
+    log.info.mockClear()
+    log.success.mockClear()
+
+    await fabric.context.emit('lifecycle:start')
+    expect(intro).toHaveBeenCalled()
 
     const file = makeFile()
 
     await fabric.context.emit('files:processing:start', [file])
-    expect(logger.start).toHaveBeenCalledWith('Processing 1 file')
+    expect(log.step).toHaveBeenCalledWith(expect.stringContaining('Processing'))
 
-    logger.start.mockClear()
+    log.step.mockClear()
 
     await fabric.context.emit('file:processing:update', {
       processed: 1,
@@ -90,34 +118,23 @@ describe('loggerPlugin', () => {
       percentage: 100,
       file,
     })
-    expect(logger.info).toHaveBeenCalledWith('Progress 100.0% (1/1) → src/example.ts')
+    expect(log.step).toHaveBeenCalledWith(expect.stringContaining('Progress'))
+    expect(log.step).toHaveBeenCalledWith(expect.stringContaining('100.0%'))
 
-    logger.info.mockClear()
+    log.success.mockClear()
 
     await fabric.context.emit('file:processing:end', file, 0, 1)
-    expect(logger.success).toHaveBeenCalledWith('Finished [1/1] src/example.ts')
+    expect(log.success).toHaveBeenCalledWith(expect.stringContaining('Finished'))
 
-    logger.success.mockClear()
+    outro.mockClear()
 
     await fabric.context.emit('lifecycle:end')
-    expect(logger.success).toHaveBeenCalledWith('Fabric run completed')
+    expect(outro).toHaveBeenCalledWith(expect.stringContaining('Fabric run completed'))
   })
 
   describe('progress option', () => {
-    let startSpy: ReturnType<typeof vi.spyOn>
-    let incrementSpy: ReturnType<typeof vi.spyOn>
-    let stopSpy: ReturnType<typeof vi.spyOn>
-
     beforeEach(() => {
-      startSpy = vi.spyOn(SingleBar.prototype as any, 'start')
-      incrementSpy = vi.spyOn(SingleBar.prototype as any, 'increment')
-      stopSpy = vi.spyOn(SingleBar.prototype as any, 'stop')
-    })
-
-    afterEach(() => {
-      startSpy.mockRestore()
-      incrementSpy.mockRestore()
-      stopSpy.mockRestore()
+      vi.clearAllMocks()
     })
 
     it('should start and update progress bar when enabled', async () => {
@@ -128,7 +145,7 @@ describe('loggerPlugin', () => {
       const files = makeFiles(2)
 
       await fabric.context.emit('files:processing:start', files)
-      expect(startSpy).toHaveBeenCalledWith(2, 0, { message: 'Starting...' })
+      expect(progressMock.start).toHaveBeenCalledWith(expect.stringContaining('Processing'))
 
       for (const file of files) {
         await fabric.context.emit('file:processing:update', {
@@ -139,10 +156,10 @@ describe('loggerPlugin', () => {
         })
       }
 
-      expect(incrementSpy).toHaveBeenCalledTimes(2)
+      expect(progressMock.advance).toHaveBeenCalledTimes(2)
 
       await fabric.context.emit('files:processing:end', files)
-      expect(stopSpy).toHaveBeenCalled()
+      expect(progressMock.stop).toHaveBeenCalled()
     })
 
     it('should not create progress bar when disabled', async () => {
@@ -165,9 +182,9 @@ describe('loggerPlugin', () => {
       })
       await fabric.context.emit('files:processing:end', files)
 
-      expect(startSpy).not.toHaveBeenCalled()
-      expect(incrementSpy).not.toHaveBeenCalled()
-      expect(stopSpy).not.toHaveBeenCalled()
+      expect(progressMock.start).not.toHaveBeenCalled()
+      expect(progressMock.advance).not.toHaveBeenCalled()
+      expect(progressMock.stop).not.toHaveBeenCalled()
     })
   })
 })
