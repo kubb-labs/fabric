@@ -90,7 +90,7 @@
     "typecheck": "tsc -p ./tsconfig.json --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@clack/prompts": "^0.11.0",
+    "@clack/prompts": "1.0.0-alpha.8",
     "fs-extra": "^11.3.3",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.2.0",
