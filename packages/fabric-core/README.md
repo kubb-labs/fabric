@@ -171,7 +171,7 @@ Injected `fabric.writeEntry` parameters (via `barrelPlugin`):
 | mode | `'all' \| 'named' \| 'propagate' \| false` | Controls which export style to use for the entry barrel. |
 
 #### `loggerPlugin`
-Streams Fabric lifecycle activity as colourful consola logs, optional progress bars, and websocket messages that you can consume from custom tooling.
+Streams Fabric lifecycle activity with beautiful @clack/prompts output, progress bars, and websocket messages that you can consume from custom tooling.
 
 ```
 import { loggerPlugin } from '@kubb/fabric-core/plugins'
@@ -179,11 +179,10 @@ import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| level | `import('consola').LogLevel` | — | Optional explicit log level passed to `createConsola`. |
 | progress | `boolean` | `true` | Enable/disable the integrated CLI progress bar. |
 | websocket | `boolean \| { host?: string; port?: number }` | `true` | Toggle or configure the websocket server that broadcasts Fabric events for future GUIs. |
 
-By default the plugin displays a progress bar, starts a websocket server on an ephemeral port, and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with a `Fabric` tag, animated in the progress bar, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
+By default the plugin displays a beautiful progress bar using @clack/prompts, starts a websocket server on an ephemeral port, and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with colored output and symbols, animated in the progress bar, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
 
 
 #### `graphPlugin`
