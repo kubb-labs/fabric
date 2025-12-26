@@ -27,6 +27,7 @@ It offers a lightweight layer for file generation while orchestrating the overal
 # Features
 
 - 🎨 Declarative file generation — Create files effortlessly using JSX or JavaScript syntax.
+- 📄 PDF generation support — Generate beautiful PDFs using react-pdf components alongside code files.
 - 📦 Cross-runtime support — Works seamlessly with Node.js and Bun.
 - 🧩 Built-in debugging utilities — Simplify development and inspect generation flows with ease.
 - ⚡ Fast and lightweight — Minimal overhead, maximum performance.
@@ -220,6 +221,52 @@ Injected methods (via `reactPlugin`):
 | `renderToString` | `(App: React.ElementType) => Promise<string> \| string` | Render a React component tree and return the final output as a string (without writing to stdout). |
 | `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
 
+#### `pdfPlugin`
+Enables PDF file generation using react-pdf components. Allows generating beautiful PDFs alongside code files.
+
+```
+import { pdfPlugin } from '@kubb/react-fabric/plugins'
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| dryRun | `boolean` | `false` | If true, PDFs will not be written to disk. |
+| onBeforeWrite | `(path: string) => void \| Promise<void>` | — | Called before writing each PDF file. |
+
+> [!NOTE]
+> Requires `@react-pdf/renderer` to be installed: `npm install @react-pdf/renderer`
+
+Injected methods (via `pdfPlugin`):
+
+| Method | Signature | Description |
+|---|---|---|
+| `renderPDF` | `(component: React.ComponentType, file: string) => Promise<void>` | Render a react-pdf component to a PDF file. |
+
+Example:
+
+```tsx
+import { createReactFabric, PDF } from '@kubb/react-fabric'
+import { pdfPlugin } from '@kubb/react-fabric/plugins'
+import { Document, Page, Text } from '@react-pdf/renderer'
+
+function App() {
+  return (
+    <PDF file="output/report.pdf">
+      <Document>
+        <Page>
+          <Text>Generated with Kubb 🚀</Text>
+        </Page>
+      </Document>
+    </PDF>
+  )
+}
+
+const fabric = createReactFabric()
+fabric.use(pdfPlugin)
+
+await fabric.render(App)
+```
+
 #### `definePlugin`
 
 Factory to declare a plugin that can be registered via `fabric.use`.
@@ -283,6 +330,21 @@ import { tsxParser } from '@kubb/fabric-core/parsers'
 |---|---|---|---|
 | file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 | extname | `string` | `'.tsx'` | Extension to use when emitting import/export paths for TSX/JSX files. |
+
+#### `pdfParser`
+
+Handles PDF file extensions when generating PDFs with react-pdf.
+
+```
+import { pdfParser } from '@kubb/react-fabric/parsers'
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| file | `KubbFile.File` | -| File that will be used to be parsed. |
+
+> [!NOTE]
+> This parser is automatically used when working with `.pdf` file extensions alongside the `pdfPlugin`.
 
 #### `defaultParser`
 
