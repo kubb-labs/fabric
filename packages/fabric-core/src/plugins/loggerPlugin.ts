@@ -179,6 +179,10 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('file:processing:start', async (file, index, total) => {
+      if (!state.progressBar) {
+        clack.log.step(`Processing ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
+      }
+      
       broadcast('file:processing:start', {
         index,
         total,
@@ -197,12 +201,17 @@ export const loggerPlugin = definePlugin<Options>({
       if (state.progressBar) {
         // undefined = auto-increment by 1
         state.progressBar.advance(undefined, `Writing ${formatPath(file.path)}`)
+      } else {
+        const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
+        clack.log.step(`Progress ${pc.green(`${formattedPercentage}%`)} ${pc.dim(`(${processed}/${total})`)} → ${formatPath(file.path)}`)
       }
     })
 
     ctx.on('file:processing:end', async (file, index, total) => {
       if (state.progressBar) {
         state.progressBar.message(`${pc.green('✓')} Finished ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
+      } else {
+        clack.log.success(`${pc.green('✓')} Finished ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       }
 
       broadcast('file:processing:end', {
