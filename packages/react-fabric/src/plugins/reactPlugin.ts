@@ -36,8 +36,8 @@ export const reactPlugin = definePlugin<Options, ExtendOptions>({
 
     return {
       async render(App) {
-        await runtime.render(createElement(App))
         await ctx.emit('lifecycle:start')
+        await runtime.render(createElement(App))
       },
       async renderToString(App) {
         await ctx.emit('lifecycle:start')
@@ -45,8 +45,6 @@ export const reactPlugin = definePlugin<Options, ExtendOptions>({
       },
       async waitUntilExit() {
         await runtime.waitUntilExit()
-
-        await ctx.emit('lifecycle:end')
       },
     }
   },
