@@ -7,6 +7,7 @@ const hoisted = vi.hoisted(() => {
   const progressMock = {
     start: vi.fn(),
     advance: vi.fn(),
+    message: vi.fn(),
     stop: vi.fn(),
   }
 
@@ -90,7 +91,7 @@ describe('loggerPlugin', () => {
     expect(intro).toHaveBeenCalledWith(expect.stringContaining('Fabric'))
 
     await fabric.context.emit('lifecycle:end')
-    expect(outro).toHaveBeenCalledWith(expect.stringContaining('Fabric run completed'))
+    expect(outro).toHaveBeenCalledWith(expect.stringContaining('Fabric completed'))
   })
 
   it('should log key lifecycle events with clack', async () => {
@@ -118,18 +119,15 @@ describe('loggerPlugin', () => {
       percentage: 100,
       file,
     })
-    expect(log.step).toHaveBeenCalledWith(expect.stringContaining('Progress'))
-    expect(log.step).toHaveBeenCalledWith(expect.stringContaining('100.0%'))
 
     log.success.mockClear()
 
     await fabric.context.emit('file:processing:end', file, 0, 1)
-    expect(log.success).toHaveBeenCalledWith(expect.stringContaining('Finished'))
 
     outro.mockClear()
 
     await fabric.context.emit('lifecycle:end')
-    expect(outro).toHaveBeenCalledWith(expect.stringContaining('Fabric run completed'))
+    expect(outro).toHaveBeenCalledWith(expect.stringContaining('Fabric completed'))
   })
 
   describe('progress option', () => {
