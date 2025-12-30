@@ -60,7 +60,6 @@ function pluralize(word: string, count: number) {
   return `${count} ${word}${count === 1 ? '' : 's'}`
 }
 
-const defaultTag = 'Fabric'
 const DEFAULT_PROGRESS_BAR_SIZE = 30
 
 export const loggerPlugin = definePlugin<Options>({
@@ -72,18 +71,6 @@ export const loggerPlugin = definePlugin<Options>({
       spinner: clack.spinner(),
       isSpinning: false,
       progressBar: undefined as ReturnType<typeof clack.progress> | undefined,
-    }
-
-    function startSpinner(text?: string) {
-      state.spinner.start(text)
-      state.isSpinning = true
-    }
-
-    function stopSpinner(text?: string) {
-      if (state.isSpinning) {
-        state.spinner.stop(text)
-        state.isSpinning = false
-      }
     }
 
     function formatPath(path: string) {
@@ -144,7 +131,7 @@ export const loggerPlugin = definePlugin<Options>({
     }
 
     ctx.on('lifecycle:start', async () => {
-      clack.intro(`${pc.blue(defaultTag)} ${pc.dim('Starting run')}`)
+      clack.intro(`${pc.blue('Fabric')} ${pc.dim('Starting run')}`)
       broadcast('lifecycle:start', { timestamp: Date.now() })
     })
 
@@ -175,8 +162,6 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('files:processing:start', async (files) => {
-      stopSpinner()
-
       clack.log.step(`Processing ${pc.green(pluralize('file', files.length))}`)
       broadcast('files:processing:start', {
         total: files.length,
@@ -194,7 +179,6 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('file:processing:start', async (file, index, total) => {
-      clack.log.step(`Processing ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       broadcast('file:processing:start', {
         index,
         total,
@@ -203,9 +187,6 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('file:processing:update', async ({ processed, total, percentage, file }) => {
-      const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
-
-      clack.log.step(`Progress ${pc.green(`${formattedPercentage}%`)} ${pc.dim(`(${processed}/${total})`)} → ${formatPath(file.path)}`)
       broadcast('file:processing:update', {
         processed,
         total,
@@ -220,7 +201,10 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('file:processing:end', async (file, index, total) => {
-      clack.log.success(`${pc.green('✓')} Finished ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
+      if (state.progressBar) {
+        state.progressBar.message(`${pc.green('✓')} Finished ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
+      }
+
       broadcast('file:processing:end', {
         index,
         total,
@@ -229,14 +213,12 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('files:writing:start', async (files) => {
-      startSpinner(`Writing ${pluralize('file', files.length)} to disk`)
       broadcast('files:writing:start', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('files:writing:end', async (files) => {
-      stopSpinner(`${pc.green('✓')} Written ${pluralize('file', files.length)} to disk`)
       broadcast('files:writing:end', {
         files: files.map(serializeFile),
       })
@@ -257,14 +239,13 @@ export const loggerPlugin = definePlugin<Options>({
     })
 
     ctx.on('lifecycle:end', async () => {
-      stopSpinner()
-
       if (state.progressBar) {
         state.progressBar.stop()
         state.progressBar = undefined
       }
 
-      clack.outro(`${pc.green('✓')} ${defaultTag} run completed`)
+      clack.outro(`${pc.blue('Fabric')} ${pc.dim('completed')}`)
+
       broadcast('lifecycle:end', { timestamp: Date.now() })
 
       const closures: Array<Promise<void>> = []

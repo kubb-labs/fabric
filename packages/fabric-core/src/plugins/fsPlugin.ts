@@ -112,6 +112,8 @@ export const fsPlugin = definePlugin<Options, ExtendOptions>({
           dryRun,
           parsers: ctx.installedParsers,
         })
+
+        await ctx.emit('lifecycle:end')
       },
     }
   },
