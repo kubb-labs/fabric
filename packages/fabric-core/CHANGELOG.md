@@ -1,5 +1,20 @@
 # @kubb/fabric-core
 
+## 0.8.0
+
+### Minor Changes
+
+- [#82](https://github.com/kubb-labs/fabric/pull/82) [`349fb76`](https://github.com/kubb-labs/fabric/commit/349fb76eb5eccf9ef7d4f366f441859c475089bc) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Replace consola and cli-progress with @clack/prompts for improved CLI output
+  - Migrated from `consola` to `@clack/prompts` for better visual feedback
+  - Replaced `cli-progress` with `clack.progress()` for modern progress bars
+  - Added colored output using `picocolors` with symbols (✓, ℹ, ✗)
+  - Implemented intro/outro pattern for lifecycle events
+  - Added comprehensive test coverage (13 tests vs 4 previously)
+  - Improved logging behavior with fallback for non-progress mode
+  - Removed deprecated `level` option (not applicable to clack)
+
+  This change provides a more polished and modern CLI experience consistent with Kubb CLI package.
+
 ## 0.7.4
 
 ### Patch Changes
