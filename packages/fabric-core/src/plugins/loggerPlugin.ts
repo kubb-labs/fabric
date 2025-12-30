@@ -182,7 +182,7 @@ export const loggerPlugin = definePlugin<Options>({
       if (!state.progressBar) {
         clack.log.step(`Processing ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       }
-      
+
       broadcast('file:processing:start', {
         index,
         total,
