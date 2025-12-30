@@ -156,7 +156,7 @@ describe('loggerPlugin', () => {
 
       const files = makeFiles(2)
       await fabric.context.emit('files:processing:start', files)
-      
+
       const file = files[0]!
       await fabric.context.emit('file:processing:update', {
         processed: 1,
@@ -174,7 +174,7 @@ describe('loggerPlugin', () => {
 
       const files = makeFiles(1)
       await fabric.context.emit('files:processing:start', files)
-      
+
       const file = files[0]!
       await fabric.context.emit('file:processing:end', file, 0, 1)
 
