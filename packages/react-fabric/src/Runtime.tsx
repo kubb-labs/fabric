@@ -1,8 +1,10 @@
 import process from 'node:process'
 import type { FileManager } from '@kubb/fabric-core'
+import { FileCollector } from '@kubb/fabric-core'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { onExit } from 'signal-exit'
+import { FileCollectorContext } from './components/File.tsx'
 import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './Renderer.ts'
@@ -25,6 +27,7 @@ type Options = {
 export class Runtime {
   readonly #options: Options
   #isUnmounted: boolean
+  #fileCollector: FileCollector
 
   exitPromise?: Promise<void>
   readonly #container: FiberRoot
@@ -32,6 +35,7 @@ export class Runtime {
 
   constructor(options: Options) {
     this.#options = options
+    this.#fileCollector = new FileCollector()
     this.#rootNode = createNode('kubb-root')
     this.#rootNode.onRender = this.onRender
     this.#rootNode.onImmediateRender = this.onRender
@@ -104,9 +108,14 @@ export class Runtime {
           return
         }
 
-        const files = await processFiles(this.#rootNode)
+        // Get files from both the collector (context-based) and processFiles (DOM-based for backward compatibility)
+        const collectedFiles = this.#fileCollector.getFiles()
+        const domFiles = await processFiles(this.#rootNode)
+        
+        // Combine both approaches
+        const allFiles = [...collectedFiles, ...domFiles]
 
-        await this.fileManager.add(...files)
+        await this.fileManager.add(...allFiles)
 
         if (!this.#options?.debug && !this.#options?.stdout) {
           return
@@ -167,10 +176,13 @@ export class Runtime {
   }
 
   async render(node: ReactNode): Promise<void> {
+    this.#fileCollector.clear() // Clear before each render
     const element = (
-      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
-        {node}
-      </Root>
+      <FileCollectorContext.Provider value={this.#fileCollector}>
+        <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
+          {node}
+        </Root>
+      </FileCollectorContext.Provider>
     )
 
     Renderer.updateContainerSync(element, this.#container, null, null)
@@ -179,10 +191,13 @@ export class Runtime {
   }
 
   async renderToString(node: ReactNode): Promise<string> {
+    this.#fileCollector.clear() // Clear before each render
     const element = (
-      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
-        {node}
-      </Root>
+      <FileCollectorContext.Provider value={this.#fileCollector}>
+        <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
+          {node}
+        </Root>
+      </FileCollectorContext.Provider>
     )
 
     Renderer.updateContainerSync(element, this.#container, null, null)

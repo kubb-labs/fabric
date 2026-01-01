@@ -15,3 +15,11 @@ export { createContext, inject, provide, unprovide, useContext } from './context
 export { createStcFabric } from './createStcFabric.ts'
 export type { StcComponent } from './types.ts'
 
+// components
+export { File, FileCollectorContext, FileExport, FileImport, FileNamespace, FileSource } from './components/File.ts'
+export type { FileProps } from './components/File.ts'
+
+// plugins
+export { stcPlugin } from './plugins/index.ts'
+export type { StcPluginOptions } from './plugins/index.ts'
+

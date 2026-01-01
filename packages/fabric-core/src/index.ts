@@ -2,5 +2,6 @@ export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
 // we need this to override the globals of `fabric.use`
 export type { Fabric } from './Fabric.ts'
+export { FileCollector } from './FileCollector.ts'
 export { FileManager } from './FileManager.ts'
 export { FileProcessor } from './FileProcessor.ts'

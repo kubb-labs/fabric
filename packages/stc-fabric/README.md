@@ -100,18 +100,22 @@ function Component(props: { name: string }) {
 
 ## Integration with Fabric
 
-```typescript
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { stc, code, provide, createContext } from '@kubb/stc-fabric'
+### Using createStcFabric
 
-const ConfigContext = createContext({ prefix: 'Generated' })
+The recommended way to use stc with Fabric is via `createStcFabric`, which pre-configures the fabric instance:
+
+```typescript
+import { createStcFabric, File, stc, code } from '@kubb/stc-fabric'
 
 function CodeGenerator(props: { className: string }) {
-  const config = useContext(ConfigContext)
+  // Register files via File component - uses context internally
+  File({
+    baseName: 'generated.ts',
+    path: './output/generated.ts',
+  })
+
   return code`
-export class ${config.prefix}${props.className} {
+export class ${props.className} {
   constructor() {}
 }
   `
@@ -119,21 +123,45 @@ export class ${config.prefix}${props.className} {
 
 const Generator = stc(CodeGenerator)
 
-const fabric = createFabric()
-fabric.use(fsPlugin)
-fabric.use(typescriptParser)
+const fabric = createStcFabric()
+await fabric.render(Generator({ className: 'MyClass' }))
 
-provide(ConfigContext, { prefix: 'Custom' })
-const generatedCode = Generator({ className: 'MyClass' })
-
-await fabric.addFile({
-  baseName: 'generated.ts',
-  path: './output/generated.ts',
-  sources: [{ value: generatedCode, isExportable: false }],
-})
-
+// Files are automatically collected via context
+const files = fabric.fileManager.files
+// write files to disk
 await fabric.write()
 ```
+
+### File Collection via Context
+
+Components can register files using the `File` component, which uses context to communicate with the FileManager:
+
+```typescript
+import { File, stc, code } from '@kubb/stc-fabric'
+
+function MultiFileGenerator() {
+  // Each File() call registers a file via context
+  File({
+    baseName: 'types.ts',
+    path: './output/types.ts',
+  })
+
+  File({
+    baseName: 'index.ts',
+    path: './output/index.ts',
+  })
+
+  return code`
+// Type definitions
+export type User = {
+  id: number
+  name: string
+}
+  `
+}
+```
+
+This approach eliminates the need to manually loop over children or walk a DOM tree - files register themselves!
 
 ## API Reference
 
