@@ -1,6 +1,6 @@
 import { createFabric, createRefKey } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { fsPlugin, refKeyPlugin } from '@kubb/fabric-core/plugins'
 
 /**
  * Example demonstrating RefKey usage for automatic import management
@@ -13,6 +13,9 @@ export const fabric = createFabric()
 // Create refkeys for symbols we want to reference across files
 const helloWorldRef = createRefKey()
 const userTypeRef = createRefKey()
+
+// Enable the refKey plugin for automatic import management
+fabric.use(refKeyPlugin)
 
 // Define a symbol in file1.ts with a refkey
 fabric.addFile({
@@ -53,7 +56,7 @@ fabric.addFile({
 })
 
 // Use the refkeys in file2.ts
-// The import resolver will automatically add the necessary imports
+// The refKeyPlugin will automatically add the necessary imports!
 fabric.addFile({
   baseName: 'file2.ts',
   path: './example6/gen/file2.ts',
@@ -67,19 +70,7 @@ fabric.addFile({
       isIndexable: true,
     },
   ],
-  imports: [
-    // Normally these would be auto-added by the import resolver
-    // For now, we manually add them as the integration is in progress
-    {
-      name: 'helloWorld',
-      path: './file1',
-    },
-    {
-      name: 'User',
-      path: './types',
-      isTypeOnly: true,
-    },
-  ],
+  imports: [],
   exports: [],
 })
 

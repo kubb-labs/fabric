@@ -28,6 +28,7 @@ It offers a lightweight layer for file generation while orchestrating the overal
 
 - 🎨 Declarative file generation — Create files effortlessly using JSX or JavaScript syntax.
 - 📦 Cross-runtime support — Works seamlessly with Node.js and Bun.
+- 🔗 Automatic import management — RefKey system inspired by Alloy automatically manages imports across files.
 - 🧩 Built-in debugging utilities — Simplify development and inspect generation flows with ease.
 - ⚡ Fast and lightweight — Minimal overhead, maximum performance.
 
@@ -77,6 +78,45 @@ Returns a Fabric instance with:
 - `fabric.addFile(...files)` — queue in-memory files to generate.
 - `fabric.files` — getter with all queued files.
 - `fabric.context` — internal context holding events, options, FileManager, installed plugins/parsers.
+
+### `createRefKey<T>(name?): RefKey<T>`
+Creates a reference key for automatic import management, inspired by [Alloy's refkey system](https://github.com/alloy-framework/alloy). RefKeys enable you to reference code symbols across files without manually managing imports.
+
+**Returns a RefKey with:**
+- `id: string` — Unique identifier for this reference
+- `name?: string` — The symbol name being referenced
+- `path?: string` — The file path where the symbol is defined
+- `isTypeOnly?: boolean` — Whether this is a type-only reference
+- `resolve(name, path, options?)` — Mark this refkey as resolved with a symbol name and file path
+
+**Example:**
+```ts
+import { createFabric, createRefKey } from '@kubb/fabric-core'
+import { refKeyPlugin } from '@kubb/fabric-core/plugins'
+
+const fabric = createFabric()
+fabric.use(refKeyPlugin)
+
+const fooRef = createRefKey()
+
+// Define the symbol
+fabric.addFile({
+  path: './file1.ts',
+  sources: [{
+    name: 'foo',
+    value: 'export const foo = "hello"',
+    refkey: fooRef.resolve('foo', './file1.ts')
+  }]
+})
+
+// Use it elsewhere - imports are auto-added
+fabric.addFile({
+  path: './file2.ts',
+  sources: [{
+    value: `console.log(foo)` // 'foo' will be imported automatically
+  }]
+})
+```
 
 
 ### Events (emitted by the core during processing)
@@ -182,6 +222,54 @@ import { loggerPlugin } from '@kubb/fabric-core/plugins'
 | websocket | `boolean \| { host?: string; port?: number }` | `true` | Toggle or configure the websocket server that broadcasts Fabric events for future GUIs. |
 
 By default the plugin displays a beautiful progress bar using @clack/prompts, starts a websocket server on an ephemeral port, and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with colored output and symbols, animated in the progress bar, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
+
+
+#### `refKeyPlugin`
+Enables automatic import management using RefKeys, inspired by [Alloy's refkey system](https://github.com/alloy-framework/alloy). When you create a refkey and attach it to an exported symbol, the plugin automatically adds import statements when that symbol is referenced in other files.
+
+```
+import { refKeyPlugin } from '@kubb/fabric-core/plugins'
+```
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| enabled | `boolean` | `true` | Enable/disable automatic import resolution based on refkeys. |
+
+**How it works:**
+1. Create a refkey using `createRefKey()`
+2. Attach it to a source with `.resolve(symbolName, filePath, options)`
+3. Use the refkey in another file - imports are automatically added
+
+**Example:**
+
+```ts
+import { createFabric, createRefKey } from '@kubb/fabric-core'
+import { refKeyPlugin } from '@kubb/fabric-core/plugins'
+
+const fabric = createFabric()
+fabric.use(refKeyPlugin)
+
+// Create a refkey
+const fooRef = createRefKey()
+
+// Define symbol with refkey
+fabric.addFile({
+  path: './file1.ts',
+  sources: [{
+    name: 'foo',
+    value: 'export const foo = "bar"',
+    refkey: fooRef.resolve('foo', './file1.ts')
+  }]
+})
+
+// Use refkey in another file - import will be auto-added!
+fabric.addFile({
+  path: './file2.ts',
+  sources: [{
+    value: `console.log(foo)` // import { foo } from './file1' is added automatically
+  }]
+})
+```
 
 
 #### `graphPlugin`
