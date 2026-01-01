@@ -1,21 +1,21 @@
 import { describe, expect, it } from 'vitest'
-import { createSignal } from './signal.ts'
+import { createSignal, ref } from './signal.ts'
 
-describe('createSignal', () => {
-  it('should create a signal with initial value', () => {
-    const count = createSignal(0)
+describe('ref (Vue-style)', () => {
+  it('should create a ref with initial value', () => {
+    const count = ref(0)
 
     expect(count.value).toBe(0)
   })
 
   it('should allow reading the value', () => {
-    const message = createSignal('Hello')
+    const message = ref('Hello')
 
     expect(message.value).toBe('Hello')
   })
 
   it('should allow writing the value', () => {
-    const count = createSignal(0)
+    const count = ref(0)
 
     count.value = 5
 
@@ -23,7 +23,7 @@ describe('createSignal', () => {
   })
 
   it('should handle object values', () => {
-    const user = createSignal({ name: 'John', age: 30 })
+    const user = ref({ name: 'John', age: 30 })
 
     expect(user.value).toEqual({ name: 'John', age: 30 })
 
@@ -33,7 +33,7 @@ describe('createSignal', () => {
   })
 
   it('should handle array values', () => {
-    const items = createSignal<number[]>([1, 2, 3])
+    const items = ref<number[]>([1, 2, 3])
 
     expect(items.value).toEqual([1, 2, 3])
 
@@ -42,17 +42,29 @@ describe('createSignal', () => {
     expect(items.value).toEqual([4, 5, 6])
   })
 
-  it('should support multiple signals independently', () => {
-    const signal1 = createSignal(10)
-    const signal2 = createSignal(20)
+  it('should support multiple refs independently', () => {
+    const ref1 = ref(10)
+    const ref2 = ref(20)
 
-    expect(signal1.value).toBe(10)
-    expect(signal2.value).toBe(20)
+    expect(ref1.value).toBe(10)
+    expect(ref2.value).toBe(20)
 
-    signal1.value = 15
-    signal2.value = 25
+    ref1.value = 15
+    ref2.value = 25
 
-    expect(signal1.value).toBe(15)
-    expect(signal2.value).toBe(25)
+    expect(ref1.value).toBe(15)
+    expect(ref2.value).toBe(25)
+  })
+})
+
+describe('createSignal (legacy)', () => {
+  it('should work as alias for ref', () => {
+    const count = createSignal(0)
+
+    expect(count.value).toBe(0)
+
+    count.value = 5
+
+    expect(count.value).toBe(5)
   })
 })

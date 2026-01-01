@@ -1,25 +1,24 @@
-import type { StcSignal } from './types.ts'
+import type { Ref } from './types.ts'
 
 /**
- * Creates a signal - a reactive value that can be read and written
+ * Creates a reactive reference (similar to Vue's ref)
  * 
  * @example
  * ```ts
- * const count = createSignal(0)
+ * const count = ref(0)
  * console.log(count.value) // 0
  * count.value = 5
  * console.log(count.value) // 5
  * ```
  */
-export function createSignal<T>(initialValue: T): StcSignal<T> {
-  let _value = initialValue
-
+export function ref<T>(initialValue: T): Ref<T> {
   return {
-    get value() {
-      return _value
-    },
-    set value(newValue: T) {
-      _value = newValue
-    },
+    value: initialValue,
   }
 }
+
+/**
+ * Legacy alias for ref() - use ref() instead
+ * @deprecated Use ref() for Vue-style naming
+ */
+export const createSignal = ref

@@ -3,16 +3,17 @@
  * 
  * A signal-based component model for code generation without React dependency.
  * Inspired by the Alloy framework (https://alloy-framework.github.io/alloy/)
+ * and Vue.js composable patterns
  */
 
 // expose fabric core helpers
 export * from '@kubb/fabric-core'
 
 // stc core functionality
-export { code, stc, template } from './stc.ts'
-export { createContext, useContext } from './context.ts'
+export { code, h, stc, template } from './stc.ts'
+export { createContext, inject, useContext } from './context.ts'
 export { clearReferences, createReference, getReference } from './reference.ts'
-export { createSignal } from './signal.ts'
+export { createSignal, ref } from './signal.ts'
 export { createStcFabric } from './createStcFabric.ts'
-export type { StcComponent, StcContext, StcReference, StcSignal } from './types.ts'
+export type { Ref, StcComponent, StcContext, StcReference } from './types.ts'
 

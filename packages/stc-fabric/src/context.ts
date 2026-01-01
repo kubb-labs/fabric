@@ -10,7 +10,7 @@ import type { StcContext } from './types.ts'
 const contextStack = new Map<StcContext<any>, any[]>()
 
 /**
- * Creates a new context for dependency injection
+ * Creates a new context for dependency injection (similar to Vue's provide/inject)
  * 
  * @example
  * ```ts
@@ -41,17 +41,23 @@ export function createContext<T>(defaultValue: T): StcContext<T> {
 }
 
 /**
- * Retrieves the current value from a context
+ * Retrieves the current value from a context (similar to Vue's inject)
  * 
  * @example
  * ```ts
- * const theme = useContext(ThemeContext)
+ * const theme = inject(ThemeContext)
  * ```
  */
-export function useContext<T>(context: StcContext<T>): T {
+export function inject<T>(context: StcContext<T>): T {
   const stack = contextStack.get(context)
   if (!stack || stack.length === 0) {
     return context.defaultValue
   }
   return stack[stack.length - 1]
 }
+
+/**
+ * Legacy alias for inject() - use inject() for Vue-style naming
+ * @deprecated Use inject() for Vue-style naming
+ */
+export const useContext = inject

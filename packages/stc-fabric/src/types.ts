@@ -1,6 +1,7 @@
 /**
  * String Template Component (stc) types
  * Provides a signal-based component model without React dependency
+ * Inspired by Vue.js composable patterns
  */
 
 /**
@@ -10,7 +11,7 @@
 export type StcComponent<TProps = {}> = (props: TProps) => string
 
 /**
- * Context value for dependency injection
+ * Context value for dependency injection (similar to Vue's provide/inject)
  */
 export interface StcContext<T = any> {
   Provider: StcComponent<{ value: T; children?: string }>
@@ -26,9 +27,8 @@ export interface StcReference<T = any> {
 }
 
 /**
- * Signal-like reactive value
+ * Reactive reference (similar to Vue's ref)
  */
-export interface StcSignal<T = any> {
-  get value(): T
-  set value(v: T)
+export interface Ref<T = any> {
+  value: T
 }

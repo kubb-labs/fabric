@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { code, createContext, createReference, createSignal, stc, useContext } from './index.ts'
+import { code, createContext, createReference, createSignal, h, inject, ref, stc, useContext } from './index.ts'
 
 describe('stc integration', () => {
   it('should integrate stc with context', () => {
@@ -17,10 +17,10 @@ describe('stc integration', () => {
   })
 
   it('should integrate stc with references', () => {
-    const ref = createReference('myVar', 42)
+    const reference = createReference('myVar', 42)
 
     function Component() {
-      return code`const value = ${ref.value};`
+      return code`const value = ${reference.value};`
     }
 
     const MyComponent = stc(Component)
@@ -98,5 +98,53 @@ ${fieldsCode}
     expect(result).toContain('id: number;')
     expect(result).toContain('name: string;')
     expect(result).toContain('email: string;')
+  })
+})
+
+describe('Vue-style API integration', () => {
+  it('should work with ref (Vue-style)', () => {
+    const count = ref(0)
+
+    function Component() {
+      count.value += 1
+      return code`const counter = ${count.value};`
+    }
+
+    const MyComponent = h(Component)
+    
+    const result1 = MyComponent({})
+    expect(result1).toContain('const counter = 1;')
+    
+    const result2 = MyComponent({})
+    expect(result2).toContain('const counter = 2;')
+  })
+
+  it('should work with inject (Vue-style)', () => {
+    const ConfigContext = createContext({ prefix: 'app' })
+
+    function Component(props: { name: string }) {
+      const config = inject(ConfigContext)
+      return code`const ${config.prefix}_${props.name} = true;`
+    }
+
+    const MyComponent = h(Component)
+    const result = MyComponent({ name: 'flag' })
+
+    expect(result).toContain('const app_flag = true;')
+  })
+
+  it('should work with h() as alias for stc()', () => {
+    function SimpleComponent(props: { text: string }) {
+      return code`// ${props.text}`
+    }
+
+    const Component1 = h(SimpleComponent)
+    const Component2 = stc(SimpleComponent)
+
+    const result1 = Component1({ text: 'test' })
+    const result2 = Component2({ text: 'test' })
+
+    expect(result1).toBe(result2)
+    expect(result1).toContain('// test')
   })
 })

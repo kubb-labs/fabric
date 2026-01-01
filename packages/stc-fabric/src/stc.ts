@@ -25,6 +25,17 @@ export function stc<TProps = {}>(component: (props: TProps) => string): (props: 
 }
 
 /**
+ * Vue-style component wrapper (alias for stc)
+ * Similar to Vue's h() function for creating components
+ * 
+ * @example
+ * ```ts
+ * const MyComponent = h(HelloWorld)
+ * ```
+ */
+export const h = stc
+
+/**
  * Tagged template literal helper for inline code generation
  * 
  * @example
