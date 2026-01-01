@@ -1,7 +1,6 @@
-import { createFabric } from '@kubb/react-fabric'
+import { createFabric, File, Interface, Class, Enum, Function, VarDeclaration } from '@kubb/react-fabric'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { File, Interface, Class, Enum, Function, VarDeclaration } from '@kubb/react-fabric'
 
 /**
  * Example demonstrating advanced TypeScript components
