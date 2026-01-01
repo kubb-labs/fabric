@@ -202,6 +202,32 @@ This approach eliminates the need to manually loop over children or walk a DOM t
 | `createContext<T>(defaultValue)` | Function | Creates a context key with default value (returns symbol) |
 | `useContext<T>(key, defaultValue?)` | Function | React-style alias for `inject()` |
 
+### Composables (Hooks)
+
+Composables provide access to framework functionality using the familiar `use` prefix:
+
+| Export | Type | Description |
+|---|---|---|
+| `useApp<TMeta>()` | Function | Returns the current App context with `meta` and `exit` function |
+| `useFile()` | Function | Returns the FileCollector for registering files programmatically |
+| `useLifecycle()` | Function | Returns lifecycle helpers like `exit()` to stop generation |
+
+**Example:**
+```typescript
+import { useApp, useLifecycle, stc, code } from '@kubb/stc-fabric'
+
+function MyComponent() {
+  const { meta } = useApp<{ version: string }>()
+  const { exit } = useLifecycle()
+  
+  if (!meta.version) {
+    exit() // Stop generation early
+  }
+  
+  return code`// Version: ${meta.version}`
+}
+```
+
 ## Examples
 
 ### TypeScript Interface Generator

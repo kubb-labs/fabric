@@ -31,3 +31,8 @@ export type { RootContextProps } from './components/Root.ts'
 export { stcPlugin } from './plugins/index.ts'
 export type { StcPluginOptions } from './plugins/index.ts'
 
+// composables (hooks with 'use' prefix)
+export { useApp } from './composables/useApp.ts'
+export { useFile } from './composables/useFile.ts'
+export { useLifecycle } from './composables/useLifecycle.ts'
+
