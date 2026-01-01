@@ -46,6 +46,12 @@ export type Source = {
    * @default false
    */
   isIndexable?: boolean
+  /**
+   * RefKey for automatic import management.
+   * When set, this source will be tracked and imports will be automatically added
+   * when the refkey is used in other files.
+   */
+  refkey?: { id: string; name?: string; path?: string; isTypeOnly?: boolean }
 }
 
 export type Export = {
