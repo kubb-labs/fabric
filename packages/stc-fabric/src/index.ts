@@ -13,7 +13,7 @@ export * from '@kubb/fabric-core'
 export { code, stc, template } from './stc.ts'
 export { createContext, inject, provide, unprovide, useContext } from './context.ts'
 export { clearReferences, createReference, getReference } from './reference.ts'
-export { createSignal, ref } from './signal.ts'
+export { createSignal, ref, useState } from './signal.ts'
 export { createStcFabric } from './createStcFabric.ts'
 export type { Ref, StcComponent, StcReference } from './types.ts'
 
