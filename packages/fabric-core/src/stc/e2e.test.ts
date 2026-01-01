@@ -1,7 +1,4 @@
 import { describe, expect, it } from 'vitest'
-import { createFabric } from '../createFabric.ts'
-import { typescriptParser } from '../parsers/index.ts'
-import { fsPlugin } from '../plugins/index.ts'
 import { code, createContext, stc, useContext } from './index.ts'
 
 describe('stc e2e integration', () => {

@@ -34,16 +34,17 @@ describe('useContext', () => {
     expect(result).toBe('test')
   })
 
-  it('should handle nested providers', () => {
+  it('should handle nested providers', async () => {
     const ThemeContext = createContext({ color: 'blue' })
     
     // Outer provider
-    const outer = ThemeContext.Provider({ 
+    const inner = await ThemeContext.Provider({ 
+      value: { color: 'green' }, 
+      children: 'inner' 
+    })
+    const outer = await ThemeContext.Provider({ 
       value: { color: 'red' }, 
-      children: ThemeContext.Provider({ 
-        value: { color: 'green' }, 
-        children: 'inner' 
-      }) 
+      children: inner
     })
     
     expect(outer).toBe('inner')
