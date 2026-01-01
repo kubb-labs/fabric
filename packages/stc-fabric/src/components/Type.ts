@@ -19,7 +19,7 @@ type Props = {
 
 export function Type({ name, export: canExport, JSDoc, children }: Props): string {
   if (name.charAt(0).toUpperCase() !== name.charAt(0)) {
-    throw new Error('Name should start with a capital letter(see TypeScript types)')
+    throw new Error('Name should start with a capital letter (see TypeScript types)')
   }
 
   let result = ''

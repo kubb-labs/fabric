@@ -1,4 +1,4 @@
-import { createContext, inject, useContext } from '../context.ts'
+import { createContext, inject } from '../context.ts'
 import { RootContext } from './Root.ts'
 
 export type AppContextProps<TMeta = unknown> = {
@@ -19,10 +19,9 @@ type Props<TMeta = unknown> = {
 export function App<TMeta = unknown>({ meta, children }: Props<TMeta>): string {
   const { exit } = inject(RootContext, { exit: () => {} })
 
-  // Provide app context
-  const appContextValue: AppContextProps<TMeta> = { exit, meta }
   // In stc, we just return children since we don't have a component tree
   // Context is provided via provide() calls before components run
+  // The appContextValue would be: { exit, meta }
   
   return children || ''
 }

@@ -78,7 +78,9 @@
     "typecheck": "tsc -p ./tsconfig.json --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@kubb/fabric-core": "workspace:*"
+    "@kubb/fabric-core": "workspace:*",
+    "dedent": "^1.7.1",
+    "indent-string": "^5.0.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
