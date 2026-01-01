@@ -11,14 +11,6 @@
 export type StcComponent<TProps = {}> = (props: TProps) => string
 
 /**
- * Context value for dependency injection (similar to Vue's provide/inject)
- */
-export interface StcContext<T = any> {
-  Provider: StcComponent<{ value: T; children?: string }>
-  defaultValue: T
-}
-
-/**
  * Reference to a named entity (variable, type, etc.) for tracking dependencies
  */
 export interface StcReference<T = any> {

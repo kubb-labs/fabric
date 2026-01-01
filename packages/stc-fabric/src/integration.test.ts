@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { code, createContext, createReference, createSignal, h, inject, ref, stc, useContext } from './index.ts'
+import { code, createContext, createReference, createSignal, inject, provide, ref, stc, unprovide, useContext } from './index.ts'
 
 describe('stc integration', () => {
   it('should integrate stc with context', () => {
     const ThemeContext = createContext({ color: 'blue' })
 
     function Component(props: { name: string }) {
-      const theme = useContext(ThemeContext)
+      const theme = useContext<{ color: string }>(ThemeContext)
       return code`const ${props.name} = "${theme.color}";`
     }
 
@@ -110,7 +110,7 @@ describe('Vue-style API integration', () => {
       return code`const counter = ${count.value};`
     }
 
-    const MyComponent = h(Component)
+    const MyComponent = stc(Component)
     
     const result1 = MyComponent({})
     expect(result1).toContain('const counter = 1;')
@@ -119,32 +119,37 @@ describe('Vue-style API integration', () => {
     expect(result2).toContain('const counter = 2;')
   })
 
-  it('should work with inject (Vue-style)', () => {
-    const ConfigContext = createContext({ prefix: 'app' })
+  it('should work with provide/inject (Vue 3 style)', () => {
+    const ConfigKey = Symbol('config')
 
     function Component(props: { name: string }) {
-      const config = inject(ConfigContext)
+      const config = inject(ConfigKey, { prefix: 'default' })
       return code`const ${config.prefix}_${props.name} = true;`
     }
 
-    const MyComponent = h(Component)
+    const MyComponent = stc(Component)
+    
+    provide(ConfigKey, { prefix: 'app' })
     const result = MyComponent({ name: 'flag' })
+    unprovide(ConfigKey)
 
     expect(result).toContain('const app_flag = true;')
   })
 
-  it('should work with h() as alias for stc()', () => {
-    function SimpleComponent(props: { text: string }) {
-      return code`// ${props.text}`
+  it('should work with createContext and useContext (React-style)', () => {
+    const ConfigContext = createContext({ prefix: 'react' })
+
+    function Component(props: { name: string }) {
+      const config = useContext<{ prefix: string }>(ConfigContext)
+      return code`const ${config.prefix}_${props.name} = true;`
     }
 
-    const Component1 = h(SimpleComponent)
-    const Component2 = stc(SimpleComponent)
+    const MyComponent = stc(Component)
+    
+    provide(ConfigContext, { prefix: 'custom' })
+    const result = MyComponent({ name: 'value' })
+    unprovide(ConfigContext)
 
-    const result1 = Component1({ text: 'test' })
-    const result2 = Component2({ text: 'test' })
-
-    expect(result1).toBe(result2)
-    expect(result1).toContain('// test')
+    expect(result).toContain('const custom_value = true;')
   })
 })

@@ -1,5 +1,3 @@
-import type { StcContext } from './types.ts'
-
 /**
  * Context stack for tracking the current context values
  * 
@@ -7,57 +5,81 @@ import type { StcContext } from './types.ts'
  * For concurrent runtime execution, consider using AsyncLocalStorage or
  * instance-based context management.
  */
-const contextStack = new Map<StcContext<any>, any[]>()
+const contextStack = new Map<symbol, any[]>()
+const contextDefaults = new Map<symbol, any>()
 
 /**
- * Creates a new context for dependency injection (similar to Vue's provide/inject)
+ * Provides a value to descendant components (Vue 3 style)
+ * 
+ * @example
+ * ```ts
+ * const ThemeKey = Symbol('theme')
+ * provide(ThemeKey, { color: 'blue' })
+ * ```
+ */
+export function provide<T>(key: symbol, value: T): void {
+  if (!contextStack.has(key)) {
+    contextStack.set(key, [])
+  }
+  contextStack.get(key)!.push(value)
+}
+
+/**
+ * Injects a value provided by an ancestor component (Vue 3 style)
+ * 
+ * @example
+ * ```ts
+ * const theme = inject(ThemeKey, { color: 'default' })
+ * ```
+ */
+export function inject<T>(key: symbol, defaultValue?: T): T {
+  const stack = contextStack.get(key)
+  if (!stack || stack.length === 0) {
+    if (defaultValue !== undefined) {
+      return defaultValue
+    }
+    const storedDefault = contextDefaults.get(key)
+    if (storedDefault !== undefined) {
+      return storedDefault
+    }
+    throw new Error(`No value provided for key: ${key.toString()}`)
+  }
+  return stack[stack.length - 1]
+}
+
+/**
+ * Unprovides a value (for cleanup)
+ * @internal
+ */
+export function unprovide(key: symbol): void {
+  const stack = contextStack.get(key)
+  if (stack && stack.length > 0) {
+    stack.pop()
+  }
+}
+
+/**
+ * Creates a context key with a default value (React-style compatibility)
  * 
  * @example
  * ```ts
  * const ThemeContext = createContext({ color: 'blue' })
  * ```
  */
-export function createContext<T>(defaultValue: T): StcContext<T> {
-  const context: StcContext<T> = {
-    defaultValue,
-    Provider: ({ value, children = '' }) => {
-      // Push value to context stack
-      if (!contextStack.has(context)) {
-        contextStack.set(context, [])
-      }
-      contextStack.get(context)!.push(value)
-
-      // Render children
-      const result = children
-
-      // Pop value from context stack
-      contextStack.get(context)!.pop()
-
-      return result
-    },
-  }
-
-  return context
+export function createContext<T>(defaultValue: T): symbol {
+  const key = Symbol('context')
+  contextDefaults.set(key, defaultValue)
+  return key
 }
 
 /**
- * Retrieves the current value from a context (similar to Vue's inject)
+ * React-style alias for inject
  * 
  * @example
  * ```ts
- * const theme = inject(ThemeContext)
+ * const theme = useContext(ThemeContext)
  * ```
  */
-export function inject<T>(context: StcContext<T>): T {
-  const stack = contextStack.get(context)
-  if (!stack || stack.length === 0) {
-    return context.defaultValue
-  }
-  return stack[stack.length - 1]
+export function useContext<T>(key: symbol, defaultValue?: T): T {
+  return inject(key, defaultValue)
 }
-
-/**
- * Legacy alias for inject() - use inject() for Vue-style naming
- * @deprecated Use inject() for Vue-style naming
- */
-export const useContext = inject

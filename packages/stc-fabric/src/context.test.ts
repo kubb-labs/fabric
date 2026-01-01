@@ -1,53 +1,85 @@
 import { describe, expect, it } from 'vitest'
-import { createContext, useContext } from './context.ts'
+import { createContext, inject, provide, unprovide, useContext } from './context.ts'
 
-describe('createContext', () => {
-  it('should create a context with default value', () => {
-    const ThemeContext = createContext({ color: 'blue' })
-
-    expect(ThemeContext).toBeDefined()
-    expect(ThemeContext.defaultValue).toEqual({ color: 'blue' })
+describe('Vue 3 style provide/inject', () => {
+  it('should provide and inject values', () => {
+    const ThemeKey = Symbol('theme')
+    
+    provide(ThemeKey, { color: 'blue' })
+    const theme = inject(ThemeKey)
+    
+    expect(theme).toEqual({ color: 'blue' })
+    
+    unprovide(ThemeKey)
   })
 
-  it('should have a Provider component', () => {
-    const ThemeContext = createContext({ color: 'blue' })
+  it('should use default value when not provided', () => {
+    const ConfigKey = Symbol('config')
+    
+    const config = inject(ConfigKey, { enabled: false })
+    
+    expect(config).toEqual({ enabled: false })
+  })
 
-    expect(ThemeContext.Provider).toBeDefined()
-    expect(typeof ThemeContext.Provider).toBe('function')
+  it('should handle nested provides', () => {
+    const ThemeKey = Symbol('theme')
+    
+    provide(ThemeKey, { color: 'red' })
+    expect(inject(ThemeKey)).toEqual({ color: 'red' })
+    
+    provide(ThemeKey, { color: 'green' })
+    expect(inject(ThemeKey)).toEqual({ color: 'green' })
+    
+    unprovide(ThemeKey)
+    expect(inject(ThemeKey)).toEqual({ color: 'red' })
+    
+    unprovide(ThemeKey)
   })
 })
 
-describe('useContext', () => {
-  it('should return default value when no provider', () => {
+describe('createContext (React-style)', () => {
+  it('should create a context with default value', () => {
     const ThemeContext = createContext({ color: 'blue' })
-    const theme = useContext(ThemeContext)
+    
+    expect(typeof ThemeContext).toBe('symbol')
+  })
 
+  it('should return default value when using inject', () => {
+    const ThemeContext = createContext({ color: 'blue' })
+    const theme = inject(ThemeContext)
+    
     expect(theme).toEqual({ color: 'blue' })
   })
 
-  it('should return provided value from Provider', () => {
+  it('should override default with provided value', () => {
     const ThemeContext = createContext({ color: 'blue' })
     
-    // Simulate being inside a Provider
-    const result = ThemeContext.Provider({ value: { color: 'red' }, children: 'test' })
+    provide(ThemeContext, { color: 'red' })
+    const theme = inject(ThemeContext)
     
-    expect(result).toBe('test')
+    expect(theme).toEqual({ color: 'red' })
+    
+    unprovide(ThemeContext)
+  })
+})
+
+describe('useContext (React-style)', () => {
+  it('should work as alias for inject', () => {
+    const ConfigContext = createContext({ prefix: 'test' })
+    
+    provide(ConfigContext, { prefix: 'app' })
+    const config = useContext(ConfigContext)
+    
+    expect(config).toEqual({ prefix: 'app' })
+    
+    unprovide(ConfigContext)
   })
 
-  it('should handle nested providers', () => {
+  it('should return default value', () => {
     const ThemeContext = createContext({ color: 'blue' })
+    const theme = useContext(ThemeContext)
     
-    // Outer provider
-    const inner = ThemeContext.Provider({ 
-      value: { color: 'green' }, 
-      children: 'inner' 
-    })
-    const outer = ThemeContext.Provider({ 
-      value: { color: 'red' }, 
-      children: inner
-    })
-    
-    expect(outer).toBe('inner')
+    expect(theme).toEqual({ color: 'blue' })
   })
 })
 
@@ -56,7 +88,7 @@ describe('context integration', () => {
     const ConfigContext = createContext({ prefix: 'test' })
 
     function Component() {
-      const config = useContext(ConfigContext)
+      const config = useContext<{ prefix: string }>(ConfigContext)
       return `${config.prefix}_variable`
     }
 

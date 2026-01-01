@@ -24,7 +24,7 @@ describe('stc e2e integration', () => {
     })
 
     function ClassGenerator(props: { name: string; methods: string[] }) {
-      const config = useContext(ConfigContext)
+      const config = useContext<{ prefix: string; suffix: string }>(ConfigContext)
       const className = `${config.prefix}${props.name}${config.suffix}`
 
       const methodsCode = props.methods

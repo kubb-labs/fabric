@@ -1,7 +1,7 @@
 import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { code, createContext, stc, useContext } from '@kubb/stc-fabric'
+import { code, createContext, provide, stc, unprovide, useContext } from '@kubb/stc-fabric'
 
 // Example 1: Basic stc component
 function HelloWorld(props: { name: string }) {
@@ -13,7 +13,7 @@ function HelloWorld(props: { name: string }) {
 
 const HelloWorldStc = stc(HelloWorld)
 
-// Example 2: Using context for configuration
+// Example 2: Using context for configuration (React-style)
 const ConfigContext = createContext({ 
   prefix: 'generated',
   suffix: 'Impl'
@@ -40,10 +40,13 @@ const ClassGeneratorStc = stc(ClassGenerator)
 function generateCode() {
   const greeting = HelloWorldStc({ name: 'World' })
   
+  // Provide custom configuration
+  provide(ConfigContext, { prefix: 'Custom', suffix: 'Class' })
   const userClass = ClassGeneratorStc({ 
     name: 'User',
     methods: ['getName', 'setName', 'getAge', 'setAge']
   })
+  unprovide(ConfigContext)
 
   return code`
 ${greeting}
