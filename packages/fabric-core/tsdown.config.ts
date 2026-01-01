@@ -7,6 +7,7 @@ export default defineConfig({
     parsers: 'src/parsers/index.ts',
     'parsers/typescript': 'src/parsers/typescriptParser.ts',
     plugins: 'src/plugins/index.ts',
+    stc: 'src/stc/index.ts',
   },
   dts: true,
   target: 'es2019',

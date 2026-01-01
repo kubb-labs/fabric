@@ -38,6 +38,10 @@
       "require": "./dist/plugins.cjs",
       "import": "./dist/plugins.js"
     },
+    "./stc": {
+      "require": "./dist/stc.cjs",
+      "import": "./dist/stc.js"
+    },
     "./types": {
       "require": "./dist/types.cjs",
       "import": "./dist/types.js"
@@ -57,6 +61,9 @@
       ],
       "plugins": [
         "./dist/plugins.d.ts"
+      ],
+      "stc": [
+        "./dist/stc.d.ts"
       ],
       "types": [
         "./dist/types.d.ts"

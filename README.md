@@ -335,6 +335,132 @@ fabric.write({ extension: { '.vue': '.ts' } })
 > - `fabric.use` accepts both plugins and parsers. The `fsPlugin` handles I/O and adds `fabric.write`. Parsers decide how files are converted to strings for specific extensions.
 > - When extension mapping is provided to `fabric.write`, Fabric picks a parser whose `extNames` include the file’s extension. Otherwise, the default parser is used.
 
+
+## String Template Components (stc)
+
+The stc module provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/), it enables declarative code generation using template strings.
+
+```
+import { stc, code, createContext, useContext } from '@kubb/fabric-core/stc'
+```
+
+### Key Features
+
+- 🎯 **No React dependency** — Pure TypeScript/JavaScript components for code generation
+- 🔄 **Signal-based reactivity** — Use signals for reactive values
+- 🎨 **Context support** — Dependency injection via context
+- 📝 **Template literals** — Natural code generation with tagged templates
+- 🔗 **Reference tracking** — Track named entities across components
+
+### Basic Usage
+
+```ts
+import { stc, code } from '@kubb/fabric-core/stc'
+
+function HelloWorld(props: { name: string }) {
+  return code`
+    const greeting = "Hello, ${props.name}!";
+  `
+}
+
+const HelloWorldStc = stc(HelloWorld)
+const result = await HelloWorldStc({ name: 'World' })
+// => 'const greeting = "Hello, World!";'
+```
+
+### Using Context
+
+```ts
+import { createContext, useContext, stc, code } from '@kubb/fabric-core/stc'
+
+const ConfigContext = createContext({ prefix: 'generated' })
+
+function Component(props: { name: string }) {
+  const config = useContext(ConfigContext)
+  return code`const ${config.prefix}_${props.name} = true;`
+}
+
+const MyComponent = stc(Component)
+const result = await MyComponent({ name: 'flag' })
+// => 'const generated_flag = true;'
+```
+
+### Using Signals
+
+```ts
+import { createSignal, stc, code } from '@kubb/fabric-core/stc'
+
+const counter = createSignal(0)
+
+function Component() {
+  counter.value += 1
+  return code`const count = ${counter.value};`
+}
+
+const MyComponent = stc(Component)
+const result1 = await MyComponent({}) // => 'const count = 1;'
+const result2 = await MyComponent({}) // => 'const count = 2;'
+```
+
+### Using References
+
+```ts
+import { createReference, getReference, stc, code } from '@kubb/fabric-core/stc'
+
+const myVar = createReference('myVariable', 'const myVariable = 42')
+
+function Component() {
+  const ref = getReference('myVariable')
+  return code`// Reference: ${ref?.name}`
+}
+```
+
+### Integration with Fabric
+
+```ts
+import { createFabric } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { stc, code } from '@kubb/fabric-core/stc'
+
+function CodeGenerator(props: { className: string }) {
+  return code`
+export class ${props.className} {
+  constructor() {}
+}
+  `
+}
+
+const Generator = stc(CodeGenerator)
+
+const fabric = createFabric()
+fabric.use(fsPlugin)
+fabric.use(typescriptParser)
+
+const generatedCode = await Generator({ className: 'MyClass' })
+
+await fabric.addFile({
+  baseName: 'generated.ts',
+  path: './output/generated.ts',
+  sources: [{ value: generatedCode, isExportable: false }],
+})
+
+await fabric.write()
+```
+
+### API
+
+| Export | Type | Description |
+|---|---|---|
+| `stc<TProps>(component)` | Function | Wraps a component function to create a string template component |
+| `code` / `template` | Template tag | Tagged template literal for code generation |
+| `createContext<T>(defaultValue)` | Function | Creates a context for dependency injection |
+| `useContext<T>(context)` | Function | Retrieves the current value from a context |
+| `createSignal<T>(initialValue)` | Function | Creates a reactive signal value |
+| `createReference<T>(name, value)` | Function | Creates a named reference for dependency tracking |
+| `getReference<T>(name)` | Function | Retrieves a reference by name |
+| `clearReferences()` | Function | Clears all references (useful for testing) |
+
 # Supporting Kubb
 
 Kubb uses an MIT-licensed open source project with its ongoing development made possible entirely by the support of Sponsors. If you would like to become a sponsor, please consider:
