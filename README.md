@@ -338,7 +338,7 @@ fabric.write({ extension: { '.vue': '.ts' } })
 
 ## String Template Components (stc)
 
-The stc module is available as a separate package `@kubb/stc-fabric` and provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/), it enables declarative code generation using template strings.
+The stc module is available as a separate package `@kubb/stc-fabric` and provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns, it enables declarative, synchronous code generation using template strings.
 
 **Installation:**
 ```bash
@@ -347,16 +347,17 @@ npm install @kubb/stc-fabric
 
 **Usage:**
 ```ts
-import { stc, code, createContext, useContext } from '@kubb/stc-fabric'
+import { stc, code, provide, inject, ref } from '@kubb/stc-fabric'
 ```
 
 ### Key Features
 
 - 🎯 **No React dependency** — Pure TypeScript/JavaScript components for code generation
-- 🔄 **Signal-based reactivity** — Use signals for reactive values
-- 🎨 **Context support** — Dependency injection via context
+- 🔄 **Reactive refs** — Use `ref()` for reactive values (Vue-style)
+- 🎨 **Context support** — Dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
 - 📝 **Template literals** — Natural code generation with tagged templates
 - 🔗 **Reference tracking** — Track named entities across components
+- ⚡ **Synchronous** — No async/await needed, just like Alloy framework
 
 ### Basic Usage
 
@@ -374,29 +375,48 @@ const result = HelloWorldStc({ name: 'World' })
 // => 'const greeting = "Hello, World!";'
 ```
 
-### Using Context
+### Using Context (Vue 3 Style)
 
 ```ts
-import { createContext, useContext, stc, code } from '@kubb/stc-fabric'
+import { provide, inject, stc, code } from '@kubb/stc-fabric'
 
-const ConfigContext = createContext({ prefix: 'generated' })
+const ConfigKey = Symbol('config')
+
+// Provide a value
+provide(ConfigKey, { prefix: 'app' })
 
 function Component(props: { name: string }) {
-  const config = useContext(ConfigContext)
+  const config = inject(ConfigKey, { prefix: 'default' })
   return code`const ${config.prefix}_${props.name} = true;`
 }
 
 const MyComponent = stc(Component)
 const result = MyComponent({ name: 'flag' })
-// => 'const generated_flag = true;'
+// => 'const app_flag = true;'
 ```
 
-### Using Signals
+### Using Context (React Style)
 
 ```ts
-import { createSignal, stc, code } from '@kubb/stc-fabric'
+import { createContext, useContext, provide, stc, code } from '@kubb/stc-fabric'
 
-const counter = createSignal(0)
+const ConfigContext = createContext({ prefix: 'generated' })
+
+// Override with provide
+provide(ConfigContext, { prefix: 'custom' })
+
+function Component(props: { name: string }) {
+  const config = useContext(ConfigContext)
+  return code`const ${config.prefix}_${props.name} = true;`
+}
+```
+
+### Using Reactive Refs
+
+```ts
+import { ref, stc, code } from '@kubb/stc-fabric'
+
+const counter = ref(0)
 
 function Component() {
   counter.value += 1
@@ -427,11 +447,14 @@ function Component() {
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { stc, code } from '@kubb/stc-fabric'
+import { stc, code, createContext, provide, useContext } from '@kubb/stc-fabric'
+
+const ConfigContext = createContext({ prefix: 'Generated' })
 
 function CodeGenerator(props: { className: string }) {
+  const config = useContext(ConfigContext)
   return code`
-export class ${props.className} {
+export class ${config.prefix}${props.className} {
   constructor() {}
 }
   `
@@ -443,7 +466,8 @@ const fabric = createFabric()
 fabric.use(fsPlugin)
 fabric.use(typescriptParser)
 
-const generatedCode = await Generator({ className: 'MyClass' })
+provide(ConfigContext, { prefix: 'Custom' })
+const generatedCode = Generator({ className: 'MyClass' })
 
 await fabric.addFile({
   baseName: 'generated.ts',
@@ -454,17 +478,8 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-### API
+For more details, see the [@kubb/stc-fabric documentation](./packages/stc-fabric/README.md).
 
-| Export | Type | Description |
-|---|---|---|
-| `stc<TProps>(component)` | Function | Wraps a component function to create a string template component |
-| `code` / `template` | Template tag | Tagged template literal for code generation |
-| `createContext<T>(defaultValue)` | Function | Creates a context for dependency injection |
-| `useContext<T>(context)` | Function | Retrieves the current value from a context |
-| `createSignal<T>(initialValue)` | Function | Creates a reactive signal value |
-| `createReference<T>(name, value)` | Function | Creates a named reference for dependency tracking |
-| `getReference<T>(name)` | Function | Retrieves a reference by name |
 | `clearReferences()` | Function | Clears all references (useful for testing) |
 
 # Supporting Kubb

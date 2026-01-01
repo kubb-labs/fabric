@@ -1,22 +1,21 @@
 # String Template Components (stc)
 
-A signal-based component model for code generation without React dependency, inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/).
+A signal-based component model for code generation without React dependency, inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns.
 
 ## Overview
 
-The stc module provides a lightweight, declarative way to generate code using template strings and composable components. Unlike React-based approaches, stc components are pure TypeScript functions that return strings, making them perfect for code generation scenarios.
+The stc module provides a lightweight, declarative way to generate code using template strings and composable components. Unlike React-based approaches, stc components are pure TypeScript functions that return strings synchronously, making them perfect for code generation scenarios.
 
 ## Key Features
 
 - 🎯 **No React dependency** — Pure TypeScript/JavaScript components for code generation
-- 🔄 **Signal-based reactivity** — Use signals for reactive values
-- 🎨 **Context support** — Dependency injection via context
+- 🔄 **Signal-based reactivity** — Use `ref()` for reactive values (Vue-style)
+- 🎨 **Context support** — Dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
 - 📝 **Template literals** — Natural code generation with tagged templates
 - 🔗 **Reference tracking** — Track named entities across components
+- ⚡ **Synchronous** — No async/await needed, just like Alloy framework
 
 ## Installation
-
-The stc module is available as a standalone package:
 
 ```bash
 npm install @kubb/stc-fabric
@@ -42,7 +41,7 @@ const result = HelloWorldStc({ name: 'World' })
 
 ### 1. Components
 
-Components are functions that accept props and return strings:
+Components are synchronous functions that accept props and return strings:
 
 ```typescript
 function ClassGenerator(props: { name: string; methods: string[] }) {
@@ -58,19 +57,42 @@ ${methodsCode}
 }
 
 const Generator = stc(ClassGenerator)
+const result = Generator({ name: 'User', methods: ['getName', 'setName'] })
 ```
 
-### 2. Context
+### 2. Context (Vue 3 Style)
 
-Use context for dependency injection and configuration:
+Use `provide`/`inject` for dependency injection:
 
 ```typescript
-import { createContext, useContext } from '@kubb/stc-fabric'
+import { provide, inject, stc, code } from '@kubb/stc-fabric'
 
-const ConfigContext = createContext({ 
-  prefix: 'generated',
-  suffix: 'Impl'
-})
+const ConfigKey = Symbol('config')
+
+// Provide a value
+provide(ConfigKey, { prefix: 'app' })
+
+function Component(props: { name: string }) {
+  const config = inject(ConfigKey, { prefix: 'default' })
+  return code`const ${config.prefix}_${props.name} = true;`
+}
+
+const MyComponent = stc(Component)
+const result = MyComponent({ name: 'flag' })
+// => 'const app_flag = true;'
+```
+
+### 2b. Context (React Style)
+
+Or use React-compatible `createContext`/`useContext`:
+
+```typescript
+import { createContext, useContext, provide, stc, code } from '@kubb/stc-fabric'
+
+const ConfigContext = createContext({ prefix: 'generated' })
+
+// Override with provide
+provide(ConfigContext, { prefix: 'custom' })
 
 function Component(props: { name: string }) {
   const config = useContext(ConfigContext)
@@ -78,19 +100,23 @@ function Component(props: { name: string }) {
 }
 ```
 
-### 3. Signals
+### 3. Reactive Refs (Vue Style)
 
-Signals provide reactive values that can be read and written:
+Use `ref()` for reactive values:
 
 ```typescript
-import { createSignal } from '@kubb/stc-fabric'
+import { ref, stc, code } from '@kubb/stc-fabric'
 
-const counter = createSignal(0)
+const counter = ref(0)
 
 function Component() {
   counter.value += 1
   return code`const count = ${counter.value};`
 }
+
+const MyComponent = stc(Component)
+const result1 = MyComponent({}) // => 'const count = 1;'
+const result2 = MyComponent({}) // => 'const count = 2;'
 ```
 
 ### 4. References
@@ -98,7 +124,7 @@ function Component() {
 Track named entities for dependency management:
 
 ```typescript
-import { createReference, getReference } from '@kubb/stc-fabric'
+import { createReference, getReference, stc, code } from '@kubb/stc-fabric'
 
 const myVar = createReference('myVariable', 'const myVariable = 42')
 
@@ -110,20 +136,19 @@ function Component() {
 
 ## Integration with Fabric
 
-stc components work seamlessly with Fabric's file generation system:
-
 ```typescript
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { stc, code } from '@kubb/stc-fabric'
+import { stc, code, provide, createContext } from '@kubb/stc-fabric'
+
+const ConfigContext = createContext({ prefix: 'Generated' })
 
 function CodeGenerator(props: { className: string }) {
+  const config = useContext(ConfigContext)
   return code`
-export class ${props.className} {
-  constructor() {
-    // Generated class
-  }
+export class ${config.prefix}${props.className} {
+  constructor() {}
 }
   `
 }
@@ -134,6 +159,7 @@ const fabric = createFabric()
 fabric.use(fsPlugin)
 fabric.use(typescriptParser)
 
+provide(ConfigContext, { prefix: 'Custom' })
 const generatedCode = Generator({ className: 'MyClass' })
 
 await fabric.addFile({
@@ -147,78 +173,50 @@ await fabric.write()
 
 ## API Reference
 
-### `stc<TProps>(component)`
+### Component Creation
 
-Wraps a component function to create a string template component.
+| Export | Type | Description |
+|---|---|---|
+| `stc<TProps>(component)` | Function | Wraps a component function to create a string template component |
+| `code` / `template` | Template tag | Tagged template literal for code generation |
 
-**Parameters:**
-- `component`: A function that accepts props and returns a string or Promise<string>
+### Context (Vue 3 Style)
 
-**Returns:** A wrapped component function
+| Export | Type | Description |
+|---|---|---|
+| `provide<T>(key, value)` | Function | Provides a value to descendant components (Vue 3 style) |
+| `inject<T>(key, defaultValue?)` | Function | Injects a value provided by an ancestor (Vue 3 style) |
+| `unprovide(key)` | Function | Removes the most recent provided value (for cleanup) |
 
-### `code` / `template`
+### Context (React Style)
 
-Tagged template literal for code generation.
+| Export | Type | Description |
+|---|---|---|
+| `createContext<T>(defaultValue)` | Function | Creates a context key with default value (returns symbol) |
+| `useContext<T>(key, defaultValue?)` | Function | React-style alias for `inject()` |
 
-```typescript
-const result = code`const x = ${value};`
-```
+### Reactive Values
 
-### `createContext<T>(defaultValue)`
+| Export | Type | Description |
+|---|---|---|
+| `ref<T>(initialValue)` | Function | Creates a reactive reference (Vue-style) |
+| `createSignal<T>(initialValue)` | Function | Alias for `ref()` |
 
-Creates a context for dependency injection.
+### References
 
-**Parameters:**
-- `defaultValue`: The default value for the context
-
-**Returns:** A context object with `Provider` and `defaultValue`
-
-### `useContext<T>(context)`
-
-Retrieves the current value from a context.
-
-**Parameters:**
-- `context`: The context to read from
-
-**Returns:** The current context value
-
-### `createSignal<T>(initialValue)`
-
-Creates a reactive signal value.
-
-**Parameters:**
-- `initialValue`: The initial value of the signal
-
-**Returns:** A signal object with `value` getter/setter
-
-### `createReference<T>(name, value)`
-
-Creates a named reference for dependency tracking.
-
-**Parameters:**
-- `name`: The name of the reference
-- `value`: The value to store
-
-**Returns:** A reference object with `name` and `value`
-
-### `getReference<T>(name)`
-
-Retrieves a reference by name.
-
-**Parameters:**
-- `name`: The name of the reference to retrieve
-
-**Returns:** The reference object or undefined
-
-### `clearReferences()`
-
-Clears all references (useful for testing).
+| Export | Type | Description |
+|---|---|---|
+| `createReference<T>(name, value)` | Function | Creates a named reference for dependency tracking |
+| `getReference<T>(name)` | Function | Retrieves a reference by name |
+| `clearReferences()` | Function | Clears all references (useful for testing) |
 
 ## Examples
 
 ### TypeScript Interface Generator
 
 ```typescript
+import { stc, code } from '@kubb/stc-fabric'
+
 function InterfaceGenerator(props: { 
   name: string
   fields: Array<{ name: string; type: string }> 
@@ -248,6 +246,8 @@ const result = Generator({
 ### Component Composition
 
 ```typescript
+import { stc, code } from '@kubb/stc-fabric'
+
 function Header() {
   return code`// Auto-generated file`
 }
@@ -268,6 +268,42 @@ ${header}
 ${body}
 `.trim()
 ```
+
+## Comparison: Vue Style vs React Style
+
+**Vue 3 Style (Recommended):**
+```typescript
+import { provide, inject, ref, stc, code } from '@kubb/stc-fabric'
+
+const ThemeKey = Symbol('theme')
+const count = ref(0)
+
+provide(ThemeKey, { color: 'blue' })
+
+function Component() {
+  const theme = inject(ThemeKey, { color: 'default' })
+  count.value++
+  return code`const count = ${count.value};`
+}
+```
+
+**React Style (Compatible):**
+```typescript
+import { createContext, useContext, createSignal, provide, stc, code } from '@kubb/stc-fabric'
+
+const ThemeContext = createContext({ color: 'blue' })
+const count = createSignal(0)
+
+provide(ThemeContext, { color: 'green' })
+
+function Component() {
+  const theme = useContext(ThemeContext)
+  count.value++
+  return code`const count = ${count.value};`
+}
+```
+
+Both styles work! Use whichever feels more natural for your team.
 
 ## License
 
