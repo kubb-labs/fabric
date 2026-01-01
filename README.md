@@ -370,7 +370,7 @@ function HelloWorld(props: { name: string }) {
 }
 
 const HelloWorldStc = stc(HelloWorld)
-const result = await HelloWorldStc({ name: 'World' })
+const result = HelloWorldStc({ name: 'World' })
 // => 'const greeting = "Hello, World!";'
 ```
 
@@ -387,7 +387,7 @@ function Component(props: { name: string }) {
 }
 
 const MyComponent = stc(Component)
-const result = await MyComponent({ name: 'flag' })
+const result = MyComponent({ name: 'flag' })
 // => 'const generated_flag = true;'
 ```
 
@@ -404,8 +404,8 @@ function Component() {
 }
 
 const MyComponent = stc(Component)
-const result1 = await MyComponent({}) // => 'const count = 1;'
-const result2 = await MyComponent({}) // => 'const count = 2;'
+const result1 = MyComponent({}) // => 'const count = 1;'
+const result2 = MyComponent({}) // => 'const count = 2;'
 ```
 
 ### Using References

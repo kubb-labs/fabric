@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { code, createContext, stc, useContext } from './index.ts'
 
 describe('stc e2e integration', () => {
-  it('should work with createFabric', async () => {
+  it('should work with createFabric', () => {
     // Example 1: Basic stc component
     function HelloWorld(props: { name: string }) {
       return code`
@@ -12,12 +12,12 @@ describe('stc e2e integration', () => {
     }
 
     const HelloWorldStc = stc(HelloWorld)
-    const greeting = await HelloWorldStc({ name: 'World' })
+    const greeting = HelloWorldStc({ name: 'World' })
 
     expect(greeting).toContain('Hello, World!')
   })
 
-  it('should use context in components', async () => {
+  it('should use context in components', () => {
     const ConfigContext = createContext({
       prefix: 'generated',
       suffix: 'Impl',
@@ -40,7 +40,7 @@ ${methodsCode}
 
     const ClassGeneratorStc = stc(ClassGenerator)
 
-    const userClass = await ClassGeneratorStc({
+    const userClass = ClassGeneratorStc({
       name: 'User',
       methods: ['getName', 'setName', 'getAge', 'setAge'],
     })
@@ -50,7 +50,7 @@ ${methodsCode}
     expect(userClass).toContain('setName()')
   })
 
-  it('should compose multiple stc components', async () => {
+  it('should compose multiple stc components', () => {
     function HelloWorld(props: { name: string }) {
       return code`
         // Generated greeting
@@ -69,8 +69,8 @@ export class ${props.name} {
     const HelloWorldStc = stc(HelloWorld)
     const ClassGeneratorStc = stc(ClassGenerator)
 
-    const greeting = await HelloWorldStc({ name: 'World' })
-    const userClass = await ClassGeneratorStc({ name: 'User' })
+    const greeting = HelloWorldStc({ name: 'World' })
+    const userClass = ClassGeneratorStc({ name: 'User' })
 
     const final = code`
 ${greeting}
@@ -82,7 +82,7 @@ ${userClass}
     expect(final).toContain('export class User')
   })
 
-  it('should integrate with Fabric file generation', async () => {
+  it('should integrate with Fabric file generation', () => {
     function CodeGenerator(props: { className: string }) {
       return code`
 export class ${props.className} {
@@ -94,7 +94,7 @@ export class ${props.className} {
     }
 
     const Generator = stc(CodeGenerator)
-    const generatedCode = await Generator({ className: 'MyClass' })
+    const generatedCode = Generator({ className: 'MyClass' })
 
     expect(generatedCode).toContain('export class MyClass')
     expect(generatedCode).toContain('constructor()')

@@ -2,38 +2,37 @@ import { describe, expect, it } from 'vitest'
 import { code, stc, template } from './stc.ts'
 
 describe('stc', () => {
-  it('should create a string template component', async () => {
+  it('should create a string template component', () => {
     function HelloWorld(props: { name: string }) {
       return `Hello, ${props.name}!`
     }
 
     const HelloWorldStc = stc(HelloWorld)
-    const result = await HelloWorldStc({ name: 'World' })
+    const result = HelloWorldStc({ name: 'World' })
 
     expect(result).toBe('Hello, World!')
   })
 
-  it('should handle async components', async () => {
-    async function AsyncComponent(props: { value: number }) {
-      await new Promise((resolve) => setTimeout(resolve, 10))
-      return `Value: ${props.value}`
-    }
-
-    const Component = stc(AsyncComponent)
-    const result = await Component({ value: 42 })
-
-    expect(result).toBe('Value: 42')
-  })
-
-  it('should work without props', async () => {
+  it('should work without props', () => {
     function SimpleComponent() {
       return 'Simple output'
     }
 
     const Component = stc(SimpleComponent)
-    const result = await Component({})
+    const result = Component({})
 
     expect(result).toBe('Simple output')
+  })
+
+  it('should work with complex components', () => {
+    function ComplexComponent(props: { items: string[] }) {
+      return props.items.map(item => `- ${item}`).join('\n')
+    }
+
+    const Component = stc(ComplexComponent)
+    const result = Component({ items: ['one', 'two', 'three'] })
+
+    expect(result).toBe('- one\n- two\n- three')
   })
 })
 

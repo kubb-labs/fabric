@@ -36,11 +36,11 @@ ${methodsCode}
 
 const ClassGeneratorStc = stc(ClassGenerator)
 
-// Example 3: Composing multiple components
-async function generateCode() {
-  const greeting = await HelloWorldStc({ name: 'World' })
+// Example 3: Composing multiple components (no async/await needed!)
+function generateCode() {
+  const greeting = HelloWorldStc({ name: 'World' })
   
-  const userClass = await ClassGeneratorStc({ 
+  const userClass = ClassGeneratorStc({ 
     name: 'User',
     methods: ['getName', 'setName', 'getAge', 'setAge']
   })
@@ -59,7 +59,7 @@ export async function run() {
   fabric.use(fsPlugin)
   fabric.use(typescriptParser)
   
-  const generatedCode = await generateCode()
+  const generatedCode = generateCode()
   
   await fabric.addFile({
     baseName: 'generated.ts',

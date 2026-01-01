@@ -4,9 +4,10 @@
  */
 
 /**
- * A component function that accepts props and returns a string or Promise<string>
+ * A component function that accepts props and returns a string
+ * Unlike React components, stc components are synchronous and return strings directly
  */
-export type StcComponent<TProps = {}> = (props: TProps) => string | Promise<string>
+export type StcComponent<TProps = {}> = (props: TProps) => string
 
 /**
  * Context value for dependency injection

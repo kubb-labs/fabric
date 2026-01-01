@@ -1,29 +1,26 @@
-import type { StcComponent } from './types.ts'
-
 /**
  * Main stc wrapper function that creates a string template component
  * 
- * Note: This function normalizes both sync and async components to always return
- * a Promise, providing a consistent API for callers. This is intentional to
- * simplify usage in code generation scenarios.
+ * Unlike the previous implementation, this does NOT force components to be async.
+ * Components can be plain functions that return strings directly, matching the
+ * Alloy framework pattern for simpler, more natural code generation.
  * 
  * @example
  * ```ts
- * import { stc } from '@kubb/fabric-core/stc'
+ * import { stc, code } from '@kubb/stc-fabric'
  * 
  * function HelloWorld(props: { name: string }) {
  *   return `Hello, ${props.name}!`
  * }
  * 
  * const HelloWorldStc = stc(HelloWorld)
- * const result = await HelloWorldStc({ name: 'World' })
- * // => "Hello, World!"
+ * const result = HelloWorldStc({ name: 'World' })
+ * // => "Hello, World!" (no await needed!)
  * ```
  */
-export function stc<TProps = {}>(component: StcComponent<TProps>): StcComponent<TProps> {
-  return async (props: TProps) => {
-    const result = await component(props)
-    return result
+export function stc<TProps = {}>(component: (props: TProps) => string): (props: TProps) => string {
+  return (props: TProps) => {
+    return component(props)
   }
 }
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { code, createContext, createReference, createSignal, stc, useContext } from './index.ts'
 
 describe('stc integration', () => {
-  it('should integrate stc with context', async () => {
+  it('should integrate stc with context', () => {
     const ThemeContext = createContext({ color: 'blue' })
 
     function Component(props: { name: string }) {
@@ -11,12 +11,12 @@ describe('stc integration', () => {
     }
 
     const MyComponent = stc(Component)
-    const result = await MyComponent({ name: 'myVar' })
+    const result = MyComponent({ name: 'myVar' })
 
     expect(result).toContain('const myVar = "blue";')
   })
 
-  it('should integrate stc with references', async () => {
+  it('should integrate stc with references', () => {
     const ref = createReference('myVar', 42)
 
     function Component() {
@@ -24,12 +24,12 @@ describe('stc integration', () => {
     }
 
     const MyComponent = stc(Component)
-    const result = await MyComponent({})
+    const result = MyComponent({})
 
     expect(result).toContain('const value = 42;')
   })
 
-  it('should integrate stc with signals', async () => {
+  it('should integrate stc with signals', () => {
     const count = createSignal(0)
 
     function Component() {
@@ -39,14 +39,14 @@ describe('stc integration', () => {
 
     const MyComponent = stc(Component)
     
-    const result1 = await MyComponent({})
+    const result1 = MyComponent({})
     expect(result1).toContain('const counter = 1;')
     
-    const result2 = await MyComponent({})
+    const result2 = MyComponent({})
     expect(result2).toContain('const counter = 2;')
   })
 
-  it('should compose multiple stc components', async () => {
+  it('should compose multiple stc components', () => {
     function Header() {
       return code`// Auto-generated file`
     }
@@ -58,8 +58,8 @@ describe('stc integration', () => {
     const HeaderStc = stc(Header)
     const BodyStc = stc(Body)
 
-    const header = await HeaderStc({})
-    const body = await BodyStc({ content: 'test' })
+    const header = HeaderStc({})
+    const body = BodyStc({ content: 'test' })
 
     const final = code`
 ${header}
@@ -71,7 +71,7 @@ ${body}
     expect(final).toContain('export const data = "test";')
   })
 
-  it('should handle complex TypeScript code generation', async () => {
+  it('should handle complex TypeScript code generation', () => {
     function InterfaceGenerator(props: { name: string; fields: Array<{ name: string; type: string }> }) {
       const fieldsCode = props.fields
         .map(field => `  ${field.name}: ${field.type};`)
@@ -85,7 +85,7 @@ ${fieldsCode}
     }
 
     const Generator = stc(InterfaceGenerator)
-    const result = await Generator({
+    const result = Generator({
       name: 'User',
       fields: [
         { name: 'id', type: 'number' },

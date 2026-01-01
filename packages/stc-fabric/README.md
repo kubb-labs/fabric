@@ -34,7 +34,7 @@ function HelloWorld(props: { name: string }) {
 }
 
 const HelloWorldStc = stc(HelloWorld)
-const result = await HelloWorldStc({ name: 'World' })
+const result = HelloWorldStc({ name: 'World' })
 // => 'const greeting = "Hello, World!";'
 ```
 
@@ -134,7 +134,7 @@ const fabric = createFabric()
 fabric.use(fsPlugin)
 fabric.use(typescriptParser)
 
-const generatedCode = await Generator({ className: 'MyClass' })
+const generatedCode = Generator({ className: 'MyClass' })
 
 await fabric.addFile({
   baseName: 'generated.ts',
@@ -235,7 +235,7 @@ ${fieldsCode}
 }
 
 const Generator = stc(InterfaceGenerator)
-const result = await Generator({
+const result = Generator({
   name: 'User',
   fields: [
     { name: 'id', type: 'number' },
@@ -259,8 +259,8 @@ function Body(props: { content: string }) {
 const HeaderStc = stc(Header)
 const BodyStc = stc(Body)
 
-const header = await HeaderStc({})
-const body = await BodyStc({ content: 'test' })
+const header = HeaderStc({})
+const body = BodyStc({ content: 'test' })
 
 const final = code`
 ${header}
