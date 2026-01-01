@@ -15,20 +15,10 @@ const fabric = createFabric()
 fabric.use(refKeyPlugin)
 
 // Create refkeys for cross-file references
-const greetingRef = createRefKey()
-const userTypeRef = createRefKey()
+const greetingRef = createRefKey('GREETING')
+const userTypeRef = createRefKey('User')
 
 // Generate constants.ts with a greeting constant
-fabric.context.on('lifecycle:render', async ({ files }) => {
-  files.push({
-    baseName: 'constants.ts',
-    path: './example9/gen/constants.ts',
-    sources: [],
-    imports: [],
-    exports: [],
-  })
-})
-
 const ConstantsFile = () => {
   return (
     <File baseName="constants.ts" path="./example9/gen/constants.ts">

@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 
 /**
  * Represents a reference to a code symbol that can be used across files.
@@ -61,10 +61,9 @@ export type RefKey<T = any> = {
  * ```
  */
 export function createRefKey<T = any>(name?: string): RefKey<T> {
-  const id = createHash('sha256')
-    .update(`${name || 'refkey'}-${Date.now()}-${Math.random()}`)
-    .digest('hex')
-    .substring(0, 16)
+  // Use crypto.randomUUID for better uniqueness guarantees
+  const uuid = randomUUID()
+  const id = name ? `${name}-${uuid.substring(0, 8)}` : uuid.substring(0, 16)
 
   const refkey: RefKey<T> = {
     id,

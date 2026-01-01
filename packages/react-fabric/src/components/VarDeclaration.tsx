@@ -22,6 +22,8 @@ type Props = {
   JSDoc?: JSDoc
   /**
    * RefKey for automatic import management.
+   * This is metadata used by the refKeyPlugin and doesn't affect the component output directly.
+   * It should be passed to File.Source when using the component.
    * Inspired by Alloy's refkey system.
    */
   refkey?: RefKey
@@ -37,17 +39,21 @@ type Props = {
  * Variable declaration component inspired by Alloy's VarDeclaration.
  * Supports automatic import management via refkeys.
  * 
+ * Note: The refkey prop is metadata for the File.Source component and
+ * doesn't affect the rendered output of this component.
+ * 
  * @example
  * ```tsx
  * const fooRef = createRefKey()
  * 
- * <VarDeclaration 
- *   name="foo" 
- *   export 
- *   refkey={fooRef}
- * >
- *   "hello world"
- * </VarDeclaration>
+ * <File.Source refkey={fooRef}>
+ *   <VarDeclaration 
+ *     name="foo" 
+ *     export
+ *   >
+ *     "hello world"
+ *   </VarDeclaration>
+ * </File.Source>
  * // Outputs: export const foo = "hello world"
  * ```
  */
