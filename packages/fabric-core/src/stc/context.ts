@@ -2,6 +2,10 @@ import type { StcContext } from './types.ts'
 
 /**
  * Context stack for tracking the current context values
+ * 
+ * Note: This uses a global Map for simplicity in code generation scenarios.
+ * For concurrent runtime execution, consider using AsyncLocalStorage or
+ * instance-based context management.
  */
 const contextStack = new Map<StcContext<any>, any[]>()
 

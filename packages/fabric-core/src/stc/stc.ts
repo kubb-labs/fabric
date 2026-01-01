@@ -3,6 +3,10 @@ import type { StcComponent } from './types.ts'
 /**
  * Main stc wrapper function that creates a string template component
  * 
+ * Note: This function normalizes both sync and async components to always return
+ * a Promise, providing a consistent API for callers. This is intentional to
+ * simplify usage in code generation scenarios.
+ * 
  * @example
  * ```ts
  * import { stc } from '@kubb/fabric-core/stc'

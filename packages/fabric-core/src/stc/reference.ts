@@ -2,6 +2,10 @@ import type { StcReference } from './types.ts'
 
 /**
  * Reference storage for tracking named entities
+ * 
+ * Note: This uses a global Map for simplicity in code generation scenarios.
+ * For concurrent execution or isolated instances, consider instance-based
+ * reference tracking or using clearReferences() between runs.
  */
 const references = new Map<string, StcReference<any>>()
 
