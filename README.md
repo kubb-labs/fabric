@@ -338,10 +338,16 @@ fabric.write({ extension: { '.vue': '.ts' } })
 
 ## String Template Components (stc)
 
-The stc module provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/), it enables declarative code generation using template strings.
+The stc module is available as a separate package `@kubb/stc-fabric` and provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/), it enables declarative code generation using template strings.
 
+**Installation:**
+```bash
+npm install @kubb/stc-fabric
 ```
-import { stc, code, createContext, useContext } from '@kubb/fabric-core/stc'
+
+**Usage:**
+```ts
+import { stc, code, createContext, useContext } from '@kubb/stc-fabric'
 ```
 
 ### Key Features
@@ -355,7 +361,7 @@ import { stc, code, createContext, useContext } from '@kubb/fabric-core/stc'
 ### Basic Usage
 
 ```ts
-import { stc, code } from '@kubb/fabric-core/stc'
+import { stc, code } from '@kubb/stc-fabric'
 
 function HelloWorld(props: { name: string }) {
   return code`
@@ -371,7 +377,7 @@ const result = await HelloWorldStc({ name: 'World' })
 ### Using Context
 
 ```ts
-import { createContext, useContext, stc, code } from '@kubb/fabric-core/stc'
+import { createContext, useContext, stc, code } from '@kubb/stc-fabric'
 
 const ConfigContext = createContext({ prefix: 'generated' })
 
@@ -388,7 +394,7 @@ const result = await MyComponent({ name: 'flag' })
 ### Using Signals
 
 ```ts
-import { createSignal, stc, code } from '@kubb/fabric-core/stc'
+import { createSignal, stc, code } from '@kubb/stc-fabric'
 
 const counter = createSignal(0)
 
@@ -405,7 +411,7 @@ const result2 = await MyComponent({}) // => 'const count = 2;'
 ### Using References
 
 ```ts
-import { createReference, getReference, stc, code } from '@kubb/fabric-core/stc'
+import { createReference, getReference, stc, code } from '@kubb/stc-fabric'
 
 const myVar = createReference('myVariable', 'const myVariable = 42')
 
@@ -421,7 +427,7 @@ function Component() {
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { stc, code } from '@kubb/fabric-core/stc'
+import { stc, code } from '@kubb/stc-fabric'
 
 function CodeGenerator(props: { className: string }) {
   return code`

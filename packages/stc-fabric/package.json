@@ -1,21 +1,22 @@
 {
-  "name": "@kubb/fabric-core",
+  "name": "@kubb/stc-fabric",
   "version": "0.8.0",
-  "description": "Core functionality for Kubb's plugin-based code generation system, providing the foundation for transforming OpenAPI specifications.",
+  "description": "String Template Components (stc) for Kubb, providing signal-based code generation without React dependency.",
   "keywords": [
+    "stc",
+    "string-template-components",
+    "signal",
+    "component-generation",
     "typescript",
-    "plugins",
-    "plugin-system",
     "code-generator",
     "codegen",
-    "openapi",
-    "swagger",
+    "plugins",
     "kubb"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kubb-labs/fabric.git",
-    "directory": "packages/fabric-core"
+    "directory": "packages/stc-fabric"
   },
   "license": "MIT",
   "author": "stijnvanhulle",
@@ -25,14 +26,6 @@
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
-    },
-    "./parsers": {
-      "require": "./dist/parsers.cjs",
-      "import": "./dist/parsers.js"
-    },
-    "./parsers/typescript": {
-      "require": "./dist/parsers/typescript.cjs",
-      "import": "./dist/parsers/typescript.js"
     },
     "./plugins": {
       "require": "./dist/plugins.cjs",
@@ -49,12 +42,6 @@
   "types": "./dist/index.d.cts",
   "typesVersions": {
     "*": {
-      "parsers": [
-        "./dist/parsers.d.ts"
-      ],
-      "parsers/typescript": [
-        "./dist/parsers/typescript.d.ts"
-      ],
       "plugins": [
         "./dist/plugins.d.ts"
       ],
@@ -68,41 +55,33 @@
     "dist",
     "*.d.ts",
     "*.d.cts",
+    "!*.map",
     "!/**/**.test.**",
     "!/**/__tests__/**"
   ],
   "size-limit": [
     {
       "path": "./dist/*.js",
-      "limit": "510 KiB",
+      "limit": "100 KiB",
       "gzip": true
     }
   ],
   "scripts": {
     "build": "tsdown && size-limit",
+    "start": "tsdown --watch ./src",
     "clean": "npx rimraf ./dist",
     "lint": "pnpm biome lint .",
     "lint:fix": "pnpm biome lint --fix --unsafe .",
     "release": "pnpm publish --no-git-check",
     "release:canary": "bash ../../.github/canary.sh && node ../../scripts/build.js canary && pnpm publish --no-git-check",
-    "start": "tsdown --watch ./src",
     "test": "vitest --passWithNoTests",
     "typecheck": "tsc -p ./tsconfig.json --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@clack/prompts": "1.0.0-alpha.8",
-    "fs-extra": "^11.3.3",
-    "natural-orderby": "^5.0.0",
-    "p-limit": "^7.2.0",
-    "picocolors": "^1.1.1",
-    "serve-handler": "^6.1.6",
-    "typescript": "5.9.3",
-    "ws": "^8.18.3"
+    "@kubb/fabric-core": "workspace:*"
   },
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
-    "@types/serve-handler": "^6.1.4",
-    "@types/ws": "^8.18.1"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20"

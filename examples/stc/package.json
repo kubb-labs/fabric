@@ -1,0 +1,35 @@
+{
+  "name": "stc-example",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "String Template Components (stc) examples",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kubb-labs/fabric.git",
+    "directory": "examples/stc"
+  },
+  "license": "MIT",
+  "author": "stijnvanhulle",
+  "sideEffects": false,
+  "scripts": {
+    "generate": "bun run main.ts",
+    "example1": "bun ./example1/run.ts",
+    "clean": "npx rimraf ./dist",
+    "test": "vitest",
+    "typecheck": "echo 'empty'"
+  },
+  "dependencies": {
+    "@kubb/fabric-core": "workspace:*",
+    "@kubb/stc-fabric": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.3.0"
+  },
+  "packageManager": "pnpm@10.18.3",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10.18.0"
+  }
+}

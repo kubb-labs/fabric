@@ -1,7 +1,7 @@
 import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { code, createContext, stc, useContext } from '@kubb/fabric-core/stc'
+import { code, createContext, stc, useContext } from '@kubb/stc-fabric'
 
 // Example 1: Basic stc component
 function HelloWorld(props: { name: string }) {
