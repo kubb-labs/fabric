@@ -18,6 +18,14 @@ export type { StcComponent } from './types.ts'
 // components
 export { File, FileCollectorContext, FileExport, FileImport, FileNamespace, FileSource } from './components/File.ts'
 export type { FileProps } from './components/File.ts'
+export { App, AppContext } from './components/App.ts'
+export type { AppContextProps } from './components/App.ts'
+export { Const } from './components/Const.ts'
+export { Function } from './components/Function.ts'
+export { Type } from './components/Type.ts'
+export { Indent } from './components/Indent.ts'
+export { Root, RootContext } from './components/Root.ts'
+export type { RootContextProps } from './components/Root.ts'
 
 // plugins
 export { stcPlugin } from './plugins/index.ts'

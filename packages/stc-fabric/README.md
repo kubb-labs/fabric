@@ -12,6 +12,8 @@ The stc module provides a lightweight, declarative way to generate code using te
 - 🎨 **Context support** — Dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
 - 📝 **Template literals** — Natural code generation with tagged templates
 - ⚡ **Synchronous** — No async/await needed, just like Alloy framework
+- 🧩 **Rich component library** — Pre-built components for common code patterns (Function, Type, Const, etc.)
+- 🚀 **Context-based file collection** — Register files without tree walking
 
 ## Installation
 
@@ -172,6 +174,19 @@ This approach eliminates the need to manually loop over children or walk a DOM t
 | `stc<TProps>(component)` | Function | Wraps a component function to create a string template component |
 | `code` / `template` | Template tag | Tagged template literal for code generation |
 
+### Built-in Components
+
+| Component | Description |
+|---|---|
+| `Function` | Generate function declarations with JSDoc, generics, params, return types |
+| `Function.Arrow` | Generate arrow function expressions |
+| `Type` | Generate TypeScript type aliases |
+| `Const` | Generate const declarations with optional typing |
+| `Indent` | Indent content by specified spaces |
+| `File` | Register files via context for file collection |
+| `App` | Application wrapper component |
+| `Root` | Root component with error handling |
+
 ### Context (Vue 3 Style)
 
 | Export | Type | Description |
@@ -245,6 +260,67 @@ ${header}
 ${body}
 `.trim()
 ```
+
+### Using Built-in Components
+
+The package includes pre-built components for common code generation patterns:
+
+```typescript
+import { Function, Type, Const, code } from '@kubb/stc-fabric'
+
+// Generate a TypeScript type
+const userType = Type({
+  name: 'User',
+  export: true,
+  JSDoc: { comments: ['User entity'] },
+  children: '{ id: number; name: string }'
+})
+
+// Generate a const declaration
+const config = Const({
+  name: 'config',
+  export: true,
+  type: 'Config',
+  children: '{ apiUrl: "https://api.example.com" }',
+  asConst: true
+})
+
+// Generate a function
+const getUserFn = Function({
+  name: 'getUser',
+  export: true,
+  async: true,
+  params: 'id: number',
+  returnType: 'User',
+  JSDoc: { comments: ['Fetch user by ID'] },
+  children: code`
+    const response = await fetch(\`/api/users/\${id}\`)
+    return response.json()
+  `
+})
+
+// Generate an arrow function
+const mapUserFn = Function.Arrow({
+  name: 'mapUser',
+  export: true,
+  params: 'user: User',
+  returnType: 'UserDTO',
+  singleLine: true,
+  children: '({ id: user.id, name: user.name })'
+})
+
+// Combine them
+const result = code`
+${userType}
+
+${config}
+
+${getUserFn}
+
+${mapUserFn}
+`.trim()
+```
+
 
 ## Comparison: Vue Style vs React Style
 
