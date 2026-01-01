@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { code, createContext, createReference, createSignal, inject, provide, ref, stc, unprovide, useContext, useState } from './index.ts'
+import { code, createContext, inject, provide, stc, unprovide, useContext } from './index.ts'
 
 describe('stc integration', () => {
   it('should integrate stc with context', () => {
@@ -14,36 +14,6 @@ describe('stc integration', () => {
     const result = MyComponent({ name: 'myVar' })
 
     expect(result).toContain('const myVar = "blue";')
-  })
-
-  it('should integrate stc with references', () => {
-    const reference = createReference('myVar', 42)
-
-    function Component() {
-      return code`const value = ${reference.value};`
-    }
-
-    const MyComponent = stc(Component)
-    const result = MyComponent({})
-
-    expect(result).toContain('const value = 42;')
-  })
-
-  it('should integrate stc with signals', () => {
-    const count = createSignal(0)
-
-    function Component() {
-      count.value += 1
-      return code`const counter = ${count.value};`
-    }
-
-    const MyComponent = stc(Component)
-    
-    const result1 = MyComponent({})
-    expect(result1).toContain('const counter = 1;')
-    
-    const result2 = MyComponent({})
-    expect(result2).toContain('const counter = 2;')
   })
 
   it('should compose multiple stc components', () => {
@@ -102,23 +72,6 @@ ${fieldsCode}
 })
 
 describe('Vue-style API integration', () => {
-  it('should work with ref (Vue-style)', () => {
-    const count = ref(0)
-
-    function Component() {
-      count.value += 1
-      return code`const counter = ${count.value};`
-    }
-
-    const MyComponent = stc(Component)
-    
-    const result1 = MyComponent({})
-    expect(result1).toContain('const counter = 1;')
-    
-    const result2 = MyComponent({})
-    expect(result2).toContain('const counter = 2;')
-  })
-
   it('should work with provide/inject (Vue 3 style)', () => {
     const ConfigKey = Symbol('config')
 
@@ -151,41 +104,5 @@ describe('Vue-style API integration', () => {
     unprovide(ConfigContext)
 
     expect(result).toContain('const custom_value = true;')
-  })
-})
-
-describe('React-style API integration', () => {
-  it('should work with useState (React-style)', () => {
-    const [count, setCount] = useState(0)
-
-    function Component() {
-      setCount(prev => prev + 1)
-      return code`const counter = ${count()};`
-    }
-
-    const MyComponent = stc(Component)
-    
-    const result1 = MyComponent({})
-    expect(result1).toContain('const counter = 1;')
-    
-    const result2 = MyComponent({})
-    expect(result2).toContain('const counter = 2;')
-  })
-
-  it('should use useState with components', () => {
-    const [prefix, setPrefix] = useState('generated')
-
-    function Component(props: { name: string }) {
-      return code`const ${prefix()}_${props.name} = true;`
-    }
-
-    const MyComponent = stc(Component)
-    
-    const result1 = MyComponent({ name: 'flag' })
-    expect(result1).toContain('const generated_flag = true;')
-
-    setPrefix('custom')
-    const result2 = MyComponent({ name: 'value' })
-    expect(result2).toContain('const custom_value = true;')
   })
 })

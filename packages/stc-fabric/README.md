@@ -9,10 +9,8 @@ The stc module provides a lightweight, declarative way to generate code using te
 ## Key Features
 
 - 🎯 **No React dependency** — Pure TypeScript/JavaScript components for code generation
-- 🔄 **Signal-based reactivity** — Use `ref()` for reactive values (Vue-style)
 - 🎨 **Context support** — Dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
 - 📝 **Template literals** — Natural code generation with tagged templates
-- 🔗 **Reference tracking** — Track named entities across components
 - ⚡ **Synchronous** — No async/await needed, just like Alloy framework
 
 ## Installation
@@ -100,40 +98,6 @@ function Component(props: { name: string }) {
 }
 ```
 
-### 3. Reactive Refs (Vue Style)
-
-Use `ref()` for reactive values:
-
-```typescript
-import { ref, stc, code } from '@kubb/stc-fabric'
-
-const counter = ref(0)
-
-function Component() {
-  counter.value += 1
-  return code`const count = ${counter.value};`
-}
-
-const MyComponent = stc(Component)
-const result1 = MyComponent({}) // => 'const count = 1;'
-const result2 = MyComponent({}) // => 'const count = 2;'
-```
-
-### 4. References
-
-Track named entities for dependency management:
-
-```typescript
-import { createReference, getReference, stc, code } from '@kubb/stc-fabric'
-
-const myVar = createReference('myVariable', 'const myVariable = 42')
-
-function Component() {
-  const ref = getReference('myVariable')
-  return code`// Reference: ${ref?.name}`
-}
-```
-
 ## Integration with Fabric
 
 ```typescript
@@ -194,21 +158,6 @@ await fabric.write()
 |---|---|---|
 | `createContext<T>(defaultValue)` | Function | Creates a context key with default value (returns symbol) |
 | `useContext<T>(key, defaultValue?)` | Function | React-style alias for `inject()` |
-
-### Reactive Values
-
-| Export | Type | Description |
-|---|---|---|
-| `ref<T>(initialValue)` | Function | Creates a reactive reference (Vue-style) |
-| `createSignal<T>(initialValue)` | Function | Alias for `ref()` |
-
-### References
-
-| Export | Type | Description |
-|---|---|---|
-| `createReference<T>(name, value)` | Function | Creates a named reference for dependency tracking |
-| `getReference<T>(name)` | Function | Retrieves a reference by name |
-| `clearReferences()` | Function | Clears all references (useful for testing) |
 
 ## Examples
 
@@ -273,33 +222,29 @@ ${body}
 
 **Vue 3 Style (Recommended):**
 ```typescript
-import { provide, inject, ref, stc, code } from '@kubb/stc-fabric'
+import { provide, inject, stc, code } from '@kubb/stc-fabric'
 
 const ThemeKey = Symbol('theme')
-const count = ref(0)
 
 provide(ThemeKey, { color: 'blue' })
 
 function Component() {
   const theme = inject(ThemeKey, { color: 'default' })
-  count.value++
-  return code`const count = ${count.value};`
+  return code`const color = "${theme.color}";`
 }
 ```
 
 **React Style (Compatible):**
 ```typescript
-import { createContext, useContext, createSignal, provide, stc, code } from '@kubb/stc-fabric'
+import { createContext, useContext, provide, stc, code } from '@kubb/stc-fabric'
 
 const ThemeContext = createContext({ color: 'blue' })
-const count = createSignal(0)
 
 provide(ThemeContext, { color: 'green' })
 
 function Component() {
   const theme = useContext(ThemeContext)
-  count.value++
-  return code`const count = ${count.value};`
+  return code`const color = "${theme.color}";`
 }
 ```
 

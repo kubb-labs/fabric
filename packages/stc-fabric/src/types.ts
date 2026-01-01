@@ -9,18 +9,3 @@
  * Unlike React components, stc components are synchronous and return strings directly
  */
 export type StcComponent<TProps = {}> = (props: TProps) => string
-
-/**
- * Reference to a named entity (variable, type, etc.) for tracking dependencies
- */
-export interface StcReference<T = any> {
-  name: string
-  value: T
-}
-
-/**
- * Reactive reference (similar to Vue's ref)
- */
-export interface Ref<T = any> {
-  value: T
-}
