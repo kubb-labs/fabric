@@ -119,6 +119,37 @@ fabric.addFile({
 })
 ```
 
+**Multiple exports from the same file:**
+```ts
+const fooRef = createRefKey()
+const barRef = createRefKey()
+
+// Define multiple symbols in the same file
+fabric.addFile({
+  path: './constants.ts',
+  sources: [
+    {
+      name: 'foo',
+      value: 'export const foo = "hello"',
+      refkey: fooRef.resolve('foo', './constants.ts')
+    },
+    {
+      name: 'bar',
+      value: 'export const bar = 42',
+      refkey: barRef.resolve('bar', './constants.ts')
+    }
+  ]
+})
+
+// Use both - both imports are auto-added
+fabric.addFile({
+  path: './app.ts',
+  sources: [{
+    value: `console.log(foo, bar)` // import { foo, bar } from './constants'
+  }]
+})
+```
+
 
 ### Events (emitted by the core during processing)
 
