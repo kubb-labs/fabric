@@ -16,10 +16,13 @@ export const useReducer = React.useReducer
 export const useRef = React.useRef
 // // components
 export { App } from './components/App.tsx'
+export { Class } from './components/Class.tsx'
 export { Const } from './components/Const.tsx'
+export { Enum } from './components/Enum.tsx'
 export { File } from './components/File.tsx'
 export { Function } from './components/Function.tsx'
 export { Indent } from './components/Indent.tsx'
+export { Interface } from './components/Interface.tsx'
 export { Type } from './components/Type.tsx'
 export { VarDeclaration } from './components/VarDeclaration.tsx'
 export { useApp } from './composables/useApp.ts'

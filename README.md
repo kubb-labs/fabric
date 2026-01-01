@@ -29,6 +29,7 @@ It offers a lightweight layer for file generation while orchestrating the overal
 - 🎨 Declarative file generation — Create files effortlessly using JSX or JavaScript syntax.
 - 📦 Cross-runtime support — Works seamlessly with Node.js and Bun.
 - 🔗 Automatic import management — RefKey system inspired by Alloy automatically manages imports across files.
+- 🏗️ Rich component library — Interface, Class, Enum, Function, and more for TypeScript code generation.
 - 🧩 Built-in debugging utilities — Simplify development and inspect generation flows with ease.
 - ⚡ Fast and lightweight — Minimal overhead, maximum performance.
 
@@ -343,6 +344,70 @@ const fabric = createFabric()
 await fabric.use(helloPlugin, { name: 'Fabric' })
 fabric.sayHello() // -> Hello Fabric!
 ```
+
+## JSX Components
+
+Fabric provides a rich set of React components for declarative TypeScript code generation, inspired by Alloy's approach.
+
+### `<Interface />`
+Generates TypeScript interface declarations with support for generics, extends, and JSDoc.
+
+```tsx
+<Interface name="User" export generics="T" extends="BaseEntity">
+  id: T{'\n'}
+  name: string{'\n'}
+  email?: string
+</Interface>
+// Outputs:
+// export interface User<T> extends BaseEntity {
+//   id: T
+//   name: string
+//   email?: string
+// }
+```
+
+### `<Class />`
+Generates TypeScript class declarations with support for abstract classes, generics, extends, implements, and JSDoc.
+
+```tsx
+<Class name="UserService" export abstract implements={['IService', 'ILogger']}>
+  abstract getUser(id: number): Promise{'<'}User{'>'}
+</Class>
+// Outputs:
+// export abstract class UserService implements IService, ILogger {
+//   abstract getUser(id: number): Promise<User>
+// }
+```
+
+### `<Enum />`
+Generates TypeScript enum declarations with support for const enums and JSDoc.
+
+```tsx
+<Enum name="Status" export const>
+  Pending = "pending",{'\n'}
+  Active = "active",{'\n'}
+  Completed = "completed"
+</Enum>
+// Outputs:
+// export const enum Status {
+//   Pending = "pending",
+//   Active = "active",
+//   Completed = "completed"
+// }
+```
+
+### `<VarDeclaration />`
+Generates variable declarations with support for const/let/var, type annotations, and JSDoc.
+
+```tsx
+<VarDeclaration name="config" type="Config" export kind="const">
+  {{ port: 3000, host: 'localhost' }}
+</VarDeclaration>
+// Outputs:
+// export const config: Config = { port: 3000, host: 'localhost' }
+```
+
+All components support the `refkey` prop for automatic import management when used with the `refKeyPlugin`.
 
 ## Parsers
 #### `typescriptParser`
