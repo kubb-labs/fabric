@@ -347,16 +347,14 @@ npm install @kubb/stc-fabric
 
 **Usage:**
 ```ts
-import { stc, code, provide, inject, ref } from '@kubb/stc-fabric'
+import { stc, code, provide, inject } from '@kubb/stc-fabric'
 ```
 
 ### Key Features
 
 - 🎯 **No React dependency** — Pure TypeScript/JavaScript components for code generation
-- 🔄 **Reactive refs** — Use `ref()` for reactive values (Vue-style)
 - 🎨 **Context support** — Dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
 - 📝 **Template literals** — Natural code generation with tagged templates
-- 🔗 **Reference tracking** — Track named entities across components
 - ⚡ **Synchronous** — No async/await needed, just like Alloy framework
 
 ### Basic Usage
@@ -408,36 +406,6 @@ provide(ConfigContext, { prefix: 'custom' })
 function Component(props: { name: string }) {
   const config = useContext(ConfigContext)
   return code`const ${config.prefix}_${props.name} = true;`
-}
-```
-
-### Using Reactive Refs
-
-```ts
-import { ref, stc, code } from '@kubb/stc-fabric'
-
-const counter = ref(0)
-
-function Component() {
-  counter.value += 1
-  return code`const count = ${counter.value};`
-}
-
-const MyComponent = stc(Component)
-const result1 = MyComponent({}) // => 'const count = 1;'
-const result2 = MyComponent({}) // => 'const count = 2;'
-```
-
-### Using References
-
-```ts
-import { createReference, getReference, stc, code } from '@kubb/stc-fabric'
-
-const myVar = createReference('myVariable', 'const myVariable = 42')
-
-function Component() {
-  const ref = getReference('myVariable')
-  return code`// Reference: ${ref?.name}`
 }
 ```
 
