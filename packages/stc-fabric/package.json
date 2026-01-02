@@ -31,6 +31,10 @@
       "require": "./dist/plugins.cjs",
       "import": "./dist/plugins.js"
     },
+    "./parsers": {
+      "require": "./dist/parsers.cjs",
+      "import": "./dist/parsers.js"
+    },
     "./types": {
       "require": "./dist/types.cjs",
       "import": "./dist/types.js"
@@ -44,6 +48,9 @@
     "*": {
       "plugins": [
         "./dist/plugins.d.ts"
+      ],
+      "parsers": [
+        "./dist/parsers.d.ts"
       ],
       "types": [
         "./dist/types.d.ts"

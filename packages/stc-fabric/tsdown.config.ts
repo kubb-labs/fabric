@@ -4,6 +4,7 @@ export default defineConfig({
   entry: {
     index: 'src/index.ts',
     types: 'src/types.ts',
+    parsers: 'src/parsers/index.ts',
     plugins: 'src/plugins/index.ts',
   },
   dts: true,
