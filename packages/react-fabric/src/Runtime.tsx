@@ -111,7 +111,7 @@ export class Runtime {
         // Get files from both the collector (context-based) and processFiles (DOM-based for backward compatibility)
         const collectedFiles = this.#fileCollector.getFiles()
         const domFiles = await processFiles(this.#rootNode)
-        
+
         // Combine both approaches
         const allFiles = [...collectedFiles, ...domFiles]
 

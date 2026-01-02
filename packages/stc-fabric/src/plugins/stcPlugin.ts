@@ -34,13 +34,13 @@ export const stcPlugin = definePlugin<Options, ExtendOptions>({
     return {
       async render(component) {
         await ctx.emit('lifecycle:start')
-        
+
         // Provide the file collector via context
         provide(FileCollectorContext, fileCollector)
-        
+
         // Execute the component
         component({})
-        
+
         // Get collected files and add to file manager
         const files = fileCollector.getFiles()
         await ctx.fileManager.add(...files)
@@ -51,20 +51,20 @@ export const stcPlugin = definePlugin<Options, ExtendOptions>({
       },
       async renderToString(component) {
         await ctx.emit('lifecycle:start')
-        
+
         // Clear collector
         fileCollector.clear()
-        
+
         // Provide the file collector via context
         provide(FileCollectorContext, fileCollector)
-        
+
         // Execute the component
         const result = component({})
-        
+
         // Get collected files and add to file manager
         const files = fileCollector.getFiles()
         await ctx.fileManager.add(...files)
-        
+
         return result
       },
     }

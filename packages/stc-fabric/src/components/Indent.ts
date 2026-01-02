@@ -16,9 +16,9 @@ export function Indent({ size = 2, children }: IndentProps): string {
   // Split content by lines
   const lines = children.split('\n')
   const result: string[] = []
-  
+
   let consecutiveEmpty = 0
-  
+
   for (const line of lines) {
     if (line.trim() === '') {
       consecutiveEmpty++
@@ -30,7 +30,7 @@ export function Indent({ size = 2, children }: IndentProps): string {
       result.push(line)
     }
   }
-  
+
   const cleaned = dedent(result.join('\n'))
   return indentString(cleaned, size)
 }

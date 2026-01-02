@@ -43,9 +43,7 @@ ${body}
 
   it('should handle complex TypeScript code generation', () => {
     function InterfaceGenerator(props: { name: string; fields: Array<{ name: string; type: string }> }) {
-      const fieldsCode = props.fields
-        .map(field => `  ${field.name}: ${field.type};`)
-        .join('\n')
+      const fieldsCode = props.fields.map((field) => `  ${field.name}: ${field.type};`).join('\n')
 
       return code`
 interface ${props.name} {
@@ -81,7 +79,7 @@ describe('Vue-style API integration', () => {
     }
 
     const MyComponent = stc(Component)
-    
+
     provide(ConfigKey, { prefix: 'app' })
     const result = MyComponent({ name: 'flag' })
     unprovide(ConfigKey)
@@ -98,7 +96,7 @@ describe('Vue-style API integration', () => {
     }
 
     const MyComponent = stc(Component)
-    
+
     provide(ConfigContext, { prefix: 'custom' })
     const result = MyComponent({ name: 'value' })
     unprovide(ConfigContext)

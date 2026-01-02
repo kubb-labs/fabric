@@ -1,5 +1,5 @@
-import { inject } from '../context.ts'
 import { AppContext, type AppContextProps } from '../components/App.ts'
+import { inject } from '../context.ts'
 
 /**
  * `useApp` will return the current App with meta and exit function.

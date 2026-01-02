@@ -24,18 +24,18 @@ export function Type({ name, export: canExport, JSDoc, children }: Props): strin
   }
 
   let result = ''
-  
+
   if (JSDoc?.comments) {
     result += createJSDoc({ comments: JSDoc.comments })
     result += '\n'
   }
-  
+
   if (canExport) {
     result += 'export '
   }
-  
+
   result += `type ${name} = ${children || ''}`
-  
+
   return result
 }
 

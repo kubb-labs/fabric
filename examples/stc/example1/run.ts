@@ -14,18 +14,16 @@ function HelloWorld(props: { name: string }) {
 const HelloWorldStc = stc(HelloWorld)
 
 // Example 2: Using context for configuration (React-style)
-const ConfigContext = createContext({ 
+const ConfigContext = createContext({
   prefix: 'generated',
-  suffix: 'Impl'
+  suffix: 'Impl',
 })
 
 function ClassGenerator(props: { name: string; methods: string[] }) {
   const config = useContext(ConfigContext)
   const className = `${config.prefix}${props.name}${config.suffix}`
-  
-  const methodsCode = props.methods
-    .map(method => `  ${method}() {\n    // TODO: implement\n  }`)
-    .join('\n\n')
+
+  const methodsCode = props.methods.map((method) => `  ${method}() {\n    // TODO: implement\n  }`).join('\n\n')
 
   return code`
 export class ${className} {
@@ -39,12 +37,12 @@ const ClassGeneratorStc = stc(ClassGenerator)
 // Example 3: Composing multiple components (no async/await needed!)
 function generateCode() {
   const greeting = HelloWorldStc({ name: 'World' })
-  
+
   // Provide custom configuration
   provide(ConfigContext, { prefix: 'Custom', suffix: 'Class' })
-  const userClass = ClassGeneratorStc({ 
+  const userClass = ClassGeneratorStc({
     name: 'User',
-    methods: ['getName', 'setName', 'getAge', 'setAge']
+    methods: ['getName', 'setName', 'getAge', 'setAge'],
   })
   unprovide(ConfigContext)
 
@@ -58,12 +56,12 @@ ${userClass}
 // Use with Fabric
 export async function run() {
   const fabric = createFabric()
-  
+
   fabric.use(fsPlugin)
   fabric.use(typescriptParser)
-  
+
   const generatedCode = generateCode()
-  
+
   await fabric.addFile({
     baseName: 'generated.ts',
     path: './example-stc/gen/generated.ts',
@@ -79,7 +77,7 @@ export async function run() {
   })
 
   await fabric.write()
-  
+
   console.log('✅ Generated code using stc components!')
 }
 

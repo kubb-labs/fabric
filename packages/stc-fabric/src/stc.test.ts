@@ -26,7 +26,7 @@ describe('stc', () => {
 
   it('should work with complex components', () => {
     function ComplexComponent(props: { items: string[] }) {
-      return props.items.map(item => `- ${item}`).join('\n')
+      return props.items.map((item) => `- ${item}`).join('\n')
     }
 
     const Component = stc(ComplexComponent)

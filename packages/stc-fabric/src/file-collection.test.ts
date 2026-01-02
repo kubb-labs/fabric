@@ -11,7 +11,7 @@ describe('File collection via context', () => {
         path: './test.ts',
         meta: {},
       })
-      
+
       return `const ${props.name} = true;`
     })
 
@@ -31,13 +31,13 @@ describe('File collection via context', () => {
         baseName: 'file1.ts',
         path: './file1.ts',
       })
-      
+
       File({
         baseName: 'file2.ts',
         path: './file2.ts',
       })
-      
-      return `// Generated code`
+
+      return '// Generated code'
     })
 
     await fabric.render(MultiFileComponent)

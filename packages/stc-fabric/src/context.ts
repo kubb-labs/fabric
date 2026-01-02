@@ -1,6 +1,6 @@
 /**
  * Context stack for tracking the current context values
- * 
+ *
  * Note: This uses a global Map for simplicity in code generation scenarios.
  * For concurrent runtime execution, consider using AsyncLocalStorage or
  * instance-based context management.
@@ -10,7 +10,7 @@ const contextDefaults = new Map<symbol, any>()
 
 /**
  * Provides a value to descendant components (Vue 3 style)
- * 
+ *
  * @example
  * ```ts
  * const ThemeKey = Symbol('theme')
@@ -26,7 +26,7 @@ export function provide<T>(key: symbol, value: T): void {
 
 /**
  * Injects a value provided by an ancestor component (Vue 3 style)
- * 
+ *
  * @example
  * ```ts
  * const theme = inject(ThemeKey, { color: 'default' })
@@ -60,7 +60,7 @@ export function unprovide(key: symbol): void {
 
 /**
  * Creates a context key with a default value (React-style compatibility)
- * 
+ *
  * @example
  * ```ts
  * const ThemeContext = createContext({ color: 'blue' })
@@ -74,7 +74,7 @@ export function createContext<T>(defaultValue: T): symbol {
 
 /**
  * React-style alias for inject
- * 
+ *
  * @example
  * ```ts
  * const theme = useContext(ThemeContext)

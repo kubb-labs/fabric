@@ -27,9 +27,7 @@ describe('stc e2e integration', () => {
       const config = useContext<{ prefix: string; suffix: string }>(ConfigContext)
       const className = `${config.prefix}${props.name}${config.suffix}`
 
-      const methodsCode = props.methods
-        .map((method) => `  ${method}() {\n    // TODO: implement\n  }`)
-        .join('\n\n')
+      const methodsCode = props.methods.map((method) => `  ${method}() {\n    // TODO: implement\n  }`).join('\n\n')
 
       return code`
 export class ${className} {

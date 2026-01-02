@@ -1,6 +1,6 @@
-import { inject } from '../context.ts'
-import { FileCollectorContext } from '../components/File.ts'
 import type { FileCollector } from '@kubb/fabric-core'
+import { FileCollectorContext } from '../components/File.ts'
+import { inject } from '../context.ts'
 
 /**
  * `useFile` will return the current FileCollector for registering files.

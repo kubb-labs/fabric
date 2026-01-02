@@ -23,10 +23,10 @@ describe('Const', () => {
   })
 
   test('should create a const with JSDoc', () => {
-    const result = Const({ 
-      name: 'myVar', 
-      JSDoc: { comments: ['This is a variable'] }, 
-      children: '"hello"' 
+    const result = Const({
+      name: 'myVar',
+      JSDoc: { comments: ['This is a variable'] },
+      children: '"hello"',
     })
     expect(result).toContain('/** This is a variable */')
     expect(result).toContain('const myVar = "hello"')

@@ -6,17 +6,15 @@ import { stcPlugin } from './plugins/stcPlugin.ts'
 
 /**
  * Creates a Fabric instance pre-configured for stc (String Template Components) usage
- * 
+ *
  * @example
  * ```ts
  * import { createStcFabric } from '@kubb/stc-fabric'
- * 
+ *
  * const fabric = createStcFabric()
  * ```
  */
-export function createStcFabric(
-  config: FabricConfig<Options & { mode?: FabricMode }> = {},
-): Fabric<Options & { mode?: FabricMode }> {
+export function createStcFabric(config: FabricConfig<Options & { mode?: FabricMode }> = {}): Fabric<Options & { mode?: FabricMode }> {
   const fabric = createFabric({ mode: config.mode })
 
   fabric.use(stcPlugin, {

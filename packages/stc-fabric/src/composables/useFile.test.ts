@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest'
 import { FileCollector } from '@kubb/fabric-core'
-import { provide } from '../context.ts'
+import { describe, expect, it } from 'vitest'
 import { FileCollectorContext } from '../components/File.ts'
+import { provide } from '../context.ts'
 import { useFile } from './useFile.ts'
 
 describe('useFile', () => {

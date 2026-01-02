@@ -19,10 +19,10 @@ describe('Type', () => {
   })
 
   test('should create a type with JSDoc', () => {
-    const result = Type({ 
-      name: 'MyType', 
-      JSDoc: { comments: ['This is a type'] }, 
-      children: 'string' 
+    const result = Type({
+      name: 'MyType',
+      JSDoc: { comments: ['This is a type'] },
+      children: 'string',
     })
     expect(result).toContain('/** This is a type */')
     expect(result).toContain('type MyType = string')

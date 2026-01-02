@@ -33,10 +33,9 @@ export function File<TMeta extends object = object>(props: FileProps<TMeta>): st
     // If no collector, just return empty string (fallback)
     return ''
   }
-
   // Register this file with the collector
   // Type assertion needed because FileCollector isn't exposed in types
-  (collector as any).add({
+  ;(collector as any).add({
     baseName: props.baseName,
     path: props.path,
     meta: props.meta || ({} as TMeta),

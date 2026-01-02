@@ -1,6 +1,6 @@
 import type { FileCollector } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
-import { createContext, useContext as useReactContext, useEffect } from 'react'
+import { createContext, useEffect, useContext as useReactContext } from 'react'
 import type { Key, KubbNode } from '../types.ts'
 
 export type FileContextProps<TMeta extends object = object> = {

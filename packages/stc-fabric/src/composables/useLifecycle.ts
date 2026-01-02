@@ -1,5 +1,5 @@
-import { inject } from '../context.ts'
 import { RootContext } from '../components/Root.ts'
+import { inject } from '../context.ts'
 
 /**
  * `useLifecycle` will return some helpers to exit/restart the generation.

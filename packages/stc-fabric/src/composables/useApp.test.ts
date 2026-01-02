@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { provide } from '../context.ts'
 import { AppContext, type AppContextProps } from '../components/App.ts'
+import { provide } from '../context.ts'
 import { useApp } from './useApp.ts'
 
 describe('useApp', () => {

@@ -15,6 +15,6 @@ export function createJSDoc({ comments }: { comments: string[] }): string {
     result += ` * ${comment}\n`
   }
   result += ' */'
-  
+
   return result
 }

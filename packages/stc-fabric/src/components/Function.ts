@@ -43,46 +43,46 @@ type Props = {
 
 export function Function({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, children }: Props): string {
   let result = ''
-  
+
   if (JSDoc?.comments) {
     result += createJSDoc({ comments: JSDoc.comments })
     result += '\n'
   }
-  
+
   if (canExport) {
     result += 'export '
   }
-  
+
   if (isDefault) {
     result += 'default '
   }
-  
+
   if (async) {
     result += 'async '
   }
-  
+
   result += `function ${name}`
-  
+
   if (generics) {
     result += '<'
     result += Array.isArray(generics) ? generics.join(', ').trim() : generics
     result += '>'
   }
-  
+
   result += `(${params || ''})`
-  
+
   if (returnType && !async) {
     result += `: ${returnType}`
   }
-  
+
   if (returnType && async) {
     result += `: Promise<${returnType}>`
   }
-  
+
   result += ' {\n'
   result += Indent({ size: 2, children })
   result += '\n}'
-  
+
   return result
 }
 
@@ -95,44 +95,55 @@ type ArrowFunctionProps = Props & {
   singleLine?: boolean
 }
 
-function ArrowFunction({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine, children }: ArrowFunctionProps): string {
+function ArrowFunction({
+  name,
+  default: isDefault,
+  export: canExport,
+  async,
+  generics,
+  params,
+  returnType,
+  JSDoc,
+  singleLine,
+  children,
+}: ArrowFunctionProps): string {
   let result = ''
-  
+
   if (JSDoc?.comments) {
     result += createJSDoc({ comments: JSDoc.comments })
     result += '\n'
   }
-  
+
   if (canExport) {
     result += 'export '
   }
-  
+
   if (isDefault) {
     result += 'default '
   }
-  
+
   result += `const ${name} = `
-  
+
   if (async) {
     result += 'async '
   }
-  
+
   if (generics) {
     result += '<'
     result += Array.isArray(generics) ? generics.join(', ').trim() : generics
     result += '>'
   }
-  
+
   result += `(${params || ''})`
-  
+
   if (returnType && !async) {
     result += `: ${returnType}`
   }
-  
+
   if (returnType && async) {
     result += `: Promise<${returnType}>`
   }
-  
+
   if (singleLine) {
     result += ` => ${children || ''}\n`
   } else {
@@ -140,7 +151,7 @@ function ArrowFunction({ name, default: isDefault, export: canExport, async, gen
     result += Indent({ size: 2, children })
     result += '\n}\n'
   }
-  
+
   return result
 }
 

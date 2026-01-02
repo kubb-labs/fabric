@@ -1,18 +1,18 @@
 /**
  * Main stc wrapper function that creates a string template component
- * 
+ *
  * Unlike the previous implementation, this does NOT force components to be async.
  * Components can be plain functions that return strings directly, matching the
  * Alloy framework pattern for simpler, more natural code generation.
- * 
+ *
  * @example
  * ```ts
  * import { stc, code } from '@kubb/stc-fabric'
- * 
+ *
  * function HelloWorld(props: { name: string }) {
  *   return `Hello, ${props.name}!`
  * }
- * 
+ *
  * const HelloWorldStc = stc(HelloWorld)
  * const result = HelloWorldStc({ name: 'World' })
  * // => "Hello, World!" (no await needed!)
@@ -26,7 +26,7 @@ export function stc<TProps = {}>(component: (props: TProps) => string): (props: 
 
 /**
  * Tagged template literal helper for inline code generation
- * 
+ *
  * @example
  * ```ts
  * const code = template`

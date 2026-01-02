@@ -28,28 +28,28 @@ type Props = {
 
 export function Const({ name, export: canExport, type, JSDoc, asConst, children }: Props): string {
   let result = ''
-  
+
   if (JSDoc?.comments) {
     result += createJSDoc({ comments: JSDoc.comments })
     result += '\n'
   }
-  
+
   if (canExport) {
     result += 'export '
   }
-  
+
   result += `const ${name}`
-  
+
   if (type) {
     result += `: ${type}`
   }
-  
+
   result += ` = ${children || ''}`
-  
+
   if (asConst) {
     result += ' as const'
   }
-  
+
   return result
 }
 
