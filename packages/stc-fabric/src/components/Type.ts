@@ -1,5 +1,6 @@
-import type { JSDoc } from '@kubb/fabric-core/types'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+
+type JSDoc = { comments: Array<string> }
 
 type Props = {
   /**

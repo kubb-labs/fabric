@@ -15,9 +15,9 @@ describe('File collection via context', () => {
       return `const ${props.name} = true;`
     })
 
-    await fabric.render(MyComponent({ name: 'test' }))
+    await fabric.render(MyComponent)
 
-    const files = fabric.fileManager.files
+    const files = (fabric as any).fileManager.files
     expect(files).toHaveLength(1)
     expect(files[0]?.baseName).toBe('test.ts')
     expect(files[0]?.path).toBe('./test.ts')
@@ -40,10 +40,10 @@ describe('File collection via context', () => {
       return `// Generated code`
     })
 
-    await fabric.render(MultiFileComponent({}))
+    await fabric.render(MultiFileComponent)
 
-    const files = fabric.fileManager.files
+    const files = (fabric as any).fileManager.files
     expect(files).toHaveLength(2)
-    expect(files.map(f => f?.baseName)).toEqual(['file1.ts', 'file2.ts'])
+    expect(files.map((f: any) => f?.baseName)).toEqual(['file1.ts', 'file2.ts'])
   })
 })

@@ -232,6 +232,12 @@ importers:
       '@kubb/fabric-core':
         specifier: workspace:*
         version: link:../fabric-core
+      dedent:
+        specifier: ^1.7.1
+        version: 1.7.1
+      indent-string:
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       typescript:
         specifier: ^5.9.3

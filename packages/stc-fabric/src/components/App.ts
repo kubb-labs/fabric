@@ -1,5 +1,4 @@
-import { createContext, inject } from '../context.ts'
-import { RootContext } from './Root.ts'
+import { createContext } from '../context.ts'
 
 export type AppContextProps<TMeta = unknown> = {
   /**
@@ -16,12 +15,9 @@ type Props<TMeta = unknown> = {
   readonly children?: string
 }
 
-export function App<TMeta = unknown>({ meta, children }: Props<TMeta>): string {
-  const { exit } = inject(RootContext, { exit: () => {} })
-
+export function App<TMeta = unknown>({ children }: Props<TMeta>): string {
   // In stc, we just return children since we don't have a component tree
   // Context is provided via provide() calls before components run
-  // The appContextValue would be: { exit, meta }
   
   return children || ''
 }

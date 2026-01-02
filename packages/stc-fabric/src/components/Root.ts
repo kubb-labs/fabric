@@ -23,7 +23,7 @@ type RootProps = {
   readonly children?: string
 }
 
-export function Root({ onError, onExit, children }: RootProps): string {
+export function Root({ onError, children }: Omit<RootProps, 'onExit'>): string {
   try {
     // In stc, we don't have component trees like React
     // We just return the children and let context handle the rest

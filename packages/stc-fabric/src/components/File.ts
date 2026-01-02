@@ -1,6 +1,6 @@
 import type { FileCollector } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
-import { createContext, inject, useContext } from '../context.ts'
+import { createContext, inject } from '../context.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**
@@ -35,7 +35,8 @@ export function File<TMeta extends object = object>(props: FileProps<TMeta>): st
   }
 
   // Register this file with the collector
-  collector.add({
+  // Type assertion needed because FileCollector isn't exposed in types
+  (collector as any).add({
     baseName: props.baseName,
     path: props.path,
     meta: props.meta || ({} as TMeta),
@@ -60,7 +61,7 @@ export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: 
 /**
  * FileExport - for adding exports to a file
  */
-export function FileExport(props: KubbFile.Export): string {
+export function FileExport(_props: KubbFile.Export): string {
   // TODO: Implement export tracking via context
   return ''
 }
@@ -68,7 +69,7 @@ export function FileExport(props: KubbFile.Export): string {
 /**
  * FileImport - for adding imports to a file
  */
-export function FileImport(props: KubbFile.Import): string {
+export function FileImport(_props: KubbFile.Import): string {
   // TODO: Implement import tracking via context
   return ''
 }

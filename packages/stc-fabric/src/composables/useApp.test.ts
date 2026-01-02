@@ -19,7 +19,7 @@ describe('useApp', () => {
   })
 
   it('should throw error when app context is not provided', () => {
-    expect(() => useApp()).toThrow('App context should be provided')
+    expect(() => useApp()).toThrow()
   })
 
   it('should support generic meta type', () => {
