@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from 'vitest'
+import { unprovide } from '../context.ts'
 import { App, AppContext } from './App.ts'
-import { provide, unprovide } from '../context.ts'
 
 describe('App', () => {
   afterEach(() => {

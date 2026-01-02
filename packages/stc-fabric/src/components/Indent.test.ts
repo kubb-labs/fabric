@@ -24,7 +24,7 @@ describe('Indent', () => {
     const result = Indent({ children: content })
     const lines = result.split('\n')
     // Should keep at most 2 consecutive empty lines
-    expect(lines.filter(l => l.trim() === '').length).toBeLessThanOrEqual(2)
+    expect(lines.filter((l) => l.trim() === '').length).toBeLessThanOrEqual(2)
   })
 
   test('should collapse more than 2 consecutive newlines', () => {

@@ -1,7 +1,7 @@
-import { afterEach, describe, expect, test } from 'vitest'
-import { File, FileCollectorContext } from './File.ts'
 import { FileCollector } from '@kubb/fabric-core'
+import { afterEach, describe, expect, test } from 'vitest'
 import { provide, unprovide } from '../context.ts'
+import { File, FileCollectorContext } from './File.ts'
 
 describe('File', () => {
   afterEach(() => {
@@ -32,10 +32,10 @@ describe('File', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
-    File({ 
-      baseName: 'user.ts', 
+    File({
+      baseName: 'user.ts',
       path: './models/user.ts',
-      meta: { model: 'User' }
+      meta: { model: 'User' },
     })
 
     const files = collector.getFiles()
@@ -46,10 +46,10 @@ describe('File', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
-    File({ 
-      baseName: 'api.ts', 
+    File({
+      baseName: 'api.ts',
       path: './api.ts',
-      banner: '/* eslint-disable */'
+      banner: '/* eslint-disable */',
     })
 
     const files = collector.getFiles()
@@ -60,10 +60,10 @@ describe('File', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
-    File({ 
-      baseName: 'export.ts', 
+    File({
+      baseName: 'export.ts',
       path: './export.ts',
-      footer: 'export default API;'
+      footer: 'export default API;',
     })
 
     const files = collector.getFiles()
@@ -87,6 +87,6 @@ describe('File', () => {
 
     const files = collector.getFiles()
     expect(files).toHaveLength(3)
-    expect(files.map(f => f?.baseName)).toEqual(['file1.ts', 'file2.ts', 'file3.ts'])
+    expect(files.map((f) => f?.baseName)).toEqual(['file1.ts', 'file2.ts', 'file3.ts'])
   })
 })
