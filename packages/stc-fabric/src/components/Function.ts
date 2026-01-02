@@ -80,8 +80,11 @@ export function Function({ name, default: isDefault, export: canExport, async, g
   }
 
   result += ' {\n'
-  result += Indent({ size: 2, children })
-  result += '\n}'
+  if (children) {
+    result += Indent({ size: 2, children })
+    result += '\n'
+  }
+  result += '}'
 
   return result
 }
@@ -148,8 +151,11 @@ function ArrowFunction({
     result += ` => ${children || ''}\n`
   } else {
     result += ' => {\n'
-    result += Indent({ size: 2, children })
-    result += '\n}\n'
+    if (children) {
+      result += Indent({ size: 2, children })
+      result += '\n'
+    }
+    result += '}\n'
   }
 
   return result
