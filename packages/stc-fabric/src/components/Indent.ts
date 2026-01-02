@@ -8,30 +8,34 @@ type IndentProps = {
 
 /**
  * Indents all content by `size` spaces.
- * Collapses consecutive newlines to at most 2.
+ * Dedents first to normalize, then applies indentation.
+ * Collapses consecutive newlines to at most 2 empty lines.
  */
 export function Indent({ size = 2, children }: IndentProps): string {
   if (!children) return ''
 
-  // First, collapse consecutive newlines (keep max 2 empty lines)
+  // Split into lines and collapse consecutive empty lines (max 2)
   const lines = children.split('\n')
-  const result: string[] = []
+  const collapsed: string[] = []
   let consecutiveEmpty = 0
 
   for (const line of lines) {
-    if (line.trim() === '') {
+    const isEmpty = line.trim() === ''
+    
+    if (isEmpty) {
       consecutiveEmpty++
+      // Keep at most 2 consecutive empty lines
       if (consecutiveEmpty <= 2) {
-        result.push('')
+        collapsed.push('')
       }
     } else {
       consecutiveEmpty = 0
-      result.push(line)
+      collapsed.push(line)
     }
   }
 
-  // Then dedent and indent
-  const collapsed = result.join('\n')
-  const cleaned = dedent(collapsed)
-  return indentString(cleaned, size)
+  // Join, dedent to remove common leading whitespace, then indent by size
+  const joined = collapsed.join('\n')
+  const dedented = dedent(joined)
+  return indentString(dedented, size)
 }
