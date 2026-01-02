@@ -1,5 +1,5 @@
-import type { FileCollector } from '@kubb/fabric-core'
-import type { KubbFile } from '@kubb/fabric-core/types'
+import type { FileCollector } from '../FileCollector.ts'
+import type { KubbFile } from '../types.ts'
 import { createContext, inject, provide, unprovide } from '../context.ts'
 
 export type FileProps<TMeta extends object = object> = {

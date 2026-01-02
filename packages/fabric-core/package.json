@@ -1,13 +1,15 @@
 {
   "name": "@kubb/fabric-core",
   "version": "0.8.0",
-  "description": "Core functionality for Kubb's plugin-based code generation system, providing the foundation for transforming OpenAPI specifications.",
+  "description": "Core functionality for Kubb's plugin-based code generation system, including stc (String Template Components) for declarative code generation without React dependency.",
   "keywords": [
     "typescript",
     "plugins",
     "plugin-system",
     "code-generator",
     "codegen",
+    "stc",
+    "string-template-components",
     "openapi",
     "swagger",
     "kubb"
@@ -91,7 +93,9 @@
   },
   "dependencies": {
     "@clack/prompts": "1.0.0-alpha.8",
+    "dedent": "^1.7.1",
     "fs-extra": "^11.3.3",
+    "indent-string": "^5.0.0",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.2.0",
     "picocolors": "^1.1.1",

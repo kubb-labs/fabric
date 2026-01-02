@@ -1,10 +1,10 @@
-import { FileCollector } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { FileCollector } from '../FileCollector.ts'
+import { definePlugin } from './definePlugin.ts'
 import { FileCollectorContext } from '../components/File.ts'
 import { provide } from '../context.ts'
 import type { StcComponent } from '../types.ts'
 
-export type Options = {
+export type StcPluginOptions = {
   /**
    * Set this to true to always see the result of the render in the console
    */
@@ -25,7 +25,7 @@ declare global {
   }
 }
 
-export const stcPlugin = definePlugin<Options, ExtendOptions>({
+export const stcPlugin = definePlugin<StcPluginOptions, ExtendOptions>({
   name: 'stc',
   install() {},
   inject(ctx, options = {}) {

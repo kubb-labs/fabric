@@ -1,4 +1,4 @@
-import type { FileCollector } from '@kubb/fabric-core'
+import type { FileCollector } from '../FileCollector.ts'
 import { FileCollectorContext } from '../components/File.ts'
 import { inject } from '../context.ts'
 

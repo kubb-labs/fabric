@@ -1,4 +1,4 @@
-import { FileCollector } from '@kubb/fabric-core'
+import { FileCollector } from '../FileCollector.ts'
 import { afterEach, describe, expect, test } from 'vitest'
 import { provide, unprovide } from '../context.ts'
 import { File, FileCollectorContext } from './File.ts'

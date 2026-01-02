@@ -1,4 +1,4 @@
-import { createJSDoc } from '../utils/createJSDoc.ts'
+import { createJSDoc } from '../stc-utils/createJSDoc.ts'
 
 type JSDoc = { comments: Array<string> }
 

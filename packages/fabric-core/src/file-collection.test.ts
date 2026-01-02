@@ -1,4 +1,4 @@
-import type { Fabric } from '@kubb/fabric-core'
+import type { Fabric } from '../Fabric.ts'
 import { afterEach, describe, expect, it } from 'vitest'
 import { FileCollectorContext } from './components/File.ts'
 import { unprovide } from './context.ts'
