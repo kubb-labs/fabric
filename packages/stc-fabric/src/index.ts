@@ -31,4 +31,4 @@ export type { StcPluginOptions } from './plugins/index.ts'
 export { stcPlugin } from './plugins/index.ts'
 // stc core functionality
 export { code, stc, template } from './stc.ts'
-export type { StcComponent } from './types.ts'
+export type { Context, StcComponent } from './types.ts'

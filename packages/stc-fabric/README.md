@@ -82,21 +82,23 @@ const result = MyComponent({ name: 'flag' })
 // => 'const app_flag = true;'
 ```
 
-### 2b. Context (React Style)
+### 2b. Context (React Style with Type Safety)
 
-Or use React-compatible `createContext`/`useContext`:
+Or use React-compatible `createContext`/`useContext` with automatic type inference:
 
 ```typescript
 import { createContext, useContext, provide, stc, code } from '@kubb/stc-fabric'
 
-const ConfigContext = createContext({ prefix: 'generated' })
+// Type is automatically inferred from the default value
+const ConfigContext = createContext({ prefix: 'generated', version: 1 })
 
 // Override with provide
-provide(ConfigContext, { prefix: 'custom' })
+provide(ConfigContext, { prefix: 'custom', version: 2 })
 
 function Component(props: { name: string }) {
+  // config is automatically typed as { prefix: string; version: number }
   const config = useContext(ConfigContext)
-  return code`const ${config.prefix}_${props.name} = true;`
+  return code`const ${config.prefix}_${props.name} = ${config.version};`
 }
 ```
 

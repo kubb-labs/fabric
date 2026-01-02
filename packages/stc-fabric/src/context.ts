@@ -1,3 +1,5 @@
+import type { Context } from './types.ts'
+
 /**
  * Context stack for tracking the current context values
  *
@@ -5,8 +7,8 @@
  * For concurrent runtime execution, consider using AsyncLocalStorage or
  * instance-based context management.
  */
-const contextStack = new Map<symbol, any[]>()
-const contextDefaults = new Map<symbol, any>()
+const contextStack = new Map<symbol, unknown[]>()
+const contextDefaults = new Map<symbol, unknown>()
 
 /**
  * Provides a value to descendant components (Vue 3 style)
@@ -17,7 +19,7 @@ const contextDefaults = new Map<symbol, any>()
  * provide(ThemeKey, { color: 'blue' })
  * ```
  */
-export function provide<T>(key: symbol, value: T): void {
+export function provide<T>(key: symbol | Context<T>, value: T): void {
   if (!contextStack.has(key)) {
     contextStack.set(key, [])
   }
@@ -32,7 +34,7 @@ export function provide<T>(key: symbol, value: T): void {
  * const theme = inject(ThemeKey, { color: 'default' })
  * ```
  */
-export function inject<T>(key: symbol, defaultValue?: T): T {
+export function inject<T>(key: symbol | Context<T>, defaultValue?: T): T {
   const stack = contextStack.get(key)
   if (!stack || stack.length === 0) {
     if (defaultValue !== undefined) {
@@ -40,18 +42,18 @@ export function inject<T>(key: symbol, defaultValue?: T): T {
     }
     const storedDefault = contextDefaults.get(key)
     if (storedDefault !== undefined) {
-      return storedDefault
+      return storedDefault as T
     }
     throw new Error(`No value provided for key: ${key.toString()}`)
   }
-  return stack[stack.length - 1]
+  return stack[stack.length - 1] as T
 }
 
 /**
  * Unprovides a value (for cleanup)
  * @internal
  */
-export function unprovide(key: symbol): void {
+export function unprovide<T>(key: symbol | Context<T>): void {
   const stack = contextStack.get(key)
   if (stack && stack.length > 0) {
     stack.pop()
@@ -64,10 +66,12 @@ export function unprovide(key: symbol): void {
  * @example
  * ```ts
  * const ThemeContext = createContext({ color: 'blue' })
+ * // ThemeContext is now typed as Context<{ color: string }>
+ * const theme = useContext(ThemeContext) // theme is { color: string }
  * ```
  */
-export function createContext<T>(defaultValue: T): symbol {
-  const key = Symbol('context')
+export function createContext<T>(defaultValue: T): Context<T> {
+  const key = Symbol('context') as Context<T>
   contextDefaults.set(key, defaultValue)
 
   return key
@@ -78,9 +82,11 @@ export function createContext<T>(defaultValue: T): symbol {
  *
  * @example
  * ```ts
- * const theme = useContext(ThemeContext)
+ * const theme = useContext(ThemeContext) // type is inferred from ThemeContext
  * ```
  */
-export function useContext<T>(key: symbol, defaultValue?: T): T {
+export function useContext<T>(key: Context<T>): T
+export function useContext<T>(key: Context<T>, defaultValue: T): T
+export function useContext<T>(key: Context<T>, defaultValue?: T): T {
   return inject(key, defaultValue)
 }

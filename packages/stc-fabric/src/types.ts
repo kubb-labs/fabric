@@ -9,3 +9,9 @@
  * Unlike React components, stc components are synchronous and return strings directly
  */
 export type StcComponent<TProps = {}> = (props: TProps) => string
+
+/**
+ * A context key that carries type information about its value
+ * This is a branded symbol type that enables type-safe context usage
+ */
+export type Context<T> = symbol & { readonly __type: T }

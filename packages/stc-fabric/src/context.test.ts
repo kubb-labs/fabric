@@ -88,11 +88,35 @@ describe('context integration', () => {
     const ConfigContext = createContext({ prefix: 'test' })
 
     function Component() {
-      const config = useContext<{ prefix: string }>(ConfigContext)
+      const config = useContext(ConfigContext) // type is inferred
       return `${config.prefix}_variable`
     }
 
     const result = Component()
     expect(result).toBe('test_variable')
+  })
+
+  it('should infer types from createContext', () => {
+    const ThemeContext = createContext({ color: 'blue', size: 12 })
+
+    // Type is inferred without explicit annotation
+    const theme = useContext(ThemeContext)
+
+    expect(theme.color).toBe('blue')
+    expect(theme.size).toBe(12)
+  })
+
+  it('should maintain type safety with provide/inject', () => {
+    const ConfigContext = createContext({ enabled: true, count: 0 })
+
+    provide(ConfigContext, { enabled: false, count: 10 })
+
+    // Type is inferred from context
+    const config = useContext(ConfigContext)
+
+    expect(config.enabled).toBe(false)
+    expect(config.count).toBe(10)
+
+    unprovide(ConfigContext)
   })
 })
