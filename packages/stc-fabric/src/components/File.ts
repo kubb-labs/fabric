@@ -1,6 +1,6 @@
 import type { FileCollector } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
-import { createContext, inject } from '../context.ts'
+import { createContext, inject, provide, unprovide } from '../context.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**
@@ -16,6 +16,7 @@ export type FileProps<TMeta extends object = object> = {
   meta?: TMeta
   banner?: string
   footer?: string
+  children?: string
 }
 
 /**
@@ -24,15 +25,42 @@ export type FileProps<TMeta extends object = object> = {
 export const FileCollectorContext = createContext<FileCollector | null>(null)
 
 /**
+ * Context for the current file being processed
+ */
+type CurrentFileContext = {
+  sources: KubbFile.Source[]
+  imports: KubbFile.Import[]
+  exports: KubbFile.Export[]
+}
+export const CurrentFileContext = createContext<CurrentFileContext | null>(null)
+
+/**
  * File component for stc - registers files via context
  */
 export function File<TMeta extends object = object>(props: FileProps<TMeta>): string {
   const collector = inject(FileCollectorContext, null)
 
   if (!collector) {
-    // If no collector, just return empty string (fallback)
-    return ''
+    // If no collector, just return children (fallback)
+    return props.children || ''
   }
+
+  // Create a context for tracking sources/imports/exports for this file
+  const currentFile: CurrentFileContext = {
+    sources: [],
+    imports: [],
+    exports: [],
+  }
+
+  // Provide the current file context
+  provide(CurrentFileContext, currentFile)
+
+  // Process children (which may call FileSource, FileImport, FileExport)
+  const result = props.children || ''
+
+  // Clean up context
+  unprovide(CurrentFileContext)
+
   // Register this file with the collector
   // Type assertion needed because FileCollector isn't exposed in types
   ;(collector as any).add({
@@ -41,35 +69,67 @@ export function File<TMeta extends object = object>(props: FileProps<TMeta>): st
     meta: props.meta || ({} as TMeta),
     banner: props.banner,
     footer: props.footer,
-    sources: [],
-    imports: [],
-    exports: [],
+    sources: currentFile.sources,
+    imports: currentFile.imports,
+    exports: currentFile.exports,
   })
 
-  return ''
+  return result
 }
 
 /**
  * FileSource - for adding source code to a file
  */
 export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: string }): string {
-  // TODO: Implement source tracking via context
+  const currentFile = inject(CurrentFileContext, null)
+
+  if (currentFile) {
+    currentFile.sources.push({
+      name: props.name,
+      isTypeOnly: props.isTypeOnly,
+      isExportable: props.isExportable,
+      isIndexable: props.isIndexable,
+      value: props.children || '',
+    })
+  }
+
   return props.children || ''
 }
 
 /**
  * FileExport - for adding exports to a file
  */
-export function FileExport(_props: KubbFile.Export): string {
-  // TODO: Implement export tracking via context
+export function FileExport(props: KubbFile.Export): string {
+  const currentFile = inject(CurrentFileContext, null)
+
+  if (currentFile) {
+    currentFile.exports.push({
+      name: props.name,
+      path: props.path,
+      isTypeOnly: props.isTypeOnly || false,
+      asAlias: props.asAlias,
+    })
+  }
+
   return ''
 }
 
 /**
  * FileImport - for adding imports to a file
  */
-export function FileImport(_props: KubbFile.Import): string {
-  // TODO: Implement import tracking via context
+export function FileImport(props: KubbFile.Import): string {
+  const currentFile = inject(CurrentFileContext, null)
+
+  if (currentFile) {
+    currentFile.imports.push({
+      name: props.name,
+      root: props.root,
+      path: props.path,
+      isNameSpace: props.isNameSpace,
+      isTypeOnly: props.isTypeOnly || false,
+    })
+  }
+
   return ''
 }
 
