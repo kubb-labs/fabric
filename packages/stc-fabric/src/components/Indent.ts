@@ -13,17 +13,16 @@ type IndentProps = {
 export function Indent({ size = 2, children }: IndentProps): string {
   if (!children) return ''
 
-  // Split content by lines
+  // First, collapse consecutive newlines (keep max 2 empty lines)
   const lines = children.split('\n')
   const result: string[] = []
-
   let consecutiveEmpty = 0
 
   for (const line of lines) {
     if (line.trim() === '') {
       consecutiveEmpty++
       if (consecutiveEmpty <= 2) {
-        result.push(line)
+        result.push('')
       }
     } else {
       consecutiveEmpty = 0
@@ -31,6 +30,8 @@ export function Indent({ size = 2, children }: IndentProps): string {
     }
   }
 
-  const cleaned = dedent(result.join('\n'))
+  // Then dedent and indent
+  const collapsed = result.join('\n')
+  const cleaned = dedent(collapsed)
   return indentString(cleaned, size)
 }
