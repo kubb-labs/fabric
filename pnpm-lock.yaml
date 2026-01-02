@@ -25,8 +25,8 @@ catalogs:
       specifier: 0.32.0
       version: 0.32.0
     remeda:
-      specifier: ^2.32.2
-      version: 2.32.2
+      specifier: ^2.33.0
+      version: 2.33.0
     size-limit:
       specifier: ^11.2.0
       version: 11.2.0
@@ -73,7 +73,7 @@ importers:
         version: 3.7.4
       remeda:
         specifier: 'catalog:'
-        version: 2.32.2
+        version: 2.33.0
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
@@ -1976,8 +1976,8 @@ packages:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
     engines: {node: '>= 20.19.0'}
 
-  remeda@2.32.2:
-    resolution: {integrity: sha512-hoxrSvrhAg6Me7ZfHLWYXMvXPMMWijNtbdZNnC3+GnQWavCBXZ8pS4AOumOi3K/preQf34ZO/J5Z5N/JNfx3gw==}
+  remeda@2.33.0:
+    resolution: {integrity: sha512-10g+LXHpn3qG/sa7Yi3/eJUk6iFoPnfB1/l5Avj4BaGTIcQT7qQd4UblsoqqJvBsiMD5GIWv5TfNKh/x4Yj5hQ==}
 
   resolve-from@5.0.0:
     resolution: {integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==}
@@ -2275,10 +2275,6 @@ packages:
   turbo@2.7.2:
     resolution: {integrity: sha512-5JIA5aYBAJSAhrhbyag1ZuMSgUZnHtI+Sq3H8D3an4fL8PeF+L1yYvbEJg47akP1PFfATMf5ehkqFnxfkmuwZQ==}
     hasBin: true
-
-  type-fest@4.41.0:
-    resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
-    engines: {node: '>=16'}
 
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
@@ -4075,9 +4071,7 @@ snapshots:
 
   readdirp@5.0.0: {}
 
-  remeda@2.32.2:
-    dependencies:
-      type-fest: 4.41.0
+  remeda@2.33.0: {}
 
   resolve-from@5.0.0: {}
 
@@ -4399,8 +4393,6 @@ snapshots:
       turbo-linux-arm64: 2.7.2
       turbo-windows-64: 2.7.2
       turbo-windows-arm64: 2.7.2
-
-  type-fest@4.41.0: {}
 
   typescript@5.9.3: {}
 

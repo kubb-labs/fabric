@@ -69,6 +69,7 @@ export function unprovide(key: symbol): void {
 export function createContext<T>(defaultValue: T): symbol {
   const key = Symbol('context')
   contextDefaults.set(key, defaultValue)
+
   return key
 }
 
