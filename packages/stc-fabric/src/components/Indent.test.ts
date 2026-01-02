@@ -19,19 +19,15 @@ describe('Indent', () => {
     expect(result).toBe('    const x = 1;\n    const y = 2;')
   })
 
-  test('should preserve empty lines up to 2', () => {
-    const content = 'line1\n\n\nline2'
+  test('should dedent and indent string children', () => {
+    const content = `
+      line1
+        line2
+      line3
+    `
     const result = Indent({ children: content })
-    const lines = result.split('\n')
-    // Should keep at most 2 consecutive empty lines
-    expect(lines.filter((l) => l.trim() === '').length).toBeLessThanOrEqual(2)
-  })
-
-  test('should collapse more than 2 consecutive newlines', () => {
-    const content = 'line1\n\n\n\n\nline2'
-    const result = Indent({ children: content })
-    // Should not have more than 2 consecutive empty lines
-    expect(result).not.toContain('\n\n\n\n')
+    // After dedent, relative indentation is preserved, then all lines get 2 spaces
+    expect(result).toBe('  line1\n    line2\n  line3')
   })
 
   test('should handle single line content', () => {
@@ -40,38 +36,49 @@ describe('Indent', () => {
     expect(result).toBe('  const x = 1;')
   })
 
-  test('should handle content with mixed spacing', () => {
+  test('should preserve relative indentation after dedent', () => {
     const content = '  indented\n    more indented\nno indent'
     const result = Indent({ size: 2, children: content })
-    // Each line should get additional indentation
-    expect(result).toContain('    indented')
-    expect(result).toContain('      more indented')
-    expect(result).toContain('  no indent')
+    // After dedent removes common indent, then add 2 spaces to all
+    expect(result).toBe('    indented\n      more indented\n  no indent')
   })
 
   test('should work with size 0', () => {
     const content = 'const x = 1;\nconst y = 2;'
     const result = Indent({ size: 0, children: content })
-    // With size 0, should still process (collapse newlines) but not add indentation
-    expect(result).not.toBe('')
+    // With size 0, should dedent but not add indentation
+    expect(result).toBe('const x = 1;\nconst y = 2;')
   })
 
-  test('should handle multiline with empty lines in between', () => {
-    const content = 'function test() {\n\n  return true;\n\n}'
+  test('should handle empty lines in content', () => {
+    const content = 'line1\n\nline2'
     const result = Indent({ size: 2, children: content })
-    expect(result).toContain('  function test() {')
-    expect(result).toContain('    return true;')
-    expect(result).toContain('  }')
+    // Empty lines should be preserved
+    expect(result).toBe('  line1\n  \n  line2')
   })
 
-  test('should dedent before indenting', () => {
+  test('should dedent template literals with leading/trailing newlines', () => {
     const content = `
       function test() {
         return true;
       }
     `
     const result = Indent({ size: 2, children: content })
-    // Should dedent first, then indent by 2
-    expect(result.trim()).toContain('  function test() {')
+    // Dedent removes common indentation, then add 2 spaces
+    expect(result).toBe('  function test() {\n    return true;\n  }')
+  })
+
+  test('should handle content with tabs', () => {
+    const content = 'line1\n\tline2'
+    const result = Indent({ size: 2, children: content })
+    // Dedent handles tabs, then indent adds spaces
+    expect(result.startsWith('  line1')).toBe(true)
+  })
+
+  test('should handle already indented content', () => {
+    const content = '    already indented\n    also indented'
+    const result = Indent({ size: 2, children: content })
+    // Dedent removes the common 4 spaces, then adds 2
+    expect(result).toBe('  already indented\n  also indented')
   })
 })
