@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { code, stc, template } from './stc.ts'
+import { code, stc, template, text } from './stc.ts'
 
 describe('stc', () => {
   it('should create a string template component', () => {
@@ -8,7 +8,7 @@ describe('stc', () => {
     }
 
     const HelloWorldStc = stc(HelloWorld)
-    const result = HelloWorldStc({ name: 'World' })
+    const result = HelloWorldStc({ name: 'World' })()
 
     expect(result).toBe('Hello, World!')
   })
@@ -19,7 +19,7 @@ describe('stc', () => {
     }
 
     const Component = stc(SimpleComponent)
-    const result = Component({})
+    const result = Component()()
 
     expect(result).toBe('Simple output')
   })
@@ -30,9 +30,56 @@ describe('stc', () => {
     }
 
     const Component = stc(ComplexComponent)
-    const result = Component({ items: ['one', 'two', 'three'] })
+    const result = Component({ items: ['one', 'two', 'three'] })()
 
     expect(result).toBe('- one\n- two\n- three')
+  })
+
+  it('should support .code() method for template children', () => {
+    function Component(props: { children?: string }) {
+      return props.children || 'default'
+    }
+
+    const Stc = stc(Component)
+    const result = Stc().code`const x = 1;`()
+
+    expect(result).toBe('const x = 1;')
+  })
+
+  it('should support .text() method for text children', () => {
+    function Component(props: { children?: string }) {
+      return props.children || 'default'
+    }
+
+    const Stc = stc(Component)
+    const result = Stc().text`Hello World`()
+
+    expect(result).toBe('Hello World')
+  })
+
+  it('should support .children() method for array children', () => {
+    function Component(props: { children?: any }) {
+      if (Array.isArray(props.children)) {
+        return props.children.join(', ')
+      }
+      return props.children || 'default'
+    }
+
+    const Stc = stc(Component)
+    const result = Stc().children('a', 'b', 'c')()
+
+    expect(result).toBe('a, b, c')
+  })
+
+  it('should work with props and code method', () => {
+    function Component(props: { name: string; children?: string }) {
+      return `${props.name}: ${props.children || 'none'}`
+    }
+
+    const Stc = stc(Component)
+    const result = Stc({ name: 'Test' }).code`const value = 42;`()
+
+    expect(result).toBe('Test: const value = 42;')
   })
 })
 
@@ -57,6 +104,19 @@ describe('template', () => {
 
     expect(result).toContain('function myFunction()')
     expect(result).toContain('return true;')
+  })
+
+  it('should handle array values', () => {
+    const items = ['a', 'b', 'c']
+    const result = template`Items: ${items}`
+
+    expect(result).toBe('Items: abc')
+  })
+
+  it('should handle null and undefined', () => {
+    const result = template`Value: ${null}, ${undefined}`
+
+    expect(result).toBe('Value: , ')
   })
 })
 
@@ -83,5 +143,14 @@ interface ${interfaceName} {
     expect(result).toContain('interface User')
     expect(result).toContain('name: string')
     expect(result).toContain('age: number')
+  })
+})
+
+describe('text', () => {
+  it('should be an alias for template', () => {
+    const value = 'hello'
+    const result = text`Text: ${value}`
+
+    expect(result).toBe('Text: hello')
   })
 })

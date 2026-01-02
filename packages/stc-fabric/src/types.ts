@@ -10,8 +10,5 @@
  */
 export type StcComponent<TProps = {}> = (props: TProps) => string
 
-/**
- * A context key that carries type information about its value
- * This is a branded symbol type that enables type-safe context usage
- */
-export type Context<T> = symbol & { readonly __type: T }
+// Re-export Context from fabric-core
+export type { Context } from '@kubb/fabric-core'
