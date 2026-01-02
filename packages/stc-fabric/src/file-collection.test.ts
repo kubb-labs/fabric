@@ -1,14 +1,23 @@
 import type { Fabric } from '@kubb/fabric-core'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
+import { FileCollectorContext } from './components/File.ts'
+import { unprovide } from './context.ts'
 import { createStcFabric, File, stc } from './index.ts'
 
 type FabricWithFileManager = Fabric & {
-  fileManager: {
-    files: Array<{ baseName: string; path: string } | null>
+  context: {
+    fileManager: {
+      files: Array<{ baseName: string; path: string } | null>
+    }
   }
 }
 
 describe('File collection via context', () => {
+  afterEach(() => {
+    // Clean up context after each test
+    unprovide(FileCollectorContext)
+  })
+
   it('should collect files via FileCollector context', async () => {
     const fabric = createStcFabric()
 
@@ -24,7 +33,7 @@ describe('File collection via context', () => {
 
     await fabric.render(MyComponent)
 
-    const files = (fabric as FabricWithFileManager).fileManager.files
+    const files = (fabric as FabricWithFileManager).context.fileManager.files
     expect(files).toHaveLength(1)
     expect(files[0]?.baseName).toBe('test.ts')
     expect(files[0]?.path).toBe('./test.ts')
@@ -49,7 +58,7 @@ describe('File collection via context', () => {
 
     await fabric.render(MultiFileComponent)
 
-    const files = (fabric as FabricWithFileManager).fileManager.files
+    const files = (fabric as FabricWithFileManager).context.fileManager.files
     expect(files).toHaveLength(2)
     expect(files.map((f) => f?.baseName)).toEqual(['file1.ts', 'file2.ts'])
   })

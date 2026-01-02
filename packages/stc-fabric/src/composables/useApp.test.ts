@@ -1,9 +1,14 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import { AppContext, type AppContextProps } from '../components/App.ts'
-import { provide } from '../context.ts'
+import { provide, unprovide } from '../context.ts'
 import { useApp } from './useApp.ts'
 
 describe('useApp', () => {
+  afterEach(() => {
+    // Clean up context after each test
+    unprovide(AppContext)
+  })
+
   it('should return app context when provided', () => {
     const appContext: AppContextProps = {
       exit: () => {},

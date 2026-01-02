@@ -1,9 +1,14 @@
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { RootContext } from '../components/Root.ts'
-import { provide } from '../context.ts'
+import { provide, unprovide } from '../context.ts'
 import { useLifecycle } from './useLifecycle.ts'
 
 describe('useLifecycle', () => {
+  afterEach(() => {
+    // Clean up context after each test
+    unprovide(RootContext)
+  })
+
   it('should return exit function from root context', () => {
     const exitMock = vi.fn()
 
