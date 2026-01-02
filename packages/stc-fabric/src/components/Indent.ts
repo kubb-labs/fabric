@@ -14,8 +14,11 @@ type IndentProps = {
 export function Indent({ size = 2, children }: IndentProps): string {
   if (!children) return ''
 
+  // Dedent first to remove common leading whitespace
+  const dedented = dedent(children)
+  
   // Split into lines and collapse consecutive empty lines (max 2)
-  const lines = children.split('\n')
+  const lines = dedented.split('\n')
   const collapsed: string[] = []
   let consecutiveEmpty = 0
 
@@ -34,8 +37,7 @@ export function Indent({ size = 2, children }: IndentProps): string {
     }
   }
 
-  // Join, dedent to remove common leading whitespace, then indent by size
+  // Join and indent by size
   const joined = collapsed.join('\n')
-  const dedented = dedent(joined)
-  return indentString(dedented, size)
+  return indentString(joined, size)
 }
