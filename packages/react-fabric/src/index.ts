@@ -14,6 +14,24 @@ export const useContext = React.useContext
 export const useEffect = React.useEffect
 export const useReducer = React.useReducer
 export const useRef = React.useRef
+
+// intrinsic components
+export {
+  Br,
+  Hbr,
+  Sbr,
+  Lbr,
+  IndentIncrease,
+  IndentDecrease,
+  Align,
+  Group,
+  IfBreak,
+  IndentIfBreak,
+  Fill,
+  isReactIntrinsic,
+  processReactIntrinsics,
+} from './intrinsic.tsx'
+
 // // components
 export { App } from './components/App.tsx'
 export { Const } from './components/Const.tsx'

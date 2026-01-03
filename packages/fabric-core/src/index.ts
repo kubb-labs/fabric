@@ -7,6 +7,25 @@ export { FileManager } from './FileManager.ts'
 export { FileProcessor } from './FileProcessor.ts'
 export { provide, inject, unprovide, createContext, type Context } from './context.ts'
 
+// Intrinsic formatting elements
+export {
+  br,
+  hbr,
+  sbr,
+  lbr,
+  indent,
+  dedent,
+  align,
+  group,
+  ifBreak,
+  indentIfBreak,
+  fill,
+  isIntrinsic,
+  renderIntrinsics,
+  type Intrinsic,
+  type IntrinsicType,
+} from './intrinsic.ts'
+
 // stc (String Template Components)
 export type { AppContextProps } from './components/App.ts'
 export { App, AppContext } from './components/App.ts'

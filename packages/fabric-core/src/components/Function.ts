@@ -1,5 +1,6 @@
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Indent } from './Indent.ts'
+import { br, indent, dedent } from '../intrinsic.ts'
+import { code } from '../stc.ts'
 
 type JSDoc = { comments: Array<string> }
 
@@ -42,51 +43,50 @@ type Props = {
 }
 
 export function Function({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, children }: Props): string {
-  let result = ''
+  const parts: string[] = []
 
   if (JSDoc?.comments) {
-    result += createJSDoc({ comments: JSDoc.comments })
-    result += '\n'
+    parts.push(createJSDoc({ comments: JSDoc.comments }))
+    parts.push('\n')
   }
 
   if (canExport) {
-    result += 'export '
+    parts.push('export ')
   }
 
   if (isDefault) {
-    result += 'default '
+    parts.push('default ')
   }
 
   if (async) {
-    result += 'async '
+    parts.push('async ')
   }
 
-  result += `function ${name}`
+  parts.push(`function ${name}`)
 
   if (generics) {
-    result += '<'
-    result += Array.isArray(generics) ? generics.join(', ').trim() : generics
-    result += '>'
+    parts.push('<')
+    parts.push(Array.isArray(generics) ? generics.join(', ').trim() : generics)
+    parts.push('>')
   }
 
-  result += `(${params || ''})`
+  parts.push(`(${params || ''})`)
 
   if (returnType && !async) {
-    result += `: ${returnType}`
+    parts.push(`: ${returnType}`)
   }
 
   if (returnType && async) {
-    result += `: Promise<${returnType}>`
+    parts.push(`: Promise<${returnType}>`)
   }
 
-  result += ' {\n'
+  parts.push(' {')
+  
   if (children) {
-    result += Indent({ size: 2, children })
-    result += '\n'
+    return code`${parts.join('')}${indent}${br}${children}${dedent}${br}}`
   }
-  result += '}'
-
-  return result
+  
+  return parts.join('') + '}'
 }
 
 Function.displayName = 'KubbFunction'
@@ -110,55 +110,53 @@ function ArrowFunction({
   singleLine,
   children,
 }: ArrowFunctionProps): string {
-  let result = ''
+  const parts: string[] = []
 
   if (JSDoc?.comments) {
-    result += createJSDoc({ comments: JSDoc.comments })
-    result += '\n'
+    parts.push(createJSDoc({ comments: JSDoc.comments }))
+    parts.push('\n')
   }
 
   if (canExport) {
-    result += 'export '
+    parts.push('export ')
   }
 
   if (isDefault) {
-    result += 'default '
+    parts.push('default ')
   }
 
-  result += `const ${name} = `
+  parts.push(`const ${name} = `)
 
   if (async) {
-    result += 'async '
+    parts.push('async ')
   }
 
   if (generics) {
-    result += '<'
-    result += Array.isArray(generics) ? generics.join(', ').trim() : generics
-    result += '>'
+    parts.push('<')
+    parts.push(Array.isArray(generics) ? generics.join(', ').trim() : generics)
+    parts.push('>')
   }
 
-  result += `(${params || ''})`
+  parts.push(`(${params || ''})`)
 
   if (returnType && !async) {
-    result += `: ${returnType}`
+    parts.push(`: ${returnType}`)
   }
 
   if (returnType && async) {
-    result += `: Promise<${returnType}>`
+    parts.push(`: Promise<${returnType}>`)
   }
 
   if (singleLine) {
-    result += ` => ${children || ''}\n`
-  } else {
-    result += ' => {\n'
-    if (children) {
-      result += Indent({ size: 2, children })
-      result += '\n'
-    }
-    result += '}\n'
+    parts.push(` => ${children || ''}\n`)
+    return parts.join('')
   }
-
-  return result
+  
+  if (children) {
+    return code`${parts.join('')} => {${indent}${br}${children}${dedent}${br}}${br}`
+  }
+  
+  return parts.join('') + ' => {}\n'
 }
 
 ArrowFunction.displayName = 'KubbArrowFunction'

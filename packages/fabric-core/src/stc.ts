@@ -1,4 +1,6 @@
-export type Children = string | number | boolean | null | undefined | Children[]
+import { renderIntrinsics, isIntrinsic, type Intrinsic } from './intrinsic.ts'
+
+export type Children = string | number | boolean | null | undefined | Intrinsic | Children[]
 
 export type ComponentDefinition<T> = (props: T) => string
 
@@ -22,9 +24,9 @@ export type StcSignature<T extends {}> = (
 export type StcComponentCreator<T> = ComponentCreator<T> & {
   code(
     template: TemplateStringsArray,
-    ...substitutions: Children[]
+    ...substitutions: (Children | Intrinsic)[]
   ): ComponentCreator<T>
-  children(...children: Children[]): ComponentCreator<T>
+  children(...children: (Children | Intrinsic)[]): ComponentCreator<T>
 }
 
 /**
@@ -87,26 +89,46 @@ export function stc<T extends {}>(
 
 /**
  * Tagged template literal helper for inline code generation
+ * Now supports intrinsic formatting elements for precise control over whitespace
  *
  * @example
  * ```ts
- * const result = code`
- *   const ${name} = ${value};
- * `
+ * import { br, indent, dedent } from '@kubb/fabric-core'
+ * 
+ * const result = code`function hello() {${indent}${br}console.log("hi")${dedent}${br}}`
+ * // => "function hello() {\n  console.log("hi")\n}"
  * ```
  */
-export function code(strings: TemplateStringsArray, ...values: Children[]): string {
-  let result = ''
+export function code(strings: TemplateStringsArray, ...values: (Children | Intrinsic)[]): string {
+  const parts: (string | Intrinsic)[] = []
+  
   for (let i = 0; i < strings.length; i++) {
-    result += strings[i]
+    if (strings[i]) {
+      parts.push(strings[i])
+    }
     if (i < values.length) {
       const value = values[i]
-      if (Array.isArray(value)) {
-        result += value.join('')
-      } else if (value !== null && value !== undefined) {
-        result += String(value)
+      
+      // Handle intrinsic elements
+      if (isIntrinsic(value)) {
+        parts.push(value)
+      }
+      // Handle arrays
+      else if (Array.isArray(value)) {
+        for (const item of value) {
+          if (isIntrinsic(item)) {
+            parts.push(item)
+          } else if (item !== null && item !== undefined) {
+            parts.push(String(item))
+          }
+        }
+      }
+      // Handle regular values
+      else if (value !== null && value !== undefined) {
+        parts.push(String(value))
       }
     }
   }
-  return result
+  
+  return renderIntrinsics(parts)
 }
