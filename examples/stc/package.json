@@ -20,8 +20,7 @@
     "typecheck": "echo 'empty'"
   },
   "dependencies": {
-    "@kubb/fabric-core": "workspace:*",
-    "@kubb/stc-fabric": "workspace:*"
+    "@kubb/fabric-core": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3",

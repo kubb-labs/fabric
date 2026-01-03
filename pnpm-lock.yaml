@@ -25,8 +25,8 @@ catalogs:
       specifier: 0.32.0
       version: 0.32.0
     remeda:
-      specifier: ^2.33.0
-      version: 2.33.0
+      specifier: ^2.33.1
+      version: 2.33.1
     size-limit:
       specifier: ^11.2.0
       version: 11.2.0
@@ -73,7 +73,7 @@ importers:
         version: 3.7.4
       remeda:
         specifier: 'catalog:'
-        version: 2.33.0
+        version: 2.33.1
       rimraf:
         specifier: ^6.1.2
         version: 6.1.2
@@ -136,9 +136,6 @@ importers:
       '@kubb/fabric-core':
         specifier: workspace:*
         version: link:../../packages/fabric-core
-      '@kubb/stc-fabric':
-        specifier: workspace:*
-        version: link:../../packages/stc-fabric
     devDependencies:
       typescript:
         specifier: ^5.9.3
@@ -152,9 +149,15 @@ importers:
       '@clack/prompts':
         specifier: 1.0.0-alpha.8
         version: 1.0.0-alpha.8
+      dedent:
+        specifier: ^1.7.1
+        version: 1.7.1
       fs-extra:
         specifier: ^11.3.3
         version: 11.3.3
+      indent-string:
+        specifier: ^5.0.0
+        version: 5.0.0
       natural-orderby:
         specifier: ^5.0.0
         version: 5.0.0
@@ -226,22 +229,6 @@ importers:
       react-reconciler:
         specifier: 'catalog:'
         version: 0.32.0(react@19.2.1)
-
-  packages/stc-fabric:
-    dependencies:
-      '@kubb/fabric-core':
-        specifier: workspace:*
-        version: link:../fabric-core
-      dedent:
-        specifier: ^1.7.1
-        version: 1.7.1
-      indent-string:
-        specifier: ^5.0.0
-        version: 5.0.0
-    devDependencies:
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
 
 packages:
 
@@ -1976,8 +1963,8 @@ packages:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
     engines: {node: '>= 20.19.0'}
 
-  remeda@2.33.0:
-    resolution: {integrity: sha512-10g+LXHpn3qG/sa7Yi3/eJUk6iFoPnfB1/l5Avj4BaGTIcQT7qQd4UblsoqqJvBsiMD5GIWv5TfNKh/x4Yj5hQ==}
+  remeda@2.33.1:
+    resolution: {integrity: sha512-404Eba/HI/blNfbebo586OjEnAhq/x5jN1aIfK4gHnjAP7SADaRfDdIjo8Acpz7hkXgM06MPTwu4IbXamvM9Qw==}
 
   resolve-from@5.0.0:
     resolution: {integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==}
@@ -4071,7 +4058,7 @@ snapshots:
 
   readdirp@5.0.0: {}
 
-  remeda@2.33.0: {}
+  remeda@2.33.1: {}
 
   resolve-from@5.0.0: {}
 

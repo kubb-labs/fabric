@@ -1,4 +1,4 @@
-# @kubb/stc-fabric Examples
+# Stc Examples
 
 Examples demonstrating the usage of String Template Components (stc).
 
