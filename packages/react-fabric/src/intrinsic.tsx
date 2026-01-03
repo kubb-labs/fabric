@@ -152,6 +152,57 @@ export function Fill({ children }: { children?: React.ReactNode }) {
 ;(Fill as any)[IntrinsicMarker] = true
 
 /**
+ * Process an intrinsic type and update context/return string
+ * This is shared logic used by both processReactIntrinsics and squashTextNodes
+ */
+export function processIntrinsicType(
+  type: string,
+  context: { indentLevel: number; indentSize: number },
+  childrenProcessor?: () => string,
+  thenContentProcessor?: () => string,
+): string {
+  const indentStr = ' '.repeat(context.indentLevel * context.indentSize)
+
+  switch (type) {
+    case 'br':
+    case 'hbr':
+    case 'sbr':
+      return `\n${indentStr}`
+
+    case 'lbr':
+      return '\n'
+
+    case 'indent':
+      context.indentLevel++
+      return ''
+
+    case 'dedent':
+      context.indentLevel = Math.max(0, context.indentLevel - 1)
+      return ''
+
+    case 'align':
+      return ''
+
+    case 'group':
+      return childrenProcessor?.() || ''
+
+    case 'ifBreak':
+      // Basic implementation: use thenContent
+      return thenContentProcessor?.() || ''
+
+    case 'indentIfBreak':
+      context.indentLevel++
+      return ''
+
+    case 'fill':
+      return childrenProcessor?.() || ''
+
+    default:
+      return ''
+  }
+}
+
+/**
  * Process React intrinsic elements during rendering
  * This is called by the React renderer to convert intrinsic components to strings
  */
@@ -179,45 +230,13 @@ export function processReactIntrinsics(element: React.ReactNode, context = { ind
   // Check if it's an intrinsic component
   if (isReactIntrinsic(element)) {
     const props = element.props as IntrinsicProps
-    const indentStr = ' '.repeat(context.indentLevel * context.indentSize)
 
-    switch (props.type) {
-      case 'br':
-      case 'hbr':
-      case 'sbr':
-        return `\n${indentStr}`
-
-      case 'lbr':
-        return '\n'
-
-      case 'indent':
-        context.indentLevel++
-        return ''
-
-      case 'dedent':
-        context.indentLevel = Math.max(0, context.indentLevel - 1)
-        return ''
-
-      case 'align':
-        return ''
-
-      case 'group':
-        return processReactIntrinsics(props.children, context)
-
-      case 'ifBreak':
-        // Basic implementation: use thenContent
-        return processReactIntrinsics(props.thenContent, context)
-
-      case 'indentIfBreak':
-        context.indentLevel++
-        return ''
-
-      case 'fill':
-        return processReactIntrinsics(props.children, context)
-
-      default:
-        return ''
-    }
+    return processIntrinsicType(
+      props.type,
+      context,
+      () => processReactIntrinsics(props.children, context),
+      () => processReactIntrinsics(props.thenContent, context),
+    )
   }
 
   // Process React Fragment

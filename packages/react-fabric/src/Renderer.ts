@@ -68,14 +68,6 @@ export const Renderer = Reconciler({
   },
   shouldSetTextContent: () => false,
   createInstance(originalType: ElementNames, newProps: Props, _root: DOMElement) {
-    // Handle JSX intrinsic br element - convert to special marker node
-    if (originalType === 'br') {
-      const node = createNode('kubb-text')
-      // Mark this as an intrinsic br element for rendering
-      setAttribute(node, '__intrinsic', 'br')
-      return node
-    }
-
     const node = createNode(originalType)
 
     for (const [key, value] of Object.entries(newProps)) {
