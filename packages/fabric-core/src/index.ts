@@ -32,6 +32,7 @@ export {
   hbr,
   type Intrinsic,
   type IntrinsicType,
+  type RenderContext,
   ifBreak,
   indent,
   indentIfBreak,

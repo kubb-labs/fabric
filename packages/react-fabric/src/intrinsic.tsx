@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import { renderIntrinsics, type Intrinsic, type RenderContext } from '@kubb/fabric-core'
 
 /**
  * Intrinsic marker component - base for all intrinsic elements
@@ -152,8 +153,35 @@ export function Fill({ children }: { children?: React.ReactNode }) {
 ;(Fill as any)[IntrinsicMarker] = true
 
 /**
+ * Convert React element to Intrinsic object for core processing
+ */
+function reactElementToIntrinsic(element: React.ReactElement, processChildren: (node: React.ReactNode) => Intrinsic | string | (Intrinsic | string)[]): Intrinsic | string {
+  const props = element.props as IntrinsicProps
+  
+  const intrinsic: Intrinsic = {
+    type: props.type as any,
+    __intrinsic: true,
+  }
+
+  if (props.children) {
+    intrinsic.content = processChildren(props.children)
+  }
+  
+  if (props.thenContent) {
+    intrinsic.thenContent = processChildren(props.thenContent)
+  }
+  
+  if (props.elseContent) {
+    intrinsic.elseContent = processChildren(props.elseContent)
+  }
+
+  return intrinsic
+}
+
+/**
  * Process React intrinsic elements and DOM nodes during rendering
  * This unified function handles both React components and DOM elements
+ * Uses fabric-core's renderIntrinsics for consistent behavior across frameworks
  * 
  * @param element - React element, DOM node name, or primitive value
  * @param context - Indentation context for formatting
@@ -163,7 +191,7 @@ export function Fill({ children }: { children?: React.ReactNode }) {
  */
 export function processReactIntrinsics(
   element: React.ReactNode | string,
-  context = { indentLevel: 0, indentSize: 2 },
+  context: RenderContext = { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false },
   childrenProcessor?: () => string,
   thenContentProcessor?: () => string,
 ): string {
@@ -172,45 +200,22 @@ export function processReactIntrinsics(
     // Check if it's an intrinsic type name (for DOM nodes)
     const intrinsicTypes = ['br', 'hbr', 'sbr', 'lbr', 'indent', 'dedent', 'align', 'group', 'ifBreak', 'indentIfBreak', 'fill']
     if (intrinsicTypes.includes(element)) {
-      const indentStr = ' '.repeat(context.indentLevel * context.indentSize)
-
-      switch (element) {
-        case 'br':
-        case 'hbr':
-        case 'sbr':
-          return `\n${indentStr}`
-
-        case 'lbr':
-          return '\n'
-
-        case 'indent':
-          context.indentLevel++
-          return ''
-
-        case 'dedent':
-          context.indentLevel = Math.max(0, context.indentLevel - 1)
-          return ''
-
-        case 'align':
-          return ''
-
-        case 'group':
-          return childrenProcessor?.() || ''
-
-        case 'ifBreak':
-          // Basic implementation: use thenContent
-          return thenContentProcessor?.() || ''
-
-        case 'indentIfBreak':
-          context.indentLevel++
-          return ''
-
-        case 'fill':
-          return childrenProcessor?.() || ''
-
-        default:
-          return ''
+      // Create intrinsic object and use core's renderIntrinsics
+      const intrinsic: Intrinsic = {
+        type: element as any,
+        __intrinsic: true,
       }
+      
+      // Add content processors if provided
+      if (childrenProcessor) {
+        intrinsic.content = childrenProcessor()
+      }
+      
+      if (thenContentProcessor) {
+        intrinsic.thenContent = thenContentProcessor()
+      }
+      
+      return renderIntrinsics(intrinsic, context)
     }
     return element
   }
@@ -233,14 +238,19 @@ export function processReactIntrinsics(
 
   // Check if it's an intrinsic React component
   if (isReactIntrinsic(element)) {
-    const props = element.props as IntrinsicProps
-
-    return processReactIntrinsics(
-      props.type,
-      context,
-      () => processReactIntrinsics(props.children, context),
-      () => processReactIntrinsics(props.thenContent, context),
-    )
+    const intrinsic = reactElementToIntrinsic(element, (node) => {
+      if (typeof node === 'string') return node
+      if (Array.isArray(node)) {
+        return node.map(child => {
+          const result = processReactIntrinsics(child, context)
+          return result
+        })
+      }
+      return processReactIntrinsics(node, context)
+    })
+    
+    // Use core's renderIntrinsics for consistent behavior
+    return renderIntrinsics(intrinsic, context)
   }
 
   // Process React Fragment

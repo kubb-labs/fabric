@@ -151,7 +151,7 @@ export function fill(strings: TemplateStringsArray, ...values: any[]): Intrinsic
 /**
  * Rendering context for processing intrinsics
  */
-type RenderContext = {
+export type RenderContext = {
   indentLevel: number
   indentSize: number
   currentLineLength: number
