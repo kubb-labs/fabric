@@ -56,7 +56,7 @@ export function squashTextNodes(node: DOMElement, context = { indentLevel: 0, in
         const intrinsicType = child.attributes.get('__intrinsic')
         if (intrinsicType) {
           const indentStr = ' '.repeat(context.indentLevel * context.indentSize)
-          
+
           switch (intrinsicType) {
             case 'br':
             case 'hbr':

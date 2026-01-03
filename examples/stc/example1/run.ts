@@ -1,7 +1,6 @@
-import { createFabric } from '@kubb/fabric-core'
+import { br, code, createContext, createFabric, dedent, indent, provide, stc, unprovide, useContext } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { br, code, createContext, dedent, indent, provide, stc, unprovide, useContext } from '@kubb/fabric-core'
 
 // Example 1: Basic stc component
 function HelloWorld(props: { name: string }) {
@@ -23,11 +22,7 @@ function ClassGenerator(props: { name: string; methods: string[] }) {
   const config = useContext(ConfigContext)
   const className = `${config.prefix}${props.name}${config.suffix}`
 
-  const methodsCode = props.methods
-    .map(
-      (method) => code`${indent}${br}${method}() {${indent}${br}// TODO: implement${dedent}${br}}${dedent}`,
-    )
-    .join('\n')
+  const methodsCode = props.methods.map((method) => code`${indent}${br}${method}() {${indent}${br}// TODO: implement${dedent}${br}}${dedent}`).join('\n')
 
   return code`
 export class ${className} {${methodsCode}${br}}
