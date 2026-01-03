@@ -1,7 +1,7 @@
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
 import { nodeNames } from '../dom.ts'
-import { processIntrinsicType } from '../intrinsic.tsx'
+import { processReactIntrinsics } from '../intrinsic.tsx'
 import type { DOMElement, KubbFile } from '../types.ts'
 
 export function squashTextNodes(node: DOMElement, context = { indentLevel: 0, indentSize: 2 }): string {
@@ -56,8 +56,8 @@ export function squashTextNodes(node: DOMElement, context = { indentLevel: 0, in
         // Check if this is an intrinsic element (br, hbr, sbr, lbr, etc.)
         const intrinsicTypes = ['br', 'hbr', 'sbr', 'lbr', 'indent', 'dedent', 'align', 'group', 'ifBreak', 'indentIfBreak', 'fill']
         if (intrinsicTypes.includes(child.nodeName)) {
-          // Use processIntrinsicType to handle intrinsic elements
-          nodeText = processIntrinsicType(
+          // Use unified processReactIntrinsics to handle intrinsic elements
+          nodeText = processReactIntrinsics(
             child.nodeName,
             context,
             () => walk(child),

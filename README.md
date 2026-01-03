@@ -338,7 +338,7 @@ fabric.write({ extension: { '.vue': '.ts' } })
 
 ## String Template Components (stc)
 
-The stc module provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns, it enables declarative, synchronous code generation using template strings.
+The stc module provides a lightweight component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns, it enables declarative, synchronous code generation using template strings with first-class formatting support.
 
 **Installation:**
 ```bash
@@ -353,10 +353,12 @@ import { stc, code, provide, inject, br, indent, dedent } from '@kubb/fabric-cor
 ### Key Features
 
 - 🎯 **No React dependency** — Pure TypeScript/JavaScript components for code generation
-- 🎨 **Context support** — Dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
+- 🎨 **Framework-agnostic context** — Shared dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
 - 📝 **Template literals** — Natural code generation with tagged templates
 - ⚡ **Synchronous** — No async/await needed, just like Alloy framework
-- 🔧 **Intrinsic formatting** — Built-in `br`, `indent`, `dedent` and more for clean code generation
+- 🔧 **Intrinsic formatting** — Built-in `br`, `hbr`, `indent`, `dedent`, `align`, `group` and more for declarative code formatting
+- 🎪 **Alloy-compatible API** — Matches Alloy framework patterns with chainable `.code()` and `.children()` methods
+- 🌐 **Universal** — Works seamlessly with React, Vue, and plain TypeScript/JavaScript
 
 ### Basic Usage
 
@@ -376,20 +378,31 @@ const result = HelloWorldStc({ name: 'World' })
 
 ### Using Intrinsic Formatting
 
+Intrinsic formatting elements like `br`, `indent`, and `dedent` provide declarative control over code layout. They work as first-class values that are processed during rendering to produce properly formatted output.
+
 ```ts
 import { stc, code, br, indent, dedent } from '@kubb/fabric-core'
 
-function FunctionGenerator(props: { name: string }) {
-  return code`function ${props.name}() {${indent}${br}console.log("Hello");${dedent}${br}}`
+function FunctionGenerator(props: { name: string; body?: string }) {
+  return code`function ${props.name}() {${indent}${br}${props.body || 'console.log("Hello");'}${dedent}${br}}`
 }
 
 const Generator = stc(FunctionGenerator)
 const result = Generator({ name: 'greet' })
-// =>
+// Output:
 // function greet() {
 //   console.log("Hello");
 // }
 ```
+
+**Available Intrinsics:**
+- `br`, `hbr`, `sbr`, `lbr` - Line breaks (regular, hard, soft, literal)
+- `indent`, `dedent` - Increase/decrease indentation level
+- `align` - Align content to current column
+- `group` - Try to fit content on single line
+- `ifBreak`, `indentIfBreak`, `fill` - Advanced conditional formatting
+
+These work identically in both stc (fabric-core) and React (react-fabric) for maximum portability.
 
 ### Using Context (Vue 3 Style)
 
@@ -429,37 +442,75 @@ function Component(props: { name: string }) {
 
 ### Integration with Fabric
 
+stc components integrate seamlessly with Fabric's file generation system:
+
 ```ts
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { stc, code, createContext, provide, useContext, br, indent, dedent } from '@kubb/fabric-core'
 
+// Create type-safe context
 const ConfigContext = createContext({ prefix: 'Generated' })
 
-function CodeGenerator(props: { className: string }) {
+function CodeGenerator(props: { className: string; methods?: string[] }) {
   const config = useContext(ConfigContext)
-  return code`
-export class ${config.prefix}${props.className} {${indent}${br}constructor() {}${dedent}${br}}
-  `
+  const methodsCode = props.methods?.map(m => `${m}() {}`).join(`${br}`) || ''
+  
+  return code`export class ${config.prefix}${props.className} {${indent}${br}${methodsCode}${dedent}${br}}`
 }
 
 const Generator = stc(CodeGenerator)
 
 const fabric = createFabric()
-fabric.use(fsPlugin)
+fabric.use(fsPlugin, { clean: { path: './output' } })
 fabric.use(typescriptParser)
 
+// Override context value
 provide(ConfigContext, { prefix: 'Custom' })
-const generatedCode = Generator({ className: 'MyClass' })
+const generatedCode = Generator({ 
+  className: 'MyClass',
+  methods: ['constructor', 'init', 'destroy']
+})
 
 await fabric.addFile({
   baseName: 'generated.ts',
   path: './output/generated.ts',
-  sources: [{ value: generatedCode, isExportable: false }],
+  sources: [{ value: generatedCode, isExportable: true }],
 })
 
 await fabric.write()
+```
+
+**Output** (`output/generated.ts`):
+```ts
+export class CustomMyClass {
+  constructor() {}
+  init() {}
+  destroy() {}
+}
+```
+
+### Alloy-Compatible Chainable API
+
+stc supports Alloy-style chainable methods for flexible component composition:
+
+```ts
+import { stc, code } from '@kubb/fabric-core'
+
+const Component = stc((props: { children?: string }) => props.children || 'default')
+
+// Use .code() for template literal children
+const result1 = Component().code`const x = 1;`()
+// => "const x = 1;"
+
+// Use .children() for direct string children  
+const result2 = Component().children('const y = 2;')()
+// => "const y = 2;"
+
+// Call directly with props
+const result3 = Component({ children: 'const z = 3;' })
+// => "const z = 3;"
 ```
 
 For more details, see the [fabric-core stc documentation](./packages/fabric-core/README.md).
