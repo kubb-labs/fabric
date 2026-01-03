@@ -20,7 +20,7 @@ export function squashSourceNodes(node: DOMElement, ignores: Array<ElementNames>
 
       if (child.nodeName === 'kubb-source') {
         const value = squashTextNodes(child)
-        
+
         const name = child.attributes.get('name')
         const isTypeOnly = child.attributes.get('isTypeOnly') ?? false
         const isExportable = child.attributes.get('isExportable') ?? false

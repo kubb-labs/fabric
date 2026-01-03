@@ -1,6 +1,5 @@
 import type { JSDoc, Key, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { br } from '../intrinsic.tsx'
 
 type Props = {
   key?: Key

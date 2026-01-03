@@ -23,9 +23,8 @@ function Intrinsic({ type, children, thenContent, elseContent }: IntrinsicProps)
   // It doesn't render anything directly in React
   return null
 }
-
 // Attach the marker to identify intrinsic components
-(Intrinsic as any)[IntrinsicMarker] = true
+;(Intrinsic as any)[IntrinsicMarker] = true
 
 /**
  * Check if a React element is an intrinsic component
@@ -36,11 +35,11 @@ export function isReactIntrinsic(element: any): boolean {
 
 /**
  * Line break - adds newline with current indentation
- * 
+ *
  * Can be used as:
  * - JSX intrinsic: `<br />` (no import needed - works like HTML br)
  * - Component import: `import { Br } from '@kubb/react-fabric'` then `<Br />`
- * 
+ *
  * @example
  * // Option 1: Native JSX intrinsic (no import needed)
  * <>
@@ -50,7 +49,7 @@ export function isReactIntrinsic(element: any): boolean {
  *   <br />
  *   {'}'}
  * </>
- * 
+ *
  * // Option 2: Explicit component import
  * import { Br } from '@kubb/react-fabric'
  * <>
@@ -60,7 +59,7 @@ export function isReactIntrinsic(element: any): boolean {
 export function Br() {
   return <Intrinsic type="br" />
 }
-(Br as any)[IntrinsicMarker] = true
+;(Br as any)[IntrinsicMarker] = true
 
 /**
  * Lowercase alias for Br - for backward compatibility
@@ -76,7 +75,7 @@ export const br = Br
 export function Hbr() {
   return <Intrinsic type="hbr" />
 }
-(Hbr as any)[IntrinsicMarker] = true
+;(Hbr as any)[IntrinsicMarker] = true
 
 /**
  * Soft break - breaks only if needed
@@ -84,7 +83,7 @@ export function Hbr() {
 export function Sbr() {
   return <Intrinsic type="sbr" />
 }
-(Sbr as any)[IntrinsicMarker] = true
+;(Sbr as any)[IntrinsicMarker] = true
 
 /**
  * Literal break - raw newline without indentation
@@ -92,7 +91,7 @@ export function Sbr() {
 export function Lbr() {
   return <Intrinsic type="lbr" />
 }
-(Lbr as any)[IntrinsicMarker] = true
+;(Lbr as any)[IntrinsicMarker] = true
 
 /**
  * Increase indentation level
@@ -110,7 +109,7 @@ export function Lbr() {
 export function IndentIncrease() {
   return <Intrinsic type="indent" />
 }
-(IndentIncrease as any)[IntrinsicMarker] = true
+;(IndentIncrease as any)[IntrinsicMarker] = true
 
 /**
  * Decrease indentation level
@@ -118,7 +117,7 @@ export function IndentIncrease() {
 export function IndentDecrease() {
   return <Intrinsic type="dedent" />
 }
-(IndentDecrease as any)[IntrinsicMarker] = true
+;(IndentDecrease as any)[IntrinsicMarker] = true
 
 /**
  * Align to current column
@@ -126,7 +125,7 @@ export function IndentDecrease() {
 export function Align() {
   return <Intrinsic type="align" />
 }
-(Align as any)[IntrinsicMarker] = true
+;(Align as any)[IntrinsicMarker] = true
 
 /**
  * Group content that tries to fit on single line
@@ -134,21 +133,15 @@ export function Align() {
 export function Group({ children }: { children?: React.ReactNode }) {
   return <Intrinsic type="group">{children}</Intrinsic>
 }
-(Group as any)[IntrinsicMarker] = true
+;(Group as any)[IntrinsicMarker] = true
 
 /**
  * Conditional content based on breaking
  */
-export function IfBreak({
-  thenContent,
-  elseContent,
-}: {
-  thenContent: React.ReactNode
-  elseContent?: React.ReactNode
-}) {
+export function IfBreak({ thenContent, elseContent }: { thenContent: React.ReactNode; elseContent?: React.ReactNode }) {
   return <Intrinsic type="ifBreak" thenContent={thenContent} elseContent={elseContent} />
 }
-(IfBreak as any)[IntrinsicMarker] = true
+;(IfBreak as any)[IntrinsicMarker] = true
 
 /**
  * Indent only if parent breaks
@@ -156,7 +149,7 @@ export function IfBreak({
 export function IndentIfBreak() {
   return <Intrinsic type="indentIfBreak" />
 }
-(IndentIfBreak as any)[IntrinsicMarker] = true
+;(IndentIfBreak as any)[IntrinsicMarker] = true
 
 /**
  * Fill with breaks when needed
@@ -164,16 +157,13 @@ export function IndentIfBreak() {
 export function Fill({ children }: { children?: React.ReactNode }) {
   return <Intrinsic type="fill">{children}</Intrinsic>
 }
-(Fill as any)[IntrinsicMarker] = true
+;(Fill as any)[IntrinsicMarker] = true
 
 /**
  * Process React intrinsic elements during rendering
  * This is called by the React renderer to convert intrinsic components to strings
  */
-export function processReactIntrinsics(
-  element: React.ReactNode,
-  context = { indentLevel: 0, indentSize: 2 },
-): string {
+export function processReactIntrinsics(element: React.ReactNode, context = { indentLevel: 0, indentSize: 2 }): string {
   if (typeof element === 'string') {
     return element
   }
@@ -203,7 +193,7 @@ export function processReactIntrinsics(
       case 'br':
       case 'hbr':
       case 'sbr':
-        return '\n' + indentStr
+        return `\n${indentStr}`
 
       case 'lbr':
         return '\n'

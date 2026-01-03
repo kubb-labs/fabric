@@ -16,7 +16,7 @@ export function Indent({ size = 2, children }: IndentProps): string {
 
   // Dedent first to remove common leading whitespace
   const cleaned = dedent(children)
-  
+
   // Apply indentation to all lines
   return indentString(cleaned, size)
 }

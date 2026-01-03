@@ -1,23 +1,23 @@
 /**
  * Intrinsic formatting elements for code generation
  * Inspired by Alloy framework's intrinsic system
- * 
+ *
  * These are special formatting elements that are processed during rendering
  * to provide precise control over whitespace, line breaks, and indentation.
  */
 
 export type IntrinsicType =
-  | 'br'          // Line break - adds newline with current indentation
-  | 'hbr'         // Hard break - always breaks regardless of context
-  | 'sbr'         // Soft break - breaks only if needed
-  | 'lbr'         // Literal break - raw newline without indentation
-  | 'indent'      // Increase indentation level
-  | 'dedent'      // Decrease indentation level
-  | 'align'       // Align to current column
-  | 'group'       // Group that tries single line, breaks if needed
-  | 'ifBreak'     // Conditional content based on breaking
+  | 'br' // Line break - adds newline with current indentation
+  | 'hbr' // Hard break - always breaks regardless of context
+  | 'sbr' // Soft break - breaks only if needed
+  | 'lbr' // Literal break - raw newline without indentation
+  | 'indent' // Increase indentation level
+  | 'dedent' // Decrease indentation level
+  | 'align' // Align to current column
+  | 'group' // Group that tries single line, breaks if needed
+  | 'ifBreak' // Conditional content based on breaking
   | 'indentIfBreak' // Indent only if parent group breaks
-  | 'fill'        // Fill with line breaks when needed
+  | 'fill' // Fill with line breaks when needed
 
 export type Intrinsic = {
   type: IntrinsicType
@@ -71,7 +71,7 @@ export const lbr = createIntrinsic('lbr')
 
 /**
  * Increase indentation level for subsequent content
- * @example code`{${indent}${br}content${dedent}${br}}` 
+ * @example code`{${indent}${br}content${dedent}${br}}`
  */
 export const indent = createIntrinsic('indent')
 
@@ -112,10 +112,7 @@ export function group(strings: TemplateStringsArray, ...values: any[]): Intrinsi
  * @param thenContent - Content when parent breaks
  * @param elseContent - Content when parent doesn't break
  */
-export function ifBreak(
-  thenContent: string | Intrinsic | (string | Intrinsic)[],
-  elseContent?: string | Intrinsic | (string | Intrinsic)[],
-): Intrinsic {
+export function ifBreak(thenContent: string | Intrinsic | (string | Intrinsic)[], elseContent?: string | Intrinsic | (string | Intrinsic)[]): Intrinsic {
   return {
     type: 'ifBreak',
     thenContent,
@@ -133,7 +130,7 @@ export const indentIfBreak = createIntrinsic('indentIfBreak')
 /**
  * Fill with line breaks when content is too long
  * Useful for paragraph-style content
- * @param strings - Template string parts  
+ * @param strings - Template string parts
  * @param values - Template values
  */
 export function fill(strings: TemplateStringsArray, ...values: any[]): Intrinsic {
@@ -188,7 +185,7 @@ export function renderIntrinsics(
     case 'hbr':
     case 'sbr':
       context.currentLineLength = 0
-      return '\n' + indentStr
+      return `\n${indentStr}`
 
     case 'lbr':
       context.currentLineLength = 0
@@ -211,10 +208,11 @@ export function renderIntrinsics(
       // Advanced: could try single line first, then break if too long
       return renderIntrinsics(content.content || '', context)
 
-    case 'ifBreak':
+    case 'ifBreak': {
       // Use thenContent if should break, else elseContent
       const selectedContent = context.shouldBreak ? content.thenContent : content.elseContent
       return selectedContent ? renderIntrinsics(selectedContent, context) : ''
+    }
 
     case 'indentIfBreak':
       if (context.shouldBreak) {

@@ -1,6 +1,6 @@
-import { createJSDoc } from '../utils/createJSDoc.ts'
-import { br, indent, dedent } from '../intrinsic.ts'
+import { br, dedent, indent } from '../intrinsic.ts'
 import { code } from '../stc.ts'
+import { createJSDoc } from '../utils/createJSDoc.ts'
 
 type JSDoc = { comments: Array<string> }
 
@@ -81,12 +81,12 @@ export function Function({ name, default: isDefault, export: canExport, async, g
   }
 
   parts.push(' {')
-  
+
   if (children) {
     return code`${parts.join('')}${indent}${br}${children}${dedent}${br}}`
   }
-  
-  return parts.join('') + '}'
+
+  return `${parts.join('')}}`
 }
 
 Function.displayName = 'KubbFunction'
@@ -151,12 +151,12 @@ function ArrowFunction({
     parts.push(` => ${children || ''}\n`)
     return parts.join('')
   }
-  
+
   if (children) {
     return code`${parts.join('')} => {${indent}${br}${children}${dedent}${br}}${br}`
   }
-  
-  return parts.join('') + ' => {}\n'
+
+  return `${parts.join('')} => {}\n`
 }
 
 ArrowFunction.displayName = 'KubbArrowFunction'

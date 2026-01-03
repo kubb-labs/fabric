@@ -1,6 +1,6 @@
+import { createContext, inject, provide, unprovide } from '../context.ts'
 import type { FileCollector } from '../FileCollector.ts'
 import type { KubbFile } from '../types.ts'
-import { createContext, inject, provide, unprovide } from '../context.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**

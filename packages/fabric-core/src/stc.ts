@@ -1,4 +1,4 @@
-import { renderIntrinsics, isIntrinsic, type Intrinsic } from './intrinsic.ts'
+import { type Intrinsic, isIntrinsic, renderIntrinsics } from './intrinsic.ts'
 
 export type Children = string | number | boolean | null | undefined | Intrinsic | Children[]
 
@@ -10,22 +10,14 @@ export type ComponentCreator<T> = {
   props: T
 }
 
-export type MakeChildrenOptional<T extends object> =
-  T extends { children?: any } ?
-    Omit<T, "children"> & Partial<Pick<T, "children">>
-  : T
+export type MakeChildrenOptional<T extends object> = T extends { children?: any } ? Omit<T, 'children'> & Partial<Pick<T, 'children'>> : T
 
 export type StcSignature<T extends {}> = (
-  ...args: unknown extends T ? []
-  : {} extends Omit<T, "children"> ? [props?: MakeChildrenOptional<T>]
-  : [props: MakeChildrenOptional<T>]
+  ...args: unknown extends T ? [] : {} extends Omit<T, 'children'> ? [props?: MakeChildrenOptional<T>] : [props: MakeChildrenOptional<T>]
 ) => StcComponentCreator<T>
 
 export type StcComponentCreator<T> = ComponentCreator<T> & {
-  code(
-    template: TemplateStringsArray,
-    ...substitutions: (Children | Intrinsic)[]
-  ): ComponentCreator<T>
+  code(template: TemplateStringsArray, ...substitutions: (Children | Intrinsic)[]): ComponentCreator<T>
   children(...children: (Children | Intrinsic)[]): ComponentCreator<T>
 }
 
@@ -53,9 +45,7 @@ export type StcComponentCreator<T> = ComponentCreator<T> & {
  * const result3 = Component().children('child1', 'child2')()
  * ```
  */
-export function stc<T extends {}>(
-  Component: ComponentDefinition<T>,
-): StcSignature<T> {
+export function stc<T extends {}>(Component: ComponentDefinition<T>): StcSignature<T> {
   return (...args) => {
     const fn: StcComponentCreator<T> = (() => Component(args[0] as T)) as any
     fn.component = Component
@@ -94,21 +84,21 @@ export function stc<T extends {}>(
  * @example
  * ```ts
  * import { br, indent, dedent } from '@kubb/fabric-core'
- * 
+ *
  * const result = code`function hello() {${indent}${br}console.log("hi")${dedent}${br}}`
  * // => "function hello() {\n  console.log("hi")\n}"
  * ```
  */
 export function code(strings: TemplateStringsArray, ...values: (Children | Intrinsic)[]): string {
   const parts: (string | Intrinsic)[] = []
-  
+
   for (let i = 0; i < strings.length; i++) {
     if (strings[i]) {
       parts.push(strings[i])
     }
     if (i < values.length) {
       const value = values[i]
-      
+
       // Handle intrinsic elements
       if (isIntrinsic(value)) {
         parts.push(value)
@@ -129,6 +119,6 @@ export function code(strings: TemplateStringsArray, ...values: (Children | Intri
       }
     }
   }
-  
+
   return renderIntrinsics(parts)
 }

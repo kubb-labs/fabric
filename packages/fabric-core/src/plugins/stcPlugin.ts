@@ -1,8 +1,8 @@
-import { FileCollector } from '../FileCollector.ts'
-import { definePlugin } from './definePlugin.ts'
 import { FileCollectorContext } from '../components/File.ts'
 import { provide } from '../context.ts'
+import { FileCollector } from '../FileCollector.ts'
 import type { StcComponent } from '../types.ts'
+import { definePlugin } from './definePlugin.ts'
 
 export type StcPluginOptions = {
   /**

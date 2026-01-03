@@ -1,6 +1,6 @@
-import { FileCollector } from '../FileCollector.ts'
 import { afterEach, describe, expect, test } from 'vitest'
 import { provide, unprovide } from '../context.ts'
+import { FileCollector } from '../FileCollector.ts'
 import { File, FileCollectorContext } from './File.ts'
 
 describe('File', () => {
