@@ -29,7 +29,7 @@ export type StcComponentCreator<T> = ComponentCreator<T> & {
  *
  * @example
  * ```ts
- * import { stc, code } from '@kubb/stc-fabric'
+ * import { stc, code } from '@kubb/fabric-core'
  *
  * const Component = stc((props: { name: string }) => {
  *   return `Hello, ${props.name}!`

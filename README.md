@@ -338,16 +338,16 @@ fabric.write({ extension: { '.vue': '.ts' } })
 
 ## String Template Components (stc)
 
-The stc module is available as a separate package `@kubb/stc-fabric` and provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns, it enables declarative, synchronous code generation using template strings.
+The stc module provides a signal-based component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns, it enables declarative, synchronous code generation using template strings.
 
 **Installation:**
 ```bash
-npm install @kubb/stc-fabric
+npm install @kubb/fabric-core
 ```
 
 **Usage:**
 ```ts
-import { stc, code, provide, inject } from '@kubb/stc-fabric'
+import { stc, code, provide, inject, br, indent, dedent } from '@kubb/fabric-core'
 ```
 
 ### Key Features
@@ -356,11 +356,12 @@ import { stc, code, provide, inject } from '@kubb/stc-fabric'
 - 🎨 **Context support** — Dependency injection via `provide`/`inject` (Vue 3) or `useContext` (React-style)
 - 📝 **Template literals** — Natural code generation with tagged templates
 - ⚡ **Synchronous** — No async/await needed, just like Alloy framework
+- 🔧 **Intrinsic formatting** — Built-in `br`, `indent`, `dedent` and more for clean code generation
 
 ### Basic Usage
 
 ```ts
-import { stc, code } from '@kubb/stc-fabric'
+import { stc, code } from '@kubb/fabric-core'
 
 function HelloWorld(props: { name: string }) {
   return code`
@@ -373,10 +374,27 @@ const result = HelloWorldStc({ name: 'World' })
 // => 'const greeting = "Hello, World!";'
 ```
 
+### Using Intrinsic Formatting
+
+```ts
+import { stc, code, br, indent, dedent } from '@kubb/fabric-core'
+
+function FunctionGenerator(props: { name: string }) {
+  return code`function ${props.name}() {${indent}${br}console.log("Hello");${dedent}${br}}`
+}
+
+const Generator = stc(FunctionGenerator)
+const result = Generator({ name: 'greet' })
+// =>
+// function greet() {
+//   console.log("Hello");
+// }
+```
+
 ### Using Context (Vue 3 Style)
 
 ```ts
-import { provide, inject, stc, code } from '@kubb/stc-fabric'
+import { provide, inject, stc, code } from '@kubb/fabric-core'
 
 const ConfigKey = Symbol('config')
 
@@ -396,7 +414,7 @@ const result = MyComponent({ name: 'flag' })
 ### Using Context (React Style)
 
 ```ts
-import { createContext, useContext, provide, stc, code } from '@kubb/stc-fabric'
+import { createContext, useContext, provide, stc, code } from '@kubb/fabric-core'
 
 const ConfigContext = createContext({ prefix: 'generated' })
 
@@ -415,16 +433,14 @@ function Component(props: { name: string }) {
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { stc, code, createContext, provide, useContext } from '@kubb/stc-fabric'
+import { stc, code, createContext, provide, useContext, br, indent, dedent } from '@kubb/fabric-core'
 
 const ConfigContext = createContext({ prefix: 'Generated' })
 
 function CodeGenerator(props: { className: string }) {
   const config = useContext(ConfigContext)
   return code`
-export class ${config.prefix}${props.className} {
-  constructor() {}
-}
+export class ${config.prefix}${props.className} {${indent}${br}constructor() {}${dedent}${br}}
   `
 }
 
@@ -446,7 +462,7 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-For more details, see the [@kubb/stc-fabric documentation](./packages/stc-fabric/README.md).
+For more details, see the [fabric-core stc documentation](./packages/fabric-core/README.md).
 
 | `clearReferences()` | Function | Clears all references (useful for testing) |
 

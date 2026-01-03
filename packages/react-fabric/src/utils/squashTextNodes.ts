@@ -3,7 +3,7 @@ import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typ
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
 
-export function squashTextNodes(node: DOMElement): string {
+export function squashTextNodes(node: DOMElement, context = { indentLevel: 0, indentSize: 2 }): string {
   let text = ''
 
   const walk = (current: DOMElement): string => {
@@ -52,10 +52,50 @@ export function squashTextNodes(node: DOMElement): string {
       if (child.nodeName === '#text') {
         nodeText = child.nodeValue
       } else {
-        // Handle JSX intrinsic <br> element (via __intrinsic marker)
+        // Handle intrinsic elements using processReactIntrinsics logic
         const intrinsicType = child.attributes.get('__intrinsic')
-        if (intrinsicType === 'br' || child.nodeName === 'br') {
-          nodeText = '\n'
+        if (intrinsicType) {
+          const indentStr = ' '.repeat(context.indentLevel * context.indentSize)
+          
+          switch (intrinsicType) {
+            case 'br':
+            case 'hbr':
+            case 'sbr':
+              nodeText = `\n${indentStr}`
+              break
+            case 'lbr':
+              nodeText = '\n'
+              break
+            case 'indent':
+              context.indentLevel++
+              nodeText = ''
+              break
+            case 'dedent':
+              context.indentLevel = Math.max(0, context.indentLevel - 1)
+              nodeText = ''
+              break
+            case 'align':
+              nodeText = ''
+              break
+            case 'group':
+            case 'fill':
+              nodeText = walk(child)
+              break
+            case 'ifBreak':
+              // Basic implementation: use thenContent (children)
+              nodeText = walk(child)
+              break
+            case 'indentIfBreak':
+              context.indentLevel++
+              nodeText = ''
+              break
+            default:
+              nodeText = ''
+          }
+        } else if (child.nodeName === 'br') {
+          // Fallback for br without __intrinsic marker
+          const indentStr = ' '.repeat(context.indentLevel * context.indentSize)
+          nodeText = `\n${indentStr}`
         } else if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
           nodeText = walk(child)
           nodeText = getPrintText(nodeText)
