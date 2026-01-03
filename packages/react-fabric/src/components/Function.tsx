@@ -1,6 +1,6 @@
 import type { JSDoc, Key, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Indent } from './Indent.tsx'
+import { Br, IndentIncrease, IndentDecrease } from '../intrinsic.tsx'
 
 type Props = {
   key?: Key
@@ -47,7 +47,7 @@ export function Function({ name, default: isDefault, export: canExport, async, g
       {JSDoc?.comments && (
         <>
           {createJSDoc({ comments: JSDoc?.comments })}
-          <br />
+          <Br />
         </>
       )}
       {canExport && <>export </>}
@@ -70,9 +70,11 @@ export function Function({ name, default: isDefault, export: canExport, async, g
         </>
       )}
       {' {'}
-      <br />
-      <Indent size={2}>{children}</Indent>
-      <br />
+      <IndentIncrease />
+      <Br />
+      {children}
+      <IndentDecrease />
+      <Br />
       {'}'}
     </>
   )
@@ -93,7 +95,7 @@ function ArrowFunction({ name, default: isDefault, export: canExport, async, gen
       {JSDoc?.comments && (
         <>
           {createJSDoc({ comments: JSDoc?.comments })}
-          <br />
+          <Br />
         </>
       )}
       {canExport && <>export </>}
@@ -118,17 +120,19 @@ function ArrowFunction({ name, default: isDefault, export: canExport, async, gen
         <>
           {' => '}
           {children}
-          <br />
+          <Br />
         </>
       )}
       {!singleLine && (
         <>
           {' => {'}
-          <br />
-          <Indent size={2}>{children}</Indent>
-          <br />
+          <IndentIncrease />
+          <Br />
+          {children}
+          <IndentDecrease />
+          <Br />
           {'}'}
-          <br />
+          <Br />
         </>
       )}
     </>
