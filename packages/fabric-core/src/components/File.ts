@@ -27,10 +27,18 @@ export const FileCollectorContext = createContext<FileCollector | null>(null)
 /**
  * Context for the current file being processed
  */
+type TreeNode = {
+  type: string
+  props?: Record<string, any>
+  children?: TreeNode[]
+}
+
 type CurrentFileContext = {
   sources: KubbFile.Source[]
   imports: KubbFile.Import[]
   exports: KubbFile.Export[]
+  tree: TreeNode[]
+  treeStack: TreeNode[][]
 }
 export const CurrentFileContext = createContext<CurrentFileContext | null>(null)
 
@@ -50,6 +58,8 @@ export function File<TMeta extends object = object>(props: FileProps<TMeta>): st
     sources: [],
     imports: [],
     exports: [],
+    tree: [],
+    treeStack: [],
   }
 
   // Provide the current file context
@@ -61,6 +71,15 @@ export function File<TMeta extends object = object>(props: FileProps<TMeta>): st
   // Clean up context
   unprovide(CurrentFileContext)
 
+  // Add stringified tree as a special source for viewing/filtering
+  const treeSource: KubbFile.Source = {
+    name: '__tree__',
+    value: JSON.stringify(currentFile.tree, null, 2),
+    isTypeOnly: false,
+    isExportable: false,
+    isIndexable: false,
+  }
+
   // Register this file with the collector
   // Type assertion needed because FileCollector isn't exposed in types
   ;(collector as any).add({
@@ -69,7 +88,7 @@ export function File<TMeta extends object = object>(props: FileProps<TMeta>): st
     meta: props.meta || ({} as TMeta),
     banner: props.banner,
     footer: props.footer,
-    sources: currentFile.sources,
+    sources: [...currentFile.sources, treeSource],
     imports: currentFile.imports,
     exports: currentFile.exports,
   })
@@ -84,6 +103,7 @@ export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: 
   const currentFile = inject(CurrentFileContext, null)
 
   if (currentFile) {
+    // Add to sources
     currentFile.sources.push({
       name: props.name,
       isTypeOnly: props.isTypeOnly,
@@ -91,6 +111,24 @@ export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: 
       isIndexable: props.isIndexable,
       value: props.children || '',
     })
+
+    // Track in tree
+    const node: TreeNode = {
+      type: 'FileSource',
+      props: {
+        name: props.name,
+        isTypeOnly: props.isTypeOnly,
+        isExportable: props.isExportable,
+        isIndexable: props.isIndexable,
+      },
+    }
+
+    // Add to current tree level
+    const currentLevel = currentFile.treeStack.length > 0 
+      ? currentFile.treeStack[currentFile.treeStack.length - 1]
+      : currentFile.tree
+    
+    currentLevel.push(node)
   }
 
   return props.children || ''
@@ -103,12 +141,31 @@ export function FileExport(props: KubbFile.Export): string {
   const currentFile = inject(CurrentFileContext, null)
 
   if (currentFile) {
+    // Add to exports
     currentFile.exports.push({
       name: props.name,
       path: props.path,
       isTypeOnly: props.isTypeOnly || false,
       asAlias: props.asAlias,
     })
+
+    // Track in tree
+    const node: TreeNode = {
+      type: 'FileExport',
+      props: {
+        name: props.name,
+        path: props.path,
+        isTypeOnly: props.isTypeOnly,
+        asAlias: props.asAlias,
+      },
+    }
+
+    // Add to current tree level
+    const currentLevel = currentFile.treeStack.length > 0 
+      ? currentFile.treeStack[currentFile.treeStack.length - 1]
+      : currentFile.tree
+    
+    currentLevel.push(node)
   }
 
   return ''
@@ -121,6 +178,7 @@ export function FileImport(props: KubbFile.Import): string {
   const currentFile = inject(CurrentFileContext, null)
 
   if (currentFile) {
+    // Add to imports
     currentFile.imports.push({
       name: props.name,
       root: props.root,
@@ -128,6 +186,25 @@ export function FileImport(props: KubbFile.Import): string {
       isNameSpace: props.isNameSpace,
       isTypeOnly: props.isTypeOnly || false,
     })
+
+    // Track in tree
+    const node: TreeNode = {
+      type: 'FileImport',
+      props: {
+        name: props.name,
+        root: props.root,
+        path: props.path,
+        isNameSpace: props.isNameSpace,
+        isTypeOnly: props.isTypeOnly,
+      },
+    }
+
+    // Add to current tree level
+    const currentLevel = currentFile.treeStack.length > 0 
+      ? currentFile.treeStack[currentFile.treeStack.length - 1]
+      : currentFile.tree
+    
+    currentLevel.push(node)
   }
 
   return ''
