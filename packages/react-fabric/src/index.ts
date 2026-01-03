@@ -32,7 +32,6 @@ export { createReactFabric } from './createReactFabric.ts'
 export {
   Align,
   Br,
-  br, // backward compatibility - prefer using <br /> as JSX intrinsic
   Fill,
   Group,
   Hbr,

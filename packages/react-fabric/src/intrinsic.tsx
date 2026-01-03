@@ -62,14 +62,6 @@ export function Br() {
 ;(Br as any)[IntrinsicMarker] = true
 
 /**
- * Lowercase alias for Br - for backward compatibility
- * Note: You can also use `<br />` directly as a JSX intrinsic without importing
- * @deprecated Use `<br />` as JSX intrinsic or `<Br />` component instead
- * @example <br />
- */
-export const br = Br
-
-/**
  * Hard break - always breaks regardless of context
  */
 export function Hbr() {
