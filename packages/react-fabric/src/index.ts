@@ -16,9 +16,11 @@ export const useReducer = React.useReducer
 export const useRef = React.useRef
 
 // intrinsic components
+// Note: <br /> works as a JSX intrinsic element without importing
+// The Br and br exports are provided for backward compatibility
 export {
   Br,
-  br, // lowercase alias for Br - allows using <br /> in standard HTML style
+  br, // backward compatibility - prefer using <br /> as JSX intrinsic
   Hbr,
   Sbr,
   Lbr,

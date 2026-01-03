@@ -36,7 +36,26 @@ export function isReactIntrinsic(element: any): boolean {
 
 /**
  * Line break - adds newline with current indentation
- * @example <Br /> or <br />
+ * 
+ * Can be used as:
+ * - JSX intrinsic: `<br />` (no import needed - works like HTML br)
+ * - Component import: `import { Br } from '@kubb/react-fabric'` then `<Br />`
+ * 
+ * @example
+ * // Option 1: Native JSX intrinsic (no import needed)
+ * <>
+ *   function hello() {'{'}
+ *   <br />
+ *   console.log("hi")
+ *   <br />
+ *   {'}'}
+ * </>
+ * 
+ * // Option 2: Explicit component import
+ * import { Br } from '@kubb/react-fabric'
+ * <>
+ *   <Br />
+ * </>
  */
 export function Br() {
   return <Intrinsic type="br" />
@@ -44,8 +63,9 @@ export function Br() {
 (Br as any)[IntrinsicMarker] = true
 
 /**
- * Lowercase alias for Br - allows using <br /> (standard HTML style)
- * Behind the scenes, this uses the Br intrinsic component
+ * Lowercase alias for Br - for backward compatibility
+ * Note: You can also use `<br />` directly as a JSX intrinsic without importing
+ * @deprecated Use `<br />` as JSX intrinsic or `<Br />` component instead
  * @example <br />
  */
 export const br = Br

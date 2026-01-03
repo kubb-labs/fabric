@@ -52,17 +52,18 @@ export function squashTextNodes(node: DOMElement): string {
       if (child.nodeName === '#text') {
         nodeText = child.nodeValue
       } else {
-        if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
-          nodeText = walk(child)
-        }
-
-        nodeText = getPrintText(nodeText)
-
-        if (child.nodeName === 'br') {
+        // Handle JSX intrinsic <br> element (via __intrinsic marker)
+        const intrinsicType = child.attributes.get('__intrinsic')
+        if (intrinsicType === 'br' || child.nodeName === 'br') {
           nodeText = '\n'
+        } else if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
+          nodeText = walk(child)
+          nodeText = getPrintText(nodeText)
+        } else {
+          nodeText = getPrintText(nodeText)
         }
 
-        if (!nodeNames.has(child.nodeName)) {
+        if (!nodeNames.has(child.nodeName) && !intrinsicType) {
           const attributes = child.attributes
           let attrString = ''
           const hasAttributes = attributes.size > 0
