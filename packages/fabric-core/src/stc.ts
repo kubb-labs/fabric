@@ -24,10 +24,6 @@ export type StcComponentCreator<T> = ComponentCreator<T> & {
     template: TemplateStringsArray,
     ...substitutions: Children[]
   ): ComponentCreator<T>
-  text(
-    template: TemplateStringsArray,
-    ...substitutions: Children[]
-  ): ComponentCreator<T>
   children(...children: Children[]): ComponentCreator<T>
 }
 
@@ -73,17 +69,6 @@ export function stc<T extends {}>(
       fn.props = args[0]! as T
       return fn
     }
-    fn.text = (template, ...substitutions) => {
-      const propsWithChildren = {
-        ...(args[0] ?? {}),
-        children: text(template, ...substitutions),
-      }
-
-      const fn = () => Component(propsWithChildren as any)
-      fn.component = Component
-      fn.props = args[0]! as T
-      return fn
-    }
     fn.children = (...children: Children[]): ComponentCreator<T> => {
       const propsWithChildren = {
         ...(args[0] ?? {}),
@@ -110,7 +95,7 @@ export function stc<T extends {}>(
  * `
  * ```
  */
-export function template(strings: TemplateStringsArray, ...values: Children[]): string {
+export function code(strings: TemplateStringsArray, ...values: Children[]): string {
   let result = ''
   for (let i = 0; i < strings.length; i++) {
     result += strings[i]
@@ -125,13 +110,3 @@ export function template(strings: TemplateStringsArray, ...values: Children[]): 
   }
   return result
 }
-
-/**
- * Alias for template - represents code generation
- */
-export const code = template
-
-/**
- * Text template literal helper (no code formatting)
- */
-export const text = template

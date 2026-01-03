@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { code, stc, template, text } from './stc.ts'
+import { code, stc } from './stc.ts'
 
 describe('stc', () => {
   it('should create a string template component', () => {
@@ -83,20 +83,20 @@ describe('stc', () => {
   })
 })
 
-describe('template', () => {
-  it('should create a template string', () => {
+describe('code', () => {
+  it('should create a code template string', () => {
     const name = 'myVar'
     const value = 42
 
-    const result = template`const ${name} = ${value};`
+    const result = code`const ${name} = ${value};`
 
     expect(result).toBe('const myVar = 42;')
   })
 
-  it('should handle multiline templates', () => {
+  it('should handle multiline code', () => {
     const name = 'myFunction'
 
-    const result = template`
+    const result = code`
       function ${name}() {
         return true;
       }
@@ -108,24 +108,15 @@ describe('template', () => {
 
   it('should handle array values', () => {
     const items = ['a', 'b', 'c']
-    const result = template`Items: ${items}`
+    const result = code`Items: ${items}`
 
     expect(result).toBe('Items: abc')
   })
 
   it('should handle null and undefined', () => {
-    const result = template`Value: ${null}, ${undefined}`
+    const result = code`Value: ${null}, ${undefined}`
 
     expect(result).toBe('Value: , ')
-  })
-})
-
-describe('code', () => {
-  it('should be an alias for template', () => {
-    const name = 'test'
-    const result = code`const ${name} = 1;`
-
-    expect(result).toBe('const test = 1;')
   })
 
   it('should generate TypeScript code', () => {
@@ -143,14 +134,5 @@ interface ${interfaceName} {
     expect(result).toContain('interface User')
     expect(result).toContain('name: string')
     expect(result).toContain('age: number')
-  })
-})
-
-describe('text', () => {
-  it('should be an alias for template', () => {
-    const value = 'hello'
-    const result = text`Text: ${value}`
-
-    expect(result).toBe('Text: hello')
   })
 })

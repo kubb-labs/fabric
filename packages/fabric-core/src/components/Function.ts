@@ -1,4 +1,4 @@
-import { createJSDoc } from '../stc-utils/createJSDoc.ts'
+import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Indent } from './Indent.ts'
 
 type JSDoc = { comments: Array<string> }
