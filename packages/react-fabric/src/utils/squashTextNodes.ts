@@ -71,7 +71,10 @@ export function squashTextNodes(node: DOMElement, context = { indentLevel: 0, in
         }
       }
 
-      if (!nodeNames.has(child.nodeName) && !['br', 'hbr', 'sbr', 'lbr', 'indent', 'dedent', 'align', 'group', 'ifBreak', 'indentIfBreak', 'fill'].includes(child.nodeName)) {
+      if (
+        !nodeNames.has(child.nodeName) &&
+        !['br', 'hbr', 'sbr', 'lbr', 'indent', 'dedent', 'align', 'group', 'ifBreak', 'indentIfBreak', 'fill'].includes(child.nodeName)
+      ) {
         const attributes = child.attributes
         let attrString = ''
         const hasAttributes = attributes.size > 0
