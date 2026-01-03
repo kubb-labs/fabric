@@ -1,6 +1,6 @@
 import type { JSDoc, Key, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Br } from '../intrinsic.tsx'
+import { br } from '../intrinsic.tsx'
 
 type Props = {
   key?: Key
@@ -29,7 +29,7 @@ export function Type({ name, export: canExport, JSDoc, children }: Props) {
       {JSDoc?.comments && (
         <>
           {createJSDoc({ comments: JSDoc?.comments })}
-          <Br />
+          <br />
         </>
       )}
       {canExport && <>export </>}

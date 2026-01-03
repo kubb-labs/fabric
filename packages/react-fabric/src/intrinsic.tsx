@@ -36,12 +36,19 @@ export function isReactIntrinsic(element: any): boolean {
 
 /**
  * Line break - adds newline with current indentation
- * @example <br />
+ * @example <Br /> or <br />
  */
 export function Br() {
   return <Intrinsic type="br" />
 }
 (Br as any)[IntrinsicMarker] = true
+
+/**
+ * Lowercase alias for Br - allows using <br /> (standard HTML style)
+ * Behind the scenes, this uses the Br intrinsic component
+ * @example <br />
+ */
+export const br = Br
 
 /**
  * Hard break - always breaks regardless of context

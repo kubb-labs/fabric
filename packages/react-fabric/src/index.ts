@@ -18,6 +18,7 @@ export const useRef = React.useRef
 // intrinsic components
 export {
   Br,
+  br, // lowercase alias for Br - allows using <br /> in standard HTML style
   Hbr,
   Sbr,
   Lbr,
