@@ -32,6 +32,12 @@ export type Import = {
   root?: string
 }
 
+export type TreeNode = {
+  type: string
+  props?: Record<string, any>
+  children?: TreeNode[]
+}
+
 export type Source = {
   name?: string
   value?: string
@@ -46,6 +52,10 @@ export type Source = {
    * @default false
    */
   isIndexable?: boolean
+  /**
+   * Tree structure showing the component hierarchy used to create this source
+   */
+  tree?: TreeNode
 }
 
 export type Export = {

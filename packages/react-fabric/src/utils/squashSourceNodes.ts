@@ -20,14 +20,31 @@ export function squashSourceNodes(node: DOMElement, ignores: Array<ElementNames>
 
       if (child.nodeName === 'kubb-source') {
         const value = squashTextNodes(child)
+        
+        const name = child.attributes.get('name')
+        const isTypeOnly = child.attributes.get('isTypeOnly') ?? false
+        const isExportable = child.attributes.get('isExportable') ?? false
+        const isIndexable = child.attributes.get('isIndexable') ?? false
+
+        // Create tree node for this source
+        const treeNode: KubbFile.TreeNode = {
+          type: 'FileSource',
+          props: {
+            name,
+            isTypeOnly,
+            isExportable,
+            isIndexable,
+          },
+        }
 
         sources.add({
-          name: child.attributes.get('name'),
-          isTypeOnly: child.attributes.get('isTypeOnly') ?? false,
-          isExportable: child.attributes.get('isExportable') ?? false,
-          isIndexable: child.attributes.get('isIndexable') ?? false,
+          name,
+          isTypeOnly,
+          isExportable,
+          isIndexable,
           // trim whitespace/newlines
           value: value.trim().replace(/^\s+|\s+$/g, ''),
+          tree: treeNode,
         } as KubbFile.Source)
         continue
       }
