@@ -1,10 +1,10 @@
 import { FileCollectorContext } from '../components/File.ts'
 import { provide } from '../context.ts'
 import { FileCollector } from '../FileCollector.ts'
-import type { StcComponent } from '../types.ts'
+import type { FsxComponent } from '../types.ts'
 import { definePlugin } from './definePlugin.ts'
 
-export type StcPluginOptions = {
+export type FsxPluginOptions = {
   /**
    * Set this to true to always see the result of the render in the console
    */
@@ -12,21 +12,21 @@ export type StcPluginOptions = {
 }
 
 type ExtendOptions = {
-  render(component: StcComponent<any>): Promise<void>
-  renderToString(component: StcComponent<any>): Promise<string>
+  render(component: FsxComponent<any>): Promise<void>
+  renderToString(component: FsxComponent<any>): Promise<string>
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(component: StcComponent<any>): Promise<void>
-      renderToString(component: StcComponent<any>): Promise<string>
+      render(component: FsxComponent<any>): Promise<void>
+      renderToString(component: FsxComponent<any>): Promise<string>
     }
   }
 }
 
-export const stcPlugin = definePlugin<StcPluginOptions, ExtendOptions>({
-  name: 'stc',
+export const fsxPlugin = definePlugin<FsxPluginOptions, ExtendOptions>({
+  name: 'fsx',
   install() {},
   inject(ctx, options = {}) {
     const fileCollector = new FileCollector()

@@ -1,13 +1,13 @@
 {
-  "name": "stc-example",
+  "name": "fsx-example",
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "description": "String Template Components (stc) examples",
+  "description": "Fabric Syntax eXtension (fsx) examples",
   "repository": {
     "type": "git",
     "url": "https://github.com/kubb-labs/fabric.git",
-    "directory": "examples/stc"
+    "directory": "examples/fsx"
   },
   "license": "MIT",
   "author": "stijnvanhulle",

@@ -12,26 +12,26 @@ export type ComponentCreator<T> = {
 
 export type MakeChildrenOptional<T extends object> = T extends { children?: any } ? Omit<T, 'children'> & Partial<Pick<T, 'children'>> : T
 
-export type StcSignature<T extends {}> = (
+export type FsxSignature<T extends {}> = (
   ...args: unknown extends T ? [] : {} extends Omit<T, 'children'> ? [props?: MakeChildrenOptional<T>] : [props: MakeChildrenOptional<T>]
-) => StcComponentCreator<T>
+) => FsxComponentCreator<T>
 
-export type StcComponentCreator<T> = ComponentCreator<T> & {
+export type FsxComponentCreator<T> = ComponentCreator<T> & {
   code(template: TemplateStringsArray, ...substitutions: (Children | Intrinsic)[]): ComponentCreator<T>
   children(...children: (Children | Intrinsic)[]): ComponentCreator<T>
 }
 
 /**
- * Main stc wrapper function that creates a string template component
+ * Main fsx wrapper function that creates a string template component
  *
  * This matches the Alloy framework pattern with chainable methods for
  * code(), text(), and children().
  *
  * @example
  * ```ts
- * import { stc, code } from '@kubb/fabric-core'
+ * import { fsx, code } from '@kubb/fabric-core'
  *
- * const Component = stc((props: { name: string }) => {
+ * const Component = fsx((props: { name: string }) => {
  *   return `Hello, ${props.name}!`
  * })
  *
@@ -45,9 +45,9 @@ export type StcComponentCreator<T> = ComponentCreator<T> & {
  * const result3 = Component().children('child1', 'child2')()
  * ```
  */
-export function stc<T extends {}>(Component: ComponentDefinition<T>): StcSignature<T> {
+export function fsx<T extends {}>(Component: ComponentDefinition<T>): FsxSignature<T> {
   return (...args) => {
-    const fn: StcComponentCreator<T> = (() => Component(args[0] as T)) as any
+    const fn: FsxComponentCreator<T> = (() => Component(args[0] as T)) as any
     fn.component = Component
     fn.props = args[0]! as T
     fn.code = (template, ...substitutions): ComponentCreator<T> => {

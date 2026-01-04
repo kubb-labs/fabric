@@ -149,9 +149,9 @@ fill`This is a long sentence that will wrap when needed.`
 Instead of strings with embedded `\n`, components use intrinsic objects:
 
 ```typescript
-import { stc, code, br, indent, dedent } from '@kubb/fabric-core'
+import { fsx, code, br, indent, dedent } from '@kubb/fabric-core'
 
-export const Function = stc((props: { name: string; children?: string }) => {
+export const Function = fsx((props: { name: string; children?: string }) => {
   return code`function ${props.name}() {${indent}${br}${props.children}${dedent}${br}}`
 })
 ```
@@ -202,7 +202,7 @@ function hello() {
 
 **Before (Manual):**
 ```typescript
-export const Function = stc((props) => {
+export const Function = fsx((props) => {
   const body = props.children 
     ? `\n${Indent({ size: 2, children: props.children })}\n`
     : ''
@@ -212,7 +212,7 @@ export const Function = stc((props) => {
 
 **After (Intrinsics):**
 ```typescript
-export const Function = stc((props) => {
+export const Function = fsx((props) => {
   return code`function ${props.name}() {${indent}${br}${props.children}${dedent}${br}}`
 })
 ```
@@ -294,14 +294,14 @@ const code = renderIntrinsics([
 ])
 ```
 
-### Integrating with `stc()`
+### Integrating with `fsx()`
 
 The `code` tagged template now automatically handles intrinsics:
 
 ```typescript
-import { stc, code, br, indent, dedent } from '@kubb/fabric-core'
+import { fsx, code, br, indent, dedent } from '@kubb/fabric-core'
 
-const Component = stc((props) => {
+const Component = fsx((props) => {
   return code`function ${props.name}() {${indent}${br}${props.body}${dedent}${br}}`
 })
 

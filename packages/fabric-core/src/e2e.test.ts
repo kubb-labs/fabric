@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { code, createContext, stc, useContext } from './index.ts'
+import { code, createContext, fsx, useContext } from './index.ts'
 
-describe('stc e2e integration', () => {
+describe('fsx e2e integration', () => {
   it('should work with createFabric', () => {
-    // Example 1: Basic stc component
+    // Example 1: Basic fsx component
     function HelloWorld(props: { name: string }) {
       return code`
         // Generated greeting
@@ -11,7 +11,7 @@ describe('stc e2e integration', () => {
       `
     }
 
-    const HelloWorldStc = stc(HelloWorld)
+    const HelloWorldStc = fsx(HelloWorld)
     const greeting = HelloWorldStc({ name: 'World' })
 
     expect(greeting).toContain('Hello, World!')
@@ -36,7 +36,7 @@ ${methodsCode}
       `
     }
 
-    const ClassGeneratorStc = stc(ClassGenerator)
+    const ClassGeneratorStc = fsx(ClassGenerator)
 
     const userClass = ClassGeneratorStc({
       name: 'User',
@@ -48,7 +48,7 @@ ${methodsCode}
     expect(userClass).toContain('setName()')
   })
 
-  it('should compose multiple stc components', () => {
+  it('should compose multiple fsx components', () => {
     function HelloWorld(props: { name: string }) {
       return code`
         // Generated greeting
@@ -64,8 +64,8 @@ export class ${props.name} {
       `
     }
 
-    const HelloWorldStc = stc(HelloWorld)
-    const ClassGeneratorStc = stc(ClassGenerator)
+    const HelloWorldStc = fsx(HelloWorld)
+    const ClassGeneratorStc = fsx(ClassGenerator)
 
     const greeting = HelloWorldStc({ name: 'World' })
     const userClass = ClassGeneratorStc({ name: 'User' })
@@ -91,7 +91,7 @@ export class ${props.className} {
       `
     }
 
-    const Generator = stc(CodeGenerator)
+    const Generator = fsx(CodeGenerator)
     const generatedCode = Generator({ className: 'MyClass' })
 
     expect(generatedCode).toContain('export class MyClass')

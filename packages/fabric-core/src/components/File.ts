@@ -20,7 +20,7 @@ export type FileProps<TMeta extends object = object> = {
 }
 
 /**
- * Context for collecting files - provided by createStcFabric
+ * Context for collecting files - provided by createFsxFabric
  */
 export const FileCollectorContext = createContext<FileCollector | null>(null)
 
@@ -35,7 +35,7 @@ type CurrentFileContext = {
 export const CurrentFileContext = createContext<CurrentFileContext | null>(null)
 
 /**
- * File component for stc - registers files via context
+ * File component for fsx - registers files via context
  */
 export function File<TMeta extends object = object>(props: FileProps<TMeta>): string {
   const collector = inject(FileCollectorContext, null)

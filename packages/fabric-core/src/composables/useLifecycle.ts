@@ -9,7 +9,7 @@ export function useLifecycle() {
 
   return {
     exit: () => {
-      // In stc, we call exit directly without setTimeout since we don't have React's lifecycle
+      // In fsx, we call exit directly without setTimeout since we don't have React's lifecycle
       exit()
     },
   }

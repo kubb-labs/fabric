@@ -1,8 +1,8 @@
-import { br, code, createContext, createFabric, dedent, indent, provide, stc, unprovide, useContext } from '@kubb/fabric-core'
+import { br, code, createContext, createFabric, dedent, indent, provide, fsx, unprovide, useContext } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
-// Example 1: Basic stc component
+// Example 1: Basic fsx component
 function HelloWorld(props: { name: string }) {
   return code`
     // Generated greeting
@@ -10,7 +10,7 @@ function HelloWorld(props: { name: string }) {
   `
 }
 
-const HelloWorldStc = stc(HelloWorld)
+const HelloWorldStc = fsx(HelloWorld)
 
 // Example 2: Using context for configuration (React-style)
 const ConfigContext = createContext({
@@ -29,7 +29,7 @@ export class ${className} {${methodsCode}${br}}
   `
 }
 
-const ClassGeneratorStc = stc(ClassGenerator)
+const ClassGeneratorStc = fsx(ClassGenerator)
 
 // Example 3: Composing multiple components (no async/await needed!)
 function generateCode() {
@@ -61,7 +61,7 @@ export async function run() {
 
   await fabric.addFile({
     baseName: 'generated.ts',
-    path: './example-stc/gen/generated.ts',
+    path: './example-fsx/gen/generated.ts',
     sources: [
       {
         value: generatedCode,
@@ -75,7 +75,7 @@ export async function run() {
 
   await fabric.write()
 
-  console.log('✅ Generated code using stc components!')
+  console.log('✅ Generated code using fsx components!')
 }
 
 run()

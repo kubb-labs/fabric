@@ -1,5 +1,5 @@
 import { br, dedent, indent } from '../intrinsic.ts'
-import { code } from '../stc.ts'
+import { code } from '../fsx.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 type JSDoc = { comments: Array<string> }

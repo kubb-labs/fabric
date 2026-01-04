@@ -336,9 +336,9 @@ fabric.write({ extension: { '.vue': '.ts' } })
 > - When extension mapping is provided to `fabric.write`, Fabric picks a parser whose `extNames` include the file’s extension. Otherwise, the default parser is used.
 
 
-## String Template Components (stc)
+## Fabric Syntax eXtension (fsx)
 
-The stc module provides a lightweight component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns, it enables declarative, synchronous code generation using template strings with first-class formatting support.
+The fsx module provides a lightweight component model for code generation without React dependency. Inspired by the [Alloy framework](https://alloy-framework.github.io/alloy/) and Vue.js composable patterns, it enables declarative, synchronous code generation using template strings with first-class formatting support.
 
 **Installation:**
 ```bash
@@ -347,7 +347,7 @@ npm install @kubb/fabric-core
 
 **Usage:**
 ```ts
-import { stc, code, provide, inject, br, indent, dedent } from '@kubb/fabric-core'
+import { fsx, code, provide, inject, br, indent, dedent } from '@kubb/fabric-core'
 ```
 
 ### Key Features
@@ -363,7 +363,7 @@ import { stc, code, provide, inject, br, indent, dedent } from '@kubb/fabric-cor
 ### Basic Usage
 
 ```ts
-import { stc, code } from '@kubb/fabric-core'
+import { fsx, code } from '@kubb/fabric-core'
 
 function HelloWorld(props: { name: string }) {
   return code`
@@ -371,8 +371,8 @@ function HelloWorld(props: { name: string }) {
   `
 }
 
-const HelloWorldStc = stc(HelloWorld)
-const result = HelloWorldStc({ name: 'World' })
+const HelloWorldFsx = fsx(HelloWorld)
+const result = HelloWorldFsx({ name: 'World' })
 // => 'const greeting = "Hello, World!";'
 ```
 
@@ -381,13 +381,13 @@ const result = HelloWorldStc({ name: 'World' })
 Intrinsic formatting elements like `br`, `indent`, and `dedent` provide declarative control over code layout. They work as first-class values that are processed during rendering to produce properly formatted output.
 
 ```ts
-import { stc, code, br, indent, dedent } from '@kubb/fabric-core'
+import { fsx, code, br, indent, dedent } from '@kubb/fabric-core'
 
 function FunctionGenerator(props: { name: string; body?: string }) {
   return code`function ${props.name}() {${indent}${br}${props.body || 'console.log("Hello");'}${dedent}${br}}`
 }
 
-const Generator = stc(FunctionGenerator)
+const Generator = fsx(FunctionGenerator)
 const result = Generator({ name: 'greet' })
 // Output:
 // function greet() {
@@ -402,12 +402,12 @@ const result = Generator({ name: 'greet' })
 - `group` - Try to fit content on single line
 - `ifBreak`, `indentIfBreak`, `fill` - Advanced conditional formatting
 
-These work identically in both stc (fabric-core) and React (react-fabric) for maximum portability.
+These work identically in both fsx (fabric-core) and React (react-fabric) for maximum portability.
 
 ### Using Context (Vue 3 Style)
 
 ```ts
-import { provide, inject, stc, code } from '@kubb/fabric-core'
+import { provide, inject, fsx, code } from '@kubb/fabric-core'
 
 const ConfigKey = Symbol('config')
 
@@ -419,7 +419,7 @@ function Component(props: { name: string }) {
   return code`const ${config.prefix}_${props.name} = true;`
 }
 
-const MyComponent = stc(Component)
+const MyComponent = fsx(Component)
 const result = MyComponent({ name: 'flag' })
 // => 'const app_flag = true;'
 ```
@@ -427,7 +427,7 @@ const result = MyComponent({ name: 'flag' })
 ### Using Context (React Style)
 
 ```ts
-import { createContext, useContext, provide, stc, code } from '@kubb/fabric-core'
+import { createContext, useContext, provide, fsx, code } from '@kubb/fabric-core'
 
 const ConfigContext = createContext({ prefix: 'generated' })
 
@@ -442,13 +442,13 @@ function Component(props: { name: string }) {
 
 ### Integration with Fabric
 
-stc components integrate seamlessly with Fabric's file generation system:
+fsx components integrate seamlessly with Fabric's file generation system:
 
 ```ts
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { stc, code, createContext, provide, useContext, br, indent, dedent } from '@kubb/fabric-core'
+import { fsx, code, createContext, provide, useContext, br, indent, dedent } from '@kubb/fabric-core'
 
 // Create type-safe context
 const ConfigContext = createContext({ prefix: 'Generated' })
@@ -460,7 +460,7 @@ function CodeGenerator(props: { className: string; methods?: string[] }) {
   return code`export class ${config.prefix}${props.className} {${indent}${br}${methodsCode}${dedent}${br}}`
 }
 
-const Generator = stc(CodeGenerator)
+const Generator = fsx(CodeGenerator)
 
 const fabric = createFabric()
 fabric.use(fsPlugin, { clean: { path: './output' } })
@@ -493,12 +493,12 @@ export class CustomMyClass {
 
 ### Alloy-Compatible Chainable API
 
-stc supports Alloy-style chainable methods for flexible component composition:
+fsx supports Alloy-style chainable methods for flexible component composition:
 
 ```ts
-import { stc, code } from '@kubb/fabric-core'
+import { fsx, code } from '@kubb/fabric-core'
 
-const Component = stc((props: { children?: string }) => props.children || 'default')
+const Component = fsx((props: { children?: string }) => props.children || 'default')
 
 // Use .code() for template literal children
 const result1 = Component().code`const x = 1;`()
@@ -513,7 +513,7 @@ const result3 = Component({ children: 'const z = 3;' })
 // => "const z = 3;"
 ```
 
-For more details, see the [fabric-core stc documentation](./packages/fabric-core/README.md).
+For more details, see the [fabric-core fsx documentation](./packages/fabric-core/README.md).
 
 | `clearReferences()` | Function | Clears all references (useful for testing) |
 

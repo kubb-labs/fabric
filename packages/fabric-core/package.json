@@ -1,14 +1,14 @@
 {
   "name": "@kubb/fabric-core",
   "version": "0.8.0",
-  "description": "Core functionality for Kubb's plugin-based code generation system, including stc (String Template Components) for declarative code generation without React dependency.",
+  "description": "Core functionality for Kubb's plugin-based code generation system, including fsx (Fabric Syntax eXtension) for declarative code generation without React dependency.",
   "keywords": [
     "typescript",
     "plugins",
     "plugin-system",
     "code-generator",
     "codegen",
-    "stc",
+    "fsx",
     "string-template-components",
     "openapi",
     "swagger",

@@ -16,7 +16,7 @@ type Props<TMeta = unknown> = {
 }
 
 export function App<TMeta = unknown>({ children }: Props<TMeta>): string {
-  // In stc, we just return children since we don't have a component tree
+  // In fsx, we just return children since we don't have a component tree
   // Context is provided via provide() calls before components run
 
   return children || ''

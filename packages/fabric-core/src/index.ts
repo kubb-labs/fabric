@@ -1,4 +1,4 @@
-// stc (String Template Components)
+// fsx (Fabric Syntax eXtension)
 export type { AppContextProps } from './components/App.ts'
 export { App, AppContext } from './components/App.ts'
 export { Const } from './components/Const.ts'
@@ -16,7 +16,7 @@ export { useLifecycle } from './composables/useLifecycle.ts'
 export { type Context, createContext, inject, provide, unprovide } from './context.ts'
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
-export { createStcFabric } from './createStcFabric.ts'
+export { createFsxFabric } from './createFsxFabric.ts'
 // we need this to override the globals of `fabric.use`
 export type { Fabric } from './Fabric.ts'
 export { FileCollector } from './FileCollector.ts'
@@ -41,7 +41,7 @@ export {
   renderIntrinsics,
   sbr,
 } from './intrinsic.ts'
-export type { StcPluginOptions } from './plugins/stcPlugin.ts'
-export { stcPlugin } from './plugins/stcPlugin.ts'
-export type { StcComponent } from './stc.ts'
-export { code, stc } from './stc.ts'
+export type { FsxPluginOptions } from './plugins/fsxPlugin.ts'
+export { fsxPlugin } from './plugins/fsxPlugin.ts'
+export type { FsxComponent } from './fsx.ts'
+export { code, fsx } from './fsx.ts'

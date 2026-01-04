@@ -25,7 +25,7 @@ type RootProps = {
 
 export function Root({ onError, children }: Omit<RootProps, 'onExit'>): string {
   try {
-    // In stc, we don't have component trees like React
+    // In fsx, we don't have component trees like React
     // We just return the children and let context handle the rest
     return children || ''
   } catch (e) {

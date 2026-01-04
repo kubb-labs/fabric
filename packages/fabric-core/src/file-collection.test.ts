@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import type { Fabric } from '../Fabric.ts'
 import { FileCollectorContext } from './components/File.ts'
 import { unprovide } from './context.ts'
-import { createStcFabric, File, stc } from './index.ts'
+import { createFsxFabric, File, fsx } from './index.ts'
 
 type FabricWithFileManager = Fabric & {
   context: {
@@ -19,9 +19,9 @@ describe('File collection via context', () => {
   })
 
   it('should collect files via FileCollector context', async () => {
-    const fabric = createStcFabric()
+    const fabric = createFsxFabric()
 
-    const MyComponent = stc<{ name: string }>((props) => {
+    const MyComponent = fsx<{ name: string }>((props) => {
       File({
         baseName: 'test.ts',
         path: './test.ts',
@@ -40,9 +40,9 @@ describe('File collection via context', () => {
   })
 
   it('should collect multiple files from same component', async () => {
-    const fabric = createStcFabric()
+    const fabric = createFsxFabric()
 
-    const MultiFileComponent = stc(() => {
+    const MultiFileComponent = fsx(() => {
       File({
         baseName: 'file1.ts',
         path: './file1.ts',

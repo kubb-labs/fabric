@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { code, createContext, inject, provide, stc, unprovide, useContext } from './index.ts'
+import { code, createContext, inject, provide, fsx, unprovide, useContext } from './index.ts'
 
-describe('stc integration', () => {
-  it('should integrate stc with context', () => {
+describe('fsx integration', () => {
+  it('should integrate fsx with context', () => {
     const ThemeContext = createContext({ color: 'blue' })
 
     function Component(props: { name: string }) {
@@ -10,13 +10,13 @@ describe('stc integration', () => {
       return code`const ${props.name} = "${theme.color}";`
     }
 
-    const MyComponent = stc(Component)
+    const MyComponent = fsx(Component)
     const result = MyComponent({ name: 'myVar' })
 
     expect(result).toContain('const myVar = "blue";')
   })
 
-  it('should compose multiple stc components', () => {
+  it('should compose multiple fsx components', () => {
     function Header() {
       return code`// Auto-generated file`
     }
@@ -25,8 +25,8 @@ describe('stc integration', () => {
       return code`export const data = "${props.content}";`
     }
 
-    const HeaderStc = stc(Header)
-    const BodyStc = stc(Body)
+    const HeaderStc = fsx(Header)
+    const BodyStc = fsx(Body)
 
     const header = HeaderStc({})
     const body = BodyStc({ content: 'test' })
@@ -52,7 +52,7 @@ ${fieldsCode}
       `.trim()
     }
 
-    const Generator = stc(InterfaceGenerator)
+    const Generator = fsx(InterfaceGenerator)
     const result = Generator({
       name: 'User',
       fields: [
@@ -78,7 +78,7 @@ describe('Vue-style API integration', () => {
       return code`const ${config.prefix}_${props.name} = true;`
     }
 
-    const MyComponent = stc(Component)
+    const MyComponent = fsx(Component)
 
     provide(ConfigKey, { prefix: 'app' })
     const result = MyComponent({ name: 'flag' })
@@ -95,7 +95,7 @@ describe('Vue-style API integration', () => {
       return code`const ${config.prefix}_${props.name} = true;`
     }
 
-    const MyComponent = stc(Component)
+    const MyComponent = fsx(Component)
 
     provide(ConfigContext, { prefix: 'custom' })
     const result = MyComponent({ name: 'value' })

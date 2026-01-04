@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { code, stc } from './stc.ts'
+import { code, fsx } from './fsx.ts'
 
-describe('stc', () => {
+describe('fsx', () => {
   it('should create a string template component', () => {
     function HelloWorld(props: { name: string }) {
       return `Hello, ${props.name}!`
     }
 
-    const HelloWorldStc = stc(HelloWorld)
+    const HelloWorldStc = fsx(HelloWorld)
     const result = HelloWorldStc({ name: 'World' })()
 
     expect(result).toBe('Hello, World!')
@@ -18,7 +18,7 @@ describe('stc', () => {
       return 'Simple output'
     }
 
-    const Component = stc(SimpleComponent)
+    const Component = fsx(SimpleComponent)
     const result = Component()()
 
     expect(result).toBe('Simple output')
@@ -29,7 +29,7 @@ describe('stc', () => {
       return props.items.map((item) => `- ${item}`).join('\n')
     }
 
-    const Component = stc(ComplexComponent)
+    const Component = fsx(ComplexComponent)
     const result = Component({ items: ['one', 'two', 'three'] })()
 
     expect(result).toBe('- one\n- two\n- three')
@@ -40,8 +40,8 @@ describe('stc', () => {
       return props.children || 'default'
     }
 
-    const Stc = stc(Component)
-    const result = Stc().code`const x = 1;`()
+    const Fsx = fsx(Component)
+    const result = Fsx().code`const x = 1;`()
 
     expect(result).toBe('const x = 1;')
   })
@@ -51,8 +51,8 @@ describe('stc', () => {
       return props.children || 'default'
     }
 
-    const Stc = stc(Component)
-    const result = Stc().text`Hello World`()
+    const Fsx = fsx(Component)
+    const result = Fsx().text`Hello World`()
 
     expect(result).toBe('Hello World')
   })
@@ -65,8 +65,8 @@ describe('stc', () => {
       return props.children || 'default'
     }
 
-    const Stc = stc(Component)
-    const result = Stc().children('a', 'b', 'c')()
+    const Fsx = fsx(Component)
+    const result = Fsx().children('a', 'b', 'c')()
 
     expect(result).toBe('a, b, c')
   })
@@ -76,8 +76,8 @@ describe('stc', () => {
       return `${props.name}: ${props.children || 'none'}`
     }
 
-    const Stc = stc(Component)
-    const result = Stc({ name: 'Test' }).code`const value = 42;`()
+    const Fsx = fsx(Component)
+    const result = Fsx({ name: 'Test' }).code`const value = 42;`()
 
     expect(result).toBe('Test: const value = 42;')
   })
