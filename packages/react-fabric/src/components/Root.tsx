@@ -56,19 +56,15 @@ type RootProps = {
 }
 
 export function Root({ onError, onExit, children }: RootProps) {
-  try {
-    return (
-      <ErrorBoundary
-        onError={(error) => {
-          onError(error)
-        }}
-      >
-        <RootContext.Provider value={{ exit: onExit }}>{children}</RootContext.Provider>
-      </ErrorBoundary>
-    )
-  } catch (_e) {
-    return null
-  }
+  return (
+    <ErrorBoundary
+      onError={(error) => {
+        onError(error)
+      }}
+    >
+      <RootContext.Provider value={{ exit: onExit }}>{children}</RootContext.Provider>
+    </ErrorBoundary>
+  )
 }
 
 Root.Context = RootContext
