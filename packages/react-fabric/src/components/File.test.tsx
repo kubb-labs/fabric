@@ -160,9 +160,7 @@ describe('<File/>', () => {
     fabric.use(reactPlugin)
 
     // The error should be thrown because 'banner' is not inside <File.Source>
-    await expect(fabric.renderToString(Component)).rejects.toThrow(
-      "'banner' should be part of <File.Source> component when using the <File/> component"
-    )
+    await expect(fabric.renderToString(Component)).rejects.toThrow("'banner' should be part of <File.Source> component when using the <File/> component")
   })
 
   test('render File with source', async () => {

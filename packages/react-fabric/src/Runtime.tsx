@@ -177,7 +177,7 @@ export class Runtime {
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()
     await this.#renderPromise
-    
+
     // Throw any errors that occurred during rendering
     if (this.#renderError) {
       const error = this.#renderError

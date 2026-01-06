@@ -1,5 +1,5 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Root } from './Root.tsx'
 
@@ -31,7 +31,7 @@ describe('<Root/>', () => {
 
     const fabric = createFabric()
     fabric.use(reactPlugin)
-    
+
     // The error should now be thrown
     await expect(fabric.renderToString(Component)).rejects.toThrow('boom')
   })
