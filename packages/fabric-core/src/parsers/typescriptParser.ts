@@ -8,10 +8,10 @@ const { factory } = ts
 
 /**
  * Validates TypeScript AST nodes before printing to catch invalid nodes early.
- * Throws an error if any node has SyntaxKind.Unknown which would cause the TypeScript printer to crash.
+ * Recursively checks all nested nodes to ensure none have SyntaxKind.Unknown which would cause the TypeScript printer to crash.
  */
 export function validateNodes(...nodes: ts.Node[]): void {
-  for (const node of nodes) {
+  function validateNode(node: ts.Node): void {
     if (!node) {
       throw new Error('Attempted to print undefined or null TypeScript node')
     }
@@ -22,6 +22,12 @@ export function validateNodes(...nodes: ts.Node[]): void {
           `Node: ${JSON.stringify(node, null, 2)}`,
       )
     }
+    // Recursively validate all child nodes
+    ts.forEachChild(node, validateNode)
+  }
+
+  for (const node of nodes) {
+    validateNode(node)
   }
 }
 

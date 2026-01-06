@@ -1,7 +1,7 @@
-import type ts from 'typescript'
+import ts from 'typescript'
 import { describe, expect, it } from 'vitest'
 
-import { createExport, createImport, print, typescriptParser } from './typescriptParser.ts'
+import { createExport, createImport, print, safePrint, typescriptParser, validateNodes } from './typescriptParser.ts'
 
 const formatTS = (elements: ts.Node | (ts.Node | undefined)[]) => {
   const nodes: Array<ts.Node> = []
@@ -157,5 +157,86 @@ describe('TypeScript parser', () => {
       export const y = 2
       // footer"
     `)
+  })
+
+  describe('validateNodes', () => {
+    it('should throw error for undefined or null nodes', () => {
+      expect(() => validateNodes(undefined as any)).toThrow('Attempted to print undefined or null TypeScript node')
+      expect(() => validateNodes(null as any)).toThrow('Attempted to print undefined or null TypeScript node')
+    })
+
+    it('should throw error for top-level Unknown nodes', () => {
+      const unknownNode = { kind: ts.SyntaxKind.Unknown } as ts.Node
+      expect(() => validateNodes(unknownNode)).toThrow('Invalid TypeScript AST node detected with SyntaxKind.Unknown')
+    })
+
+    it('should throw error for nested Unknown nodes in PropertySignature', () => {
+      const factory = ts.factory
+      // Create a PropertySignature with a nested Unknown node (simulating the reported issue)
+      const typeElement = factory.createPropertySignature(
+        undefined,
+        factory.createIdentifier('test'),
+        undefined,
+        { kind: ts.SyntaxKind.Unknown } as ts.TypeNode,
+      )
+      const typeNode = factory.createTypeLiteralNode([typeElement])
+
+      expect(() => validateNodes(typeNode)).toThrow('Invalid TypeScript AST node detected with SyntaxKind.Unknown')
+    })
+
+    it('should throw error for deeply nested Unknown nodes', () => {
+      const factory = ts.factory
+      // Create a more complex nested structure
+      const innerUnknownType = { kind: ts.SyntaxKind.Unknown } as ts.TypeNode
+      const propertySignature = factory.createPropertySignature(undefined, factory.createIdentifier('nested'), undefined, innerUnknownType)
+      const typeLiteral = factory.createTypeLiteralNode([propertySignature])
+      const outerProperty = factory.createPropertySignature(undefined, factory.createIdentifier('outer'), undefined, typeLiteral)
+      const outerTypeLiteral = factory.createTypeLiteralNode([outerProperty])
+
+      expect(() => validateNodes(outerTypeLiteral)).toThrow('Invalid TypeScript AST node detected with SyntaxKind.Unknown')
+    })
+
+    it('should not throw for valid nodes', () => {
+      const factory = ts.factory
+      const typeElement = factory.createPropertySignature(
+        undefined,
+        factory.createIdentifier('test'),
+        undefined,
+        factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+      )
+      const typeNode = factory.createTypeLiteralNode([typeElement])
+
+      expect(() => validateNodes(typeNode)).not.toThrow()
+    })
+  })
+
+  describe('safePrint', () => {
+    it('should successfully print valid nodes', () => {
+      const factory = ts.factory
+      const typeElement = factory.createPropertySignature(
+        undefined,
+        factory.createIdentifier('name'),
+        undefined,
+        factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+      )
+      const typeNode = factory.createTypeLiteralNode([typeElement])
+
+      const result = safePrint(typeNode)
+      expect(result).toContain('name')
+      expect(result).toContain('string')
+    })
+
+    it('should throw error before printing when nested Unknown nodes are present', () => {
+      const factory = ts.factory
+      const typeElement = factory.createPropertySignature(
+        undefined,
+        factory.createIdentifier('test'),
+        undefined,
+        { kind: ts.SyntaxKind.Unknown } as ts.TypeNode,
+      )
+      const typeNode = factory.createTypeLiteralNode([typeElement])
+
+      expect(() => safePrint(typeNode)).toThrow('Invalid TypeScript AST node detected with SyntaxKind.Unknown')
+    })
   })
 })
