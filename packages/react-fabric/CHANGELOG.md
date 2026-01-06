@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.9.2
+
+### Patch Changes
+
+- [`4f238c7`](https://github.com/kubb-labs/fabric/commit/4f238c79518cedeb46e9b5da5d6c138a40f91fc5) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Do not repeat console.error but use console.log
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.9.2
+
 ## 0.9.1
 
 ### Patch Changes
