@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.9.1
+
+### Patch Changes
+
+- [`fb407bf`](https://github.com/kubb-labs/fabric/commit/fb407bf8cbd915fc18054407e75990e4bc636c63) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Better throw of errors
+
 ## 0.9.0
 
 ### Minor Changes
