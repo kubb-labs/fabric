@@ -97,7 +97,7 @@
     "picocolors": "^1.1.1",
     "serve-handler": "^6.1.6",
     "typescript": "5.9.3",
-    "ws": "^8.18.3"
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",

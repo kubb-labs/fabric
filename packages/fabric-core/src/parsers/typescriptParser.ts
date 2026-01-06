@@ -7,6 +7,25 @@ import { defineParser } from './defineParser.ts'
 const { factory } = ts
 
 /**
+ * Validates TypeScript AST nodes before printing to catch invalid nodes early.
+ * Throws an error if any node has SyntaxKind.Unknown which would cause the TypeScript printer to crash.
+ */
+export function validateNodes(...nodes: ts.Node[]): void {
+  for (const node of nodes) {
+    if (!node) {
+      throw new Error('Attempted to print undefined or null TypeScript node')
+    }
+    if (node.kind === ts.SyntaxKind.Unknown) {
+      throw new Error(
+        'Invalid TypeScript AST node detected with SyntaxKind.Unknown. ' +
+          `This typically indicates a schema pattern that couldn't be properly converted to TypeScript. ` +
+          `Node: ${JSON.stringify(node, null, 2)}`,
+      )
+    }
+  }
+}
+
+/**
  * Convert AST TypeScript/TSX nodes to a string based on the TypeScript printer.
  */
 export function print(...elements: Array<ts.Node>): string {
@@ -28,6 +47,12 @@ export function print(...elements: Array<ts.Node>): string {
   const output = printer.printList(ts.ListFormat.MultiLine, factory.createNodeArray(elements.filter(Boolean)), sourceFile)
 
   return output.replace(/\r\n/g, '\n')
+}
+
+export function safePrint(...elements: Array<ts.Node>): string {
+  validateNodes(...elements)
+
+  return print(...elements)
 }
 
 export function createImport({
