@@ -66,7 +66,8 @@ export function Root({ onError, onExit, children }: RootProps) {
         <RootContext.Provider value={{ exit: onExit }}>{children}</RootContext.Provider>
       </ErrorBoundary>
     )
-  } catch (_e) {
+  } catch (e) {
+    onError(e as Error)
     return null
   }
 }
