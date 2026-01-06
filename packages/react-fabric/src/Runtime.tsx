@@ -129,7 +129,6 @@ export class Runtime {
 
     this.#renderPromise = task.catch((error) => {
       this.onError(error as Error)
-      throw error
     })
 
     return this.#renderPromise
