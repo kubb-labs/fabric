@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.9.0
+
+### Minor Changes
+
+- [`bf1f368`](https://github.com/kubb-labs/fabric/commit/bf1f36863554b07b87a04dc676b6bd5d12a86280) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Add safePrint helper to validate before printing
+
 ## 0.8.0
 
 ### Minor Changes
