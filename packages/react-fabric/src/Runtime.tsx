@@ -40,7 +40,6 @@ export class Runtime {
     this.unmount.bind(this)
 
     // Intercept noisy React errors
-    const originalError = console.error
     console.error = (data: string | Error) => {
       const message = typeof data === 'string' ? data : data?.message
       if (
@@ -52,7 +51,7 @@ export class Runtime {
       ) {
         return
       }
-      originalError(data)
+      console.log(data)
     }
 
     const logRecoverableError = typeof reportError === 'function' ? reportError : console.error
