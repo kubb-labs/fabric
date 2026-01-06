@@ -1,5 +1,5 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, test } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Root } from './Root.tsx'
 
@@ -24,24 +24,15 @@ describe('<Root/>', () => {
     expect(output).toMatchSnapshot()
   })
 
-  test('error boundary should catch and call onError', async () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
-
+  test('error boundary should catch and throw error', async () => {
     const Component = () => {
-      return (
-        <Root onExit={onExit} onError={onError}>
-          <Thrower />
-        </Root>
-      )
+      return <Thrower />
     }
 
     const fabric = createFabric()
     fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
-    expect(onError).toHaveBeenCalledTimes(1)
-    expect(onExit).not.toHaveBeenCalled()
+    // The error should now be thrown
+    await expect(fabric.renderToString(Component)).rejects.toThrow('boom')
   })
 })

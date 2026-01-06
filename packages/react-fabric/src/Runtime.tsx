@@ -25,6 +25,7 @@ type Options = {
 export class Runtime {
   readonly #options: Options
   #isUnmounted: boolean
+  #renderError?: Error
 
   exitPromise?: Promise<void>
   readonly #container: FiberRoot
@@ -138,7 +139,8 @@ export class Runtime {
       console.warn(error)
     }
 
-    throw error
+    // Store the error to be thrown after render completes
+    this.#renderError = error
   }
 
   onExit(error?: Error): void {
@@ -175,6 +177,13 @@ export class Runtime {
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()
     await this.#renderPromise
+
+    // Throw any errors that occurred during rendering
+    if (this.#renderError) {
+      const error = this.#renderError
+      this.#renderError = undefined
+      throw error
+    }
   }
 
   async renderToString(node: ReactNode): Promise<string> {
@@ -189,6 +198,13 @@ export class Runtime {
 
     await this.#renderPromise
     this.fileManager.clear()
+
+    // Throw any errors that occurred during rendering
+    if (this.#renderError) {
+      const error = this.#renderError
+      this.#renderError = undefined
+      throw error
+    }
 
     return this.#getOutput(this.#rootNode)
   }
