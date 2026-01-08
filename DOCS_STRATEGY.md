@@ -180,6 +180,339 @@ If Option 2 is preferred instead:
 5. Implement cross-site navigation links
 6. Set up separate CI/CD pipeline
 
+## TanStack-Style Approach: Unified Docs Site with Separate Source Repos
+
+If you want to implement **TanStack's approach** (unified docs site that pulls from separate repos):
+
+### Architecture Overview
+
+```
+kubb-labs/kubb.dev (new dedicated docs repo)
+├─ .vitepress/
+│  └─ config.ts           # Main VitePress config
+├─ app/                   # Docs site app/framework
+├─ public/                # Static assets
+├─ kubb/                  # Symlink or git submodule → kubb-labs/kubb/docs
+└─ fabric/                # Symlink or git submodule → kubb-labs/fabric/docs
+```
+
+### Implementation Steps
+
+#### 1. Create Dedicated Docs Repository
+
+Create new repository: `kubb-labs/kubb.dev`
+
+```bash
+# Structure
+kubb.dev/
+├─ package.json
+├─ .vitepress/
+│  ├─ config.ts
+│  └─ theme/
+├─ app/                   # Landing page, shared content
+└─ README.md
+```
+
+#### 2. Set Up Docs in Source Repositories
+
+**In kubb-labs/kubb:**
+```
+kubb/
+└─ docs/
+   ├─ getting-started/
+   ├─ plugins/
+   └─ ... (existing Kubb docs)
+```
+
+**In kubb-labs/fabric:**
+```
+fabric/
+└─ docs/                  # NEW
+   ├─ getting-started/
+   ├─ core/
+   ├─ plugins/
+   └─ parsers/
+```
+
+#### 3. Link Docs into Main Site
+
+**Option A: Git Submodules** (TanStack approach)
+
+```bash
+# In kubb.dev repo
+git submodule add https://github.com/kubb-labs/kubb.git vendor/kubb
+git submodule add https://github.com/kubb-labs/fabric.git vendor/fabric
+
+# Create symlinks or copy during build
+ln -s vendor/kubb/docs kubb
+ln -s vendor/fabric/docs fabric
+```
+
+**Option B: Build-time Fetch** (Simpler for contributors)
+
+```typescript
+// scripts/fetch-docs.ts
+import { execSync } from 'child_process'
+import fs from 'fs'
+
+// Clone or pull latest docs
+const repos = [
+  { name: 'kubb', url: 'https://github.com/kubb-labs/kubb.git' },
+  { name: 'fabric', url: 'https://github.com/kubb-labs/fabric.git' }
+]
+
+repos.forEach(({ name, url }) => {
+  if (!fs.existsSync(`vendor/${name}`)) {
+    execSync(`git clone ${url} vendor/${name}`)
+  } else {
+    execSync(`cd vendor/${name} && git pull`)
+  }
+  
+  // Copy docs to build location
+  fs.cpSync(`vendor/${name}/docs`, name, { recursive: true })
+})
+```
+
+**Option C: Sibling Repos** (Local development)
+
+```bash
+# Clone repos as siblings (for local dev)
+parent/
+├─ kubb.dev/              # Main docs site
+├─ kubb/                  # Code repo with docs/
+└─ fabric/                # Code repo with docs/
+
+# In kubb.dev package.json
+{
+  "scripts": {
+    "dev": "node scripts/link-docs.js && vitepress dev",
+    "build": "node scripts/link-docs.js && vitepress build"
+  }
+}
+```
+
+#### 4. Configure VitePress
+
+```typescript
+// .vitepress/config.ts
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  title: 'Kubb Docs',
+  description: 'Toolkit for working with APIs and code generation',
+  
+  themeConfig: {
+    nav: [
+      { text: 'Kubb', link: '/kubb/' },
+      { text: 'Fabric', link: '/fabric/' },
+    ],
+    
+    sidebar: {
+      '/kubb/': [
+        {
+          text: 'Getting Started',
+          items: [
+            { text: 'Introduction', link: '/kubb/getting-started/' },
+            { text: 'Installation', link: '/kubb/getting-started/installation' }
+          ]
+        },
+        {
+          text: 'Plugins',
+          items: [
+            { text: 'Overview', link: '/kubb/plugins/' }
+          ]
+        }
+      ],
+      
+      '/fabric/': [
+        {
+          text: 'Getting Started',
+          items: [
+            { text: 'Introduction', link: '/fabric/getting-started/' },
+            { text: 'Quick Start', link: '/fabric/getting-started/quick-start' }
+          ]
+        },
+        {
+          text: 'Core',
+          items: [
+            { text: 'createFabric', link: '/fabric/core/create-fabric' }
+          ]
+        },
+        {
+          text: 'Plugins',
+          items: [
+            { text: 'fsPlugin', link: '/fabric/plugins/fs-plugin' },
+            { text: 'barrelPlugin', link: '/fabric/plugins/barrel-plugin' }
+          ]
+        }
+      ]
+    },
+    
+    search: {
+      provider: 'algolia', // or 'local'
+      options: {
+        // Configure unified search across all products
+      }
+    }
+  },
+  
+  // Source directories
+  srcDir: '.',
+})
+```
+
+#### 5. Create Sync Script
+
+```typescript
+// scripts/link-docs.ts
+import fs from 'fs'
+import path from 'path'
+
+const REPOS = ['kubb', 'fabric']
+
+REPOS.forEach(repo => {
+  const source = path.resolve(__dirname, `../../${repo}/docs`)
+  const target = path.resolve(__dirname, `../${repo}`)
+  
+  // Check if running in CI or local
+  if (fs.existsSync(source)) {
+    // Local development - create symlink
+    if (fs.existsSync(target)) fs.unlinkSync(target)
+    fs.symlinkSync(source, target, 'dir')
+    console.log(`✓ Linked ${repo} docs from sibling repo`)
+  } else {
+    console.warn(`⚠ ${repo} repo not found at ${source}`)
+    console.log('  Clone repos as siblings or use git submodules')
+  }
+})
+```
+
+#### 6. Package.json Setup
+
+```json
+{
+  "name": "@kubb/docs",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm run sync-docs && vitepress dev",
+    "build": "pnpm run sync-docs && vitepress build",
+    "sync-docs": "tsx scripts/link-docs.ts",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0",
+    "tsx": "^4.0.0"
+  }
+}
+```
+
+#### 7. CI/CD Pipeline
+
+```yaml
+# .github/workflows/deploy-docs.yml
+name: Deploy Docs
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [docs-updated] # Triggered from kubb/fabric repos
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Fetch docs from source repos
+      - name: Clone Kubb docs
+        run: |
+          git clone --depth 1 https://github.com/kubb-labs/kubb.git vendor/kubb
+          cp -r vendor/kubb/docs kubb
+      
+      - name: Clone Fabric docs
+        run: |
+          git clone --depth 1 https://github.com/kubb-labs/fabric.git vendor/fabric
+          cp -r vendor/fabric/docs fabric
+      
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      
+      - run: pnpm install
+      - run: pnpm run build
+      
+      - name: Deploy to Netlify/Vercel
+        # Deploy built docs
+```
+
+#### 8. Trigger Updates from Source Repos
+
+In `kubb` and `fabric` repos, add workflow to notify docs repo:
+
+```yaml
+# kubb/.github/workflows/update-docs.yml
+name: Notify Docs Update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger docs rebuild
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.DOCS_DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/kubb-labs/kubb.dev/dispatches \
+            -d '{"event_type":"docs-updated","client_payload":{"repo":"kubb"}}'
+```
+
+### Pros of TanStack Approach
+
+✅ **Docs live with code** - Contributors update docs alongside code changes
+✅ **Unified experience** - Single site, unified search, consistent navigation
+✅ **Independent repos** - Kubb and Fabric remain separate
+✅ **Versioning flexibility** - Can version docs per product
+✅ **Clear ownership** - Each team owns their docs in their repo
+
+### Cons of TanStack Approach
+
+❌ **More complex setup** - Requires submodules/sync scripts
+❌ **Build complexity** - Must fetch/sync docs before building
+❌ **Coordination** - Changes need to trigger rebuilds
+❌ **Local development** - Contributors need multiple repos cloned
+❌ **Higher maintenance** - Three repos instead of one
+
+### Comparison: Option 1 vs TanStack Approach
+
+| Aspect | Option 1 (Unified in Kubb) | TanStack Approach |
+|--------|---------------------------|-------------------|
+| Setup complexity | ⭐ Simple | ⭐⭐⭐ Complex |
+| Docs location | Kubb repo only | Both repos |
+| Build process | ⭐ Direct | ⭐⭐ Requires sync |
+| Local dev | ⭐ Simple | ⭐⭐ Needs siblings |
+| Contributor friction | ⭐ Low | ⭐⭐ Medium |
+| Docs-code coupling | ✅ Can update together | ✅ Update together |
+| Independence | ❌ Same repo | ✅ Separate repos |
+
+### Recommendation
+
+For Kubb + Fabric, **stick with Option 1** unless you specifically need:
+- Separate repository ownership/permissions
+- Different release cycles for docs vs code
+- Team separation between products
+
+The TanStack approach makes sense for TanStack because they have 8+ products with different maintainers. For 2 closely-related products with shared team, the added complexity isn't worth it.
+
 ## Migration Path
 
 If starting with Option 1 and later needing Option 2:
