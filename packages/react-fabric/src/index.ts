@@ -28,3 +28,4 @@ export { createReactFabric } from './createReactFabric.ts'
 export { Runtime } from './Runtime.tsx'
 // utils
 export { createFunctionParams, FunctionParams } from './utils/getFunctionParams.ts'
+export { TypeGenerator } from './utils/TypeGenerator.ts'
