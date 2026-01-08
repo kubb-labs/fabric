@@ -3,6 +3,9 @@
  * in a specific format for API requests and responses.
  */
 
+const DEFAULT_INDENT = 4
+const NESTED_INDENT = 8
+
 type PropertyDefinition = {
   name: string
   type: string
@@ -28,7 +31,7 @@ type ResponseTypeDefinition = {
 /**
  * Generate a property definition with optional JSDoc comment
  */
-function printProperty(property: PropertyDefinition, indent = 4): string {
+function printProperty(property: PropertyDefinition, indent = DEFAULT_INDENT): string {
   const spaces = ' '.repeat(indent)
   const optionalMarker = property.optional ? '?' : ''
   let result = ''
@@ -62,7 +65,7 @@ export function printCombinedSchema(
     const bodyOptional = request.body.properties.length > 0 && request.body.properties.every(p => p.optional) ? '?' : ''
     parts.push(`    body${bodyOptional}: {`)
     request.body.properties.forEach(prop => {
-      parts.push(printProperty(prop, 8))
+      parts.push(printProperty(prop, NESTED_INDENT))
     })
     parts.push('    };')
   }
@@ -72,7 +75,7 @@ export function printCombinedSchema(
     const pathOptional = request.pathParams.properties.length > 0 && request.pathParams.properties.every(p => p.optional) ? '?' : ''
     parts.push(`    pathParams${pathOptional}: {`)
     request.pathParams.properties.forEach(prop => {
-      parts.push(printProperty(prop, 8))
+      parts.push(printProperty(prop, NESTED_INDENT))
     })
     parts.push('    };')
   }
@@ -82,7 +85,7 @@ export function printCombinedSchema(
     const queryOptional = request.queryParams.properties.length > 0 && request.queryParams.properties.every(p => p.optional) ? '?' : ''
     parts.push(`    queryParams${queryOptional}: {`)
     request.queryParams.properties.forEach(prop => {
-      parts.push(printProperty(prop, 8))
+      parts.push(printProperty(prop, NESTED_INDENT))
     })
     parts.push('    };')
   } else {
