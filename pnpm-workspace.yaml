@@ -15,4 +15,3 @@ catalog:
   remeda: ^2.33.1
   tsdown: ^0.18.4
   typescript: ^5.9.3
-  typescript-native: npm:@typescript/native-preview@latest
