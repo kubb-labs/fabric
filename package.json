@@ -61,6 +61,7 @@
 		"tsdown": "catalog:",
 		"turbo": "^2.7.3",
 		"typescript": "catalog:",
+		"typescript-native": "catalog:",
 		"vite-tsconfig-paths": "^6.0.3",
 		"vitest": "^4.0.16"
 	},

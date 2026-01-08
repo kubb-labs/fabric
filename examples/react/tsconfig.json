@@ -11,7 +11,9 @@
     "outDir": "es",
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
+    "paths": {
+      "*": ["./*"]
+    },
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowJs": true,

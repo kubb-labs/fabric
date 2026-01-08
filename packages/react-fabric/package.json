@@ -114,7 +114,7 @@
     "start:devtools": "npx react-devtools",
     "test": "vitest --passWithNoTests",
     "test:devtools": "node ./dist/runner.cjs",
-    "typecheck": "tsc -p ./tsconfig.json --noEmit --emitDeclarationOnly false"
+    "typecheck": "npx --yes tsgo -p ./tsconfig.json --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
     "@kubb/fabric-core": "workspace:*",

@@ -4,8 +4,10 @@ import ws from 'ws'
 
 declare global {
   var WebSocket: typeof WebSocket
-  var self: any
-  var window: any
+  // eslint-disable-next-line no-var
+  var self: Window & typeof globalThis
+  // eslint-disable-next-line no-var
+  var window: Window & typeof globalThis
   var isDevtoolsEnabled: any
 }
 
