@@ -59,7 +59,7 @@ export function printCombinedSchema(
   
   // Add body
   if (request.body) {
-    const bodyOptional = request.body.properties.every(p => p.optional) ? '?' : ''
+    const bodyOptional = request.body.properties.length > 0 && request.body.properties.every(p => p.optional) ? '?' : ''
     parts.push(`    body${bodyOptional}: {`)
     request.body.properties.forEach(prop => {
       parts.push(printProperty(prop, 8))
@@ -69,7 +69,7 @@ export function printCombinedSchema(
   
   // Add pathParams
   if (request.pathParams) {
-    const pathOptional = request.pathParams.properties.every(p => p.optional) ? '?' : ''
+    const pathOptional = request.pathParams.properties.length > 0 && request.pathParams.properties.every(p => p.optional) ? '?' : ''
     parts.push(`    pathParams${pathOptional}: {`)
     request.pathParams.properties.forEach(prop => {
       parts.push(printProperty(prop, 8))
@@ -79,7 +79,7 @@ export function printCombinedSchema(
   
   // Add queryParams
   if (request.queryParams) {
-    const queryOptional = request.queryParams.properties.every(p => p.optional) ? '?' : ''
+    const queryOptional = request.queryParams.properties.length > 0 && request.queryParams.properties.every(p => p.optional) ? '?' : ''
     parts.push(`    queryParams${queryOptional}: {`)
     request.queryParams.properties.forEach(prop => {
       parts.push(printProperty(prop, 8))

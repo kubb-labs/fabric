@@ -129,5 +129,29 @@ export type UploadFileDataResponse = UploadFileDataResponses[keyof UploadFileDat
       expect(output).toContain('200: Pet;')
       expect(output).toContain('404: NotFoundError;')
     })
+
+    test('handles empty properties arrays correctly', () => {
+      const output = TypeGenerator.printCombinedSchema(
+        'EmptyTest',
+        {
+          body: {
+            properties: [],
+          },
+          pathParams: {
+            properties: [],
+          },
+          url: '/test',
+        },
+        {
+          200: 'void',
+        }
+      )
+
+      // Empty properties should not mark the field as optional
+      expect(output).toContain('body: {')
+      expect(output).toContain('pathParams: {')
+      expect(output).not.toContain('body?: {')
+      expect(output).not.toContain('pathParams?: {')
+    })
   })
 })
