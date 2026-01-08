@@ -17,6 +17,66 @@ This document outlines the research and recommendations for combining documentat
 - Both projects share the kubb.dev domain
 - Fabric's package.json references a `build:docs` script pointing to non-existent docs folder
 
+## Comparison with Similar Projects
+
+To inform our decision, we analyzed how other popular TypeScript ecosystem projects handle documentation for multiple related packages:
+
+### TanStack (React Query, Router, Table, etc.)
+
+**Approach**: **Unified documentation site** (tanstack.com) for all libraries
+
+**Structure**:
+- Single domain (tanstack.com) hosts docs for Query, Router, Table, Form, Virtual, Store, etc.
+- Markdown files live in each library's GitHub repo (e.g., `tanstack/query/docs/`)
+- Main docs site fetches and renders markdown from individual repos
+- Shared navigation, search (Algolia), theme, and UX across all libraries
+- Framework selector (React, Vue, Solid, etc.) and version switcher built-in
+- Local development: clone tanstack.com + library repos as siblings for preview
+
+**Key Benefits**:
+- ✅ Consistent user experience across all TanStack products
+- ✅ Unified search finds answers across any TanStack library
+- ✅ Single deployment/hosting for entire ecosystem
+- ✅ Easy cross-library navigation and discovery
+- ✅ Shared infrastructure reduces duplication
+
+**Similar to**: Our Option 1 (unified docs in main repo)
+
+### Zod (Schema Validation)
+
+**Approach**: **Single repository documentation** (zod.dev)
+
+**Structure**:
+- Main repository (colinhacks/zod) contains all documentation
+- Markdown-based docs in the main repo
+- Single product with ecosystem integrations documented
+- Automated deployment via GitHub Actions to zod.dev
+- Documentation versioned alongside code releases
+- CI/CD rebuilds and deploys on main branch updates
+
+**Key Benefits**:
+- ✅ Simple, straightforward structure
+- ✅ Docs always in sync with code
+- ✅ Single source of truth
+- ✅ Easy for contributors to update docs with code changes
+
+**Similar to**: Our current Kubb setup (single repo for main product)
+
+### Key Insights for Kubb + Fabric
+
+Both TanStack and Zod validate our **Option 1 recommendation**:
+
+1. **TanStack's approach** shows that unified documentation for multiple related products creates excellent UX and discoverability - exactly what we need for Kubb + Fabric
+2. **TanStack's success** with 8+ libraries under one docs site proves this scales well beyond 2 products
+3. **Single domain strategy** (tanstack.com, zod.dev) aligns with our kubb.dev domain
+4. **Markdown-based content** makes migration easy if we ever need to split (like VitePress)
+5. **Industry pattern**: Most successful TypeScript tooling ecosystems use unified docs for related products
+
+**Differences from our situation**:
+- TanStack fetches docs from separate repos (we'd embed directly)
+- Both have larger teams, but still benefit from unified approach
+- Our products are even more closely related (Fabric could power Kubb)
+
 ## Research Summary
 
 Three primary options were evaluated:
@@ -87,6 +147,7 @@ After evaluating all options, **Option 1 (Unified Documentation in Kubb Main Rep
 4. **Ecosystem coherence**: Both products share kubb.dev domain and audience
 5. **Future flexibility**: Can migrate to Option 2 later if needed (VitePress content is portable)
 6. **Cost effective**: Minimal setup, low ongoing maintenance
+7. **Industry validation**: TanStack's success with unified docs for 8+ libraries proves this approach scales excellently for related products
 
 ## Implementation Plan (If Option 1 Approved)
 
@@ -140,6 +201,15 @@ If starting with Option 1 and later needing Option 2:
 - Kubb main docs: https://github.com/kubb-labs/kubb/tree/main/docs
 - VitePress documentation: https://vitepress.dev
 - Current Fabric README: https://github.com/kubb-labs/fabric/blob/main/README.md
+
+### Industry Examples Analyzed
+
+- **TanStack**: https://tanstack.com - Unified docs for Query, Router, Table, Form, etc.
+  - GitHub: https://github.com/tanstack/tanstack.com
+  - Demonstrates excellent unified documentation for multiple libraries
+- **Zod**: https://zod.dev - Single-repo documentation approach
+  - GitHub: https://github.com/colinhacks/zod
+  - Shows simplicity of docs-with-code approach
 
 ## Decision Log
 
