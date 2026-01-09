@@ -224,14 +224,152 @@ kubb/
    └─ ... (existing Kubb docs)
 ```
 
-**In kubb-labs/fabric:**
+**In kubb-labs/fabric:** (NEW - needs to be created)
+
+Create `/docs` folder with initial structure:
+
 ```
 fabric/
-└─ docs/                  # NEW
+└─ docs/
+   ├─ index.md
    ├─ getting-started/
+   │  ├─ index.md
+   │  ├─ installation.md
+   │  └─ quick-start.md
    ├─ core/
+   │  ├─ index.md
+   │  ├─ create-fabric.md
+   │  ├─ events.md
+   │  └─ file-manager.md
    ├─ plugins/
-   └─ parsers/
+   │  ├─ index.md
+   │  ├─ fs-plugin.md
+   │  ├─ barrel-plugin.md
+   │  ├─ logger-plugin.md
+   │  ├─ graph-plugin.md
+   │  └─ define-plugin.md
+   ├─ parsers/
+   │  ├─ index.md
+   │  ├─ typescript-parser.md
+   │  ├─ tsx-parser.md
+   │  └─ define-parser.md
+   └─ react-fabric/
+      ├─ index.md
+      └─ react-plugin.md
+```
+
+**Example: `fabric/docs/index.md`**
+
+```markdown
+# Fabric
+
+Language-agnostic toolkit for generating code and files using JSX and TypeScript.
+
+## Features
+
+- 🎨 Declarative file generation — Create files effortlessly using JSX or JavaScript syntax
+- 📦 Cross-runtime support — Works seamlessly with Node.js and Bun
+- 🧩 Built-in debugging utilities — Simplify development and inspect generation flows
+- ⚡ Fast and lightweight — Minimal overhead, maximum performance
+
+## Quick Start
+
+\`\`\`typescript
+import { createFabric } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
+
+const fabric = createFabric()
+
+fabric.use(fsPlugin, {
+  dryRun: false,
+  clean: { path: './generated' },
+})
+
+fabric.use(typescriptParser)
+
+await fabric.addFile({
+  baseName: 'index.ts',
+  path: './generated/index.ts',
+  sources: [
+    { value: 'export const x = 1', isExportable: true },
+  ],
+})
+
+await fabric.write()
+\`\`\`
+
+## Next Steps
+
+- [Getting Started](/fabric/getting-started/)
+- [Core Concepts](/fabric/core/)
+- [Plugins](/fabric/plugins/)
+- [Parsers](/fabric/parsers/)
+```
+
+**Example: `fabric/docs/getting-started/quick-start.md`**
+
+```markdown
+# Quick Start
+
+Get started with Fabric in under 5 minutes.
+
+## Installation
+
+\`\`\`bash
+pnpm add @kubb/fabric-core
+\`\`\`
+
+## Basic Usage
+
+### 1. Create a Fabric Instance
+
+\`\`\`typescript
+import { createFabric } from '@kubb/fabric-core'
+
+const fabric = createFabric()
+\`\`\`
+
+### 2. Add Plugins
+
+\`\`\`typescript
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
+
+fabric.use(fsPlugin, {
+  dryRun: false,
+  clean: { path: './generated' },
+})
+
+fabric.use(typescriptParser)
+\`\`\`
+
+### 3. Add Files
+
+\`\`\`typescript
+await fabric.addFile({
+  baseName: 'types.ts',
+  path: './generated/types.ts',
+  sources: [
+    { 
+      value: 'export type User = { id: string; name: string }', 
+      isExportable: true 
+    },
+  ],
+})
+\`\`\`
+
+### 4. Write to Disk
+
+\`\`\`typescript
+await fabric.write()
+\`\`\`
+
+## What's Next?
+
+- Learn about [Core Concepts](/fabric/core/)
+- Explore [Plugins](/fabric/plugins/)
+- Understand [Parsers](/fabric/parsers/)
 ```
 
 #### 3. Link Docs into Main Site
@@ -248,29 +386,624 @@ ln -s vendor/kubb/docs kubb
 ln -s vendor/fabric/docs fabric
 ```
 
-**Option B: Build-time Fetch** (Simpler for contributors)
+**Option B: Build-time Fetch** (Simpler for contributors) ⭐ **RECOMMENDED FOR TANSTACK APPROACH**
+
+This option fetches docs from source repositories at build time, avoiding git submodules complexity.
+
+**Complete File Setup for `kubb-labs/kubb.dev` Repository:**
+
+##### 1. Repository Structure
+
+```
+kubb.dev/
+├─ .github/
+│  └─ workflows/
+│     └─ deploy.yml
+├─ .vitepress/
+│  ├─ config.ts
+│  └─ theme/
+│     └─ index.ts
+├─ scripts/
+│  └─ fetch-docs.ts
+├─ public/
+│  └─ logo.png
+├─ index.md
+├─ package.json
+├─ tsconfig.json
+├─ .gitignore
+└─ README.md
+```
+
+##### 2. `package.json`
+
+```json
+{
+  "name": "@kubb/docs-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unified documentation site for Kubb and Fabric",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "tsx scripts/fetch-docs.ts && vitepress dev",
+    "docs:build": "tsx scripts/fetch-docs.ts && vitepress build",
+    "docs:preview": "vitepress preview",
+    "fetch": "tsx scripts/fetch-docs.ts",
+    "clean": "rimraf vendor kubb fabric .vitepress/dist"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "rimraf": "^5.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "vitepress": "^1.0.0",
+    "vue": "^3.4.0"
+  }
+}
+```
+
+##### 3. `scripts/fetch-docs.ts`
 
 ```typescript
-// scripts/fetch-docs.ts
 import { execSync } from 'child_process'
 import fs from 'fs'
+import path from 'path'
 
-// Clone or pull latest docs
+const VENDOR_DIR = 'vendor'
 const repos = [
-  { name: 'kubb', url: 'https://github.com/kubb-labs/kubb.git' },
-  { name: 'fabric', url: 'https://github.com/kubb-labs/fabric.git' }
+  { 
+    name: 'kubb', 
+    url: 'https://github.com/kubb-labs/kubb.git',
+    branch: 'main',
+    docsPath: 'docs'
+  },
+  { 
+    name: 'fabric', 
+    url: 'https://github.com/kubb-labs/fabric.git',
+    branch: 'main',
+    docsPath: 'docs'
+  }
 ]
 
-repos.forEach(({ name, url }) => {
-  if (!fs.existsSync(`vendor/${name}`)) {
-    execSync(`git clone ${url} vendor/${name}`)
-  } else {
-    execSync(`cd vendor/${name} && git pull`)
-  }
+console.log('🚀 Fetching documentation from source repositories...\n')
+
+// Ensure vendor directory exists
+if (!fs.existsSync(VENDOR_DIR)) {
+  fs.mkdirSync(VENDOR_DIR, { recursive: true })
+}
+
+repos.forEach(({ name, url, branch, docsPath }) => {
+  const vendorPath = path.join(VENDOR_DIR, name)
+  const targetDocsPath = path.join(process.cwd(), name)
   
-  // Copy docs to build location
-  fs.cpSync(`vendor/${name}/docs`, name, { recursive: true })
+  try {
+    // Clone or update repository
+    if (!fs.existsSync(vendorPath)) {
+      console.log(`📦 Cloning ${name} repository...`)
+      execSync(`git clone --depth 1 --branch ${branch} ${url} ${vendorPath}`, {
+        stdio: 'inherit'
+      })
+    } else {
+      console.log(`🔄 Updating ${name} repository...`)
+      execSync(`git -C ${vendorPath} pull origin ${branch}`, {
+        stdio: 'inherit'
+      })
+    }
+    
+    // Copy docs to build location
+    const sourceDocs = path.join(vendorPath, docsPath)
+    
+    if (!fs.existsSync(sourceDocs)) {
+      console.warn(`⚠️  Warning: ${name}/${docsPath} not found. Creating placeholder...`)
+      fs.mkdirSync(targetDocsPath, { recursive: true })
+      fs.writeFileSync(
+        path.join(targetDocsPath, 'index.md'),
+        `# ${name.charAt(0).toUpperCase() + name.slice(1)}\n\nDocumentation coming soon...`
+      )
+    } else {
+      console.log(`📄 Copying ${name} docs...`)
+      
+      // Remove existing docs
+      if (fs.existsSync(targetDocsPath)) {
+        fs.rmSync(targetDocsPath, { recursive: true, force: true })
+      }
+      
+      // Copy docs
+      fs.cpSync(sourceDocs, targetDocsPath, { recursive: true })
+      console.log(`✅ ${name} docs copied successfully\n`)
+    }
+  } catch (error) {
+    console.error(`❌ Error processing ${name}:`, error)
+    process.exit(1)
+  }
 })
+
+console.log('✨ All documentation fetched successfully!')
+```
+
+##### 4. `.vitepress/config.ts`
+
+```typescript
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  title: 'Kubb Documentation',
+  description: 'The ultimate toolkit for working with APIs and code generation',
+  
+  head: [
+    ['link', { rel: 'icon', href: '/logo.png' }],
+    ['meta', { property: 'og:title', content: 'Kubb Documentation' }],
+    ['meta', { property: 'og:description', content: 'Documentation for Kubb and Fabric' }]
+  ],
+  
+  themeConfig: {
+    logo: '/logo.png',
+    
+    nav: [
+      { text: 'Home', link: '/' },
+      { text: 'Kubb', link: '/kubb/' },
+      { text: 'Fabric', link: '/fabric/' },
+      {
+        text: 'Resources',
+        items: [
+          { text: 'GitHub', link: 'https://github.com/kubb-labs' },
+          { text: 'Sponsors', link: 'https://github.com/sponsors/stijnvanhulle' }
+        ]
+      }
+    ],
+    
+    sidebar: {
+      '/kubb/': [
+        {
+          text: 'Getting Started',
+          collapsed: false,
+          items: [
+            { text: 'Introduction', link: '/kubb/' },
+            { text: 'Installation', link: '/kubb/getting-started/installation' },
+            { text: 'Quick Start', link: '/kubb/getting-started/quick-start' },
+            { text: 'Configuration', link: '/kubb/getting-started/configure' }
+          ]
+        },
+        {
+          text: 'Plugins',
+          collapsed: false,
+          items: [
+            { text: 'Overview', link: '/kubb/plugins/' },
+            { text: 'Plugin Development', link: '/kubb/plugins/development' }
+          ]
+        },
+        {
+          text: 'Reference',
+          collapsed: true,
+          items: [
+            { text: 'CLI', link: '/kubb/reference/cli' },
+            { text: 'API', link: '/kubb/reference/api' }
+          ]
+        }
+      ],
+      
+      '/fabric/': [
+        {
+          text: 'Getting Started',
+          collapsed: false,
+          items: [
+            { text: 'Introduction', link: '/fabric/' },
+            { text: 'Quick Start', link: '/fabric/getting-started/quick-start' },
+            { text: 'Installation', link: '/fabric/getting-started/installation' }
+          ]
+        },
+        {
+          text: 'Core',
+          collapsed: false,
+          items: [
+            { text: 'createFabric', link: '/fabric/core/create-fabric' },
+            { text: 'Events', link: '/fabric/core/events' },
+            { text: 'File Manager', link: '/fabric/core/file-manager' }
+          ]
+        },
+        {
+          text: 'Plugins',
+          collapsed: false,
+          items: [
+            { text: 'Overview', link: '/fabric/plugins/' },
+            { text: 'fsPlugin', link: '/fabric/plugins/fs-plugin' },
+            { text: 'barrelPlugin', link: '/fabric/plugins/barrel-plugin' },
+            { text: 'loggerPlugin', link: '/fabric/plugins/logger-plugin' },
+            { text: 'graphPlugin', link: '/fabric/plugins/graph-plugin' },
+            { text: 'definePlugin', link: '/fabric/plugins/define-plugin' }
+          ]
+        },
+        {
+          text: 'Parsers',
+          collapsed: false,
+          items: [
+            { text: 'Overview', link: '/fabric/parsers/' },
+            { text: 'typescriptParser', link: '/fabric/parsers/typescript-parser' },
+            { text: 'tsxParser', link: '/fabric/parsers/tsx-parser' },
+            { text: 'defineParser', link: '/fabric/parsers/define-parser' }
+          ]
+        },
+        {
+          text: 'React Fabric',
+          collapsed: false,
+          items: [
+            { text: 'Overview', link: '/fabric/react-fabric/' },
+            { text: 'reactPlugin', link: '/fabric/react-fabric/react-plugin' }
+          ]
+        }
+      ]
+    },
+    
+    search: {
+      provider: 'local',
+      options: {
+        detailedView: true
+      }
+    },
+    
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/kubb-labs' }
+    ],
+    
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2024-present Stijn Van Hulle'
+    },
+    
+    editLink: {
+      pattern: ({ filePath }) => {
+        // Determine which repo the file belongs to
+        if (filePath.startsWith('kubb/')) {
+          return `https://github.com/kubb-labs/kubb/edit/main/docs/${filePath.replace('kubb/', '')}`
+        }
+        if (filePath.startsWith('fabric/')) {
+          return `https://github.com/kubb-labs/fabric/edit/main/docs/${filePath.replace('fabric/', '')}`
+        }
+        return `https://github.com/kubb-labs/kubb.dev/edit/main/${filePath}`
+      },
+      text: 'Edit this page on GitHub'
+    }
+  },
+  
+  srcDir: '.',
+  
+  cleanUrls: true,
+  
+  lastUpdated: true,
+  
+  markdown: {
+    theme: {
+      light: 'github-light',
+      dark: 'github-dark'
+    }
+  }
+})
+```
+
+##### 5. `index.md` (Landing Page)
+
+```markdown
+---
+layout: home
+
+hero:
+  name: Kubb
+  text: The Ultimate Toolkit for APIs
+  tagline: Work with OpenAPI specs and generate code with ease using Kubb and Fabric
+  image:
+    src: /logo.png
+    alt: Kubb
+  actions:
+    - theme: brand
+      text: Get Started with Kubb
+      link: /kubb/
+    - theme: alt
+      text: Explore Fabric
+      link: /fabric/
+    - theme: alt
+      text: View on GitHub
+      link: https://github.com/kubb-labs
+
+features:
+  - icon: 🚀
+    title: Kubb - API Code Generation
+    details: Transform OpenAPI/Swagger specs into type-safe clients, hooks, and validators for React, Vue, and more
+    link: /kubb/
+    
+  - icon: 🎨
+    title: Fabric - Universal Code Generation
+    details: Language-agnostic toolkit for generating code and files using JSX and TypeScript
+    link: /fabric/
+    
+  - icon: 🔌
+    title: Plugin Ecosystem
+    details: Extensive plugin system for TypeScript, Zod, MSW, Tanstack Query, Axios, and more
+    
+  - icon: ⚡
+    title: Fast & Lightweight
+    details: Optimized for performance with minimal overhead and maximum developer experience
+    
+  - icon: 🛠️
+    title: Developer Friendly
+    details: Built-in debugging utilities, TypeScript-first, and comprehensive documentation
+    
+  - icon: 📦
+    title: Cross-Runtime Support
+    details: Works seamlessly with Node.js, Bun, and other JavaScript runtimes
+---
+
+## Quick Examples
+
+### Kubb - Generate API Clients
+
+```typescript
+import { defineConfig } from '@kubb/core'
+
+export default defineConfig({
+  input: {
+    path: './petstore.yaml',
+  },
+  output: {
+    path: './src/gen',
+  },
+  plugins: [
+    ['@kubb/swagger-ts'],
+    ['@kubb/swagger-client'],
+    ['@kubb/swagger-tanstack-query'],
+  ],
+})
+```
+
+### Fabric - Generate Files with JSX
+
+```typescript
+import { createFabric } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
+
+const fabric = createFabric()
+
+fabric.use(fsPlugin, { dryRun: false })
+fabric.use(typescriptParser)
+
+await fabric.addFile({
+  baseName: 'index.ts',
+  path: './generated/index.ts',
+  sources: [
+    { value: 'export const x = 1', isExportable: true },
+  ],
+})
+
+await fabric.write()
+```
+
+## Ecosystem
+
+<div class="ecosystem-grid">
+  <a href="/kubb/" class="ecosystem-card">
+    <h3>Kubb</h3>
+    <p>OpenAPI/Swagger code generation toolkit</p>
+  </a>
+  
+  <a href="/fabric/" class="ecosystem-card">
+    <h3>Fabric</h3>
+    <p>Universal code generation framework</p>
+  </a>
+</div>
+
+<style>
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.ecosystem-card {
+  padding: 1.5rem;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.ecosystem-card:hover {
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ecosystem-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--vp-c-brand);
+}
+
+.ecosystem-card p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+}
+</style>
+```
+
+##### 6. `.gitignore`
+
+```gitignore
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+.vitepress/dist/
+.vitepress/cache/
+
+# Fetched docs (regenerated on build)
+/kubb/
+/fabric/
+/vendor/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+```
+
+##### 7. `.github/workflows/deploy.yml`
+
+```yaml
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [docs-updated]
+  workflow_dispatch:
+  schedule:
+    # Rebuild daily to catch latest docs updates
+    - cron: '0 0 * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Fetch documentation
+        run: pnpm run fetch
+      
+      - name: Build documentation
+        run: pnpm run docs:build
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .vitepress/dist
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+##### 8. `tsconfig.json`
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020"],
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["scripts/**/*", ".vitepress/**/*"],
+  "exclude": ["node_modules", "vendor", ".vitepress/dist"]
+}
+```
+
+##### 9. `README.md`
+
+```markdown
+# Kubb Documentation Site
+
+Unified documentation site for Kubb and Fabric, powered by VitePress.
+
+## Development
+
+### Prerequisites
+
+- Node.js 20+
+- pnpm 8+
+
+### Setup
+
+```bash
+# Install dependencies
+pnpm install
+
+# Fetch documentation from source repos
+pnpm run fetch
+
+# Start development server
+pnpm run docs:dev
+```
+
+### Build
+
+```bash
+# Build for production
+pnpm run docs:build
+
+# Preview production build
+pnpm run docs:preview
+```
+
+## Architecture
+
+This site uses **Option B: Build-time Fetch** approach:
+
+- Documentation lives in source repositories (`kubb-labs/kubb` and `kubb-labs/fabric`)
+- Build script fetches latest docs from both repos
+- VitePress combines everything into unified site
+- Deployed to GitHub Pages with automatic daily rebuilds
+
+## Updating Documentation
+
+Documentation is automatically fetched from:
+- `kubb-labs/kubb/docs/` → `/kubb/`
+- `kubb-labs/fabric/docs/` → `/fabric/`
+
+To manually update:
+```bash
+pnpm run fetch
+```
+
+## Contributing
+
+Edit documentation in the source repositories:
+- Kubb docs: https://github.com/kubb-labs/kubb/tree/main/docs
+- Fabric docs: https://github.com/kubb-labs/fabric/tree/main/docs
+
+Changes are automatically pulled during builds.
 ```
 
 **Option C: Sibling Repos** (Local development)
@@ -451,30 +1184,89 @@ jobs:
 
 #### 8. Trigger Updates from Source Repos
 
-In `kubb` and `fabric` repos, add workflow to notify docs repo:
+Add workflows in both source repositories to automatically trigger docs rebuild when documentation changes.
+
+**In `kubb-labs/kubb` repository:**
+
+Create `.github/workflows/trigger-docs-update.yml`:
 
 ```yaml
-# kubb/.github/workflows/update-docs.yml
-name: Notify Docs Update
+name: Trigger Documentation Update
 
 on:
   push:
     branches: [main]
     paths:
       - 'docs/**'
+      - '.github/workflows/trigger-docs-update.yml'
 
 jobs:
-  notify:
+  trigger-docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger docs rebuild
+      - name: Trigger kubb.dev rebuild
         run: |
           curl -X POST \
             -H "Authorization: token ${{ secrets.DOCS_DEPLOY_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/kubb-labs/kubb.dev/dispatches \
-            -d '{"event_type":"docs-updated","client_payload":{"repo":"kubb"}}'
+            -d '{"event_type":"docs-updated","client_payload":{"repo":"kubb","commit":"${{ github.sha }}"}}'
 ```
+
+**In `kubb-labs/fabric` repository:**
+
+Create `.github/workflows/trigger-docs-update.yml`:
+
+```yaml
+name: Trigger Documentation Update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/trigger-docs-update.yml'
+
+jobs:
+  trigger-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger kubb.dev rebuild
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.DOCS_DEPLOY_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/kubb-labs/kubb.dev/dispatches \
+            -d '{"event_type":"docs-updated","client_payload":{"repo":"fabric","commit":"${{ github.sha }}"}}'
+```
+
+**Setup Instructions:**
+
+1. **Create Personal Access Token (PAT):**
+   - Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+   - Generate new token with `repo` scope
+   - Copy the token
+
+2. **Add Token to Source Repositories:**
+   - In `kubb-labs/kubb`: Settings → Secrets → Actions → New repository secret
+     - Name: `DOCS_DEPLOY_TOKEN`
+     - Value: [paste your PAT]
+   - In `kubb-labs/fabric`: Settings → Secrets → Actions → New repository secret
+     - Name: `DOCS_DEPLOY_TOKEN`
+     - Value: [paste the same PAT]
+
+3. **Enable Repository Dispatch in kubb.dev:**
+   - The `kubb.dev` repository's deploy workflow already listens for `repository_dispatch` events
+   - No additional configuration needed
+
+**How It Works:**
+
+1. Developer pushes changes to `kubb/docs/` or `fabric/docs/`
+2. GitHub Actions workflow detects changes in `docs/**` path
+3. Workflow triggers repository dispatch event to `kubb.dev`
+4. `kubb.dev` receives event and runs deploy workflow
+5. Deploy workflow fetches latest docs and rebuilds site
+6. Updated documentation is deployed automatically
 
 ### Pros of TanStack Approach
 
