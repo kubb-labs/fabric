@@ -60,7 +60,7 @@ exports[`[params] getFunctionParams constructor (Function) > 'params[without nam
 
 exports[`[params] getFunctionParams constructor (Function) > 'params[without name] with age, addres…' 1`] = `"{ age, country, address }: { age: number; country: string; address?: string }"`;
 
-exports[`[params] getFunctionParams constructor (Function) > 'params[without name] with age[optiona…' 1`] = `"{ address, age = 20, country = "Belgium" }?: { address?: string; age?: number; country?: string }"`;
+exports[`[params] getFunctionParams constructor (Function) > 'params[without name] with age[optiona…' 1`] = `"{ address, age = 20, country = "Belgium" }: { address?: string; age?: number; country?: string } = {}"`;
 
 exports[`[params] getFunctionParams constructor (Function) > 'string' 1`] = `"name: string"`;
 
