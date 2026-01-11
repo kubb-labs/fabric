@@ -64,4 +64,39 @@ describe('[params] getFunctionParams with transformers', () => {
     expect(result).toContain('child1')
     expect(result).toContain('child2')
   })
+
+  it('should render optional object mode params with = {} syntax', () => {
+    // Object mode with all optional children
+    const paramsObjectMode = {
+      data: {
+        children: {
+          name: { type: 'string' as const, optional: true },
+          age: { type: 'number' as const, optional: true },
+        },
+      },
+    }
+
+    const resultObjectMode = getFunctionParams(paramsObjectMode, { type: 'constructor' })
+    // Should use ": type = {}" syntax for optional destructured params
+    expect(resultObjectMode).toBe('{ name, age }: { name?: string; age?: number } = {}')
+    // Should NOT use invalid "?: type" syntax
+    expect(resultObjectMode).not.toContain('}?:')
+  })
+
+  it('should render optional inline mode params with ?: syntax', () => {
+    // Inline mode with all optional children
+    const paramsInlineMode = {
+      data: {
+        mode: 'inline' as const,
+        children: {
+          name: { type: 'string' as const, optional: true },
+          age: { type: 'number' as const, optional: true },
+        },
+      },
+    }
+
+    const resultInlineMode = getFunctionParams(paramsInlineMode, { type: 'constructor' })
+    // Should use "?: type" syntax for inline params
+    expect(resultInlineMode).toBe('data?: { name?: string; age?: number }')
+  })
 })

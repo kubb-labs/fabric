@@ -136,7 +136,15 @@ function parseItem(name: string, item: ParamItem, options: Options): string {
   //LEGACY
   if (item.type && options.type === 'constructor') {
     if (item.optional) {
-      acc.push(`${transformedName}?: ${transformedType}`)
+      // Check if this is a destructured parameter (object mode)
+      const isDestructured = transformedName.startsWith('{')
+      if (isDestructured) {
+        // For destructured parameters, use ": type = {}" syntax to make it optional
+        acc.push(`${transformedName}: ${transformedType} = {}`)
+      } else {
+        // For inline parameters, use "?: type" syntax
+        acc.push(`${transformedName}?: ${transformedType}`)
+      }
     } else {
       acc.push(`${transformedName}: ${transformedType}${item.default ? ` = ${item.default}` : ''}`)
     }
