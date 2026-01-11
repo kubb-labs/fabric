@@ -71,7 +71,7 @@ function parseChild(key: string, item: ParamItem, options: Options): string | nu
   const types: string[] = []
   const names: string[] = []
 
-  const optional = entries.every(([_key, item]) => item?.optional)
+  const optional = entries.every(([_key, item]) => item?.optional || !!item?.default)
 
   entries.forEach(([key, entryItem]) => {
     if (entryItem) {
