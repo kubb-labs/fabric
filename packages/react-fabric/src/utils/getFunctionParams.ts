@@ -114,7 +114,7 @@ function parseChild(key: string, item: ParamItem, options: Options): string | nu
     {
       type,
       default: item.default,
-      optional: !item.default ? optional : undefined,
+      optional: !item.default ? (item.optional || optional) : undefined,
     } as ParamItem,
     options,
   )
