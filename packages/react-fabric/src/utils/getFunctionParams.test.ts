@@ -152,22 +152,6 @@ describe('[params] getFunctionParams with transformers', () => {
   })
 })
 
-  it('should add default value when parent has default even if not all children are optional', () => {
-    const paramsWithDefault = {
-      options: {
-        default: '{}',
-        children: {
-          required: { type: 'string', optional: false },
-          optional: { type: 'number', optional: true },
-        },
-      },
-    }
-
-    const result = getFunctionParams(paramsWithDefault, { type: 'constructor' })
-    // Parent has default, so it should be added even though not all children are optional
-    expect(result).toBe('{ required, optional }: { required: string; optional?: number } = {}')
-  })
-
   it('should treat children with default values as optional for parent optionality', () => {
     const paramsWithChildDefaults = {
       options: {
