@@ -167,3 +167,22 @@ describe('[params] getFunctionParams with transformers', () => {
     // But the types themselves don't need ? since they have defaults
     expect(result).toBe("{ name = 'John', age = 30 }: { name: string; age: number } = {}")
   })
+
+  it('should add = {} to parameter with all optional children even when followed by other parameters', () => {
+    const multipleParams = {
+      options: {
+        children: {
+          params: { type: 'GetBroadcastsQueryParams', optional: true },
+        },
+      },
+      config: {
+        type: 'Config',
+        default: '{}',
+      },
+    }
+
+    const result = getFunctionParams(multipleParams, { type: 'constructor' })
+    // First param has all optional children, so it should get = {}
+    // Second param has explicit default, so it should use that
+    expect(result).toBe('{ params }: { params?: GetBroadcastsQueryParams } = {}, config: Config = {}')
+  })
