@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.9.3
+
+### Patch Changes
+
+- [#96](https://github.com/kubb-labs/fabric/pull/96) [`2ba4327`](https://github.com/kubb-labs/fabric/commit/2ba4327ea93c3657d6bef8b5da5fb565b9f32dfa) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix FunctionParams.toConstructor() to render optional object-mode parameters with valid TypeScript syntax
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.9.3
+
 ## 0.9.2
 
 ### Patch Changes
