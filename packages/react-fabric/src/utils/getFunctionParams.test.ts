@@ -70,8 +70,8 @@ describe('[params] getFunctionParams with transformers', () => {
     const paramsObjectMode = {
       data: {
         children: {
-          name: { type: 'string', optional: true },
-          age: { type: 'number', optional: true },
+          name: { type: 'string' as const, optional: true },
+          age: { type: 'number' as const, optional: true },
         },
       },
     }
@@ -87,10 +87,10 @@ describe('[params] getFunctionParams with transformers', () => {
     // Inline mode with all optional children
     const paramsInlineMode = {
       data: {
-        mode: 'inline',
+        mode: 'inline' as const,
         children: {
-          name: { type: 'string', optional: true },
-          age: { type: 'number', optional: true },
+          name: { type: 'string' as const, optional: true },
+          age: { type: 'number' as const, optional: true },
         },
       },
     }
