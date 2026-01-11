@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.9.4
+
+### Patch Changes
+
+- [#100](https://github.com/kubb-labs/fabric/pull/100) [`670a4f5`](https://github.com/kubb-labs/fabric/commit/670a4f53e8fefdb81c69d55366ee2dc9d8079c13) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Treat children with default values as optional when determining parent optionality in FunctionParams. When all children have either `optional: true` or a default value, the parent parameter now gets `= {}` appended, making it fully optional.
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.9.4
+
 ## 0.9.3
 
 ### Patch Changes
