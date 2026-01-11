@@ -99,4 +99,20 @@ describe('[params] getFunctionParams with transformers', () => {
     // Should use "?: type" syntax for inline params
     expect(resultInlineMode).toBe('data?: { name?: string; age?: number }')
   })
+
+  it('should handle explicitly set optional flag on object mode parent', () => {
+    const params = {
+      data: {
+        optional: true,  // Explicitly setting optional on the parent
+        children: {
+          name: { type: 'string' as const },  // Children are NOT optional
+          age: { type: 'number' as const },
+        },
+      },
+    }
+
+    const result = getFunctionParams(params, { type: 'constructor' })
+    // When optional is explicitly set on parent, it should make the whole parameter optional
+    expect(result).toBe('{ name, age }: { name: string; age: number } = {}')
+  })
 })
