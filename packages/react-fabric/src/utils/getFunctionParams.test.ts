@@ -151,3 +151,35 @@ describe('[params] getFunctionParams with transformers', () => {
     expect(result).toBe('{ pathParams, data }: RequestOptions = {}')
   })
 })
+
+  it('should add default value when parent has default even if not all children are optional', () => {
+    const paramsWithDefault = {
+      options: {
+        default: '{}',
+        children: {
+          required: { type: 'string', optional: false },
+          optional: { type: 'number', optional: true },
+        },
+      },
+    }
+
+    const result = getFunctionParams(paramsWithDefault, { type: 'constructor' })
+    // Parent has default, so it should be added even though not all children are optional
+    expect(result).toBe('{ required, optional }: { required: string; optional?: number } = {}')
+  })
+
+  it('should treat children with default values as optional for parent optionality', () => {
+    const paramsWithChildDefaults = {
+      options: {
+        children: {
+          name: { type: 'string', default: "'John'" },
+          age: { type: 'number', default: '30' },
+        },
+      },
+    }
+
+    const result = getFunctionParams(paramsWithChildDefaults, { type: 'constructor' })
+    // All children have defaults, so parent should be treated as optional (has = {})
+    // But the types themselves don't need ? since they have defaults
+    expect(result).toBe("{ name = 'John', age = 30 }: { name: string; age: number } = {}")
+  })
