@@ -56,7 +56,10 @@ function order(items: Array<[key: string, item?: ParamItem]>) {
           return 1 // Optional parameters (with or without default)
         }
         if (item?.default) {
-          return 2 // Parameters with default only (not marked as optional)
+          // Parameters with default only (not marked as optional)
+          // Note: While the ParamItem type suggests optional and default are mutually exclusive,
+          // this handles the case where a parameter has a default value but isn't explicitly marked as optional
+          return 2
         }
         return 0 // Required parameters
       },
