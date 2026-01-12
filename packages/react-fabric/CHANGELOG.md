@@ -1,5 +1,16 @@
 # @kubb/react-fabric
 
+## 0.9.5
+
+### Patch Changes
+
+- [#102](https://github.com/kubb-labs/fabric/pull/102) [`b5c8743`](https://github.com/kubb-labs/fabric/commit/b5c874321348ef9874e25cef97addcca96ad9981) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix parameter ordering in generated functions to follow TypeScript conventions: required → optional → default
+
+  The `order()` function in `getFunctionParams.ts` was incorrectly placing parameters with default values before optional parameters, which violates TypeScript's parameter ordering rules. This fix ensures generated function signatures place optional parameters before those with defaults.
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.9.5
+
 ## 0.9.4
 
 ### Patch Changes
