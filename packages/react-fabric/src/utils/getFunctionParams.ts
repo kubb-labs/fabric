@@ -49,18 +49,19 @@ function order(items: Array<[key: string, item?: ParamItem]>) {
     [
       ([_key, item]) => {
         if (item?.children) {
-          return undefined
+          return 0 // Treat items with children as required (they'll get = {} if all children are optional)
         }
-        return !item?.default
-      },
-      ([_key, item]) => {
-        if (item?.children) {
-          return undefined
+        // Priority order: required (0) → optional (1) → default-only (2)
+        if (item?.optional) {
+          return 1 // Optional parameters (with or without default)
         }
-        return !item?.optional
+        if (item?.default) {
+          return 2 // Parameters with default only (not marked as optional)
+        }
+        return 0 // Required parameters
       },
     ],
-    ['desc', 'desc'],
+    ['asc'],
   )
 }
 
