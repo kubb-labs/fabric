@@ -17,7 +17,7 @@ export class FileCollector {
   /**
    * Get all collected files
    */
-  getFiles(): Array<KubbFile.File> {
+  get files(): Array<KubbFile.File> {
     return [...this.#files]
   }
 

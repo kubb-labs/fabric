@@ -20,9 +20,7 @@ describe('useFile', () => {
     expect(result).toBe(collector)
   })
 
-  it('should return null when collector is not provided', () => {
-    const result = useFile()
-
-    expect(result).toBeNull()
+  it('should throw when collector is not provided', () => {
+    expect(() => useFile()).toThrow()
   })
 })

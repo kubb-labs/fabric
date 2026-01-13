@@ -1,21 +1,7 @@
+import { FileCollectorContext, provide } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
-import { createContext } from 'react'
+import { FileCollector } from '@kubb/fabric-core/utils'
 import type { Key, KubbNode } from '../types.ts'
-
-export type FileContextProps<TMeta extends object = object> = {
-  /**
-   * Name to be used to dynamicly create the baseName(based on input.path).
-   * Based on UNIX basename
-   * @link https://nodejs.org/api/path.html#pathbasenamepath-suffix
-   */
-  baseName: KubbFile.BaseName
-  /**
-   * Path will be full qualified path to a specified file.
-   */
-  path: KubbFile.Path
-  meta?: TMeta
-}
-const FileContext = createContext<FileContextProps>({} as FileContextProps)
 
 type BasePropsWithBaseName = {
   /**
@@ -49,15 +35,26 @@ type Props<TMeta> = BaseProps & {
 }
 
 export function File<TMeta extends object = object>({ children, ...rest }: Props<TMeta>) {
+  const collector = new FileCollector()
+  provide(FileCollectorContext, collector)
+
   if (!rest.baseName || !rest.path) {
     return <>{children}</>
   }
 
-  return (
-    <kubb-file {...rest}>
-      <FileContext.Provider value={{ baseName: rest.baseName, path: rest.path, meta: rest.meta }}>{children}</FileContext.Provider>
-    </kubb-file>
-  )
+  // Register this file with the collector
+  collector.add({
+    baseName: rest.baseName,
+    path: rest.path,
+    meta: rest.meta || ({} as TMeta),
+    banner: rest.banner,
+    footer: rest.footer,
+    sources: [],
+    imports: [],
+    exports: [],
+  })
+
+  return <kubb-file {...rest}>{children}</kubb-file>
 }
 
 File.displayName = 'KubbFile'
@@ -96,4 +93,3 @@ FileImport.displayName = 'KubbFileImport'
 File.Export = FileExport
 File.Import = FileImport
 File.Source = FileSource
-File.Context = FileContext

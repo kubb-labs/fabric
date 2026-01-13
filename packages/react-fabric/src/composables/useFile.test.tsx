@@ -28,8 +28,21 @@ describe('useFile', () => {
     await fabric.render(Component)
 
     expect(ctx).toBeDefined()
-    expect(ctx?.baseName).toBe('index.ts')
-    expect(ctx?.path).toBe('/tmp/index.ts')
-    expect(ctx?.meta).toEqual(meta)
+    expect(ctx?.files).toMatchInlineSnapshot(`
+      [
+        {
+          "banner": undefined,
+          "baseName": "index.ts",
+          "exports": [],
+          "footer": undefined,
+          "imports": [],
+          "meta": {
+            "flag": true,
+          },
+          "path": "/tmp/index.ts",
+          "sources": [],
+        },
+      ]
+    `)
   })
 })
