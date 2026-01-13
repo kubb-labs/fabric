@@ -1,12 +1,12 @@
-// composables
-
+// components
 export { App } from './components/App.ts'
 export { Const } from './components/Const.ts'
 export { File } from './components/File.ts'
 export { Function } from './components/Function.ts'
 export { Root } from './components/Root.ts'
-// components
 export { Type } from './components/Type.ts'
+
+// composables
 export { useApp } from './composables/useApp.ts'
 export { useContext } from './composables/useContext.ts'
 export { useFile } from './composables/useFile.ts'
