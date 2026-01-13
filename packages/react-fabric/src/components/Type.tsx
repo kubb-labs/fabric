@@ -18,6 +18,10 @@ type Props = {
   children?: KubbNode
 }
 
+/**
+ * Renders a TypeScript type alias. Validates that the provided name starts
+ * with a capital letter and optionally emits JSDoc comments.
+ */
 export function Type({ name, export: canExport, JSDoc, children }: Props) {
   if (name.charAt(0).toUpperCase() !== name.charAt(0)) {
     throw new Error('Name should start with a capital letter(see TypeScript types)')

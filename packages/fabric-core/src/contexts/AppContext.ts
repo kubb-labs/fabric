@@ -8,4 +8,8 @@ export type AppContextProps<TMeta = unknown> = {
   readonly meta: TMeta
 }
 
+/**
+ * Provides app-level metadata and lifecycle hooks (like `exit`) to
+ * components and composables within a Fabric runtime.
+ */
 export const AppContext = createContext<AppContextProps | undefined>(undefined)

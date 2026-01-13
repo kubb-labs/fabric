@@ -33,6 +33,11 @@ type Props<TMeta> = BaseProps & {
   children?: KubbNode
 }
 
+/**
+ * Registers a file in the FileCollector context and provides a scoped collector
+ * for children. When `baseName` and `path` are provided the file will be
+ * registered so it can be emitted by the collector later.
+ */
 export function File<TMeta extends object = object>({ children, ...rest }: Props<TMeta>) {
   const collector = useContext(FileCollectorContext, new FileCollector())
   provide(FileCollectorContext, collector)
@@ -63,6 +68,12 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
   children?: KubbNode
 }
 
+/**
+ * File.Source
+ *
+ * Marks a block of source text to be associated with the current file when
+ * rendering with the FileCollector. Children are treated as the source string.
+ */
 function FileSource({ isTypeOnly, name, isExportable, isIndexable, children }: FileSourceProps) {
   return (
     <kubb-source name={name} isTypeOnly={isTypeOnly} isExportable={isExportable} isIndexable={isIndexable}>
@@ -75,6 +86,12 @@ FileSource.displayName = 'KubbFileSource'
 
 type FileExportProps = KubbFile.Export & { key?: Key }
 
+/**
+ * File.Export
+ *
+ * Declares an export entry for the current file. This will be collected by
+ * the FileCollector for later emission.
+ */
 function FileExport({ name, path, isTypeOnly, asAlias }: FileExportProps) {
   return <kubb-export name={name} path={path} isTypeOnly={isTypeOnly || false} asAlias={asAlias} />
 }
@@ -83,6 +100,11 @@ FileExport.displayName = 'KubbFileExport'
 
 type FileImportProps = KubbFile.Import & { key?: Key }
 
+/**
+ * File.Import
+ *
+ * Declares an import entry for the current file.
+ */
 function FileImport({ name, root, path, isTypeOnly, isNameSpace }: FileImportProps) {
   return <kubb-import name={name} root={root} path={path} isNameSpace={isNameSpace} isTypeOnly={isTypeOnly || false} />
 }

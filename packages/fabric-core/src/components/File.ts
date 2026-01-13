@@ -23,6 +23,10 @@ export type FileProps<TMeta extends object = object> = {
 
 /**
  * File component for fsx - registers files via context
+ *
+ * When executed this will create or reuse a FileCollector from context and
+ * register the file (baseName/path) so it can be emitted later. Returns the
+ * children string content for fsx renderers.
  */
 export function File<TMeta extends object = object>({ children, ...rest }: FileProps<TMeta>): string {
   const collector = useContext(FileCollectorContext, new FileCollector())
@@ -45,6 +49,8 @@ export function File<TMeta extends object = object>({ children, ...rest }: FileP
 
 /**
  * FileSource - for adding source code to a file
+ *
+ * Returns the provided children string so the fsx renderer can collect it.
  */
 export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: string }): string {
   return props.children || ''
@@ -52,6 +58,8 @@ export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: 
 
 /**
  * FileExport - for adding exports to a file
+ *
+ * No-op function used by renderers to record exports.
  */
 export function FileExport(_props: KubbFile.Export): string {
   return ''
@@ -59,6 +67,8 @@ export function FileExport(_props: KubbFile.Export): string {
 
 /**
  * FileImport - for adding imports to a file
+ *
+ * No-op function used by renderers to record imports.
  */
 export function FileImport(_props: KubbFile.Import): string {
   return ''

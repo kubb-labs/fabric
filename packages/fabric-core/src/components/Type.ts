@@ -17,6 +17,10 @@ type Props = {
   children?: string
 }
 
+/**
+ * Renders a TypeScript type alias string for use with the fsx renderer.
+ * Optionally emits JSDoc comments when `JSDoc.comments` is provided.
+ */
 export function Type({ name, export: canExport, JSDoc, children }: Props): string {
   if (name.charAt(0).toUpperCase() !== name.charAt(0)) {
     throw new Error('Name should start with a capital letter (see TypeScript types)')

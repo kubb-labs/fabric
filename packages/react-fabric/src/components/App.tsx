@@ -6,6 +6,10 @@ type Props<TMeta = unknown> = {
   readonly meta: TMeta
 }
 
+/**
+ * Provides the current app context (meta and exit) to descendants.
+ * This component mirrors the Fabric app container in React.
+ */
 export function App<TMeta = unknown>({ meta, children }: Props<TMeta>) {
   const { exit } = useContext(RootContext)
   provide(AppContext, { exit, meta })

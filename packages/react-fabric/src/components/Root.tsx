@@ -33,13 +33,6 @@ class ErrorBoundary extends Component<{
   }
 }
 
-export type RootContextProps = {
-  /**
-   * Exit (unmount) the whole Ink app.
-   */
-  readonly exit: (error?: Error) => void
-}
-
 type RootProps = {
   /**
    * Exit (unmount) hook
@@ -52,6 +45,14 @@ type RootProps = {
   readonly children?: KubbNode
 }
 
+/**
+ * Provides the root context (exit hook) and wraps children into an
+ * ErrorBoundary so errors can be forwarded to the `onError` handler.
+ *
+ * This component provides the root behaviour for the React Fabric runtime.
+ *
+ * Returns a React node tree representing the root of the Fabric app.
+ */
 export function Root({ onError, onExit, children }: RootProps) {
   provide(RootContext, { exit: onExit })
 

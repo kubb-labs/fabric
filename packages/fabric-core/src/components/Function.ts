@@ -39,6 +39,10 @@ type Props = {
   children?: string
 }
 
+/**
+ * Builds a function declaration string for the fsx renderer. Supports optional
+ * export/default/async flags, generics, params and JSDoc rendering.
+ */
 export function Function({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, children }: Props): string {
   const parts: string[] = []
 
@@ -95,6 +99,13 @@ type ArrowFunctionProps = Props & {
   singleLine?: boolean
 }
 
+/**
+ * ArrowFunction
+ *
+ * Builds an arrow function declaration string for the fsx renderer. Supports
+ * the same options as `Function`. Use `singleLine` to produce a one-line
+ * arrow expression.
+ */
 function ArrowFunction({
   name,
   default: isDefault,

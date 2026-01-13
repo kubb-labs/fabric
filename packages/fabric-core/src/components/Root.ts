@@ -1,15 +1,5 @@
-import { createContext } from '../context.ts'
-
-export type RootContextProps = {
-  /**
-   * Exit (unmount) the whole app.
-   */
-  readonly exit: (error?: Error) => void
-}
-
-export const RootContext = createContext<RootContextProps>({
-  exit: () => {},
-})
+import { provide } from '../context.ts'
+import { RootContext } from '../contexts/RootContext.ts'
 
 type RootProps = {
   /**
@@ -23,7 +13,14 @@ type RootProps = {
   readonly children?: string
 }
 
+/**
+ * Top-level root for fsx renderers. Returns children content and ensures
+ * `onError` is called for runtime exceptions. Provides a RootContext with
+ * an `exit` hook for downstream consumers.
+ */
 export function Root({ onError, children }: Omit<RootProps, 'onExit'>): string {
+  provide(RootContext, { exit: () => {} })
+
   try {
     // In fsx, we don't have component trees like React
     // We just return the children and let context handle the rest
@@ -36,5 +33,4 @@ export function Root({ onError, children }: Omit<RootProps, 'onExit'>): string {
   }
 }
 
-Root.Context = RootContext
 Root.displayName = 'KubbRoot'

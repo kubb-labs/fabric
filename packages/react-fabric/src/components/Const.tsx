@@ -27,6 +27,9 @@ type Props = {
   children?: KubbNode
 }
 
+/**
+ * Renders a constant declaration. Supports optional export, type and JSDoc.
+ */
 export function Const({ name, export: canExport, type, JSDoc, asConst, children }: Props) {
   return (
     <>

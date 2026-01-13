@@ -4,6 +4,9 @@ import { useContext } from './useContext.ts'
 
 /**
  * `useFile` will return the current FileCollector for registering files.
+ *
+ * Throws when no FileCollector is present in context — ensure a Fabric that
+ * provides a FileCollector is mounted before calling this hook.
  */
 export function useFile(): FileCollector {
   const collector = useContext(FileCollectorContext, null)

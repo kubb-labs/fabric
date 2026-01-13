@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { unprovide } from '../context.ts'
-import { Root, RootContext } from './Root.ts'
+import { RootContext } from '../contexts/RootContext.ts'
+import { Root } from './Root.ts'
 
 describe('Root', () => {
   afterEach(() => {

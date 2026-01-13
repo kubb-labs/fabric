@@ -41,6 +41,10 @@ type Props = {
   children?: KubbNode
 }
 
+/**
+ * Renders a function definition using the Fabric templating primitives.
+ * Supports optional export/default/async flags, generics, params and JSDoc.
+ */
 export function Function({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, children }: Props) {
   return (
     <>
@@ -87,6 +91,12 @@ type ArrowFunctionProps = Props & {
   singleLine?: boolean
 }
 
+/**
+ * ArrowFunction
+ *
+ * Renders an arrow function definition. Supports the same flags as `Function`.
+ * Use `singleLine` to render the body as a single-line expression.
+ */
 function ArrowFunction({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine, children }: ArrowFunctionProps) {
   return (
     <>
