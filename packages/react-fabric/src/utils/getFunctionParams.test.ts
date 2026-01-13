@@ -152,37 +152,37 @@ describe('[params] getFunctionParams with transformers', () => {
   })
 })
 
-  it('should treat children with default values as optional for parent optionality', () => {
-    const paramsWithChildDefaults = {
-      options: {
-        children: {
-          name: { type: 'string', default: "'John'" },
-          age: { type: 'number', default: '30' },
-        },
+it('should treat children with default values as optional for parent optionality', () => {
+  const paramsWithChildDefaults = {
+    options: {
+      children: {
+        name: { type: 'string', default: "'John'" },
+        age: { type: 'number', default: '30' },
       },
-    }
+    },
+  }
 
-    const result = getFunctionParams(paramsWithChildDefaults, { type: 'constructor' })
-    // All children have defaults, so parent should be treated as optional (has = {})
-    // But the types themselves don't need ? since they have defaults
-    expect(result).toBe("{ name = 'John', age = 30 }: { name: string; age: number } = {}")
-  })
+  const result = getFunctionParams(paramsWithChildDefaults, { type: 'constructor' })
+  // All children have defaults, so parent should be treated as optional (has = {})
+  // But the types themselves don't need ? since they have defaults
+  expect(result).toBe("{ name = 'John', age = 30 }: { name: string; age: number } = {}")
+})
 
-  it('should add = {} to parameter with all optional children even when followed by other parameters', () => {
-    const multipleParams = {
-      options: {
-        children: {
-          params: { type: 'GetBroadcastsQueryParams', optional: true },
-        },
+it('should add = {} to parameter with all optional children even when followed by other parameters', () => {
+  const multipleParams = {
+    options: {
+      children: {
+        params: { type: 'GetBroadcastsQueryParams', optional: true },
       },
-      config: {
-        type: 'Config',
-        default: '{}',
-      },
-    }
+    },
+    config: {
+      type: 'Config',
+      default: '{}',
+    },
+  }
 
-    const result = getFunctionParams(multipleParams, { type: 'constructor' })
-    // First param has all optional children, so it should get = {}
-    // Second param has explicit default, so it should use that
-    expect(result).toBe('{ params }: { params?: GetBroadcastsQueryParams } = {}, config: Config = {}')
-  })
+  const result = getFunctionParams(multipleParams, { type: 'constructor' })
+  // First param has all optional children, so it should get = {}
+  // Second param has explicit default, so it should use that
+  expect(result).toBe('{ params }: { params?: GetBroadcastsQueryParams } = {}, config: Config = {}')
+})
