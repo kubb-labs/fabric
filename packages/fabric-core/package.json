@@ -42,10 +42,6 @@
       "require": "./dist/types.cjs",
       "import": "./dist/types.js"
     },
-    "./utils": {
-      "require": "./dist/utils.cjs",
-      "import": "./dist/utils.js"
-    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.cjs",
@@ -61,9 +57,6 @@
       ],
       "plugins": [
         "./dist/plugins.d.ts"
-      ],
-      "utils": [
-        "./dist/utils.d.ts"
       ],
       "types": [
         "./dist/types.d.ts"

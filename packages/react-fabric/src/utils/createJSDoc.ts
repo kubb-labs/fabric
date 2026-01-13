@@ -1,1 +1,1 @@
-export { createJSDoc } from '@kubb/fabric-core/utils'
+export { createJSDoc } from '@kubb/fabric-core'

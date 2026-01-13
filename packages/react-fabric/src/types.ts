@@ -50,10 +50,6 @@ export type KubbElement = JSX.Element
 
 export type { Key } from 'react'
 
-export type JSDoc = {
-  comments: string[]
-}
-
 export type KubbTextProps = {
   children?: KubbNode
 }

@@ -1,6 +1,5 @@
-import { FileCollectorContext, provide } from '@kubb/fabric-core'
+import { FileCollector, FileCollectorContext, provide, useContext } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
-import { FileCollector } from '@kubb/fabric-core/utils'
 import type { Key, KubbNode } from '../types.ts'
 
 type BasePropsWithBaseName = {
@@ -35,7 +34,7 @@ type Props<TMeta> = BaseProps & {
 }
 
 export function File<TMeta extends object = object>({ children, ...rest }: Props<TMeta>) {
-  const collector = new FileCollector()
+  const collector = useContext(FileCollectorContext, new FileCollector())
   provide(FileCollectorContext, collector)
 
   if (!rest.baseName || !rest.path) {

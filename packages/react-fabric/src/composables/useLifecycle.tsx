@@ -1,7 +1,7 @@
-import { inject, RootContext } from '@kubb/fabric-core'
+import { RootContext, useContext } from '@kubb/fabric-core'
 
 export function useLifecycle() {
-  const { exit } = inject(RootContext, { exit: () => {} })
+  const { exit } = useContext(RootContext, { exit: () => {} })
 
   return {
     exit: () => {
