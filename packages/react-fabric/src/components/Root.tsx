@@ -1,4 +1,5 @@
-import { Component, createContext } from 'react'
+import { provide, RootContext } from '@kubb/fabric-core'
+import { Component } from 'react'
 
 import type { KubbNode } from '../types.ts'
 
@@ -39,10 +40,6 @@ export type RootContextProps = {
   readonly exit: (error?: Error) => void
 }
 
-export const RootContext = createContext<RootContextProps>({
-  exit: () => {},
-})
-
 type RootProps = {
   /**
    * Exit (unmount) hook
@@ -56,16 +53,17 @@ type RootProps = {
 }
 
 export function Root({ onError, onExit, children }: RootProps) {
+  provide(RootContext, { exit: onExit })
+
   return (
     <ErrorBoundary
       onError={(error) => {
         onError(error)
       }}
     >
-      <RootContext.Provider value={{ exit: onExit }}>{children}</RootContext.Provider>
+      {children}
     </ErrorBoundary>
   )
 }
 
-Root.Context = RootContext
 Root.displayName = 'KubbRoot'

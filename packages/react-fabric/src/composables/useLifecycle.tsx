@@ -1,18 +1,12 @@
-import { useContext } from 'react'
+import { inject, RootContext } from '@kubb/fabric-core'
 
-import { Root } from '../components/Root.tsx'
-
-/**
- * `useLifecycle` will return some helpers to exit/restart the generation.
- */
 export function useLifecycle() {
-  const { exit } = useContext(Root.Context)
+  const { exit } = inject(RootContext, { exit: () => {} })
 
   return {
     exit: () => {
-      const timeout = setTimeout(() => {
-        clearTimeout(timeout)
-
+      // need this to let React finish its current render cycle
+      setTimeout(() => {
         exit()
       }, 0)
     },

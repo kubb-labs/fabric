@@ -14,7 +14,9 @@ describe('useLifecycle', () => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const { exit } = useLifecycle()
       // call exit on mount
-      exit()
+      setTimeout(() => {
+        exit()
+      }, 1000)
       return null
     }
 

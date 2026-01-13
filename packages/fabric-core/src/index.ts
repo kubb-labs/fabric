@@ -1,3 +1,13 @@
+export { useApp } from './composables/useApp.ts'
+export { useContext } from './composables/useContext.ts'
+export { useFile } from './composables/useFile.ts'
+export { useLifecycle } from './composables/useLifecycle.ts'
+// context api
+export type { Context } from './context.ts'
+export { createContext, inject, provide, unprovide } from './context.ts'
+export { AppContext } from './contexts/AppContext.ts'
+export { FileCollectorContext } from './contexts/FileCollectorContext.ts'
+export { RootContext } from './contexts/RootContext.ts'
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
 // we need this to override the globals of `fabric.use`

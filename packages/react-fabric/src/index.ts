@@ -14,16 +14,20 @@ export const useContext = React.useContext
 export const useEffect = React.useEffect
 export const useReducer = React.useReducer
 export const useRef = React.useRef
-// // components
+// components
 export { App } from './components/App.tsx'
 export { Const } from './components/Const.tsx'
 export { File } from './components/File.tsx'
 export { Function } from './components/Function.tsx'
 export { Indent } from './components/Indent.tsx'
 export { Type } from './components/Type.tsx'
+
+// composables
 export { useApp } from './composables/useApp.ts'
 export { useFile } from './composables/useFile.ts'
 export { useLifecycle } from './composables/useLifecycle.tsx'
+
+// factories
 export { createReactFabric } from './createReactFabric.ts'
 export { Runtime } from './Runtime.tsx'
 // utils
