@@ -11,6 +11,7 @@ describe('useLifecycle', () => {
   })
 
   it('should return exit function from root context', () => {
+    vi.useFakeTimers()
     const exitMock = vi.fn()
 
     provide(RootContext, { exit: exitMock })
@@ -18,8 +19,10 @@ describe('useLifecycle', () => {
     const { exit } = useLifecycle()
 
     exit()
+    vi.runAllTimers()
 
     expect(exitMock).toHaveBeenCalledOnce()
+    vi.useRealTimers()
   })
 
   it('should use default no-op exit when context not provided', () => {
