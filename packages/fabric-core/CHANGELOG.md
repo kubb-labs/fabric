@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.10.0
+
+### Minor Changes
+
+- [#104](https://github.com/kubb-labs/fabric/pull/104) [`000e087`](https://github.com/kubb-labs/fabric/commit/000e087044f9737fa3cef7904ef26fd2fddd5077) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Use of Fabric core composables with custom Context helpers (Vue inspired).
+
 ## 0.9.5
 
 ## 0.9.4
