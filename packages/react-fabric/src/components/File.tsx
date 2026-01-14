@@ -1,4 +1,4 @@
-import { FileContext, NodeTreeContext, provide, useFileCollector, useNodeTree } from '@kubb/fabric-core'
+import { FileContext, NodeTreeContext, provide, useFile, useFileCollector, useNodeTree } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
 import type { Key, KubbNode } from '../types.ts'
 
@@ -84,7 +84,17 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  * Marks a block of source text to be associated with the current file when
  * rendering with the FileCollector. Children are treated as the source string.
  */
-function FileSource({ isTypeOnly, name, isExportable, isIndexable, children }: FileSourceProps) {
+function FileSource({ children, ...props }: FileSourceProps) {
+  const { name, isExportable, isIndexable, isTypeOnly } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileSource', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   return (
     <kubb-source name={name} isTypeOnly={isTypeOnly} isExportable={isExportable} isIndexable={isIndexable}>
       {children}
@@ -106,6 +116,7 @@ function FileExport(props: FileExportProps) {
   const { name, path, isTypeOnly, asAlias } = props
 
   const nodeTree = useNodeTree()
+  const file = useFile()
 
   if (nodeTree) {
     const childTree = nodeTree.addChild({ type: 'FileExport', props })
@@ -113,7 +124,16 @@ function FileExport(props: FileExportProps) {
     provide(NodeTreeContext, childTree)
   }
 
-  return <kubb-export name={name} path={path} isTypeOnly={isTypeOnly || false} asAlias={asAlias} />
+  if (file) {
+    file.exports.push({
+      name,
+      path,
+      asAlias,
+      isTypeOnly,
+    })
+  }
+
+  return <kubb-export name={name} path={path} isTypeOnly={isTypeOnly} asAlias={asAlias} />
 }
 
 FileExport.displayName = 'KubbFileExport'
@@ -129,6 +149,7 @@ function FileImport(props: FileImportProps) {
   const { name, root, path, isTypeOnly, isNameSpace } = props
 
   const nodeTree = useNodeTree()
+  const file = useFile()
 
   if (nodeTree) {
     const childTree = nodeTree.addChild({ type: 'FileImport', props })
@@ -136,7 +157,17 @@ function FileImport(props: FileImportProps) {
     provide(NodeTreeContext, childTree)
   }
 
-  return <kubb-import name={name} root={root} path={path} isNameSpace={isNameSpace} isTypeOnly={isTypeOnly || false} />
+  if (file) {
+    file.imports.push({
+      name,
+      path,
+      root,
+      isNameSpace,
+      isTypeOnly,
+    })
+  }
+
+  return <kubb-import name={name} root={root} path={path} isNameSpace={isNameSpace} isTypeOnly={isTypeOnly} />
 }
 
 FileImport.displayName = 'KubbFileImport'

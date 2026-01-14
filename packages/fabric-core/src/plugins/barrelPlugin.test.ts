@@ -9,16 +9,22 @@ const files = [
     path: 'src/a.ts',
     baseName: 'a.ts',
     sources: [{ name: 'A', isExportable: true, isIndexable: true }],
+    imports: [],
+    exports: [],
   }),
   createFile({
     path: 'src/sub/sub2/b.ts',
     baseName: 'b.ts',
     sources: [{ name: 'b', isExportable: true, isIndexable: true }],
+    imports: [],
+    exports: [],
   }),
   createFile({
     path: 'src/sub/sub2/c.ts',
     baseName: 'c.ts',
     sources: [{ name: 'C', isExportable: false, isIndexable: false }],
+    imports: [],
+    exports: [],
   }),
   createFile({
     path: 'src/sub/d.ts',
@@ -27,6 +33,8 @@ const files = [
       { name: 'D', isExportable: true, isIndexable: true },
       { name: 'E', isExportable: true, isIndexable: true, isTypeOnly: true },
     ],
+    imports: [],
+    exports: [],
   }),
   createFile({
     path: 'src/sub/index.ts',
@@ -45,6 +53,8 @@ const files = [
         isIndexable: true,
       },
     ],
+    imports: [],
+    exports: [],
   }),
 ]
 

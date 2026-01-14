@@ -87,6 +87,7 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
       barrelFile = createFile({
         path: barrelPath,
         baseName: 'index.ts',
+        imports: [],
         exports: [],
         sources: [],
       })
@@ -214,6 +215,7 @@ export const barrelPlugin = definePlugin<Options, ExtendOptions>({
         const entryFile = createFile({
           path: rootPath,
           baseName: 'index.ts',
+          imports: [],
           exports,
           sources: [],
         })

@@ -247,6 +247,7 @@ describe('File', () => {
     File({
       baseName: 'parent.ts',
       path: './parent.ts',
+      children: () => File.Source({ name: 'parent.ts', children: 'test' }),
     })
 
     // Verify file was added to collector
@@ -255,6 +256,12 @@ describe('File', () => {
     expect(files[0]).toMatchObject({
       baseName: 'parent.ts',
       path: './parent.ts',
+      sources: [
+        {
+          name: 'parent.ts',
+          value: 'test',
+        },
+      ],
     })
   })
 

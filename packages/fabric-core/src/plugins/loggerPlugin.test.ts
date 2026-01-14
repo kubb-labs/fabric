@@ -70,6 +70,8 @@ function makeFile(name = 'example'): KubbFile.ResolvedFile {
         isExportable: true,
       },
     ],
+    imports: [],
+    exports: [],
   })
 }
 

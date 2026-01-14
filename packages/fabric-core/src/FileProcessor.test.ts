@@ -28,6 +28,7 @@ describe('FileProcessor', () => {
           isTypeOnly: true,
         },
       ],
+      exports: [],
       sources: [
         {
           value: 'export type X = A',
@@ -48,6 +49,7 @@ describe('FileProcessor', () => {
       baseName: 'test.json',
       path: 'models/ts/test.json',
       imports: [],
+      exports: [],
       sources: [{ value: '{"a":1}' }, { value: '{"b":2}' }],
     })
 
@@ -66,11 +68,15 @@ describe('FileProcessor', () => {
         baseName: 'a.ts',
         path: 'models/ts/a.ts',
         sources: [{ value: 'export const a = 1' }],
+        imports: [],
+        exports: [],
       }),
       createFile({
         baseName: 'b.ts',
         path: 'models/ts/b.ts',
         sources: [{ value: 'export const b = 2' }],
+        imports: [],
+        exports: [],
       }),
     ]
 

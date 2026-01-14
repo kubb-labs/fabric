@@ -1,3 +1,4 @@
+import { useFile } from '../composables/useFile.ts'
 import { useFileCollector } from '../composables/useFileCollector.ts'
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
@@ -69,12 +70,25 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  * Returns the provided children string so the fsx renderer can collect it.
  */
 export function FileSource({ children, ...props }: FileSourceProps): string {
+  const { name, isExportable, isIndexable, isTypeOnly } = props
+
   const nodeTree = useNodeTree()
+  const file = useFile()
 
   if (nodeTree) {
     const childTree = nodeTree.addChild({ type: 'FileSource', props })
 
     provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.sources.push({
+      name,
+      isExportable,
+      isIndexable,
+      isTypeOnly,
+      value: Text({ children }),
+    })
   }
 
   return Text({ children })
@@ -88,12 +102,24 @@ type FileExportProps = KubbFile.Export
  * No-op function used by renderers to record exports.
  */
 export function FileExport(props: FileExportProps): string {
+  const { name, path, isTypeOnly, asAlias } = props
+
   const nodeTree = useNodeTree()
+  const file = useFile()
 
   if (nodeTree) {
     const childTree = nodeTree.addChild({ type: 'FileExport', props })
 
     provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.exports.push({
+      name,
+      path,
+      asAlias,
+      isTypeOnly,
+    })
   }
 
   return Text({ children: '' })
@@ -107,12 +133,25 @@ type FileImportProps = KubbFile.Import
  * No-op function used by renderers to record imports.
  */
 export function FileImport(props: FileImportProps): string {
+  const { name, path, root, isNameSpace, isTypeOnly } = props
+
   const nodeTree = useNodeTree()
+  const file = useFile()
 
   if (nodeTree) {
     const childTree = nodeTree.addChild({ type: 'FileImport', props })
 
     provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.imports.push({
+      name,
+      path,
+      root,
+      isNameSpace,
+      isTypeOnly,
+    })
   }
 
   return Text({ children: '' })

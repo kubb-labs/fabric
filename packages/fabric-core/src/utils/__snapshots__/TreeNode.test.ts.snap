@@ -8,6 +8,8 @@ TreeNode {
       "data": {
         "file": {
           "baseName": "test.ts",
+          "exports": [],
+          "imports": [],
           "meta": {},
           "path": "src/test.ts",
           "sources": [],
@@ -24,6 +26,8 @@ TreeNode {
           "data": {
             "file": {
               "baseName": "hello.ts",
+              "exports": [],
+              "imports": [],
               "meta": {},
               "path": "src/sub/hello.ts",
               "sources": [],
@@ -38,6 +42,8 @@ TreeNode {
           "data": {
             "file": {
               "baseName": "world.ts",
+              "exports": [],
+              "imports": [],
               "meta": {},
               "path": "src/sub/world.ts",
               "sources": [],

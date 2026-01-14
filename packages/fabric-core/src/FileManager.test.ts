@@ -11,12 +11,16 @@ describe('FileManager', () => {
       path: path.resolve('./src/file1.ts'),
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     await fileManager.add({
       path: path.resolve('./src/models/file1.ts'),
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     const files = fileManager.files
@@ -39,6 +43,8 @@ describe('FileManager', () => {
       path: path.resolve('./src/file1.ts'),
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     expect(file!.path).toBe(path.resolve('./src/file1.generated.ts'))
@@ -57,6 +63,8 @@ describe('FileManager', () => {
       path: path.resolve('./src/file1.ts'),
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     expect(file!.name).toBe('prefix-file1')
@@ -75,6 +83,7 @@ describe('FileManager', () => {
             value: "const file1 ='file1';",
           },
         ],
+        exports: [],
       },
       {
         path: path.resolve('./src/file2.ts'),
@@ -85,6 +94,7 @@ describe('FileManager', () => {
             value: "const file2 ='file2';",
           },
         ],
+        exports: [],
       },
     )
 
@@ -98,6 +108,7 @@ describe('FileManager', () => {
       path: path.resolve('./src/file1.ts'),
       baseName: 'file1.ts',
       imports: [{ name: 'path', path: 'node:path' }],
+      exports: [],
       sources: [
         {
           name: 'file1',
@@ -116,6 +127,7 @@ describe('FileManager', () => {
           value: "const file1 ='file1Bis';",
         },
       ],
+      exports: [],
     })
 
     expect(file).toBeDefined()
@@ -152,6 +164,7 @@ describe('FileManager', () => {
           value: "const file1 ='file1';",
         },
       ],
+      exports: [],
     })
 
     const [file] = await fileManager.upsert({
@@ -163,6 +176,7 @@ describe('FileManager', () => {
           value: "const file1Bis ='file1Bis';",
         },
       ],
+      exports: [],
     })
 
     expect(file).toBeDefined()
@@ -199,23 +213,31 @@ describe('FileManager', () => {
       path: path.resolve('./src/file1.ts'),
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
     await fileManager.add({
       path: path.resolve('./src/hooks/file1.ts'),
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     await fileManager.add({
       path: path.resolve('./src/models/file1.ts'),
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     await fileManager.add({
       path: path.resolve('./src/models/file2.ts'),
       baseName: 'file2.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     const files = fileManager.files
@@ -230,6 +252,8 @@ describe('FileManager', () => {
       path: filePath,
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
+      exports: [],
     })
 
     fileManager.deleteByPath(filePath)
@@ -254,11 +278,15 @@ describe('FileManager', () => {
         path: path.resolve('./src/a.ts'),
         baseName: 'a.ts',
         sources: [],
+        imports: [],
+        exports: [],
       },
       {
         path: path.resolve('./src/b.ts'),
         baseName: 'b.ts',
         sources: [],
+        imports: [],
+        exports: [],
       },
     )
 
