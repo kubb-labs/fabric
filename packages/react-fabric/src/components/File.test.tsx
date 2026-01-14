@@ -389,7 +389,7 @@ describe('<File/>', () => {
       ]
     `)
 
-    expect(files[1]?.sources).toMatchInlineSnapshot(`undefined`)
+    expect(files[1]?.sources).toMatchInlineSnapshot('undefined')
   })
 
   it('render File with meta', async () => {
