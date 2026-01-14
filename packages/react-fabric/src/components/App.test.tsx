@@ -28,4 +28,54 @@ describe('<App/>', () => {
 
     expect(output).toMatchSnapshot()
   })
+
+  test('render App without children', async () => {
+    const Component = () => {
+      return (
+        <Root onExit={() => {}} onError={() => {}}>
+          <App meta={{}} />
+        </Root>
+      )
+    }
+
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
+
+    expect(output).toBe('')
+  })
+
+  test('render App with typed meta', async () => {
+    type Meta = { version: string; author: string }
+    const Component = () => {
+      const meta: Meta = { version: '1.0.0', author: 'test' }
+      return (
+        <Root onExit={() => {}} onError={() => {}}>
+          <App meta={meta}>code here</App>
+        </Root>
+      )
+    }
+
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
+
+    expect(output).toBe('code here')
+  })
+
+  test('render App with undefined children', async () => {
+    const Component = () => {
+      return (
+        <Root onExit={() => {}} onError={() => {}}>
+          <App meta={{ test: true }} />
+        </Root>
+      )
+    }
+
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
+
+    expect(output).toBe('')
+  })
 })

@@ -144,4 +144,34 @@ describe('<Function/>', () => {
 
     expect(output).toMatchSnapshot()
   })
+
+  test('render Function with params', async () => {
+    const Component = () => {
+      return (
+        <Function name="myFunc" params="a: string, b: number">
+          return true;
+        </Function>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
+
+    expect(output).toContain('function myFunc(a: string, b: number)')
+  })
+
+  test('render Function with returnType', async () => {
+    const Component = () => {
+      return (
+        <Function name="myFunc" returnType="boolean">
+          return true;
+        </Function>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(Component)
+
+    expect(output).toContain('function myFunc(): boolean')
+  })
 })

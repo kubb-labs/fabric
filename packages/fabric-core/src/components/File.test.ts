@@ -218,4 +218,18 @@ describe('File', () => {
   })
   it.todo('should set the import when using File and File.Import')
   it.todo('should set the export when using File and File.Export')
+
+  it('should call File.Import without throwing', () => {
+    // File.Import is a no-op that just adds to the node tree
+    expect(() => {
+      File.Import({ name: 'React', path: 'react' })
+    }).not.toThrow()
+  })
+
+  it('should call File.Export without throwing', () => {
+    // File.Export is a no-op that just adds to the node tree
+    expect(() => {
+      File.Export({ path: './index.ts', asAlias: true })
+    }).not.toThrow()
+  })
 })

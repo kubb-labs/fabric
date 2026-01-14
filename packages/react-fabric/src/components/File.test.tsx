@@ -366,6 +366,57 @@ describe('<File/>', () => {
 
     expect(files[1]?.sources).toMatchSnapshot()
   })
+
+  test('render File with meta', async () => {
+    const Component = () => {
+      return (
+        <File baseName="user.ts" path="./models/user.ts" meta={{ model: 'User' }}>
+          <File.Source>type User = {'{}'}</File.Source>
+        </File>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+
+    await fabric.render(Component)
+    const files = fabric.files
+
+    expect(files[0]?.meta).toEqual({ model: 'User' })
+  })
+
+  test('render File with banner', async () => {
+    const Component = () => {
+      return (
+        <File baseName="api.ts" path="./api.ts" banner="/* eslint-disable */">
+          <File.Source>const api = {'{}'}</File.Source>
+        </File>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+
+    await fabric.render(Component)
+    const files = fabric.files
+
+    expect(files[0]?.banner).toBe('/* eslint-disable */')
+  })
+
+  test('render File with footer', async () => {
+    const Component = () => {
+      return (
+        <File baseName="export.ts" path="./export.ts" footer="export default API;">
+          <File.Source>const API = {'{}'}</File.Source>
+        </File>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+
+    await fabric.render(Component)
+    const files = fabric.files
+
+    expect(files[0]?.footer).toBe('export default API;')
+  })
 })
 
 describe('<File.Export/>', () => {
