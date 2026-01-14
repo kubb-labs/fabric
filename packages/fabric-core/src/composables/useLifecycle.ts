@@ -8,7 +8,7 @@ import { useContext } from './useContext.ts'
  * for consumers to programmatically stop generation or perform teardown.
  */
 export function useLifecycle() {
-  const { exit } = useContext(RootContext, { exit: () => {} })
+  const { exit } = useContext(RootContext)
 
   return {
     exit,

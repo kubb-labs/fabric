@@ -7,11 +7,5 @@ import { useContext } from './useContext.ts'
  * Throws an error when there is no AppContext available.
  */
 export function useApp<TMeta = unknown>(): AppContextProps<TMeta> {
-  const app = useContext(AppContext, undefined)
-
-  if (!app) {
-    throw new Error('App context should be provided')
-  }
-
-  return app as AppContextProps<TMeta>
+  return useContext(AppContext) as AppContextProps<TMeta>
 }

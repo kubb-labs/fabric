@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, test } from 'vitest'
+import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { provide, unprovide } from '../context.ts'
 import { FileCollectorContext } from '../contexts/FileCollectorContext.ts'
 import { FileCollector } from '../utils/FileCollector.ts'
+import { TreeNode } from '../utils/TreeNode.ts'
+import { App } from './App.ts'
+import { Const } from './Const.ts'
 import { File } from './File.ts'
 
 describe('File', () => {
@@ -89,5 +93,56 @@ describe('File', () => {
     const files = collector.files
     expect(files).toHaveLength(3)
     expect(files.map((f) => f?.baseName)).toEqual(['file1.ts', 'file2.ts', 'file3.ts'])
+  })
+
+  test('should add a node to the ComponentTreeContext when provided', () => {
+    const tree = new TreeNode({ type: 'root', props: {} })
+
+    App({
+      tree,
+      children() {
+        return [File({ baseName: 'test.ts', path: './test.ts' })]
+      },
+    })
+
+    expect(tree.children).toHaveLength(1)
+    const child = tree.children[0]!
+    expect(child.data).toMatchObject({
+      type: 'File',
+      props: expect.objectContaining({ baseName: 'test.ts', path: './test.ts' }),
+    })
+  })
+
+  test('should add multiple nodes to the ComponentTreeContext when rendering a File and a Const', () => {
+    const tree = new TreeNode<ComponentNode>({ type: 'App', props: {} })
+
+    const result = App({
+      tree,
+      meta: {
+        name: 'TestApp',
+      },
+      children() {
+        return [
+          File({
+            baseName: 'file.ts',
+            path: './file.ts',
+            children: () => [Const({ name: 'myConst', children: '"value"' })],
+          }),
+        ]
+      },
+    })
+
+    expect(tree.children).toHaveLength(1)
+
+    const fileNode = tree.children[0]!
+    expect(fileNode.children).toHaveLength(1)
+    expect(fileNode.children?.[0]?.data).toMatchObject({
+      props: {
+        name: 'myConst',
+      },
+      type: 'Const',
+    })
+
+    expect(result).toMatchInlineSnapshot(`"const myConst = "value""`)
   })
 })

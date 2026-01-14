@@ -1,8 +1,9 @@
-import { useContext } from '../composables/useContext.ts'
+import { useFileCollector } from '../composables/useFileCollector.ts'
+import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
-import { FileCollectorContext } from '../contexts/FileCollectorContext.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import type { KubbFile } from '../types.ts'
-import { FileCollector } from '../utils/FileCollector.ts'
+import { Text } from './Text.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**
@@ -10,15 +11,15 @@ export type FileProps<TMeta extends object = object> = {
    * Based on UNIX basename
    * @link https://nodejs.org/api/path.html#pathbasenamepath-suffix
    */
-  baseName: KubbFile.BaseName
+  readonly baseName: KubbFile.BaseName
   /**
    * Path will be full qualified path to a specified file.
    */
-  path: KubbFile.Path
-  meta?: TMeta
-  banner?: string
-  footer?: string
-  children?: string
+  readonly path: KubbFile.Path
+  readonly meta?: TMeta
+  readonly banner?: string
+  readonly footer?: string
+  readonly children?: string | (() => string | Array<string>)
 }
 
 /**
@@ -28,23 +29,30 @@ export type FileProps<TMeta extends object = object> = {
  * register the file (baseName/path) so it can be emitted later. Returns the
  * children string content for fsx renderers.
  */
-export function File<TMeta extends object = object>({ children, ...rest }: FileProps<TMeta>): string {
-  const collector = useContext(FileCollectorContext, new FileCollector())
-  provide(FileCollectorContext, collector)
+export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>): string {
+  const { baseName, path, meta = {}, footer, banner } = props
 
-  // Register this file with the collector
-  collector.add({
-    baseName: rest.baseName,
-    path: rest.path,
-    meta: rest.meta || ({} as TMeta),
-    banner: rest.banner,
-    footer: rest.footer,
+  const fileCollector = useFileCollector()
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'File', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  fileCollector.add({
+    baseName,
+    path,
+    meta,
+    banner,
+    footer,
     sources: [],
     imports: [],
     exports: [],
   })
 
-  return children || ''
+  return Text({ children })
 }
 
 /**

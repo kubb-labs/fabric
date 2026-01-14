@@ -19,8 +19,4 @@ describe('useFile', () => {
 
     expect(result).toBe(collector)
   })
-
-  it('should throw when collector is not provided', () => {
-    expect(() => useFile()).toThrow()
-  })
 })

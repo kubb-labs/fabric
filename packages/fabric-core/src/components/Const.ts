@@ -1,32 +1,44 @@
+import { useNodeTree } from '../composables/useNodeTree.ts'
+import { provide } from '../context.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-
-type JSDoc = { comments: Array<string> }
 
 type Props = {
   /**
    * Name of the const
    */
-  name: string
+  readonly name: string
   /**
    * Does this type need to be exported.
    */
-  export?: boolean
+  readonly export?: boolean
   /**
    * Type to make the const being typed
    */
-  type?: string
+  readonly type?: string
   /**
    * Options for JSdocs.
    */
-  JSDoc?: JSDoc
+  readonly JSDoc?: JSDoc
   /**
    * Use of `const` assertions
    */
-  asConst?: boolean
-  children?: string
+  readonly asConst?: boolean
+  readonly children?: string
 }
 
-export function Const({ name, export: canExport, type, JSDoc, asConst, children }: Props): string {
+export function Const({ children, ...props }: Props): string {
+  const { name, export: canExport, type, JSDoc, asConst } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'Const', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   let result = ''
 
   if (JSDoc?.comments) {
@@ -44,7 +56,7 @@ export function Const({ name, export: canExport, type, JSDoc, asConst, children 
     result += `: ${type}`
   }
 
-  result += ` = ${children || ''}`
+  result += ` = ${children ? children : ''}`
 
   if (asConst) {
     result += ' as const'

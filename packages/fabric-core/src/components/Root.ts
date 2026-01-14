@@ -1,7 +1,8 @@
 import { provide } from '../context.ts'
 import { RootContext } from '../contexts/RootContext.ts'
+import { Text } from './Text.ts'
 
-type RootProps = {
+type Props = {
   /**
    * Exit (unmount) hook
    */
@@ -9,8 +10,8 @@ type RootProps = {
   /**
    * Error hook
    */
-  readonly onError: (error: Error) => void
-  readonly children?: string
+  readonly onError?: (error: Error) => void
+  readonly children?: string | (() => string | Array<string>)
 }
 
 /**
@@ -18,16 +19,14 @@ type RootProps = {
  * `onError` is called for runtime exceptions. Provides a RootContext with
  * an `exit` hook for downstream consumers.
  */
-export function Root({ onError, children }: Omit<RootProps, 'onExit'>): string {
-  provide(RootContext, { exit: () => {} })
+export function Root({ onError, onExit, children }: Props): string {
+  provide(RootContext, { exit: onExit })
 
   try {
-    // In fsx, we don't have component trees like React
-    // We just return the children and let context handle the rest
-    return children || ''
+    return Text({ children })
   } catch (e) {
     if (e instanceof Error) {
-      onError(e)
+      onError?.(e)
     }
     return ''
   }

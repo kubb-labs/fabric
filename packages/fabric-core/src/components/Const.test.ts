@@ -1,4 +1,6 @@
 import { describe, expect, test } from 'vitest'
+import { TreeNode } from '../utils/TreeNode.ts'
+import { App } from './App.ts'
 import { Const } from './Const.ts'
 
 describe('Const', () => {
@@ -35,5 +37,26 @@ describe('Const', () => {
       const myVar = "hello""
     `)
     expect(result).toContain('const myVar = "hello"')
+  })
+
+  test('should add a node to the ComponentTreeContext when provided', () => {
+    const tree = new TreeNode({ type: 'root', props: {} })
+
+    const result = App({
+      tree,
+      meta: {
+        name: 'TestApp',
+      },
+      children: () => Const({ name: 'myVar', children: '"hello"' }),
+    })
+
+    expect(tree.children).toHaveLength(1)
+    const child = tree.children[0]!
+    expect(child.data).toMatchObject({
+      type: 'Const',
+      props: expect.objectContaining({ name: 'myVar' }),
+    })
+
+    expect(result).toMatchInlineSnapshot(`"const myVar = "hello""`)
   })
 })

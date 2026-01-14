@@ -1,6 +1,5 @@
-import { FileCollectorContext } from '../contexts/FileCollectorContext.ts'
 import type { FileCollector } from '../utils/FileCollector.ts'
-import { useContext } from './useContext.ts'
+import { useFileCollector } from './useFileCollector.ts'
 
 /**
  * `useFile` will return the current FileCollector for registering files.
@@ -9,7 +8,8 @@ import { useContext } from './useContext.ts'
  * provides a FileCollector is mounted before calling this hook.
  */
 export function useFile(): FileCollector {
-  const collector = useContext(FileCollectorContext, null)
+  // use custom file context
+  const collector = useFileCollector()
 
   if (!collector) {
     throw new Error('No FileCollector found in context. Make sure you are using a Fabric that provides a FileCollector.')

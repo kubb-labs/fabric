@@ -1,4 +1,4 @@
-import { FileCollector, FileCollectorContext, provide, useContext } from '@kubb/fabric-core'
+import { useFileCollector } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
 import type { Key, KubbNode } from '../types.ts'
 
@@ -39,15 +39,14 @@ type Props<TMeta> = BaseProps & {
  * registered so it can be emitted by the collector later.
  */
 export function File<TMeta extends object = object>({ children, ...rest }: Props<TMeta>) {
-  const collector = useContext(FileCollectorContext, new FileCollector())
-  provide(FileCollectorContext, collector)
+  const fileCollector = useFileCollector()
 
   if (!rest.baseName || !rest.path) {
     return <>{children}</>
   }
 
   // Register this file with the collector
-  collector.add({
+  fileCollector.add({
     baseName: rest.baseName,
     path: rest.path,
     meta: rest.meta || ({} as TMeta),
