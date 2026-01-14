@@ -1,5 +1,5 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Root } from './Root.tsx'
 
@@ -8,7 +8,7 @@ function Thrower(): React.ReactNode {
 }
 
 describe('<Root/>', () => {
-  test('render Root with children', async () => {
+  it('render Root with children', async () => {
     const Component = () => {
       return (
         <Root onExit={() => {}} onError={() => {}}>
@@ -21,10 +21,10 @@ describe('<Root/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
 
-  test('render Root with multiline children', async () => {
+  it('render Root with multiline children', async () => {
     const Component = () => {
       return (
         <Root onExit={() => {}} onError={() => {}}>
@@ -47,7 +47,7 @@ describe('<Root/>', () => {
     expect(output).toContain('export function main()')
   })
 
-  test('render Root with whitespace preservation', async () => {
+  it('render Root with whitespace preservation', async () => {
     const Component = () => {
       return (
         <Root onExit={() => {}} onError={() => {}}>
@@ -63,7 +63,7 @@ describe('<Root/>', () => {
     expect(output).toBe('  indented\n    more indented')
   })
 
-  test('error boundary should catch and throw error', async () => {
+  it('error boundary should catch and throw error', async () => {
     const Component = () => {
       return <Thrower />
     }

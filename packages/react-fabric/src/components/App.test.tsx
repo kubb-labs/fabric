@@ -1,11 +1,11 @@
 import { AppContext, createFabric, inject } from '@kubb/fabric-core'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { App } from './App.tsx'
 import { Root } from './Root.tsx'
 
 describe('<App/>', () => {
-  test('render App with meta and children', async () => {
+  it('render App with meta and children', async () => {
     const Text = () => {
       const ctx = inject(AppContext)
 
@@ -26,10 +26,10 @@ describe('<App/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`"AppChildren|meta:{"color":"blue","version":1}|exit:function|"`)
   })
 
-  test('render App without children', async () => {
+  it('render App without children', async () => {
     const Component = () => {
       return (
         <Root onExit={() => {}} onError={() => {}}>
@@ -45,7 +45,7 @@ describe('<App/>', () => {
     expect(output).toBe('')
   })
 
-  test('render App with typed meta', async () => {
+  it('render App with typed meta', async () => {
     type Meta = { version: string; author: string }
     const Component = () => {
       const meta: Meta = { version: '1.0.0', author: 'test' }
@@ -63,7 +63,7 @@ describe('<App/>', () => {
     expect(output).toBe('code here')
   })
 
-  test('render App with undefined children', async () => {
+  it('render App with undefined children', async () => {
     const Component = () => {
       return (
         <Root onExit={() => {}} onError={() => {}}>

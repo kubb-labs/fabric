@@ -1,10 +1,10 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Type } from './Type.tsx'
 
 describe('<Type/>', () => {
-  test('render Type', async () => {
+  it('render Type', async () => {
     const Component = () => {
       return <Type name="Data">string</Type>
     }
@@ -12,10 +12,10 @@ describe('<Type/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`"type Data = string"`)
   })
 
-  test('render exported Type', async () => {
+  it('render exported Type', async () => {
     const Component = () => {
       return (
         <Type name="MyType" export>
@@ -30,7 +30,7 @@ describe('<Type/>', () => {
     expect(output).toContain('export type MyType')
   })
 
-  test('render Type with comments', async () => {
+  it('render Type with comments', async () => {
     const Component = () => {
       return (
         <Type name="Data" export JSDoc={{ comments: ['@deprecated'] }}>
@@ -42,10 +42,15 @@ describe('<Type/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`
+      "/**
+       * @deprecated
+       */
+      export type Data = number | string"
+    `)
   })
 
-  test('should throw error if name does not start with capital letter', async () => {
+  it('should throw error if name does not start with capital letter', async () => {
     const Component = () => {
       return <Type name="myType">string</Type>
     }

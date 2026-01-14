@@ -1,10 +1,10 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Indent } from './Indent.tsx'
 
 describe('<Indent/>', () => {
-  test('indent string children by default size', async () => {
+  it('indent string children by default size', async () => {
     const Component = () => {
       return (
         <Indent>
@@ -21,10 +21,14 @@ describe('<Indent/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`
+      "  line1
+          line2
+        line3"
+    `)
   })
 
-  test('indent mixed children and collapse br elements', async () => {
+  it('indent mixed children and collapse br elements', async () => {
     const Component = () => {
       return (
         <Indent size={4}>
@@ -43,6 +47,11 @@ describe('<Indent/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`
+      "    Hello    
+          
+          world    
+          <span>!</span>"
+    `)
   })
 })

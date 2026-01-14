@@ -1,10 +1,10 @@
 import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Const } from './Const.tsx'
 
 describe('<Const/>', () => {
-  test('render Const', async () => {
+  it('render Const', async () => {
     const Component = () => {
       return <Const name="data">"blue"</Const>
     }
@@ -12,10 +12,10 @@ describe('<Const/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`"const data = "blue""`)
   })
 
-  test('render exported Const', async () => {
+  it('render exported Const', async () => {
     const Component = () => {
       return (
         <Const name="myVar" export>
@@ -30,7 +30,7 @@ describe('<Const/>', () => {
     expect(output).toContain('export const myVar = "hello"')
   })
 
-  test('render Const with type', async () => {
+  it('render Const with type', async () => {
     const Component = () => {
       return (
         <Const name="myVar" type="string">
@@ -47,7 +47,7 @@ describe('<Const/>', () => {
     expect(output).toContain('"hello"')
   })
 
-  test('render Const with const assertion', async () => {
+  it('render Const with const assertion', async () => {
     const Component = () => {
       return (
         <Const name="data" asConst>
@@ -59,10 +59,10 @@ describe('<Const/>', () => {
     fabric.use(reactPlugin)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`"const data = "blue" as const"`)
   })
 
-  test('render Const with JSDoc', async () => {
+  it('render Const with JSDoc', async () => {
     const Component = () => {
       return (
         <Const name="myVar" JSDoc={{ comments: ['This is a variable'] }}>
