@@ -59,31 +59,63 @@ export function File<TMeta extends object = object>({ children, ...props }: File
   return Text({ children })
 }
 
+type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
+  readonly children?: string | (() => string | Array<string>)
+}
+
 /**
  * FileSource - for adding source code to a file
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export function FileSource({ children }: Omit<KubbFile.Source, 'value'> & { children?: string }): string {
+export function FileSource({ children, ...props }: FileSourceProps): string {
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileSource', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   return Text({ children })
 }
+
+type FileExportProps = KubbFile.Export
 
 /**
  * FileExport - for adding exports to a file
  *
  * No-op function used by renderers to record exports.
  */
-export function FileExport(_props: KubbFile.Export): string {
-  return ''
+export function FileExport(props: FileExportProps): string {
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileExport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  return Text({ children: '' })
 }
+
+type FileImportProps = KubbFile.Import
 
 /**
  * FileImport - for adding imports to a file
  *
  * No-op function used by renderers to record imports.
  */
-export function FileImport(_props: KubbFile.Import): string {
-  return ''
+export function FileImport(props: FileImportProps): string {
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileImport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  return Text({ children: '' })
 }
 
 File.Source = FileSource

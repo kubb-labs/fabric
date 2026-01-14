@@ -148,4 +148,74 @@ describe('File', () => {
 
   it.todo('should save the file in the FileContext for child components to use')
   it.todo('should save the file in the FileCollectorContext for child components to use')
+  it('should set multiple files in the FileCollectorContext', () => {
+    const fileCollector = new FileCollector()
+
+    const result = App({
+      fileCollector,
+      children() {
+        return [
+          File({
+            baseName: 'file.ts',
+            path: './file.ts',
+            children: () => File.Source({ children: () => "const test = 'hello';" }),
+          }),
+          File({
+            baseName: 'file2.ts',
+            path: './file2.ts',
+            children: () => File.Source({ children: () => "const test2 = 'hello';" }),
+          }),
+        ]
+      },
+    })
+
+    expect(fileCollector.files).toHaveLength(2)
+
+    expect(result).toMatchInlineSnapshot(`
+      "const test = 'hello';
+      const test2 = 'hello';"
+    `)
+  })
+  it('should set the source when using File and File.Source', () => {
+    const tree = new TreeNode<ComponentNode>({ type: 'App', props: {} })
+
+    const result = App({
+      tree,
+      meta: {
+        name: 'TestApp',
+      },
+      children() {
+        return [
+          File({
+            baseName: 'file.ts',
+            path: './file.ts',
+            children: () => File.Source({ children: () => "const test = 'hello';" }),
+          }),
+        ]
+      },
+    })
+
+    expect(tree.children).toHaveLength(1)
+
+    const fileNode = tree.children[0]!
+    expect(fileNode.data).toMatchObject({
+      props: {
+        baseName: 'file.ts',
+        path: './file.ts',
+      },
+      type: 'File',
+    })
+    expect(fileNode.children).toHaveLength(1)
+
+    const fileSourceNode = fileNode.children[0]!
+
+    expect(fileSourceNode.data).toMatchObject({
+      props: {},
+      type: 'FileSource',
+    })
+
+    expect(result).toMatchInlineSnapshot(`"const test = 'hello';"`)
+  })
+  it.todo('should set the import when using File and File.Import')
+  it.todo('should set the export when using File and File.Export')
 })

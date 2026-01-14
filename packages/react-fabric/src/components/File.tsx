@@ -102,7 +102,17 @@ type FileExportProps = KubbFile.Export & { key?: Key }
  * Declares an export entry for the current file. This will be collected by
  * the FileCollector for later emission.
  */
-function FileExport({ name, path, isTypeOnly, asAlias }: FileExportProps) {
+function FileExport(props: FileExportProps) {
+  const { name, path, isTypeOnly, asAlias } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileExport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   return <kubb-export name={name} path={path} isTypeOnly={isTypeOnly || false} asAlias={asAlias} />
 }
 
@@ -115,7 +125,17 @@ type FileImportProps = KubbFile.Import & { key?: Key }
  *
  * Declares an import entry for the current file.
  */
-function FileImport({ name, root, path, isTypeOnly, isNameSpace }: FileImportProps) {
+function FileImport(props: FileImportProps) {
+  const { name, root, path, isTypeOnly, isNameSpace } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileImport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   return <kubb-import name={name} root={root} path={path} isNameSpace={isNameSpace} isTypeOnly={isTypeOnly || false} />
 }
 

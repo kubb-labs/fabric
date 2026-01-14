@@ -12,6 +12,7 @@ import { Text } from './Text.ts'
 type Props<TMeta = unknown> = {
   readonly meta?: TMeta
   readonly tree?: TreeNode<ComponentNode>
+  readonly fileCollector?: FileCollector
   readonly children?: string | (() => string | Array<string>)
 }
 
@@ -19,14 +20,19 @@ type Props<TMeta = unknown> = {
  * Minimal fsx app container — provides an AppContext carrying `meta` and an
  * `exit` hook. In fsx mode this just returns children content.
  */
-export function App<TMeta = unknown>({ meta, tree = new TreeNode<ComponentNode>({ type: 'App', props: { meta } }), children }: Props<TMeta>): string {
+export function App<TMeta = unknown>({
+  meta,
+  fileCollector = new FileCollector(),
+  tree = new TreeNode<ComponentNode>({ type: 'App', props: { meta } }),
+  children,
+}: Props<TMeta>): string {
   const { exit } = useContext(RootContext)
 
   tree.data.props = { meta }
 
   provide(AppContext, { exit, meta })
+  provide(FileCollectorContext, fileCollector)
   provide(NodeTreeContext, tree)
-  provide(FileCollectorContext, new FileCollector())
 
   return Text({ children })
 }

@@ -14,7 +14,7 @@ export function Text({ children }: Props): string {
   const value = children()
 
   if (Array.isArray(value)) {
-    return value.join('')
+    return value.join('\n')
   }
 
   return value
