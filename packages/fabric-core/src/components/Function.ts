@@ -1,6 +1,8 @@
+import { code } from '../code.ts'
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import { br, dedent, indent } from '../intrinsic.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
@@ -58,50 +60,18 @@ export function Function({ children, ...props }: Props): string {
     provide(NodeTreeContext, childTree)
   }
 
-  const parts: string[] = []
-
-  if (JSDoc?.comments) {
-    parts.push(createJSDoc({ comments: JSDoc.comments }))
-    parts.push('\n')
-  }
-
-  if (canExport) {
-    parts.push('export ')
-  }
-
-  if (isDefault) {
-    parts.push('default ')
-  }
-
-  if (async) {
-    parts.push('async ')
-  }
-
-  parts.push(`function ${name}`)
-
-  if (generics) {
-    parts.push('<')
-    parts.push(Array.isArray(generics) ? generics.join(', ').trim() : generics)
-    parts.push('>')
-  }
-
-  parts.push(`(${params || ''})`)
-
-  if (returnType && !async) {
-    parts.push(`: ${returnType}`)
-  }
-
-  if (returnType && async) {
-    parts.push(`: Promise<${returnType}>`)
-  }
-
-  parts.push(' {')
+  const genericsPart = generics ? (Array.isArray(generics) ? generics.join(', ').trim() : generics) : undefined
+  const jsdoc = JSDoc?.comments ? createJSDoc({ comments: JSDoc.comments }) : undefined
 
   if (children) {
-    return Text({ children: `${parts.join('')}${' '}${'\n'}${children}${' '}${'\n'}}` })
+    const result = code`${jsdoc ?? ''}${jsdoc ? br : ''}${canExport ? 'export ' : ''}${isDefault ? 'default ' : ''}${async ? 'async ' : ''}function ${name}${genericsPart ? `<${genericsPart}>` : ''}(${params ?? ''})${returnType && !async ? `: ${returnType}` : ''}${returnType && async ? `: Promise<${returnType}>` : ''} {${br}${indent}${children}${dedent}${br}}`
+
+    return Text({ children: result })
   }
 
-  return Text({ children: `${parts.join('')}}` })
+  const result = code`${jsdoc ?? ''}${jsdoc ? br : ''}${canExport ? 'export ' : ''}${isDefault ? 'default ' : ''}${async ? 'async ' : ''}function ${name}${genericsPart ? `<${genericsPart}>` : ''}(${params ?? ''})${returnType && !async ? `: ${returnType}` : ''}${returnType && async ? `: Promise<${returnType}>` : ''} {}`
+
+  return Text({ children: result })
 }
 
 Function.displayName = 'KubbFunction'
@@ -131,53 +101,22 @@ function ArrowFunction({ children, ...props }: ArrowFunctionProps): string {
     provide(NodeTreeContext, childTree)
   }
 
-  const parts: string[] = []
-
-  if (JSDoc?.comments) {
-    parts.push(createJSDoc({ comments: JSDoc.comments }))
-    parts.push('\n')
-  }
-
-  if (canExport) {
-    parts.push('export ')
-  }
-
-  if (isDefault) {
-    parts.push('default ')
-  }
-
-  parts.push(`const ${name} = `)
-
-  if (async) {
-    parts.push('async ')
-  }
-
-  if (generics) {
-    parts.push('<')
-    parts.push(Array.isArray(generics) ? generics.join(', ').trim() : generics)
-    parts.push('>')
-  }
-
-  parts.push(`(${params || ''})`)
-
-  if (returnType && !async) {
-    parts.push(`: ${returnType}`)
-  }
-
-  if (returnType && async) {
-    parts.push(`: Promise<${returnType}>`)
-  }
+  const genericsPart = generics ? (Array.isArray(generics) ? generics.join(', ').trim() : generics) : undefined
+  const jsdoc = JSDoc?.comments ? createJSDoc({ comments: JSDoc.comments }) : undefined
 
   if (singleLine) {
-    parts.push(` => ${children || ''}\n`)
-    return Text({ children: parts.join('') })
+    const result = code`${jsdoc ?? ''}${jsdoc ? br : ''}${canExport ? 'export ' : ''}${isDefault ? 'default ' : ''}const ${name} = ${async ? 'async ' : ''}${genericsPart ? `<${genericsPart}>` : ''}(${params ?? ''})${returnType && !async ? `: ${returnType}` : ''}${returnType && async ? `: Promise<${returnType}>` : ''} => ${children ?? ''}${br}`
+    return Text({ children: result })
   }
 
   if (children) {
-    return Text({ children: `${parts.join('')} => {${' '}${'\n'}${children}${' '}${'\n'}}${'\n'}` })
+    const result = code`${jsdoc ?? ''}${jsdoc ? br : ''}${canExport ? 'export ' : ''}${isDefault ? 'default ' : ''}const ${name} = ${async ? 'async ' : ''}${genericsPart ? `<${genericsPart}>` : ''}(${params ?? ''})${returnType && !async ? `: ${returnType}` : ''}${returnType && async ? `: Promise<${returnType}>` : ''} => {${br}${indent}${children}${dedent}${br}}${br}`
+    return Text({ children: result })
   }
 
-  return Text({ children: `${parts.join('')} => {}\n` })
+  const result = code`${jsdoc ?? ''}${jsdoc ? br : ''}${canExport ? 'export ' : ''}${isDefault ? 'default ' : ''}const ${name} = ${async ? 'async ' : ''}${genericsPart ? `<${genericsPart}>` : ''}(${params ?? ''})${returnType && !async ? `: ${returnType}` : ''}${returnType && async ? `: Promise<${returnType}>` : ''} => {}${br}`
+
+  return Text({ children: result })
 }
 
 ArrowFunction.displayName = 'KubbArrowFunction'
