@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import type { ComponentNode } from '../composables/useNodeTree.ts'
-import { provide, unprovide } from '../context.ts'
+import { inject, provide, unprovide } from '../context.ts'
 import { FileCollectorContext } from '../contexts/FileCollectorContext.ts'
+import { FileContext } from '../contexts/FileContext.ts'
 import { FileCollector } from '../utils/FileCollector.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { App } from './App.ts'
@@ -12,6 +13,7 @@ describe('File', () => {
   afterEach(() => {
     // Clean up context after each test
     unprovide(FileCollectorContext)
+    unprovide(FileContext)
   })
 
   it('should return empty string', () => {
@@ -218,4 +220,55 @@ describe('File', () => {
   })
   it.todo('should set the import when using File and File.Import')
   it.todo('should set the export when using File and File.Export')
+
+  it('should save the file in the FileContext for child components to use', () => {
+    const fileCollector = new FileCollector()
+    provide(FileCollectorContext, fileCollector)
+
+    // Create a custom component that reads from FileContext
+    const ChildComponent = (): string => {
+      const currentFile = inject(FileContext)
+      return currentFile ? `File: ${currentFile.baseName}` : 'No file'
+    }
+
+    const result = File({
+      baseName: 'test.ts',
+      path: './test.ts',
+      children: () => ChildComponent(),
+    })
+
+    expect(result).toBe('File: test.ts')
+  })
+
+  it('should save the file in the FileCollectorContext for child components to use', () => {
+    const fileCollector = new FileCollector()
+    provide(FileCollectorContext, fileCollector)
+
+    File({
+      baseName: 'parent.ts',
+      path: './parent.ts',
+    })
+
+    // Verify file was added to collector
+    const files = fileCollector.files
+    expect(files).toHaveLength(1)
+    expect(files[0]).toMatchObject({
+      baseName: 'parent.ts',
+      path: './parent.ts',
+    })
+  })
+
+  it('should call File.Import without throwing', () => {
+    // File.Import is a no-op that just adds to the node tree
+    expect(() => {
+      File.Import({ name: 'React', path: 'react' })
+    }).not.toThrow()
+  })
+
+  it('should call File.Export without throwing', () => {
+    // File.Export is a no-op that just adds to the node tree
+    expect(() => {
+      File.Export({ path: './index.ts', asAlias: true })
+    }).not.toThrow()
+  })
 })

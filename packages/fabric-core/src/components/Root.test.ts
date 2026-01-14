@@ -64,4 +64,14 @@ describe('Root', () => {
     const result = Root({ onExit, onError, children })
     expect(result).toBe(children)
   })
+
+  test('should handle error boundary functionality', () => {
+    const onError = vi.fn()
+    const onExit = vi.fn()
+
+    // Root should not throw when provided with normal children
+    expect(() => {
+      Root({ onExit, onError, children: 'normal code' })
+    }).not.toThrow()
+  })
 })

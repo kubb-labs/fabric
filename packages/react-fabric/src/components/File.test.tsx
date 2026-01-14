@@ -1,11 +1,11 @@
 import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { File } from './File.tsx'
 
 describe('<File/>', () => {
-  test('render text', async () => {
+  it('render text', async () => {
     const Component = () => {
       return 'test'
     }
@@ -16,7 +16,7 @@ describe('<File/>', () => {
     expect(output).toMatchInlineSnapshot(`"test"`)
   })
 
-  test('render File', async () => {
+  it('render File', async () => {
     const Component = () => {
       return <File baseName="test.ts" path="path" />
     }
@@ -27,7 +27,7 @@ describe('<File/>', () => {
     expect(output).toMatchInlineSnapshot(`""`)
   })
 
-  test('render File with Import and Export', async () => {
+  it('render File with Import and Export', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path">
@@ -68,7 +68,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('do not render File', async () => {
+  it('do not render File', async () => {
     const enable = false
     const Component = () => {
       return (
@@ -91,7 +91,7 @@ describe('<File/>', () => {
     expect(files).toMatchInlineSnapshot('[]')
   })
 
-  test('render File with Export inside Source', async () => {
+  it('render File with Export inside Source', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path">
@@ -141,7 +141,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('render File with source', async () => {
+  it('render File with source', async () => {
     const Component = () => {
       return (
         <>
@@ -163,7 +163,7 @@ describe('<File/>', () => {
     await expect(fabric.renderToString(Component)).rejects.toThrow("'banner' should be part of <File.Source> component when using the <File/> component")
   })
 
-  test('render File with source', async () => {
+  it('render File with source', async () => {
     const Component = () => {
       return (
         <>
@@ -209,7 +209,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('render File with source and React element', async () => {
+  it('render File with source and React element', async () => {
     const Component = () => {
       return (
         <>
@@ -261,7 +261,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('render File with multiple sources', async () => {
+  it('render File with multiple sources', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path">
@@ -315,7 +315,7 @@ describe('<File/>', () => {
     `)
   })
 
-  test('render multiple Files', async () => {
+  it('render multiple Files', async () => {
     const Component = () => {
       return (
         <>
@@ -343,14 +343,39 @@ describe('<File/>', () => {
     await fabric.render(Component)
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchSnapshot()
+    expect(output).toMatchInlineSnapshot(`
+      "
+                  const test = 1;
+                  import node from "node";
+
+                  const test2 = 2;
+                  "
+    `)
 
     await fabric.render(Component)
     const files = fabric.files
 
     expect(files.length).toBe(1)
 
-    expect(files[0]?.sources).toMatchSnapshot()
+    expect(files[0]?.sources).toMatchInlineSnapshot(`
+      [
+        {
+          "isExportable": false,
+          "isIndexable": false,
+          "isTypeOnly": false,
+          "name": undefined,
+          "value": "const test = 1;
+                  import node from "node";",
+        },
+        {
+          "isExportable": false,
+          "isIndexable": false,
+          "isTypeOnly": false,
+          "name": undefined,
+          "value": "const test2 = 2;",
+        },
+      ]
+    `)
 
     expect(files[0]?.imports).toMatchInlineSnapshot(`
       [
@@ -364,12 +389,63 @@ describe('<File/>', () => {
       ]
     `)
 
-    expect(files[1]?.sources).toMatchSnapshot()
+    expect(files[1]?.sources).toMatchInlineSnapshot(`undefined`)
+  })
+
+  it('render File with meta', async () => {
+    const Component = () => {
+      return (
+        <File baseName="user.ts" path="./models/user.ts" meta={{ model: 'User' }}>
+          <File.Source>type User = {'{}'}</File.Source>
+        </File>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+
+    await fabric.render(Component)
+    const files = fabric.files
+
+    expect(files[0]?.meta).toEqual({ model: 'User' })
+  })
+
+  it('render File with banner', async () => {
+    const Component = () => {
+      return (
+        <File baseName="api.ts" path="./api.ts" banner="/* eslint-disable */">
+          <File.Source>const api = {'{}'}</File.Source>
+        </File>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+
+    await fabric.render(Component)
+    const files = fabric.files
+
+    expect(files[0]?.banner).toBe('/* eslint-disable */')
+  })
+
+  it('render File with footer', async () => {
+    const Component = () => {
+      return (
+        <File baseName="export.ts" path="./export.ts" footer="export default API;">
+          <File.Source>const API = {'{}'}</File.Source>
+        </File>
+      )
+    }
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+
+    await fabric.render(Component)
+    const files = fabric.files
+
+    expect(files[0]?.footer).toBe('export default API;')
   })
 })
 
 describe('<File.Export/>', () => {
-  test('render Export with print', async () => {
+  it('render Export with print', async () => {
     const Component = () => {
       return <File.Export path="kubb" />
     }
@@ -385,7 +461,7 @@ describe('<File.Export/>', () => {
 })
 
 describe('<File.Import/>', () => {
-  test('render Import', async () => {
+  it('render Import', async () => {
     const Component = () => {
       return <File.Import name="React" path="react" />
     }
@@ -399,7 +475,7 @@ describe('<File.Import/>', () => {
     `)
   })
 
-  test('render Import with type', async () => {
+  it('render Import with type', async () => {
     const Component = () => {
       return <File.Import name="React" path="react" isTypeOnly />
     }
@@ -413,7 +489,7 @@ describe('<File.Import/>', () => {
     `)
   })
 
-  test('render Import with fabric', async () => {
+  it('render Import with fabric', async () => {
     const Component = () => {
       return <File.Import name="React" root="types" path="types/test" />
     }
@@ -427,7 +503,7 @@ describe('<File.Import/>', () => {
     `)
   })
 
-  test('render Import with File.Import inside of File.Source', async () => {
+  it('render Import with File.Import inside of File.Source', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path">
@@ -483,7 +559,7 @@ describe('<File.Import/>', () => {
     `)
   })
 
-  test('render Import with File.Import inside of File with render', async () => {
+  it('render Import with File.Import inside of File with render', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path.ts">
@@ -534,7 +610,7 @@ describe('<File.Import/>', () => {
     `)
   })
 
-  test('render Import with File.Import inside of File with renderToString', async () => {
+  it('render Import with File.Import inside of File with renderToString', async () => {
     const Component = () => {
       return (
         <File baseName="test.ts" path="path.ts">
