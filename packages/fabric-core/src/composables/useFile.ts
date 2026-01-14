@@ -1,5 +1,6 @@
-import type { FileCollector } from '../utils/FileCollector.ts'
-import { useFileCollector } from './useFileCollector.ts'
+import { FileContext } from '../contexts/FileContext.ts'
+import type * as KubbFile from '../KubbFile.ts'
+import { useContext } from './useContext.ts'
 
 /**
  * `useFile` will return the current FileCollector for registering files.
@@ -7,13 +8,6 @@ import { useFileCollector } from './useFileCollector.ts'
  * Throws when no FileCollector is present in context — ensure a Fabric that
  * provides a FileCollector is mounted before calling this hook.
  */
-export function useFile(): FileCollector {
-  // use custom file context
-  const collector = useFileCollector()
-
-  if (!collector) {
-    throw new Error('No FileCollector found in context. Make sure you are using a Fabric that provides a FileCollector.')
-  }
-
-  return collector
+export function useFile(): KubbFile.File | null {
+  return useContext(FileContext)
 }

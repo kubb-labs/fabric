@@ -1,5 +1,9 @@
+import { useNodeTree } from '../composables/useNodeTree.ts'
+import { provide } from '../context.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import { Text } from './Text.ts'
 
 type Props = {
   /**
@@ -43,7 +47,17 @@ type Props = {
  * Builds a function declaration string for the fsx renderer. Supports optional
  * export/default/async flags, generics, params and JSDoc rendering.
  */
-export function Function({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, children }: Props): string {
+export function Function({ children, ...props }: Props): string {
+  const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'Function', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   const parts: string[] = []
 
   if (JSDoc?.comments) {
@@ -84,10 +98,10 @@ export function Function({ name, default: isDefault, export: canExport, async, g
   parts.push(' {')
 
   if (children) {
-    return `${parts.join('')}${' '}${'\n'}${children}${' '}${'\n'}}`
+    return Text({ children: `${parts.join('')}${' '}${'\n'}${children}${' '}${'\n'}}` })
   }
 
-  return `${parts.join('')}}`
+  return Text({ children: `${parts.join('')}}` })
 }
 
 Function.displayName = 'KubbFunction'
@@ -106,18 +120,17 @@ type ArrowFunctionProps = Props & {
  * the same options as `Function`. Use `singleLine` to produce a one-line
  * arrow expression.
  */
-function ArrowFunction({
-  name,
-  default: isDefault,
-  export: canExport,
-  async,
-  generics,
-  params,
-  returnType,
-  JSDoc,
-  singleLine,
-  children,
-}: ArrowFunctionProps): string {
+function ArrowFunction({ children, ...props }: ArrowFunctionProps): string {
+  const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'ArrowFunction', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   const parts: string[] = []
 
   if (JSDoc?.comments) {
@@ -157,14 +170,14 @@ function ArrowFunction({
 
   if (singleLine) {
     parts.push(` => ${children || ''}\n`)
-    return parts.join('')
+    return Text({ children: parts.join('') })
   }
 
   if (children) {
-    return `${parts.join('')} => {${' '}${'\n'}${children}${' '}${'\n'}}${'\n'}`
+    return Text({ children: `${parts.join('')} => {${' '}${'\n'}${children}${' '}${'\n'}}${'\n'}` })
   }
 
-  return `${parts.join('')} => {}\n`
+  return Text({ children: `${parts.join('')} => {}\n` })
 }
 
 ArrowFunction.displayName = 'KubbArrowFunction'

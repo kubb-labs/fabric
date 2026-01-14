@@ -1,4 +1,4 @@
-import { useFileCollector } from '@kubb/fabric-core'
+import { FileContext, NodeTreeContext, provide, useFileCollector, useNodeTree } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
 import type { Key, KubbNode } from '../types.ts'
 
@@ -38,26 +38,37 @@ type Props<TMeta> = BaseProps & {
  * for children. When `baseName` and `path` are provided the file will be
  * registered so it can be emitted by the collector later.
  */
-export function File<TMeta extends object = object>({ children, ...rest }: Props<TMeta>) {
-  const fileCollector = useFileCollector()
+export function File<TMeta extends object = object>({ children, ...props }: Props<TMeta>) {
+  const { baseName, path, meta = {}, footer, banner } = props
 
-  if (!rest.baseName || !rest.path) {
+  const fileCollector = useFileCollector()
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'File', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  if (!baseName || !path) {
     return <>{children}</>
   }
 
-  // Register this file with the collector
-  fileCollector.add({
-    baseName: rest.baseName,
-    path: rest.path,
-    meta: rest.meta || ({} as TMeta),
-    banner: rest.banner,
-    footer: rest.footer,
+  const file: KubbFile.File = {
+    baseName,
+    path,
+    meta,
+    banner,
+    footer,
     sources: [],
     imports: [],
     exports: [],
-  })
+  }
 
-  return <kubb-file {...rest}>{children}</kubb-file>
+  fileCollector.add(file)
+  provide(FileContext, file)
+
+  return <kubb-file {...props}>{children}</kubb-file>
 }
 
 File.displayName = 'KubbFile'

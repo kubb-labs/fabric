@@ -27,22 +27,19 @@ describe('useFile', () => {
 
     await fabric.render(Component)
 
-    expect(ctx).toBeDefined()
-    expect(ctx?.files).toMatchInlineSnapshot(`
-      [
-        {
-          "banner": undefined,
-          "baseName": "index.ts",
-          "exports": [],
-          "footer": undefined,
-          "imports": [],
-          "meta": {
-            "flag": true,
-          },
-          "path": "/tmp/index.ts",
-          "sources": [],
+    expect(ctx).toMatchInlineSnapshot(`
+      {
+        "banner": undefined,
+        "baseName": "index.ts",
+        "exports": [],
+        "footer": undefined,
+        "imports": [],
+        "meta": {
+          "flag": true,
         },
-      ]
+        "path": "/tmp/index.ts",
+        "sources": [],
+      }
     `)
   })
 })

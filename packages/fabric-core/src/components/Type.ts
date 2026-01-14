@@ -1,5 +1,9 @@
+import { useNodeTree } from '../composables/useNodeTree.ts'
+import { provide } from '../context.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import { Text } from './Text.ts'
 
 type Props = {
   /**
@@ -21,7 +25,17 @@ type Props = {
  * Renders a TypeScript type alias string for use with the fsx renderer.
  * Optionally emits JSDoc comments when `JSDoc.comments` is provided.
  */
-export function Type({ name, export: canExport, JSDoc, children }: Props): string {
+export function Type({ children, ...props }: Props): string {
+  const { name, export: canExport, JSDoc } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'Type', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   if (name.charAt(0).toUpperCase() !== name.charAt(0)) {
     throw new Error('Name should start with a capital letter (see TypeScript types)')
   }
@@ -39,7 +53,7 @@ export function Type({ name, export: canExport, JSDoc, children }: Props): strin
 
   result += `type ${name} = ${children || ''}`
 
-  return result
+  return Text({ children: result })
 }
 
 Type.displayName = 'KubbType'

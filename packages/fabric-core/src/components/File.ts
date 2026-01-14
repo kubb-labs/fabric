@@ -1,6 +1,7 @@
 import { useFileCollector } from '../composables/useFileCollector.ts'
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
+import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import type { KubbFile } from '../types.ts'
 import { Text } from './Text.ts'
@@ -41,7 +42,7 @@ export function File<TMeta extends object = object>({ children, ...props }: File
     provide(NodeTreeContext, childTree)
   }
 
-  fileCollector.add({
+  const file: KubbFile.File = {
     baseName,
     path,
     meta,
@@ -50,7 +51,10 @@ export function File<TMeta extends object = object>({ children, ...props }: File
     sources: [],
     imports: [],
     exports: [],
-  })
+  }
+
+  fileCollector.add(file)
+  provide(FileContext, file)
 
   return Text({ children })
 }
@@ -60,8 +64,8 @@ export function File<TMeta extends object = object>({ children, ...props }: File
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: string }): string {
-  return props.children || ''
+export function FileSource({ children }: Omit<KubbFile.Source, 'value'> & { children?: string }): string {
+  return Text({ children })
 }
 
 /**

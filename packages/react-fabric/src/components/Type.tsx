@@ -1,3 +1,4 @@
+import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
 import type { JSDoc, Key, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
@@ -22,7 +23,17 @@ type Props = {
  * Renders a TypeScript type alias. Validates that the provided name starts
  * with a capital letter and optionally emits JSDoc comments.
  */
-export function Type({ name, export: canExport, JSDoc, children }: Props) {
+export function Type({ children, ...props }: Props) {
+  const { name, export: canExport, JSDoc } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'Type', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   if (name.charAt(0).toUpperCase() !== name.charAt(0)) {
     throw new Error('Name should start with a capital letter(see TypeScript types)')
   }

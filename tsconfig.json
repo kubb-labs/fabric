@@ -41,7 +41,7 @@
       "@kubb/react-fabric/types": ["packages/react-fabric/src/types.ts"],
       "@kubb/react-fabric": ["packages/react-fabric/src/index.ts"]
     },
-    "types": ["vitest/globals", "bun-types", "./reset.d.ts"],
+    "types": ["bun-types", "./reset.d.ts"],
     "module": "ES2020",
     "moduleResolution": "Bundler",
     "declaration": false,

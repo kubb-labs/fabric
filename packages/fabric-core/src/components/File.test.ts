@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { provide, unprovide } from '../context.ts'
 import { FileCollectorContext } from '../contexts/FileCollectorContext.ts'
@@ -14,12 +14,12 @@ describe('File', () => {
     unprovide(FileCollectorContext)
   })
 
-  test('should return empty string', () => {
+  it('should return empty string', () => {
     const result = File({ baseName: 'test.ts', path: './test.ts' })
     expect(result).toBe('')
   })
 
-  test('should register file with collector when context is provided', () => {
+  it('should register file with collector when context is provided', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
@@ -33,7 +33,7 @@ describe('File', () => {
     })
   })
 
-  test('should register file with meta', () => {
+  it('should register file with meta', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
@@ -47,7 +47,7 @@ describe('File', () => {
     expect(files[0]?.meta).toEqual({ model: 'User' })
   })
 
-  test('should register file with banner', () => {
+  it('should register file with banner', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
@@ -61,7 +61,7 @@ describe('File', () => {
     expect(files[0]?.banner).toBe('/* eslint-disable */')
   })
 
-  test('should register file with footer', () => {
+  it('should register file with footer', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
@@ -75,14 +75,14 @@ describe('File', () => {
     expect(files[0]?.footer).toBe('export default API;')
   })
 
-  test('should handle no collector in context gracefully', () => {
+  it('should handle no collector in context gracefully', () => {
     // Should not throw even when no collector is provided
     expect(() => {
       File({ baseName: 'test.ts', path: './test.ts' })
     }).not.toThrow()
   })
 
-  test('should register multiple files', () => {
+  it('should register multiple files', () => {
     const collector = new FileCollector()
     provide(FileCollectorContext, collector)
 
@@ -95,7 +95,7 @@ describe('File', () => {
     expect(files.map((f) => f?.baseName)).toEqual(['file1.ts', 'file2.ts', 'file3.ts'])
   })
 
-  test('should add a node to the ComponentTreeContext when provided', () => {
+  it('should add a node to the NodeTreeContext when provided', () => {
     const tree = new TreeNode({ type: 'root', props: {} })
 
     App({
@@ -113,7 +113,7 @@ describe('File', () => {
     })
   })
 
-  test('should add multiple nodes to the ComponentTreeContext when rendering a File and a Const', () => {
+  it('should add multiple nodes to the NodeTreeContext when rendering a File and a Const', () => {
     const tree = new TreeNode<ComponentNode>({ type: 'App', props: {} })
 
     const result = App({
@@ -145,4 +145,7 @@ describe('File', () => {
 
     expect(result).toMatchInlineSnapshot(`"const myConst = "value""`)
   })
+
+  it.todo('should save the file in the FileContext for child components to use')
+  it.todo('should save the file in the FileCollectorContext for child components to use')
 })

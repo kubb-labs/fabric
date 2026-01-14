@@ -20,6 +20,7 @@ export type { Context } from './context.ts'
 export { createContext, inject, provide, unprovide } from './context.ts'
 export { AppContext } from './contexts/AppContext.ts'
 export { FileCollectorContext } from './contexts/FileCollectorContext.ts'
+export { FileContext } from './contexts/FileContext.ts'
 export { NodeTreeContext } from './contexts/NodeTreeContext.ts'
 export { RootContext } from './contexts/RootContext.ts'
 

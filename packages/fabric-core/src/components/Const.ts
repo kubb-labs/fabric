@@ -3,6 +3,7 @@ import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import { Text } from './Text.ts'
 
 type Props = {
   /**
@@ -62,7 +63,7 @@ export function Const({ children, ...props }: Props): string {
     result += ' as const'
   }
 
-  return result
+  return Text({ children: result })
 }
 
 Const.displayName = 'KubbConst'

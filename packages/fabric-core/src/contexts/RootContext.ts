@@ -1,6 +1,6 @@
 import { createContext } from '../context.ts'
 
-export type RootContextProps = {
+type RootContextProps = {
   /**
    * Exit (unmount) the whole app.
    */
