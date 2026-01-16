@@ -5,7 +5,7 @@ import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
 
-type Props = {
+export type TypeProps = {
   /**
    * Name of the type, this needs to start with a capital letter.
    */
@@ -18,14 +18,16 @@ type Props = {
    * Options for JSdocs.
    */
   JSDoc?: JSDoc
+  /**
+   * Children nodes.
+   */
   children?: string
 }
 
 /**
- * Renders a TypeScript type alias string for use with the fsx renderer.
- * Optionally emits JSDoc comments when `JSDoc.comments` is provided.
+ * Generates a TypeScript type declaration.
  */
-export function Type({ children, ...props }: Props): string {
+export function Type({ children, ...props }: TypeProps): string {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()

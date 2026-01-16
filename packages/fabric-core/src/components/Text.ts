@@ -1,7 +1,13 @@
 type Props = {
-  readonly children?: string | (() => string | Array<string>)
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string>)
 }
 
+/**
+ * Generates a text node from string or function returning string/array of strings.
+ */
 export function Text({ children }: Props): string {
   if (!children) {
     return ''

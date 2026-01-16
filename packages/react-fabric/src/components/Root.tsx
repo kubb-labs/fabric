@@ -1,7 +1,7 @@
-import { provide, RootContext } from '@kubb/fabric-core'
+import { type FileManager, NodeTreeContext, provide, RootContext, type TreeNode } from '@kubb/fabric-core'
 import { Component } from 'react'
 
-import type { KubbNode } from '../types.ts'
+import type { ComponentNode, KubbNode } from '../types.ts'
 
 type ErrorBoundaryProps = {
   onError: (error: Error) => void
@@ -33,28 +33,35 @@ class ErrorBoundary extends Component<{
   }
 }
 
-type RootProps = {
+export type RootProps = {
   /**
-   * Exit (unmount) hook
+   * Exit (unmount) the whole app.
    */
-  readonly onExit: (error?: Error) => void
+  onExit: (error?: Error) => void
   /**
-   * Error hook
+   * Error hook receiving runtime exceptions.
    */
-  readonly onError: (error: Error) => void
-  readonly children?: KubbNode
+  onError: (error: Error) => void
+  /**
+   * TreeNode representing the tree structure of the app.
+   */
+  treeNode: TreeNode<ComponentNode>
+  /**
+   * FileManager instance for managing files within the app.
+   */
+  fileManager: FileManager
+  /**
+   * Children nodes.
+   */
+  children?: KubbNode
 }
 
 /**
- * Provides the root context (exit hook) and wraps children into an
- * ErrorBoundary so errors can be forwarded to the `onError` handler.
- *
- * This component provides the root behaviour for the React Fabric runtime.
- *
- * Returns a React node tree representing the root of the Fabric app.
+ * This component provides the root behavior for the Fabric runtime.
  */
-export function Root({ onError, onExit, children }: RootProps) {
-  provide(RootContext, { exit: onExit })
+export function Root({ onError, onExit, treeNode, fileManager, children }: RootProps) {
+  provide(RootContext, { exit: onExit, treeNode, fileManager })
+  provide(NodeTreeContext, treeNode)
 
   return (
     <ErrorBoundary

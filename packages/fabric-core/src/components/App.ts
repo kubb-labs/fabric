@@ -1,38 +1,39 @@
 import { useContext } from '../composables/useContext.ts'
-import type { ComponentNode } from '../composables/useNodeTree.ts'
+import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { AppContext } from '../contexts/AppContext.ts'
-import { FileCollectorContext } from '../contexts/FileCollectorContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
-import { FileCollector } from '../utils/FileCollector.ts'
-import { TreeNode } from '../utils/TreeNode.ts'
 import { Text } from './Text.ts'
 
-type Props<TMeta = unknown> = {
-  readonly meta?: TMeta
-  readonly tree?: TreeNode<ComponentNode>
-  readonly fileCollector?: FileCollector
-  readonly children?: string | (() => string | Array<string>)
+export type AppProps<TMeta extends Object = Object> = {
+  /**
+   * Metadata associated with the App.
+   */
+  meta?: TMeta
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string>)
 }
 
 /**
- * Minimal fsx app container — provides an AppContext carrying `meta` and an
- * `exit` hook. In fsx mode this just returns children content.
+ * App container containing the AppContext carrying `meta` and an `exit` hook.
  */
-export function App<TMeta = unknown>({
-  meta,
-  fileCollector = new FileCollector(),
-  tree = new TreeNode<ComponentNode>({ type: 'App', props: { meta } }),
-  children,
-}: Props<TMeta>): string {
+export function App<TMeta extends Object = Object>({ children, ...props }: AppProps<TMeta>): string {
+  const { meta = {} } = props
+
   const { exit } = useContext(RootContext)
 
-  tree.data.props = { meta }
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'App', props })
+
+    provide(NodeTreeContext, childTree)
+  }
 
   provide(AppContext, { exit, meta })
-  provide(FileCollectorContext, fileCollector)
-  provide(NodeTreeContext, tree)
 
   return Text({ children })
 }

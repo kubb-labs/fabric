@@ -13,23 +13,22 @@ export type FileProps<TMeta extends object = object> = {
    * Based on UNIX basename
    * @link https://nodejs.org/api/path.html#pathbasenamepath-suffix
    */
-  readonly baseName: KubbFile.BaseName
+  baseName: KubbFile.BaseName
   /**
    * Path will be full qualified path to a specified file.
    */
-  readonly path: KubbFile.Path
-  readonly meta?: TMeta
-  readonly banner?: string
-  readonly footer?: string
-  readonly children?: string | (() => string | Array<string>)
+  path: KubbFile.Path
+  meta?: TMeta
+  banner?: string
+  footer?: string
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string>)
 }
 
 /**
- * File component for fsx - registers files via context
- *
- * When executed this will create or reuse a FileCollector from context and
- * register the file (baseName/path) so it can be emitted later. Returns the
- * children string content for fsx renderers.
+ * Adds files to the FileManager
  */
 export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>): string {
   const { baseName, path, meta = {}, footer, banner } = props
@@ -61,7 +60,10 @@ export function File<TMeta extends object = object>({ children, ...props }: File
 }
 
 type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
-  readonly children?: string | (() => string | Array<string>)
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string>)
 }
 
 /**

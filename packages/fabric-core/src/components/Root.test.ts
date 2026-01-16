@@ -1,50 +1,74 @@
-import { afterEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { useContext } from '../composables/useContext.ts'
+import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { unprovide } from '../context.ts'
-import { RootContext } from '../contexts/RootContext.ts'
+import { RootContext, type RootContextProps } from '../contexts/RootContext.ts'
+import { FileManager } from '../FileManager.ts'
+import { TreeNode } from '../utils/TreeNode.ts'
 import { Root } from './Root.ts'
+
+function Thrower(): string {
+  throw new Error('boom')
+}
+
+function getProps() {
+  return {
+    onError: vi.fn(),
+    onExit: vi.fn(),
+    treeNode: new TreeNode<ComponentNode>({ type: 'Root', props: {} }),
+    fileManager: new FileManager(),
+  }
+}
 
 describe('Root', () => {
   afterEach(() => {
-    // Clean up context after each test
     unprovide(RootContext)
   })
 
-  test('should return empty string when no children', () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
-    const result = Root({ onExit, onError })
-    expect(result).toBe('')
+  it('should return empty string when no children', () => {
+    const props = getProps()
+
+    const output = Root(props)
+
+    expect(output).toMatchInlineSnapshot('""')
   })
 
-  test('should return children when provided', () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
-    const children = 'const x = 1;\nconst y = 2;'
-    const result = Root({ onError, onExit, children })
-    expect(result).toBe(children)
+  it('should return children when provided', () => {
+    const props = getProps()
+
+    const output = Root({ ...props, children: 'Hello from Root' })
+
+    expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
 
-  test('should not call onError when no error occurs', () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
-    Root({ onExit, onError, children: 'normal code' })
-    expect(onError).not.toHaveBeenCalled()
+  it('should throw when Error occurs', () => {
+    const props = getProps()
+
+    const output = Root({ ...props, children: () => Thrower() })
+
+    expect(props.onError).toHaveBeenCalled()
+    expect(output).toMatchInlineSnapshot(`""`)
   })
 
-  test('should handle undefined children', () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
-    const result = Root({ onExit, onError })
-    expect(result).toBe('')
+  it('should have RootContext being defined', () => {
+    const props = getProps()
+
+    let context: RootContextProps
+    const Test = () => {
+      context = useContext(RootContext)
+
+      return ''
+    }
+
+    const output = Root({ ...props, children: () => Test() })
+
+    expect(context!).toBeDefined()
+    expect(output).toMatchInlineSnapshot(`""`)
   })
 
-  test('should have RootContext exported', () => {
-    expect(RootContext).toBeDefined()
-  })
+  it('should work with multiline', () => {
+    const props = getProps()
 
-  test('should work with multiline children', () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
     const children = `
       import { test } from 'test'
 
@@ -52,26 +76,18 @@ describe('Root', () => {
         test()
       }
     `
-    const result = Root({ onExit, onError, children })
-    expect(result).toBe(children)
+    const output = Root({ ...props, children })
+
+    expect(output).toContain('import { test }')
+    expect(output).toContain('export function main()')
   })
 
-  test('should preserve whitespace in children', () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
+  it('should preserve whitespace', () => {
+    const props = getProps()
 
     const children = '  indented\n    more indented'
-    const result = Root({ onExit, onError, children })
-    expect(result).toBe(children)
-  })
+    const output = Root({ ...props, children })
 
-  test('should handle error boundary functionality', () => {
-    const onError = vi.fn()
-    const onExit = vi.fn()
-
-    // Root should not throw when provided with normal children
-    expect(() => {
-      Root({ onExit, onError, children: 'normal code' })
-    }).not.toThrow()
+    expect(output).toBe(children)
   })
 })

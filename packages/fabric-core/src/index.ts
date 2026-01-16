@@ -29,6 +29,7 @@ export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
 export { createJSDoc } from './utils/createJSDoc.ts'
 export { FileCollector } from './utils/FileCollector.ts'
+export { getRelativePath } from './utils/getRelativePath.ts'
 
 // we need this to override the globals of `fabric.use`
 

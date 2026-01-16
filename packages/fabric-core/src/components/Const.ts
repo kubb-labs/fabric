@@ -5,31 +5,37 @@ import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
 
-type Props = {
+export type ConstProps = {
   /**
    * Name of the const
    */
-  readonly name: string
+  name: string
   /**
    * Does this type need to be exported.
    */
-  readonly export?: boolean
+  export?: boolean
   /**
    * Type to make the const being typed
    */
-  readonly type?: string
+  type?: string
   /**
    * Options for JSdocs.
    */
-  readonly JSDoc?: JSDoc
+  JSDoc?: JSDoc
   /**
    * Use of `const` assertions
    */
-  readonly asConst?: boolean
-  readonly children?: string
+  asConst?: boolean
+  /**
+   * Children nodes.
+   */
+  children?: string
 }
 
-export function Const({ children, ...props }: Props): string {
+/**
+ * Generates a TypeScript constant declaration.
+ */
+export function Const({ children, ...props }: ConstProps): string {
   const { name, export: canExport, type, JSDoc, asConst } = props
 
   const nodeTree = useNodeTree()

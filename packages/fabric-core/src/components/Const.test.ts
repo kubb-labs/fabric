@@ -1,62 +1,77 @@
-import { describe, expect, test } from 'vitest'
+import path from 'node:path'
+import { describe, expect, it, vi } from 'vitest'
+import { FileManager } from '../FileManager.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { App } from './App.ts'
-import { Const } from './Const.ts'
+import { Const, type ConstProps } from './Const.ts'
+import { Root } from './Root.ts'
 
 describe('Const', () => {
-  test('should create a basic const', () => {
-    const result = Const({ name: 'myVar', children: '"hello"' })
-    expect(result).toBe('const myVar = "hello"')
+  const scenarios: Array<{ name: string; props: ConstProps }> = [
+    {
+      name: 'basic const',
+      props: { name: 'myVar', children: '"hello"' },
+    },
+    {
+      name: 'exported const',
+      props: { name: 'myVar', export: true, children: '"hello"' },
+    },
+    {
+      name: 'const with type',
+      props: { name: 'myVar', type: 'string', children: '"hello"' },
+    },
+    {
+      name: 'const with as const',
+      props: { name: 'myVar', asConst: true, children: '"hello"' },
+    },
+    {
+      name: 'const with JSDoc',
+      props: { name: 'myVar', JSDoc: { comments: ['This is a variable'] }, children: '"hello"' },
+    },
+  ]
+
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const output = Const(props)
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  test('should create an exported const', () => {
-    const result = Const({ name: 'myVar', export: true, children: '"hello"' })
-    expect(result).toBe('export const myVar = "hello"')
-  })
+  it('should add nodes to the NodeTreeContext', () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
 
-  test('should create a typed const', () => {
-    const result = Const({ name: 'myVar', type: 'string', children: '"hello"' })
-    expect(result).toBe('const myVar: string = "hello"')
-  })
-
-  test('should create a const with as const', () => {
-    const result = Const({ name: 'myVar', asConst: true, children: '{ a: 1 }' })
-    expect(result).toBe('const myVar = { a: 1 } as const')
-  })
-
-  test('should create a const with JSDoc', () => {
-    const result = Const({
-      name: 'myVar',
-      JSDoc: { comments: ['This is a variable'] },
-      children: '"hello"',
+    const output = Root({
+      treeNode,
+      fileManager: new FileManager(),
+      onError: vi.fn(),
+      onExit: vi.fn(),
+      children: () => {
+        return App({
+          meta: {
+            name: 'TestApp',
+          },
+          children: () => Const({ name: 'myVar', children: '"hello"' }),
+        })
+      },
     })
-    expect(result).toMatchInlineSnapshot(`
-      "/**
-       * This is a variable
-       */
-      const myVar = "hello""
-    `)
-    expect(result).toContain('const myVar = "hello"')
-  })
 
-  test('should add a node to the ComponentTreeContext when provided', () => {
-    const tree = new TreeNode({ type: 'root', props: {} })
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
 
-    const result = App({
-      tree,
+    const appChild = treeNode.children[0]!
+    expect(appChild.data.type).toBe('App')
+    expect(appChild.data.props).toMatchObject({
       meta: {
         name: 'TestApp',
       },
-      children: () => Const({ name: 'myVar', children: '"hello"' }),
     })
 
-    expect(tree.children).toHaveLength(1)
-    const child = tree.children[0]!
-    expect(child.data).toMatchObject({
-      type: 'Const',
-      props: expect.objectContaining({ name: 'myVar' }),
+    const constChild = appChild.children[0]!
+
+    expect(constChild.data.type).toBe('Const')
+    expect(constChild.data.props).toMatchObject({
+      name: 'myVar',
     })
 
-    expect(result).toMatchInlineSnapshot(`"const myVar = "hello""`)
+    expect(output).toMatchInlineSnapshot(`"const myVar = "hello""`)
   })
 })

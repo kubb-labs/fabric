@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { FileManager } from '@kubb/fabric-core'
+import { type FileManager, TreeNode } from '@kubb/fabric-core'
 import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { onExit } from 'signal-exit'
@@ -7,7 +7,7 @@ import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './Renderer.ts'
 import { Renderer } from './Renderer.ts'
-import type { DOMElement } from './types.ts'
+import type { ComponentNode, DOMElement } from './types.ts'
 import { processFiles } from './utils/processFiles.ts'
 import { squashTextNodes } from './utils/squashTextNodes.ts'
 
@@ -167,11 +167,16 @@ export class Runtime {
   }
 
   async render(node: ReactNode): Promise<void> {
-    const element = (
-      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
-        {node}
-      </Root>
-    )
+    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+    const props = {
+      fileManager: this.fileManager,
+      treeNode,
+      onExit: this.onExit.bind(this),
+      onError: this.onError.bind(this),
+    }
+    treeNode.data.props = props
+
+    const element = <Root {...props}>{node}</Root>
 
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()
@@ -186,11 +191,16 @@ export class Runtime {
   }
 
   async renderToString(node: ReactNode): Promise<string> {
-    const element = (
-      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
-        {node}
-      </Root>
-    )
+    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+    const props = {
+      fileManager: this.fileManager,
+      treeNode,
+      onExit: this.onExit.bind(this),
+      onError: this.onError.bind(this),
+    }
+    treeNode.data.props = props
+
+    const element = <Root {...props}>{node}</Root>
 
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()

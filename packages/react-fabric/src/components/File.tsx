@@ -34,9 +34,7 @@ type Props<TMeta> = BaseProps & {
 }
 
 /**
- * Registers a file in the FileCollector context and provides a scoped collector
- * for children. When `baseName` and `path` are provided the file will be
- * registered so it can be emitted by the collector later.
+ * Adds files to the FileManager
  */
 export function File<TMeta extends object = object>({ children, ...props }: Props<TMeta>) {
   const { baseName, path, meta = {}, footer, banner } = props

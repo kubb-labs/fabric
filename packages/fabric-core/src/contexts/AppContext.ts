@@ -1,11 +1,11 @@
 import { createContext } from '../context.ts'
 
-export type AppContextProps<TMeta = unknown> = {
+export type AppContextProps<TMeta extends Object = Object> = {
   /**
    * Exit (unmount)
    */
-  readonly exit: (error?: Error) => void
-  readonly meta: TMeta | undefined
+  exit: (error?: Error) => void
+  meta: TMeta
 }
 
 /**

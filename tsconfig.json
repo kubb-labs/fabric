@@ -18,6 +18,7 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "@kubb/react-fabric",
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "experimentalDecorators": true,
