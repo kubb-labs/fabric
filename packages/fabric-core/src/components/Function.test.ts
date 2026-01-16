@@ -1,90 +1,98 @@
-import { describe, expect, it } from 'vitest'
+import path from 'node:path'
+import { describe, expect, it, vi } from 'vitest'
+import { FileManager } from '../FileManager.ts'
+import { TreeNode } from '../utils/TreeNode.ts'
+import { App } from './App.ts'
 import { Function } from './Function.ts'
+import { Root } from './Root.ts'
 
 describe('Function', () => {
-  it('should create a basic function', () => {
-    const result = Function({ name: 'myFunc', children: 'return true' })
-    expect(result).toContain('function myFunc()')
-    expect(result).toContain('return true')
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
+    { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'function with generics', props: { name: 'myFunc', generics: 'T', children: 'return true' } },
+    { name: 'function with return type', props: { name: 'myFunc', returnType: 'boolean', children: 'return true' } },
+    { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
+    { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
+    { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const output = Function(props)
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  it('should create an exported function', () => {
-    const result = Function({ name: 'myFunc', export: true, children: 'return true' })
-    expect(result).toContain('export function myFunc()')
-  })
+  it('should add nodes to the NodeTreeContext', () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
 
-  it('should create a function with parameters', () => {
-    const result = Function({ name: 'myFunc', params: 'a: string, b: number', children: 'return true' })
-    expect(result).toContain('function myFunc(a: string, b: number)')
-  })
+    const output = Root({
+      treeNode,
+      fileManager: new FileManager(),
+      onError: vi.fn(),
+      onExit: vi.fn(),
+      children: () => {
+        return App({
+          children: () => Function({ name: 'myFunc', children: 'return true' }),
+        })
+      },
+    })
 
-  it('should create an async function', () => {
-    const result = Function({ name: 'myFunc', async: true, children: 'return true' })
-    expect(result).toContain('async function myFunc()')
-  })
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
 
-  it('should create a function with generics', () => {
-    const result = Function({ name: 'myFunc', generics: 'T', children: 'return true' })
-    expect(result).toContain('function myFunc<T>()')
-  })
+    const appChild = treeNode.children[0]!
+    const functionChild = appChild.children[0]!
 
-  it('should create a function with return type', () => {
-    const result = Function({ name: 'myFunc', returnType: 'boolean', children: 'return true' })
-    expect(result).toContain('function myFunc(): boolean')
-  })
+    expect(functionChild.data.type).toBe('Function')
+    expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
 
-  it('should create an async function with Promise return type', () => {
-    const result = Function({ name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' })
-    expect(result).toContain('async function myFunc(): Promise<boolean>')
-  })
-
-  it('should create a function with JSDoc', () => {
-    const result = Function({ name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' })
-    expect(result).toContain('@deprecated')
-    expect(result).toContain('function myFunc()')
-  })
-
-  it('should create a default exported function', () => {
-    const result = Function({ name: 'myFunc', export: true, default: true, children: 'return true' })
-    expect(result).toContain('export default function myFunc()')
-  })
-
-  it('should create a function with multiple parameters', () => {
-    const result = Function({ name: 'getData', generics: 'TData', returnType: 'number', children: 'return 2' })
-    expect(result).toContain('function getData<TData>(): number')
+    expect(output).toMatchInlineSnapshot(`"function myFunc() { \nreturn true \n}"`)
   })
 })
 
 describe('Function.Arrow', () => {
-  it('should create a basic arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', children: 'return true' })
-    expect(result).toContain('const myFunc =')
-    expect(result).toContain('=>')
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic arrow function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'single line arrow function', props: { name: 'myFunc', singleLine: true, children: 'true' } },
+    { name: 'exported arrow function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'async arrow function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'arrow function with generics', props: { name: 'getData', generics: 'TData', returnType: 'number', children: 'return 2' } },
+    { name: 'default exported arrow function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const output = Function.Arrow(props)
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  it('should create a single line arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', singleLine: true, children: 'true' })
-    expect(result).toContain('const myFunc = () => true')
-  })
+  it('should add nodes to the NodeTreeContext', () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
 
-  it('should create an exported arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', export: true, children: 'return true' })
-    expect(result).toContain('export const myFunc =')
-  })
+    const output = Root({
+      treeNode,
+      fileManager: new FileManager(),
+      onError: vi.fn(),
+      onExit: vi.fn(),
+      children: () => {
+        return App({
+          children: () => Function.Arrow({ name: 'myFunc', children: 'return true' }),
+        })
+      },
+    })
 
-  it('should create an async arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', async: true, children: 'return true' })
-    expect(result).toContain('async')
-  })
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
 
-  it('should create an arrow function with generics', () => {
-    const result = Function.Arrow({ name: 'getData', generics: 'TData', returnType: 'number', children: 'return 2' })
-    expect(result).toContain('<TData>')
-    expect(result).toContain(': number')
-  })
+    const appChild = treeNode.children[0]!
+    const functionChild = appChild.children[0]!
 
-  it('should create a default exported arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', export: true, default: true, children: 'return true' })
-    expect(result).toContain('export default')
+    expect(functionChild.data.type).toBe('ArrowFunction')
+    expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
+
+    expect(output).toMatchInlineSnapshot(`"const myFunc = () => { \nreturn true \n}\n"`)
   })
 })

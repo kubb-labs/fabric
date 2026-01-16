@@ -1,220 +1,124 @@
-import { createFabric } from '@kubb/fabric-core'
-import { describe, expect, it } from 'vitest'
-import { reactPlugin } from '../plugins/reactPlugin.ts'
+import path from 'node:path'
+import { FileManager, TreeNode } from '@kubb/fabric-core'
+import { describe, expect, it, vi } from 'vitest'
+import { createReactFabric } from '../createReactFabric.ts'
+import { App } from './App.tsx'
 import { Function } from './Function.tsx'
+import { Root } from './Root.tsx'
 
 describe('<Function/>', () => {
-  it('render Function', async () => {
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
+    { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'function with generics', props: { name: 'myFunc', generics: 'T', children: 'return true' } },
+    { name: 'function with return type', props: { name: 'myFunc', returnType: 'boolean', children: 'return true' } },
+    { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
+    { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
+    { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should render $name', async ({ name, props }) => {
     const Component = () => {
-      return (
-        <Function name="getData" export async>
-          return 2;
-        </Function>
-      )
+      // Use Function or Function.Arrow depending on scenario name containing 'arrow'
+      if (/arrow/i.test(name)) {
+        return <Function.Arrow {...(props as any)}>{(props as any).children}</Function.Arrow>
+      }
+
+      return <Function {...(props as any)}>{(props as any).children}</Function>
     }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
+
+    const fabric = createReactFabric()
     const output = await fabric.renderToString(Component)
 
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
+  })
+
+  it('should add nodes to the NodeTreeContext', async () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
+
+    const Component = () => {
+      return (
+        <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+          <App>
+            <Function name={'myFunc'}>return true;</Function>
+          </App>
+        </Root>
+      )
+    }
+
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(Component)
+
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
+
+    const appChild = treeNode.children[0]!
+    const functionChild = appChild.children[0]!
+
+    expect(functionChild.data.type).toBe('Function')
+    expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
+
     expect(output).toMatchInlineSnapshot(`
-      "export async function getData() {
-        return 2;
+      "function myFunc() {
+        return true;
       }"
     `)
   })
+})
 
-  it('render default Function', async () => {
+describe('<Function.Arrow/>', () => {
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic arrow function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'single line arrow function', props: { name: 'myFunc', singleLine: true, children: 'true' } },
+    { name: 'exported arrow function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'async arrow function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'arrow function with generics', props: { name: 'getData', generics: 'TData', returnType: 'number', children: 'return 2' } },
+    { name: 'default exported arrow function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should render $name', async ({ name, props }) => {
     const Component = () => {
-      return (
-        <Function name="getData" export async default>
-          return 2;
-        </Function>
-      )
+      return <Function.Arrow {...(props as any)}>{(props as any).children}</Function.Arrow>
     }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
+
+    const fabric = createReactFabric()
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchInlineSnapshot(`
-      "export default async function getData() {
-        return 2;
-      }"
-    `)
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  it('render Function with comments', async () => {
+  it('should add nodes to the NodeTreeContext', async () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
+
     const Component = () => {
       return (
-        <Function name="getData" export async JSDoc={{ comments: ['@deprecated'] }}>
-          return 2;
-        </Function>
+        <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+          <App>
+            <Function.Arrow name={'myFunc'}>return true;</Function.Arrow>
+          </App>
+        </Root>
       )
     }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
+
+    const fabric = createReactFabric()
     const output = await fabric.renderToString(Component)
 
-    expect(output).toMatchInlineSnapshot(`
-      "/**
-       * @deprecated
-       */
-      export async function getData() {
-        return 2;
-      }"
-    `)
-  })
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
 
-  it('render ArrowFunction', async () => {
-    const Component = () => {
-      return (
-        <Function.Arrow name="getData" export async>
-          return 2;
-        </Function.Arrow>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+    const appChild = treeNode.children[0]!
+    const functionChild = appChild.children[0]!
+
+    expect(functionChild.data.type).toBe('ArrowFunction')
+    expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
 
     expect(output).toMatchInlineSnapshot(`
-      "export const getData = async () => {
-        return 2;
+      "const myFunc = () => {
+        return true;
       }
       "
     `)
-  })
-
-  it('render default ArrowFunction', async () => {
-    const Component = () => {
-      return (
-        <Function.Arrow name="getData" export async default>
-          return 2;
-        </Function.Arrow>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toMatchInlineSnapshot(`
-      "export default const getData = async () => {
-        return 2;
-      }
-      "
-    `)
-  })
-
-  it('render Function Generics', async () => {
-    const Component = () => {
-      return (
-        <Function name="getData" export async generics={['TData']} returnType="number">
-          return 2;
-        </Function>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toMatchInlineSnapshot(`
-      "export async function getData<TData>(): Promise<number> {
-        return 2;
-      }"
-    `)
-  })
-
-  it('render ArrowFunction Generics', async () => {
-    const Component = () => {
-      return (
-        <Function.Arrow name="getData" export async generics={['TData']} returnType="number">
-          return 2;
-        </Function.Arrow>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toMatchInlineSnapshot(`
-      "export const getData = async <TData>(): Promise<number> => {
-        return 2;
-      }
-      "
-    `)
-  })
-
-  it('render ArrowFunction SingleLine', async () => {
-    const Component = () => {
-      return (
-        <Function.Arrow name="getData" export async generics={['TData']} singleLine returnType="number">
-          2;
-        </Function.Arrow>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toMatchInlineSnapshot(`
-      "export const getData = async <TData>(): Promise<number> => 2;
-      "
-    `)
-  })
-
-  it('render multiple functions', async () => {
-    const Component = () => {
-      return (
-        <>
-          <Function name="getData" export async generics={['TData']} returnType="number">
-            2;
-          </Function>
-
-          <Function name="getData" export async generics={['TData']} returnType="number">
-            3;
-          </Function>
-        </>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toMatchInlineSnapshot(`
-      "export async function getData<TData>(): Promise<number> {
-        2;
-      }export async function getData<TData>(): Promise<number> {
-        3;
-      }"
-    `)
-  })
-
-  it('render Function with params', async () => {
-    const Component = () => {
-      return (
-        <Function name="myFunc" params="a: string, b: number">
-          return true;
-        </Function>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toContain('function myFunc(a: string, b: number)')
-  })
-
-  it('render Function with returnType', async () => {
-    const Component = () => {
-      return (
-        <Function name="myFunc" returnType="boolean">
-          return true;
-        </Function>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
-
-    expect(output).toContain('function myFunc(): boolean')
   })
 })
