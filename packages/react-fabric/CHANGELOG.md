@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.11.2
+
+### Patch Changes
+
+- [`62cdbf8`](https://github.com/kubb-labs/fabric/commit/62cdbf838140bcc5fd28dea3b8b304bc98c2a9a8) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - revert custom KubbElement
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.2
+
 ## 0.11.1
 
 ### Patch Changes
