@@ -8,6 +8,6 @@ import { useContext } from './useContext.ts'
  * Throws when no FileCollector is present in context — ensure a Fabric that
  * provides a FileCollector is mounted before calling this hook.
  */
-export function useFile(): KubbFile.File | null {
+export function useFile(): KubbFile.ResolvedFile | null {
   return useContext(FileContext)
 }

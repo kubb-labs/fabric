@@ -6,6 +6,6 @@ import { useContext } from './useContext.ts'
  *
  * Throws an error when there is no AppContext available.
  */
-export function useApp<TMeta = unknown>(): AppContextProps<TMeta> {
+export function useApp<TMeta extends object = object>(): AppContextProps<TMeta> {
   return useContext(AppContext) as AppContextProps<TMeta>
 }

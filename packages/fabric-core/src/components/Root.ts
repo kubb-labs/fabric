@@ -26,7 +26,7 @@ export type RootProps = {
   /**
    * Children nodes.
    */
-  children?: string | (() => string | Array<string>)
+  children?: string | (() => string | Array<string> | undefined)
 }
 
 /**

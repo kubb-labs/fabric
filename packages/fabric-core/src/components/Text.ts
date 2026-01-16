@@ -2,7 +2,7 @@ type Props = {
   /**
    * Children nodes.
    */
-  children?: string | (() => string | Array<string>)
+  children?: string | (() => string | Array<string> | undefined)
 }
 
 /**
@@ -23,5 +23,5 @@ export function Text({ children }: Props): string {
     return value.join('\n')
   }
 
-  return value
+  return value || ''
 }

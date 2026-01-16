@@ -1,6 +1,6 @@
 import { createContext } from '../context.ts'
 
-export type AppContextProps<TMeta extends Object = Object> = {
+export type AppContextProps<TMeta extends object = object> = {
   /**
    * Exit (unmount)
    */

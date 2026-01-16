@@ -1,5 +1,5 @@
 import { useFile } from '../composables/useFile.ts'
-import { useFileCollector } from '../composables/useFileCollector.ts'
+import { useFileManager } from '../composables/useFileManager.ts'
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
@@ -33,7 +33,7 @@ export type FileProps<TMeta extends object = object> = {
 export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>): string {
   const { baseName, path, meta = {}, footer, banner } = props
 
-  const fileCollector = useFileCollector()
+  const fileManager = useFileManager()
   const nodeTree = useNodeTree()
 
   if (nodeTree) {
@@ -53,8 +53,8 @@ export function File<TMeta extends object = object>({ children, ...props }: File
     exports: [],
   }
 
-  fileCollector.add(file)
-  provide(FileContext, file)
+  const [resolvedFile] = fileManager.add(file)
+  provide(FileContext, resolvedFile)
 
   return Text({ children })
 }
@@ -96,7 +96,7 @@ export function FileSource({ children, ...props }: FileSourceProps): string {
   return Text({ children })
 }
 
-type FileExportProps = KubbFile.Export
+export type FileExportProps = KubbFile.Export
 
 /**
  * FileExport - for adding exports to a file
@@ -127,7 +127,7 @@ export function FileExport(props: FileExportProps): string {
   return Text({ children: '' })
 }
 
-type FileImportProps = KubbFile.Import
+export type FileImportProps = KubbFile.Import
 
 /**
  * FileImport - for adding imports to a file

@@ -1,3 +1,5 @@
+import { FileManager, TreeNode } from '@kubb/fabric-core'
+import type { ComponentNode } from '@kubb/fabric-core/types'
 import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { describe, expect, test, vi } from 'vitest'
 import { Root } from '../components/Root'
@@ -22,6 +24,8 @@ describe('useLifecycle', () => {
 
     const element = (
       <Root
+        treeNode={new TreeNode<ComponentNode>({ type: 'root', props: {} })}
+        fileManager={new FileManager()}
         onExit={onExit}
         onError={(e) => {
           throw e

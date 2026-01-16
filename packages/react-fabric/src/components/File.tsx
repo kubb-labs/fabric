@@ -1,4 +1,4 @@
-import { FileContext, NodeTreeContext, provide, useFile, useFileCollector, useNodeTree } from '@kubb/fabric-core'
+import { FileContext, NodeTreeContext, provide, useFile, useFileManager, useNodeTree } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
 import type { Key, KubbNode } from '../types.ts'
 
@@ -39,7 +39,7 @@ type Props<TMeta> = BaseProps & {
 export function File<TMeta extends object = object>({ children, ...props }: Props<TMeta>) {
   const { baseName, path, meta = {}, footer, banner } = props
 
-  const fileCollector = useFileCollector()
+  const fileManager = useFileManager()
   const nodeTree = useNodeTree()
 
   if (nodeTree) {
@@ -63,8 +63,8 @@ export function File<TMeta extends object = object>({ children, ...props }: Prop
     exports: [],
   }
 
-  fileCollector.add(file)
-  provide(FileContext, file)
+  const [resolvedFile] = fileManager.add(file)
+  provide(FileContext, resolvedFile)
 
   return <kubb-file {...props}>{children}</kubb-file>
 }
@@ -102,7 +102,7 @@ function FileSource({ children, ...props }: FileSourceProps) {
 
 FileSource.displayName = 'KubbFileSource'
 
-type FileExportProps = KubbFile.Export & { key?: Key }
+export type FileExportProps = KubbFile.Export & { key?: Key }
 
 /**
  * File.Export
@@ -136,7 +136,7 @@ function FileExport(props: FileExportProps) {
 
 FileExport.displayName = 'KubbFileExport'
 
-type FileImportProps = KubbFile.Import & { key?: Key }
+export type FileImportProps = KubbFile.Import & { key?: Key }
 
 /**
  * File.Import
