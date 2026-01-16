@@ -1,5 +1,5 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
-import type { JSDoc, Key } from '../types.ts'
+import type { JSDoc, Key, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Indent } from './Indent.tsx'
 
@@ -41,7 +41,7 @@ type Props = {
   /**
    * Children nodes.
    */
-  children?: string
+  children?: KubbNode
 }
 
 /**
