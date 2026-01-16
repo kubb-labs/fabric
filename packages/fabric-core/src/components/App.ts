@@ -1,38 +1,41 @@
 import { useContext } from '../composables/useContext.ts'
-import { createContext, provide } from '../context.ts'
+import { useNodeTree } from '../composables/useNodeTree.ts'
+import { provide } from '../context.ts'
+import { AppContext } from '../contexts/AppContext.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
+import { Text } from './Text.ts'
 
-export type AppContextProps<TMeta = unknown> = {
+export type AppProps<TMeta extends Object = Object> = {
   /**
-   * Exit (unmount)
+   * Metadata associated with the App.
    */
-  readonly exit: (error?: Error) => void
-  readonly meta: TMeta
-}
-
-const AppContext = createContext<AppContextProps | undefined>(undefined)
-
-type Props<TMeta = unknown> = {
-  readonly meta: TMeta
-  readonly children?: string
+  meta?: TMeta
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string>)
 }
 
 /**
- * Minimal fsx app container — provides an AppContext carrying `meta` and an
- * `exit` hook. In fsx mode this just returns children content.
+ * App container containing the AppContext carrying `meta` and an `exit` hook.
  */
-export function App<TMeta = unknown>({ children, meta }: Props<TMeta>): string {
+export function App<TMeta extends Object = Object>({ children, ...props }: AppProps<TMeta>): string {
+  const { meta = {} } = props
+
   const { exit } = useContext(RootContext)
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'App', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   provide(AppContext, { exit, meta })
 
-  // In fsx, we just return children since we don't have a component tree
-  // Context is provided via provide() calls before components run
-
-  return children || ''
+  return Text({ children })
 }
 
-App.Context = AppContext
 App.displayName = 'KubbApp'
-
-// Export for use with provide/inject
-export { AppContext }

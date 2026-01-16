@@ -1,8 +1,11 @@
+import { useNodeTree } from '../composables/useNodeTree.ts'
+import { provide } from '../context.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import { Text } from './Text.ts'
 
-type JSDoc = { comments: Array<string> }
-
-type Props = {
+export type ConstProps = {
   /**
    * Name of the const
    */
@@ -23,10 +26,26 @@ type Props = {
    * Use of `const` assertions
    */
   asConst?: boolean
+  /**
+   * Children nodes.
+   */
   children?: string
 }
 
-export function Const({ name, export: canExport, type, JSDoc, asConst, children }: Props): string {
+/**
+ * Generates a TypeScript constant declaration.
+ */
+export function Const({ children, ...props }: ConstProps): string {
+  const { name, export: canExport, type, JSDoc, asConst } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'Const', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   let result = ''
 
   if (JSDoc?.comments) {
@@ -44,13 +63,13 @@ export function Const({ name, export: canExport, type, JSDoc, asConst, children 
     result += `: ${type}`
   }
 
-  result += ` = ${children || ''}`
+  result += ` = ${children ? children : ''}`
 
   if (asConst) {
     result += ' as const'
   }
 
-  return result
+  return Text({ children: result })
 }
 
 Const.displayName = 'KubbConst'

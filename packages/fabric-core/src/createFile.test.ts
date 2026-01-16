@@ -29,6 +29,7 @@ describe('createFile', () => {
             isTypeOnly: true,
           },
         ],
+        exports: [],
         sources: [
           {
             value: 'export type Pet = Pets;',
@@ -57,6 +58,7 @@ describe('createFile', () => {
             path: './React.ts',
           },
         ],
+        exports: [],
         sources: [
           {
             value: 'export type Pet = Pets | Cat; const test = [client, React];',
@@ -97,6 +99,7 @@ describe('createFile', () => {
             isTypeOnly: true,
           },
         ],
+        exports: [],
       }),
       { parsers },
     )
@@ -123,6 +126,7 @@ describe('createFile', () => {
             isTypeOnly: true,
           },
         ],
+        exports: [],
       }),
       { parsers },
     )
@@ -156,12 +160,14 @@ describe('createFile', () => {
           isTypeOnly: true,
         },
       ],
+      exports: [],
     })
 
     const fileExport = createFile({
       path: './src/models/file1.ts',
       baseName: 'file1.ts',
       sources: [],
+      imports: [],
       exports: [
         {
           name: ['Pets'],

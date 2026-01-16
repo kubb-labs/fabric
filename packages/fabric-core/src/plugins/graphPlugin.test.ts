@@ -21,6 +21,8 @@ function makeFiles(count = 3): KubbFile.ResolvedFile[] {
             isIndexable: true,
           },
         ],
+        imports: [],
+        exports: [],
       }),
     )
   }

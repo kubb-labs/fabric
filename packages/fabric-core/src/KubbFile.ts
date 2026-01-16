@@ -100,8 +100,8 @@ export type File<TMeta extends object = object> = {
    */
   path: AdvancedPath<BaseName> | Path
   sources: Array<Source>
-  imports?: Array<Import>
-  exports?: Array<Export>
+  imports: Array<Import>
+  exports: Array<Export>
   /**
    * Use extra meta, this is getting used to generate the barrel/index files.
    */

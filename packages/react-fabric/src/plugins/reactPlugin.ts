@@ -1,6 +1,7 @@
 import { definePlugin } from '@kubb/fabric-core/plugins'
 import { createElement, type ElementType } from 'react'
 import { Runtime } from '../Runtime.tsx'
+import type { KubbElement } from '../types'
 
 export type Options = {
   stdout?: NodeJS.WriteStream
@@ -13,16 +14,16 @@ export type Options = {
 }
 
 type ExtendOptions = {
-  render(App: ElementType): Promise<void>
-  renderToString(App: ElementType): Promise<string>
+  render(App: KubbElement | ElementType): Promise<void>
+  renderToString(App: KubbElement | ElementType): Promise<string>
   waitUntilExit(): Promise<void>
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(App: ElementType): Promise<void>
-      renderToString(App: ElementType): Promise<string>
+      render(App: KubbElement | ElementType): Promise<void>
+      renderToString(App: KubbElement | ElementType): Promise<string>
       waitUntilExit(): Promise<void>
     }
   }
@@ -37,11 +38,11 @@ export const reactPlugin = definePlugin<Options, ExtendOptions>({
     return {
       async render(App) {
         await ctx.emit('lifecycle:start')
-        await runtime.render(createElement(App))
+        await runtime.render(createElement(App as unknown as ElementType))
       },
       async renderToString(App) {
         await ctx.emit('lifecycle:start')
-        return runtime.renderToString(createElement(App))
+        return runtime.renderToString(createElement(App as unknown as ElementType))
       },
       async waitUntilExit() {
         await runtime.waitUntilExit()

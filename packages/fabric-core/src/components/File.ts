@@ -1,8 +1,11 @@
-import { useContext } from '../composables/useContext.ts'
+import { useFile } from '../composables/useFile.ts'
+import { useFileManager } from '../composables/useFileManager.ts'
+import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
-import { FileCollectorContext } from '../contexts/FileCollectorContext.ts'
+import { FileContext } from '../contexts/FileContext.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import type { KubbFile } from '../types.ts'
-import { FileCollector } from '../utils/FileCollector.ts'
+import { Text } from './Text.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**
@@ -18,33 +21,49 @@ export type FileProps<TMeta extends object = object> = {
   meta?: TMeta
   banner?: string
   footer?: string
-  children?: string
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string>)
 }
 
 /**
- * File component for fsx - registers files via context
- *
- * When executed this will create or reuse a FileCollector from context and
- * register the file (baseName/path) so it can be emitted later. Returns the
- * children string content for fsx renderers.
+ * Adds files to the FileManager
  */
-export function File<TMeta extends object = object>({ children, ...rest }: FileProps<TMeta>): string {
-  const collector = useContext(FileCollectorContext, new FileCollector())
-  provide(FileCollectorContext, collector)
+export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>): string {
+  const { baseName, path, meta = {}, footer, banner } = props
 
-  // Register this file with the collector
-  collector.add({
-    baseName: rest.baseName,
-    path: rest.path,
-    meta: rest.meta || ({} as TMeta),
-    banner: rest.banner,
-    footer: rest.footer,
+  const fileManager = useFileManager()
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'File', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  const file: KubbFile.File = {
+    baseName,
+    path,
+    meta,
+    banner,
+    footer,
     sources: [],
     imports: [],
     exports: [],
-  })
+  }
 
-  return children || ''
+  const [resolvedFile] = fileManager.add(file)
+  provide(FileContext, resolvedFile)
+
+  return Text({ children })
+}
+
+type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string>)
 }
 
 /**
@@ -52,26 +71,92 @@ export function File<TMeta extends object = object>({ children, ...rest }: FileP
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export function FileSource(props: Omit<KubbFile.Source, 'value'> & { children?: string }): string {
-  return props.children || ''
+export function FileSource({ children, ...props }: FileSourceProps): string {
+  const { name, isExportable, isIndexable, isTypeOnly } = props
+
+  const nodeTree = useNodeTree()
+  const file = useFile()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileSource', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.sources.push({
+      name,
+      isExportable,
+      isIndexable,
+      isTypeOnly,
+      value: Text({ children }),
+    })
+  }
+
+  return Text({ children })
 }
+
+export type FileExportProps = KubbFile.Export
 
 /**
  * FileExport - for adding exports to a file
  *
  * No-op function used by renderers to record exports.
  */
-export function FileExport(_props: KubbFile.Export): string {
-  return ''
+export function FileExport(props: FileExportProps): string {
+  const { name, path, isTypeOnly, asAlias } = props
+
+  const nodeTree = useNodeTree()
+  const file = useFile()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileExport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.exports.push({
+      name,
+      path,
+      asAlias,
+      isTypeOnly,
+    })
+  }
+
+  return Text({ children: '' })
 }
+
+export type FileImportProps = KubbFile.Import
 
 /**
  * FileImport - for adding imports to a file
  *
  * No-op function used by renderers to record imports.
  */
-export function FileImport(_props: KubbFile.Import): string {
-  return ''
+export function FileImport(props: FileImportProps): string {
+  const { name, path, root, isNameSpace, isTypeOnly } = props
+
+  const nodeTree = useNodeTree()
+  const file = useFile()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileImport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.imports.push({
+      name,
+      path,
+      root,
+      isNameSpace,
+      isTypeOnly,
+    })
+  }
+
+  return Text({ children: '' })
 }
 
 File.Source = FileSource

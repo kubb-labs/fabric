@@ -40,6 +40,8 @@ describe('createFabric', () => {
           isExportable: true,
         },
       ],
+      imports: [],
+      exports: [],
     })
 
     await fabric.write({ extension: { '.ts': '.ts' } })
@@ -64,6 +66,8 @@ describe('createFabric', () => {
           isExportable: true,
         },
       ],
+      imports: [],
+      exports: [],
     })
 
     await fabric.write()
@@ -87,6 +91,8 @@ describe('createFabric', () => {
           isExportable: true,
         },
       ],
+      imports: [],
+      exports: [],
     })
 
     await fabric.write({ extension: { '.ts': '.ts' } })
@@ -121,6 +127,8 @@ describe('createFabric', () => {
           isExportable: true,
         },
       ],
+      imports: [],
+      exports: [],
     })
 
     await fabric.write({ extension: { '.vue': '.vue' } })
@@ -136,7 +144,9 @@ describe('createFabric', () => {
     const file = {
       path: '/tmp/a.ts',
       baseName: 'a.ts',
-      sources: [] as any[],
+      sources: [],
+      imports: [],
+      exports: [],
     } as KubbFile.File
 
     const spy = vi.spyOn(fabric.context.fileManager, 'add')

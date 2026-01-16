@@ -1,4 +1,4 @@
-import { FileCollector, FileCollectorContext, provide, useContext } from '@kubb/fabric-core'
+import { FileContext, NodeTreeContext, provide, useFile, useFileManager, useNodeTree } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
 import type { Key, KubbNode } from '../types.ts'
 
@@ -34,31 +34,39 @@ type Props<TMeta> = BaseProps & {
 }
 
 /**
- * Registers a file in the FileCollector context and provides a scoped collector
- * for children. When `baseName` and `path` are provided the file will be
- * registered so it can be emitted by the collector later.
+ * Adds files to the FileManager
  */
-export function File<TMeta extends object = object>({ children, ...rest }: Props<TMeta>) {
-  const collector = useContext(FileCollectorContext, new FileCollector())
-  provide(FileCollectorContext, collector)
+export function File<TMeta extends object = object>({ children, ...props }: Props<TMeta>) {
+  const { baseName, path, meta = {}, footer, banner } = props
 
-  if (!rest.baseName || !rest.path) {
+  const fileManager = useFileManager()
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'File', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  if (!baseName || !path) {
     return <>{children}</>
   }
 
-  // Register this file with the collector
-  collector.add({
-    baseName: rest.baseName,
-    path: rest.path,
-    meta: rest.meta || ({} as TMeta),
-    banner: rest.banner,
-    footer: rest.footer,
+  const file: KubbFile.File = {
+    baseName,
+    path,
+    meta,
+    banner,
+    footer,
     sources: [],
     imports: [],
     exports: [],
-  })
+  }
 
-  return <kubb-file {...rest}>{children}</kubb-file>
+  const [resolvedFile] = fileManager.add(file)
+  provide(FileContext, resolvedFile)
+
+  return <kubb-file {...props}>{children}</kubb-file>
 }
 
 File.displayName = 'KubbFile'
@@ -74,7 +82,17 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  * Marks a block of source text to be associated with the current file when
  * rendering with the FileCollector. Children are treated as the source string.
  */
-function FileSource({ isTypeOnly, name, isExportable, isIndexable, children }: FileSourceProps) {
+function FileSource({ children, ...props }: FileSourceProps) {
+  const { name, isExportable, isIndexable, isTypeOnly } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileSource', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   return (
     <kubb-source name={name} isTypeOnly={isTypeOnly} isExportable={isExportable} isIndexable={isIndexable}>
       {children}
@@ -84,7 +102,7 @@ function FileSource({ isTypeOnly, name, isExportable, isIndexable, children }: F
 
 FileSource.displayName = 'KubbFileSource'
 
-type FileExportProps = KubbFile.Export & { key?: Key }
+export type FileExportProps = KubbFile.Export & { key?: Key }
 
 /**
  * File.Export
@@ -92,21 +110,62 @@ type FileExportProps = KubbFile.Export & { key?: Key }
  * Declares an export entry for the current file. This will be collected by
  * the FileCollector for later emission.
  */
-function FileExport({ name, path, isTypeOnly, asAlias }: FileExportProps) {
-  return <kubb-export name={name} path={path} isTypeOnly={isTypeOnly || false} asAlias={asAlias} />
+function FileExport(props: FileExportProps) {
+  const { name, path, isTypeOnly, asAlias } = props
+
+  const nodeTree = useNodeTree()
+  const file = useFile()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileExport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.exports.push({
+      name,
+      path,
+      asAlias,
+      isTypeOnly,
+    })
+  }
+
+  return <kubb-export name={name} path={path} isTypeOnly={isTypeOnly} asAlias={asAlias} />
 }
 
 FileExport.displayName = 'KubbFileExport'
 
-type FileImportProps = KubbFile.Import & { key?: Key }
+export type FileImportProps = KubbFile.Import & { key?: Key }
 
 /**
  * File.Import
  *
  * Declares an import entry for the current file.
  */
-function FileImport({ name, root, path, isTypeOnly, isNameSpace }: FileImportProps) {
-  return <kubb-import name={name} root={root} path={path} isNameSpace={isNameSpace} isTypeOnly={isTypeOnly || false} />
+function FileImport(props: FileImportProps) {
+  const { name, root, path, isTypeOnly, isNameSpace } = props
+
+  const nodeTree = useNodeTree()
+  const file = useFile()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'FileImport', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
+  if (file) {
+    file.imports.push({
+      name,
+      path,
+      root,
+      isNameSpace,
+      isTypeOnly,
+    })
+  }
+
+  return <kubb-import name={name} root={root} path={path} isNameSpace={isNameSpace} isTypeOnly={isTypeOnly} />
 }
 
 FileImport.displayName = 'KubbFileImport'

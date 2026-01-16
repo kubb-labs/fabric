@@ -6,7 +6,7 @@ import { RootContext, useContext } from '@kubb/fabric-core'
  * next tick to allow React to complete its render cycle first.
  */
 export function useLifecycle() {
-  const { exit } = useContext(RootContext, { exit: () => {} })
+  const { exit } = useContext(RootContext)
 
   return {
     exit: () => {

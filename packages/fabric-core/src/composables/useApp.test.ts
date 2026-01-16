@@ -23,10 +23,6 @@ describe('useApp', () => {
     expect(result.meta).toEqual({ version: '1.0.0' })
   })
 
-  it('should throw error when app context is not provided', () => {
-    expect(() => useApp()).toThrow()
-  })
-
   it('should support generic meta type', () => {
     type CustomMeta = { customField: string }
     const appContext: AppContextProps<CustomMeta> = {
@@ -38,6 +34,6 @@ describe('useApp', () => {
 
     const result = useApp<CustomMeta>()
 
-    expect(result.meta.customField).toBe('custom value')
+    expect(result.meta?.customField).toBe('custom value')
   })
 })

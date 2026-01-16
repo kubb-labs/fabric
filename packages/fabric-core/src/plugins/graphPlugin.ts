@@ -109,6 +109,8 @@ export const graphPlugin = definePlugin<Options>({
             value: JSON.stringify(graph, null, 2),
           },
         ],
+        imports: [],
+        exports: [],
       })
 
       const graphHtmlFile = createFile({
@@ -120,6 +122,8 @@ export const graphPlugin = definePlugin<Options>({
             value: html,
           },
         ],
+        imports: [],
+        exports: [],
       })
 
       await ctx.addFile(graphFile, graphHtmlFile)

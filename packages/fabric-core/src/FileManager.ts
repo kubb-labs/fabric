@@ -45,7 +45,7 @@ export class FileManager {
     return file
   }
 
-  async add(...files: Array<KubbFile.File>) {
+  add(...files: Array<KubbFile.File>): Array<KubbFile.ResolvedFile> {
     const resolvedFiles: Array<KubbFile.ResolvedFile> = []
 
     const mergedFiles = new Map<string, KubbFile.File>()
@@ -71,12 +71,12 @@ export class FileManager {
       resolvedFiles.push(resolvedFile)
     }
 
-    await this.events.emit('files:added', resolvedFiles)
+    this.events.emit('files:added', resolvedFiles)
 
     return resolvedFiles
   }
 
-  async upsert(...files: Array<KubbFile.File>) {
+  upsert(...files: Array<KubbFile.File>): Array<KubbFile.ResolvedFile> {
     const resolvedFiles: Array<KubbFile.ResolvedFile> = []
 
     const mergedFiles = new Map<string, KubbFile.File>()
@@ -105,7 +105,7 @@ export class FileManager {
       resolvedFiles.push(resolvedFile)
     }
 
-    await this.events.emit('files:added', resolvedFiles)
+    this.events.emit('files:added', resolvedFiles)
 
     return resolvedFiles
   }

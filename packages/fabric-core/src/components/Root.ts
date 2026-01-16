@@ -1,33 +1,46 @@
+import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
+import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
+import type { FileManager } from '../FileManager.ts'
+import type { TreeNode } from '../utils/TreeNode.ts'
+import { Text } from './Text.ts'
 
-type RootProps = {
+export type RootProps = {
   /**
-   * Exit (unmount) hook
+   * Exit (unmount) the whole app.
    */
-  readonly onExit: (error?: Error) => void
+  onExit: (error?: Error) => void
   /**
-   * Error hook
+   * Error hook receiving runtime exceptions.
    */
-  readonly onError: (error: Error) => void
-  readonly children?: string
+  onError: (error: Error) => void
+  /**
+   * TreeNode representing the tree structure of the app.
+   */
+  treeNode: TreeNode<ComponentNode>
+  /**
+   * FileManager instance for managing files within the app.
+   */
+  fileManager: FileManager
+  /**
+   * Children nodes.
+   */
+  children?: string | (() => string | Array<string> | undefined)
 }
 
 /**
- * Top-level root for fsx renderers. Returns children content and ensures
- * `onError` is called for runtime exceptions. Provides a RootContext with
- * an `exit` hook for downstream consumers.
+ * This component provides the root behavior for the Fabric runtime.
  */
-export function Root({ onError, children }: Omit<RootProps, 'onExit'>): string {
-  provide(RootContext, { exit: () => {} })
+export function Root({ onError, onExit, treeNode, fileManager, children }: RootProps): string {
+  provide(RootContext, { exit: onExit, treeNode, fileManager })
+  provide(NodeTreeContext, treeNode)
 
   try {
-    // In fsx, we don't have component trees like React
-    // We just return the children and let context handle the rest
-    return children || ''
+    return Text({ children })
   } catch (e) {
     if (e instanceof Error) {
-      onError(e)
+      onError?.(e)
     }
     return ''
   }

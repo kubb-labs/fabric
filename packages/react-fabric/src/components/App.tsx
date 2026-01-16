@@ -1,17 +1,33 @@
-import { AppContext, provide, RootContext, useContext } from '@kubb/fabric-core'
+import { AppContext, NodeTreeContext, provide, RootContext, useContext, useNodeTree } from '@kubb/fabric-core'
 import type { KubbNode } from '../types.ts'
 
-type Props<TMeta = unknown> = {
-  readonly children?: KubbNode
-  readonly meta: TMeta
+export type AppProps<TMeta extends object = object> = {
+  /**
+   * Metadata associated with the App.
+   */
+  meta?: TMeta
+  /**
+   * Children nodes.
+   */
+  children?: KubbNode
 }
 
 /**
- * Provides the current app context (meta and exit) to descendants.
- * This component mirrors the Fabric app container in React.
+ * App container containing the AppContext carrying `meta` and an `exit` hook.
  */
-export function App<TMeta = unknown>({ meta, children }: Props<TMeta>) {
+export function App<TMeta extends object = object>({ children, ...props }: AppProps<TMeta>) {
+  const { meta = {} } = props
+
   const { exit } = useContext(RootContext)
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'App', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   provide(AppContext, { exit, meta })
 
   return children

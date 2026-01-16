@@ -1,8 +1,8 @@
+import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
 import type { JSDoc, Key, KubbNode } from '../types.ts'
-
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
-type Props = {
+export type ConstProps = {
   key?: Key
   /**
    * Name of the const
@@ -24,13 +24,26 @@ type Props = {
    * Use of `const` assertions
    */
   asConst?: boolean
+  /**
+   * Children nodes.
+   */
   children?: KubbNode
 }
 
 /**
- * Renders a constant declaration. Supports optional export, type and JSDoc.
+ * Generates a TypeScript constant declaration.
  */
-export function Const({ name, export: canExport, type, JSDoc, asConst, children }: Props) {
+export function Const({ children, ...props }: ConstProps) {
+  const { name, export: canExport, type, JSDoc, asConst } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'Const', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   return (
     <>
       {JSDoc?.comments && (

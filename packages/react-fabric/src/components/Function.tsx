@@ -1,4 +1,5 @@
-import type { JSDoc, Key, KubbNode } from '../types.ts'
+import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
+import type { JSDoc, Key } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Indent } from './Indent.tsx'
 
@@ -29,7 +30,6 @@ type Props = {
    * Generics that needs to be added for TypeScript.
    */
   generics?: string | string[]
-
   /**
    * ReturnType(see async for adding Promise type).
    */
@@ -38,14 +38,26 @@ type Props = {
    * Options for JSdocs.
    */
   JSDoc?: JSDoc
-  children?: KubbNode
+  /**
+   * Children nodes.
+   */
+  children?: string
 }
 
 /**
- * Renders a function definition using the Fabric templating primitives.
- * Supports optional export/default/async flags, generics, params and JSDoc.
+ * Generates a TypeScript function declaration.
  */
-export function Function({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, children }: Props) {
+export function Function({ children, ...props }: Props) {
+  const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'Function', props })
+
+    provide(NodeTreeContext, childTree)
+  }
+
   return (
     <>
       {JSDoc?.comments && (
@@ -97,7 +109,16 @@ type ArrowFunctionProps = Props & {
  * Renders an arrow function definition. Supports the same flags as `Function`.
  * Use `singleLine` to render the body as a single-line expression.
  */
-function ArrowFunction({ name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine, children }: ArrowFunctionProps) {
+function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
+  const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine } = props
+
+  const nodeTree = useNodeTree()
+
+  if (nodeTree) {
+    const childTree = nodeTree.addChild({ type: 'ArrowFunction', props })
+
+    provide(NodeTreeContext, childTree)
+  }
   return (
     <>
       {JSDoc?.comments && (

@@ -1,53 +1,98 @@
-import { describe, expect, test } from 'vitest'
+import path from 'node:path'
+import { describe, expect, it, vi } from 'vitest'
+import { FileManager } from '../FileManager.ts'
+import { TreeNode } from '../utils/TreeNode.ts'
+import { App } from './App.ts'
 import { Function } from './Function.ts'
+import { Root } from './Root.ts'
 
 describe('Function', () => {
-  test('should create a basic function', () => {
-    const result = Function({ name: 'myFunc', children: 'return true' })
-    expect(result).toContain('function myFunc()')
-    expect(result).toContain('return true')
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
+    { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'function with generics', props: { name: 'myFunc', generics: 'T', children: 'return true' } },
+    { name: 'function with return type', props: { name: 'myFunc', returnType: 'boolean', children: 'return true' } },
+    { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
+    { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
+    { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const output = Function(props)
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  test('should create an exported function', () => {
-    const result = Function({ name: 'myFunc', export: true, children: 'return true' })
-    expect(result).toContain('export function myFunc()')
-  })
+  it('should add nodes to the NodeTreeContext', () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
 
-  test('should create a function with parameters', () => {
-    const result = Function({ name: 'myFunc', params: 'a: string, b: number', children: 'return true' })
-    expect(result).toContain('function myFunc(a: string, b: number)')
-  })
+    const output = Root({
+      treeNode,
+      fileManager: new FileManager(),
+      onError: vi.fn(),
+      onExit: vi.fn(),
+      children: () => {
+        return App({
+          children: () => Function({ name: 'myFunc', children: 'return true' }),
+        })
+      },
+    })
 
-  test('should create an async function', () => {
-    const result = Function({ name: 'myFunc', async: true, children: 'return true' })
-    expect(result).toContain('async function myFunc()')
-  })
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
 
-  test('should create a function with generics', () => {
-    const result = Function({ name: 'myFunc', generics: 'T', children: 'return true' })
-    expect(result).toContain('function myFunc<T>()')
-  })
+    const appChild = treeNode.children[0]!
+    const functionChild = appChild.children[0]!
 
-  test('should create a function with return type', () => {
-    const result = Function({ name: 'myFunc', returnType: 'boolean', children: 'return true' })
-    expect(result).toContain('function myFunc(): boolean')
-  })
+    expect(functionChild.data.type).toBe('Function')
+    expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
 
-  test('should create an async function with Promise return type', () => {
-    const result = Function({ name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' })
-    expect(result).toContain('async function myFunc(): Promise<boolean>')
+    expect(output).toMatchInlineSnapshot(`"function myFunc() { \nreturn true \n}"`)
   })
 })
 
 describe('Function.Arrow', () => {
-  test('should create a basic arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', children: 'return true' })
-    expect(result).toContain('const myFunc =')
-    expect(result).toContain('=>')
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic arrow function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'single line arrow function', props: { name: 'myFunc', singleLine: true, children: 'true' } },
+    { name: 'exported arrow function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'async arrow function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'arrow function with generics', props: { name: 'getData', generics: 'TData', returnType: 'number', children: 'return 2' } },
+    { name: 'default exported arrow function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const output = Function.Arrow(props)
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  test('should create a single line arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', singleLine: true, children: 'true' })
-    expect(result).toContain('const myFunc = () => true')
+  it('should add nodes to the NodeTreeContext', () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
+
+    const output = Root({
+      treeNode,
+      fileManager: new FileManager(),
+      onError: vi.fn(),
+      onExit: vi.fn(),
+      children: () => {
+        return App({
+          children: () => Function.Arrow({ name: 'myFunc', children: 'return true' }),
+        })
+      },
+    })
+
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
+
+    const appChild = treeNode.children[0]!
+    const functionChild = appChild.children[0]!
+
+    expect(functionChild.data.type).toBe('ArrowFunction')
+    expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
+
+    expect(output).toMatchInlineSnapshot(`"const myFunc = () => { \nreturn true \n}\n"`)
   })
 })
