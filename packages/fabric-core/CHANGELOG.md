@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.11.0
+
+### Minor Changes
+
+- [`a84b6b0`](https://github.com/kubb-labs/fabric/commit/a84b6b0d166a0be1c4dabcb86afb07eb90131565) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - FSX first release
+
 ## 0.10.0
 
 ### Minor Changes
