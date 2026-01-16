@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.11.3
+
+### Patch Changes
+
+- [`ebfe4c3`](https://github.com/kubb-labs/fabric/commit/ebfe4c370333a4e6ae807486fbd87e64091ef650) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Use of KubbNode
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.3
+
 ## 0.11.2
 
 ### Patch Changes
