@@ -6,7 +6,7 @@ type ElementCreator<T extends {}> = (
   ...args: unknown extends T ? [] : {} extends Omit<T, 'children'> ? [props?: MakeChildrenOptional<T>] : [props: MakeChildrenOptional<T>]
 ) => FabricElement<T>
 
-export function createElement<T extends {}>(Component: FabricComponent<T>): ElementCreator<T> {
+export function fsx<T extends {}>(Component: FabricComponent<T>): ElementCreator<T> {
   return (...args) => {
     const fn: FabricElement<T> = (() => Component(args[0] as T)) as any
     fn.component = Component

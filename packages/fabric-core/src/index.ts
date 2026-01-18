@@ -1,11 +1,15 @@
 // components
-export { App } from './components/App.ts'
+import { App as AppComponent } from './components/App.ts'
+import { fsx } from './fsx.ts'
+
 export { Const } from './components/Const.ts'
 export { File } from './components/File.ts'
 export { Function } from './components/Function.ts'
 export { Root } from './components/Root.ts'
 export { Text } from './components/Text.ts'
 export { Type } from './components/Type.ts'
+
+export const App = fsx(AppComponent)
 
 // composables
 export { useApp } from './composables/useApp.ts'
@@ -22,10 +26,10 @@ export { AppContext } from './contexts/AppContext.ts'
 export { FileContext } from './contexts/FileContext.ts'
 export { NodeTreeContext } from './contexts/NodeTreeContext.ts'
 export { RootContext } from './contexts/RootContext.ts'
-export { createElement } from './createElement.ts'
 // helpers
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
+export { fsx } from './fsx.ts'
 export { createJSDoc } from './utils/createJSDoc.ts'
 export { getRelativePath } from './utils/getRelativePath.ts'
 
