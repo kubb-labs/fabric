@@ -4,6 +4,7 @@ import { provide } from '../context.ts'
 import { AppContext } from '../contexts/AppContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
+import type { FabricNode } from '../Fabric.ts'
 import { Text } from './Text.ts'
 
 export type AppProps<TMeta extends Object = Object> = {
@@ -14,13 +15,13 @@ export type AppProps<TMeta extends Object = Object> = {
   /**
    * Children nodes.
    */
-  children?: string | (() => string | Array<string>)
+  children?: FabricNode
 }
 
 /**
  * App container containing the AppContext carrying `meta` and an `exit` hook.
  */
-export function App<TMeta extends Object = Object>({ children, ...props }: AppProps<TMeta>): string {
+export function App<TMeta extends Object = Object>({ children, ...props }: AppProps<TMeta>) {
   const { meta = {} } = props
 
   const { exit } = useContext(RootContext)

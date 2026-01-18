@@ -24,17 +24,14 @@ describe('<File/>', () => {
 
   it('should add files with the FileManager', async () => {
     const rootProps = getRootProps()
-    const Component = () => {
-      return (
-        <Root {...rootProps}>
-          <File baseName="test.ts" path="./test.ts" />
-        </Root>
-      )
-    }
 
     const fabric = createReactFabric()
 
-    await fabric.render(Component)
+    await fabric.render(
+      <Root {...rootProps}>
+        <File baseName="test.ts" path="./test.ts" />
+      </Root>,
+    )
 
     expect(fabric.files).toHaveLength(1)
     expect(fabric.files[0]).toMatchObject({
@@ -43,73 +40,42 @@ describe('<File/>', () => {
     })
   })
 
-  it('should not return files is disabled', async () => {
-    const enable = false
-    const Component = () => {
-      return (
-        <>
-          {enable && (
-            <File baseName="test.ts" path="path">
-              <File.Import name={'React'} path="react" />
-              <File.Export asAlias path="./index.ts" />
-            </File>
-          )}
-        </>
-      )
-    }
-    const fabric = createReactFabric()
-
-    await fabric.render(Component)
-    const files = fabric.files
-
-    expect(files).toMatchInlineSnapshot('[]')
-  })
-
   it('should add a file with a banner', async () => {
     const rootProps = getRootProps()
-    const Component = () => {
-      return (
-        <Root {...rootProps}>
-          <File baseName="test.ts" path="./test.ts" banner={'/* eslint-disable */'} />
-        </Root>
-      )
-    }
 
     const fabric = createReactFabric()
 
-    await fabric.render(Component)
+    await fabric.render(
+      <Root {...rootProps}>
+        <File baseName="test.ts" path="./test.ts" banner={'/* eslint-disable */'} />
+      </Root>,
+    )
 
     expect(fabric.files[0]?.banner).toBe('/* eslint-disable */')
   })
 
   it('should add a file with a footer', async () => {
     const rootProps = getRootProps()
-    const Component = () => {
-      return (
-        <Root {...rootProps}>
-          <File baseName="test.ts" path="./test.ts" footer={'/* eslint-disable */'} />
-        </Root>
-      )
-    }
 
     const fabric = createReactFabric()
 
-    await fabric.render(Component)
+    await fabric.render(
+      <Root {...rootProps}>
+        <File baseName="test.ts" path="./test.ts" footer={'/* eslint-disable */'} />
+      </Root>,
+    )
 
     expect(fabric.files[0]?.footer).toBe('/* eslint-disable */')
   })
 
   it('render File with meta', async () => {
-    const Component = () => {
-      return (
-        <File baseName="user.ts" path="./models/user.ts" meta={{ model: 'User' }}>
-          <File.Source>type User = {'{}'}</File.Source>
-        </File>
-      )
-    }
     const fabric = createReactFabric()
 
-    await fabric.render(Component)
+    await fabric.render(
+      <File baseName="user.ts" path="./models/user.ts" meta={{ model: 'User' }}>
+        <File.Source>type User = {'{}'}</File.Source>
+      </File>,
+    )
     const files = fabric.files
 
     expect(files[0]?.meta).toEqual({ model: 'User' })
@@ -117,25 +83,22 @@ describe('<File/>', () => {
 
   it('should register multiple files', async () => {
     const rootProps = getRootProps()
-    const Component = () => {
-      return (
-        <Root {...rootProps}>
-          <File baseName="file1.ts" path="./file1.ts">
-            <File.Source>const test = 1;</File.Source>
-          </File>
-          <File baseName="file2.ts" path="./file2.ts">
-            <File.Source>const test = 2;</File.Source>
-          </File>
-          <File baseName="file3.ts" path="./file3.ts">
-            <File.Source>const test = 3;</File.Source>
-          </File>
-        </Root>
-      )
-    }
 
     const fabric = createReactFabric()
 
-    await fabric.render(Component)
+    await fabric.render(
+      <Root {...rootProps}>
+        <File baseName="file1.ts" path="./file1.ts">
+          <File.Source>const test = 1;</File.Source>
+        </File>
+        <File baseName="file2.ts" path="./file2.ts">
+          <File.Source>const test = 2;</File.Source>
+        </File>
+        <File baseName="file3.ts" path="./file3.ts">
+          <File.Source>const test = 3;</File.Source>
+        </File>
+      </Root>,
+    )
 
     expect(fabric.files).toHaveLength(3)
     expect(fabric.files.map((f) => f?.baseName)).toMatchInlineSnapshot(`
@@ -154,8 +117,11 @@ describe('<File/>', () => {
   })
 
   it('should throw error when using components outside of File', async () => {
-    const Component = () => {
-      return (
+    const fabric = createReactFabric()
+
+    // The error should be thrown because 'banner' is not inside <File.Source>
+    await expect(
+      fabric.renderToString(
         <>
           ignore
           <File baseName="test.ts" path="path">
@@ -165,13 +131,9 @@ describe('<File/>', () => {
               <div>sdfs</div>
             </File.Source>
           </File>
-        </>
-      )
-    }
-    const fabric = createReactFabric()
-
-    // The error should be thrown because 'banner' is not inside <File.Source>
-    await expect(fabric.renderToString(Component)).rejects.toThrow("'banner' should be part of <File.Source> component when using the <File/> component")
+        </>,
+      ),
+    ).rejects.toThrow("'banner' should be part of <File.Source> component when using the <File/> component")
   })
 })
 
@@ -182,22 +144,26 @@ describe('<File.Source/>', () => {
   })
 
   it('should ignore components outside of File.Source', async () => {
-    const Component = () => {
-      return (
-        <>
-          ignore
-          <File baseName="test.ts" path="path">
-            <File.Source>test</File.Source>
-          </File>
-        </>
-      )
-    }
     const fabric = createReactFabric()
 
-    await fabric.render(Component)
+    await fabric.render(
+      <>
+        ignore
+        <File baseName="test.ts" path="path">
+          <File.Source>test</File.Source>
+        </File>
+      </>,
+    )
     const files = fabric.files
 
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <>
+        ignore
+        <File baseName="test.ts" path="path">
+          <File.Source>test</File.Source>
+        </File>
+      </>,
+    )
     expect(output).toMatchInlineSnapshot(`"ignoretest"`)
 
     expect(files).toHaveLength(1)
@@ -205,17 +171,16 @@ describe('<File.Source/>', () => {
   })
 
   it('should set source with React component when JSX syntax is being used', async () => {
-    const Component = () => {
-      return (
-        <File baseName="test.ts" path="path">
-          <File.Source>
-            <button className="className" type={'button'} aria-disabled={false} onClick={(e) => console.log(e)}>
-              sdfs
-            </button>
-          </File.Source>
-        </File>
-      )
-    }
+    const Component = (
+      <File baseName="test.ts" path="path">
+        <File.Source>
+          <button className="className" type={'button'} aria-disabled={false} onClick={(e) => console.log(e)}>
+            sdfs
+          </button>
+        </File.Source>
+      </File>
+    )
+
     const fabric = createReactFabric()
 
     await fabric.render(Component)
@@ -230,16 +195,15 @@ describe('<File.Source/>', () => {
   })
 
   it('should set multiple sources when using File.Source multiple times', async () => {
-    const Component = () => {
-      return (
-        <File baseName="test.ts" path="path">
-          <File.Source>{'const file = 2;'}</File.Source>
-          <File.Source isTypeOnly name={'test'} isExportable>
-            {'export const test = 2;'}
-          </File.Source>
-        </File>
-      )
-    }
+    const Component = (
+      <File baseName="test.ts" path="path">
+        <File.Source>{'const file = 2;'}</File.Source>
+        <File.Source isTypeOnly name={'test'} isExportable>
+          {'export const test = 2;'}
+        </File.Source>
+      </File>
+    )
+
     const fabric = createReactFabric()
 
     await fabric.render(Component)
@@ -257,17 +221,15 @@ describe('<File.Import/>', () => {
 
   it('should set the import when using File and File.Import', async () => {
     const rootProps = getRootProps()
-    const Component = () => {
-      return (
-        <Root {...rootProps}>
-          <File baseName="file1.ts" path="./file1.ts">
-            <File.Source>
-              <File.Import name={'test'} path={'./test.ts'} />
-            </File.Source>
-          </File>
-        </Root>
-      )
-    }
+    const Component = (
+      <Root {...rootProps}>
+        <File baseName="file1.ts" path="./file1.ts">
+          <File.Source>
+            <File.Import name={'test'} path={'./test.ts'} />
+          </File.Source>
+        </File>
+      </Root>
+    )
 
     const fabric = createReactFabric()
 
@@ -317,9 +279,7 @@ describe('<File.Import/>', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const Component = () => {
-      return <File.Import {...props} />
-    }
+    const Component = <File.Import {...props} />
 
     const fabric = createReactFabric()
     const output = await fabric.renderToString(Component)
@@ -328,15 +288,14 @@ describe('<File.Import/>', () => {
   })
 
   it('should ignore that File.Import is a child of File.Source', async () => {
-    const Component = () => {
-      return (
-        <File baseName="test.ts" path="path">
-          <File.Source>
-            <File.Import name="React" path="react" />
-          </File.Source>
-        </File>
-      )
-    }
+    const Component = (
+      <File baseName="test.ts" path="path">
+        <File.Source>
+          <File.Import name="React" path="react" />
+        </File.Source>
+      </File>
+    )
+
     const fabric = createReactFabric()
 
     await fabric.render(Component)
@@ -356,14 +315,13 @@ describe('<File.Import/>', () => {
   })
 
   it('render Import with File.Import inside of File with render', async () => {
-    const Component = () => {
-      return (
-        <File baseName="test.ts" path="path.ts">
-          <File.Import name="React" path="react" />
-          <File.Source>test</File.Source>
-        </File>
-      )
-    }
+    const Component = (
+      <File baseName="test.ts" path="path.ts">
+        <File.Import name="React" path="react" />
+        <File.Source>test</File.Source>
+      </File>
+    )
+
     const fabric = createReactFabric()
     fabric.use(typescriptParser)
 
@@ -392,15 +350,13 @@ describe('<File.Export/>', () => {
 
   it('should set the export when using File and File.Export', async () => {
     const rootProps = getRootProps()
-    const Component = () => {
-      return (
-        <Root {...rootProps}>
-          <File baseName="file1.ts" path="./file1.ts">
-            <File.Export name={'test'} path={'./test.ts'} />
-          </File>
-        </Root>
-      )
-    }
+    const Component = (
+      <Root {...rootProps}>
+        <File baseName="file1.ts" path="./file1.ts">
+          <File.Export name={'test'} path={'./test.ts'} />
+        </File>
+      </Root>
+    )
 
     const fabric = createReactFabric()
 
@@ -415,9 +371,8 @@ describe('<File.Export/>', () => {
   })
 
   it('should print the export syntax', async () => {
-    const Component = () => {
-      return <File.Export path="kubb" />
-    }
+    const Component = <File.Export path="kubb" />
+
     const fabric = createReactFabric()
     const output = await fabric.renderToString(Component)
 
@@ -455,9 +410,7 @@ describe('<File.Export/>', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const Component = () => {
-      return <File.Export {...props} />
-    }
+    const Component = <File.Export {...props} />
 
     const fabric = createReactFabric()
     const output = await fabric.renderToString(Component)

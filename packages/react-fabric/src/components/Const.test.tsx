@@ -31,12 +31,8 @@ describe('<Const/>', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const Component = () => {
-      return <Const {...props} />
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(<Const {...props} />)
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
@@ -44,18 +40,14 @@ describe('<Const/>', () => {
   it('should add nodes to the NodeTreeContext', async () => {
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    const Component = () => {
-      return (
-        <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
-          <App meta={{ name: 'TestApp' }}>
-            <Const name={'myVar'}>"hello"</Const>
-          </App>
-        </Root>
-      )
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+        <App meta={{ name: 'TestApp' }}>
+          <Const name={'myVar'}>"hello"</Const>
+        </App>
+      </Root>,
+    )
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

@@ -1,13 +1,12 @@
 import process from 'node:process'
 import { type FileManager, TreeNode } from '@kubb/fabric-core'
-import type { ReactNode } from 'react'
 import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { onExit } from 'signal-exit'
 import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './Renderer.ts'
 import { Renderer } from './Renderer.ts'
-import type { ComponentNode, DOMElement } from './types.ts'
+import type { ComponentNode, DOMElement, KubbElement } from './types.ts'
 import { processFiles } from './utils/processFiles.ts'
 import { squashTextNodes } from './utils/squashTextNodes.ts'
 
@@ -166,7 +165,7 @@ export class Runtime {
     return [...values].join('\n\n')
   }
 
-  async render(node: ReactNode): Promise<void> {
+  async render(node: KubbElement): Promise<void> {
     const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
     const props = {
       fileManager: this.fileManager,
@@ -190,7 +189,7 @@ export class Runtime {
     }
   }
 
-  async renderToString(node: ReactNode): Promise<string> {
+  async renderToString(node: KubbElement): Promise<string> {
     const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
     const props = {
       fileManager: this.fileManager,

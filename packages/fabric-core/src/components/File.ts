@@ -4,6 +4,7 @@ import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import type { FabricNode } from '../Fabric.ts'
 import type { KubbFile } from '../types.ts'
 import { Text } from './Text.ts'
 
@@ -24,13 +25,13 @@ export type FileProps<TMeta extends object = object> = {
   /**
    * Children nodes.
    */
-  children?: string | (() => string | Array<string>)
+  children?: FabricNode
 }
 
 /**
  * Adds files to the FileManager
  */
-export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>): string {
+export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>) {
   const { baseName, path, meta = {}, footer, banner } = props
 
   const fileManager = useFileManager()
@@ -63,7 +64,7 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
   /**
    * Children nodes.
    */
-  children?: string | (() => string | Array<string>)
+  children?: FabricNode
 }
 
 /**
@@ -71,7 +72,7 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export function FileSource({ children, ...props }: FileSourceProps): string {
+export function FileSource({ children, ...props }: FileSourceProps) {
   const { name, isExportable, isIndexable, isTypeOnly } = props
 
   const nodeTree = useNodeTree()
@@ -83,17 +84,19 @@ export function FileSource({ children, ...props }: FileSourceProps): string {
     provide(NodeTreeContext, childTree)
   }
 
+  const value = Text({ children })
+
   if (file) {
     file.sources.push({
       name,
       isExportable,
       isIndexable,
       isTypeOnly,
-      value: Text({ children }),
+      value,
     })
   }
 
-  return Text({ children })
+  return value
 }
 
 export type FileExportProps = KubbFile.Export
@@ -103,7 +106,7 @@ export type FileExportProps = KubbFile.Export
  *
  * No-op function used by renderers to record exports.
  */
-export function FileExport(props: FileExportProps): string {
+export function FileExport(props: FileExportProps) {
   const { name, path, isTypeOnly, asAlias } = props
 
   const nodeTree = useNodeTree()
@@ -134,7 +137,7 @@ export type FileImportProps = KubbFile.Import
  *
  * No-op function used by renderers to record imports.
  */
-export function FileImport(props: FileImportProps): string {
+export function FileImport(props: FileImportProps) {
   const { name, path, root, isNameSpace, isTypeOnly } = props
 
   const nodeTree = useNodeTree()

@@ -1,6 +1,7 @@
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
@@ -42,13 +43,13 @@ type Props = {
   /**
    * Children nodes.
    */
-  children?: string
+  children?: FabricNode
 }
 
 /**
  * Generates a TypeScript function declaration.
  */
-export function Function({ children, ...props }: Props): string {
+export function Function({ children, ...props }: Props) {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -121,7 +122,7 @@ type ArrowFunctionProps = Props & {
  * the same options as `Function`. Use `singleLine` to produce a one-line
  * arrow expression.
  */
-function ArrowFunction({ children, ...props }: ArrowFunctionProps): string {
+function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine } = props
 
   const nodeTree = useNodeTree()

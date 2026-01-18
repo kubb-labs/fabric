@@ -1,5 +1,5 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
-import type { JSDoc, Key, KubbNode } from '../types.ts'
+import type { JSDoc, Key, KubbElement, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 export type TypeProps = {
@@ -25,7 +25,7 @@ export type TypeProps = {
 /**
  * Generates a TypeScript type declaration.
  */
-export function Type({ children, ...props }: TypeProps) {
+export function Type({ children, ...props }: TypeProps): KubbElement {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()

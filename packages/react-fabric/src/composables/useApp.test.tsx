@@ -18,7 +18,7 @@ describe('useApp', () => {
     const fabric = createFabric()
     fabric.use(reactPlugin)
 
-    const Component = () => (
+    const Component = (
       <App meta={meta}>
         <Test />
       </App>

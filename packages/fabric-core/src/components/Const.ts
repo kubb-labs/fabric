@@ -1,6 +1,7 @@
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
@@ -29,13 +30,13 @@ export type ConstProps = {
   /**
    * Children nodes.
    */
-  children?: string
+  children?: FabricNode
 }
 
 /**
  * Generates a TypeScript constant declaration.
  */
-export function Const({ children, ...props }: ConstProps): string {
+export function Const({ children, ...props }: ConstProps) {
   const { name, export: canExport, type, JSDoc, asConst } = props
 
   const nodeTree = useNodeTree()

@@ -22,7 +22,7 @@ export { AppContext } from './contexts/AppContext.ts'
 export { FileContext } from './contexts/FileContext.ts'
 export { NodeTreeContext } from './contexts/NodeTreeContext.ts'
 export { RootContext } from './contexts/RootContext.ts'
-
+export { createElement } from './createElement.ts'
 // helpers
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'

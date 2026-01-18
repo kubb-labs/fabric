@@ -1,5 +1,5 @@
 import { AppContext, NodeTreeContext, provide, RootContext, useContext, useNodeTree } from '@kubb/fabric-core'
-import type { KubbNode } from '../types.ts'
+import type { KubbElement, KubbNode } from '../types.ts'
 
 export type AppProps<TMeta extends object = object> = {
   /**
@@ -15,7 +15,7 @@ export type AppProps<TMeta extends object = object> = {
 /**
  * App container containing the AppContext carrying `meta` and an `exit` hook.
  */
-export function App<TMeta extends object = object>({ children, ...props }: AppProps<TMeta>) {
+export function App<TMeta extends object = object>({ children, ...props }: AppProps<TMeta>): KubbElement {
   const { meta = {} } = props
 
   const { exit } = useContext(RootContext)
@@ -30,7 +30,7 @@ export function App<TMeta extends object = object>({ children, ...props }: AppPr
 
   provide(AppContext, { exit, meta })
 
-  return children
+  return <>{children}</>
 }
 
 App.displayName = 'KubbApp'

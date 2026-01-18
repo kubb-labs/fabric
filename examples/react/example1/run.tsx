@@ -43,4 +43,4 @@ const fabric = createFabric()
 
 fabric.use(reactPlugin, { stderr: process.stderr, stdout: process.stdout, stdin: process.stdin })
 
-fabric.render(App)
+fabric.render(<App />)

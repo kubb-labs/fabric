@@ -167,7 +167,7 @@ describe('File', () => {
     expect(file3!.sources.map(({ value }) => value).join('\n')).toMatchInlineSnapshot(`"const test = 3;"`)
   })
 
-  it.skip('should set the import when using File and File.Import', () => {
+  it('should set the import when using File and File.Import', () => {
     const rootProps = getRootProps()
 
     Root({
