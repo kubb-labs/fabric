@@ -17,4 +17,7 @@ export default defineConfig({
   exports: true,
   noExternal: [/remeda/],
   fixedExtension: false,
+  outputOptions: {
+    keepNames: true,
+  },
 })
