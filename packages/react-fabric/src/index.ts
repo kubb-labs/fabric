@@ -15,7 +15,7 @@ export const useEffect = React.useEffect
 export const useReducer = React.useReducer
 export const useRef = React.useRef
 // components
-export { App } from './components/App.tsx'
+export { App, Div } from './components/App.tsx'
 export { Const } from './components/Const.tsx'
 export { File } from './components/File.tsx'
 export { Function } from './components/Function.tsx'

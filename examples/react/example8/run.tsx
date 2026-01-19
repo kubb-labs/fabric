@@ -22,7 +22,7 @@ function App2() {
 }
 
 async function start() {
-  const fabric = createReactFabric()
+  const fabric = createReactFabric({ devtools: false })
 
   fabric.use(fsPlugin, { clean: { path: path.resolve(__dirname, './gen') } })
 
