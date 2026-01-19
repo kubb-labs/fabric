@@ -8,11 +8,11 @@ import { reactPlugin } from './plugins/reactPlugin.ts'
 export function createReactFabric(
   config: FabricConfig<Options & { mode?: FabricMode; devtools?: boolean }> = {},
 ): Fabric<Options & { mode?: FabricMode; devtools?: boolean }> {
-  const fabric = createFabric({ mode: config.mode })
-
   if (config.devtools) {
     open()
   }
+
+  const fabric = createFabric({ mode: config.mode })
 
   fabric.use(reactPlugin, {
     stdout: config.stdout,

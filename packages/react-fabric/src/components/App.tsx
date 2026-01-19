@@ -1,4 +1,5 @@
 import { AppContext, NodeTreeContext, provide, RootContext, useContext, useNodeTree } from '@kubb/fabric-core'
+import type * as React from 'react'
 import type { KubbNode } from '../types.ts'
 
 export type AppProps<TMeta extends object = object> = {
@@ -10,6 +11,10 @@ export type AppProps<TMeta extends object = object> = {
    * Children nodes.
    */
   children?: KubbNode
+}
+
+export function Div(props: { children: React.ReactNode }) {
+  return <div>{props.children}</div>
 }
 
 /**

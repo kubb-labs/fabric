@@ -89,7 +89,7 @@ export function open() {
       preferLocal: true,
       cancelSignal: controller.signal,
       gracefulCancel: true,
-    })`npx react-devtools`
+    })`npx react-devtools@6.1.5`
 
     // Destructure the functions from the module
     const { initialize, connectToDevTools } = devtools
