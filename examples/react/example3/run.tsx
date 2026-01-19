@@ -1,10 +1,6 @@
 import path from 'node:path'
 import { Const, createFabric, File } from '@kubb/react-fabric'
-import { open as openDevtools } from '@kubb/react-fabric/devtools'
 import { fsPlugin, reactPlugin } from '@kubb/react-fabric/plugins'
-
-// Initialize devtools before renderer mounts (helps ensure proper injection)
-openDevtools()
 
 /**
  * Create 2 files and write them to the file-system

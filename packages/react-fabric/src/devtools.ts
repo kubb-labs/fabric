@@ -2,6 +2,8 @@ import { execa } from 'execa'
 import { onExit } from 'signal-exit'
 import ws from 'ws'
 
+import { Renderer } from './Renderer.ts'
+
 declare global {
   var WebSocket: typeof WebSocket
   var self: any
@@ -97,9 +99,6 @@ export function open() {
     // Initialize DevTools BEFORE importing Renderer (which imports React)
     initialize()
     console.info('Initializing devtools')
-
-    // Now dynamically import the Renderer after DevTools is initialized
-    const { Renderer } = await import('./Renderer.ts')
 
     // Inject the renderer BEFORE connecting to DevTools
     // This ensures DevTools can properly discover the custom renderer

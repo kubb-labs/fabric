@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { createReactFabric, File, open } from '@kubb/react-fabric'
+import { createReactFabric, File } from '@kubb/react-fabric'
 
 import { fsPlugin, graphPlugin, loggerPlugin } from '@kubb/react-fabric/plugins'
 
@@ -25,10 +25,6 @@ function App() {
 }
 
 async function start() {
-  open()
-  await new Promise((resolve) => {
-    setTimeout(resolve, 1000)
-  })
   const fabric = createReactFabric({ devtools: false })
 
   fabric.use(fsPlugin, {

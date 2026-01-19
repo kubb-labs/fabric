@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createReactFabric } from './createReactFabric.ts'
 
 const hoisted = vi.hoisted(() => {
   const instance = {
@@ -18,9 +19,6 @@ vi.mock('./Runtime.tsx', () => {
   return { Runtime: RuntimeMock }
 })
 
-import { createFabric } from '@kubb/fabric-core'
-import { reactPlugin } from './plugins/reactPlugin.ts'
-
 const Component = () => 'test'
 
 describe('e2e', () => {
@@ -29,8 +27,7 @@ describe('e2e', () => {
   })
 
   it('should delegate rendering to Runtime.render', async () => {
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
+    const fabric = createReactFabric()
 
     await fabric.render(Component)
 
@@ -38,16 +35,14 @@ describe('e2e', () => {
   })
 
   it('should return runtime result from renderToString', async () => {
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
+    const fabric = createReactFabric()
 
     await expect(fabric.renderToString(Component)).resolves.toBe('hello')
     expect(hoisted.instance.renderToString).toHaveBeenCalledTimes(1)
   })
 
   it('should delegate waitUntilExit to runtime', async () => {
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
+    const fabric = createReactFabric()
 
     await fabric.waitUntilExit()
     expect(hoisted.instance.waitUntilExit).toHaveBeenCalledTimes(1)
