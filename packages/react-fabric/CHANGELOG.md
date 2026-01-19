@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.11.4
+
+### Patch Changes
+
+- [#125](https://github.com/kubb-labs/fabric/pull/125) [`9110c73`](https://github.com/kubb-labs/fabric/commit/9110c73a2c44cd9d9be4dcb6bd6c1a334b9196ec) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix React DevTools integration by setting up globals before import and properly destructuring functions
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.4
+
 ## 0.11.3
 
 ### Patch Changes
