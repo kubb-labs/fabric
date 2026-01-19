@@ -1,6 +1,7 @@
 import { execa } from 'execa'
 import { onExit } from 'signal-exit'
 import ws from 'ws'
+import { Renderer } from './Renderer.ts'
 
 declare global {
   var WebSocket: typeof WebSocket
@@ -93,6 +94,18 @@ export function open() {
 
     // Destructure the functions from the module
     const { initialize, connectToDevTools } = devtools
+
+    // Inject the renderer BEFORE initializing and connecting
+    // This ensures DevTools can properly discover the custom renderer
+    Renderer.injectIntoDevTools({
+      bundleType: 1,
+      version: '19.1.0',
+      rendererPackageName: 'kubb',
+      // findFiberByHostInstance is required for DevTools to map elements to fibers
+      findFiberByHostInstance: () => null,
+      // Set the bundler name for better DevTools integration
+      bundlerName: 'kubb',
+    })
 
     initialize()
     console.info('Connecting devtools')
