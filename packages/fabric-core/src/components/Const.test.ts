@@ -31,7 +31,7 @@ describe('Const', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const output = Const(props)
+    const output = Const(props)()
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
@@ -49,10 +49,10 @@ describe('Const', () => {
           meta: {
             name: 'TestApp',
           },
-          children: () => Const({ name: 'myVar', children: '"hello"' }),
-        })
+          children: () => Const({ name: 'myVar', children: '"hello"' })(),
+        })()
       },
-    })
+    })()
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

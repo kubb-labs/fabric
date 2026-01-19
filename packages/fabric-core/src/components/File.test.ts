@@ -30,9 +30,9 @@ describe('File', () => {
     Root({
       ...rootProps,
       children: () => {
-        return File({ baseName: 'test.ts', path: './test.ts' })
+        return File({ baseName: 'test.ts', path: './test.ts' })()
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -51,9 +51,9 @@ describe('File', () => {
     Root({
       ...rootProps,
       children: () => {
-        return enable ? File({ baseName: 'test.ts', path: './test.ts' }) : undefined
+        return enable ? File({ baseName: 'test.ts', path: './test.ts' })() : undefined
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -70,9 +70,9 @@ describe('File', () => {
           baseName: 'api.ts',
           path: './api.ts',
           banner: '/* eslint-disable */',
-        })
+        })()
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -89,9 +89,9 @@ describe('File', () => {
           baseName: 'export.ts',
           path: './export.ts',
           meta: { model: 'User' },
-        })
+        })()
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -108,9 +108,9 @@ describe('File', () => {
           baseName: 'export.ts',
           path: './export.ts',
           footer: 'export default API;',
-        })
+        })()
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -128,26 +128,26 @@ describe('File', () => {
             baseName: 'file1.ts',
             path: './file1.ts',
             children() {
-              return File.Source({ children: () => 'const test = 1;' })
+              return File.Source({ children: () => 'const test = 1;' })()
             },
-          }),
+          })(),
           File({
             baseName: 'file2.ts',
             path: './file2.ts',
             children() {
-              return File.Source({ children: () => 'const test = 2;' })
+              return File.Source({ children: () => 'const test = 2;' })()
             },
-          }),
+          })(),
           File({
             baseName: 'file3.ts',
             path: './file3.ts',
             children() {
-              return File.Source({ children: () => 'const test = 3;' })
+              return File.Source({ children: () => 'const test = 3;' })()
             },
-          }),
+          })(),
         ]
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -182,12 +182,12 @@ describe('File', () => {
                 children() {
                   return File.Import({ name: 'test', path: './test.ts' })
                 },
-              })
+              })()
             },
-          }),
+          })(),
         ]
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -212,10 +212,10 @@ describe('File', () => {
             children() {
               return File.Export({ name: 'test', path: './test.ts' })
             },
-          }),
+          })(),
         ]
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -237,11 +237,11 @@ describe('File', () => {
           File({
             baseName: 'file1.ts',
             path: './file1.ts',
-            children: () => File.Source({ children: () => "const test = 'hello';" }),
-          }),
+            children: () => File.Source({ children: () => "const test = 'hello';" })(),
+          })(),
         ]
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -262,11 +262,11 @@ describe('File', () => {
           File({
             baseName: 'file1.ts',
             path: './file1.ts',
-            children: () => [File.Import({ name: 'test', path: 'test.ts' }), File.Source({ children: () => "const test = 'hello';" })],
-          }),
+            children: () => [File.Import({ name: 'test', path: 'test.ts' }), File.Source({ children: () => "const test = 'hello';" })()],
+          })(),
         ]
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 
@@ -300,10 +300,10 @@ describe('File', () => {
             baseName: 'file1.ts',
             path: './file1.ts',
             children: () => ChildComponent(),
-          }),
+          })(),
         ]
       },
-    })
+    })()
 
     expect(result).toBe('File: file1.ts')
   })
@@ -321,10 +321,10 @@ describe('File', () => {
             children() {
               return File.Import({ name: 'MyClass', path: './MyClass.ts' })
             },
-          }),
+          })(),
         ]
       },
-    })
+    })()
 
     const treeNode = rootProps.treeNode
 
@@ -360,13 +360,13 @@ describe('File.Source', () => {
             baseName: 'file1.ts',
             path: './file1.ts',
             children: () => [
-              File.Source({ children: () => 'const file = 2;' }),
-              File.Source({ name: 'test', isTypeOnly: true, children: () => ' export const test = 2;' }),
+              File.Source({ children: () => 'const file = 2;' })(),
+              File.Source({ name: 'test', isTypeOnly: true, children: () => ' export const test = 2;' })(),
             ],
-          }),
+          })(),
         ]
       },
-    })
+    })()
 
     const files = rootProps.fileManager.files
 

@@ -28,7 +28,7 @@ describe('Root', () => {
   it('should return empty string when no children', () => {
     const props = getProps()
 
-    const output = Root(props)
+    const output = Root(props)()
 
     expect(output).toMatchInlineSnapshot('""')
   })
@@ -36,7 +36,7 @@ describe('Root', () => {
   it('should return children when provided', () => {
     const props = getProps()
 
-    const output = Root({ ...props, children: 'Hello from Root' })
+    const output = Root({ ...props, children: 'Hello from Root' })()
 
     expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
@@ -44,7 +44,7 @@ describe('Root', () => {
   it('should throw when Error occurs', () => {
     const props = getProps()
 
-    const output = Root({ ...props, children: () => Thrower() })
+    const output = Root({ ...props, children: () => Thrower() })()
 
     expect(props.onError).toHaveBeenCalled()
     expect(output).toMatchInlineSnapshot(`""`)
@@ -60,7 +60,7 @@ describe('Root', () => {
       return ''
     }
 
-    const output = Root({ ...props, children: () => Test() })
+    const output = Root({ ...props, children: () => Test() })()
 
     expect(context!).toBeDefined()
     expect(output).toMatchInlineSnapshot(`""`)
@@ -76,7 +76,7 @@ describe('Root', () => {
         test()
       }
     `
-    const output = Root({ ...props, children })
+    const output = Root({ ...props, children })()
 
     expect(output).toContain('import { test }')
     expect(output).toContain('export function main()')
@@ -86,7 +86,7 @@ describe('Root', () => {
     const props = getProps()
 
     const children = '  indented\n    more indented'
-    const output = Root({ ...props, children })
+    const output = Root({ ...props, children })()
 
     expect(output).toBe(children)
   })
