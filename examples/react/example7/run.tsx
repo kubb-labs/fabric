@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { createReactFabric, File } from '@kubb/react-fabric'
+
 import { fsPlugin, graphPlugin, loggerPlugin } from '@kubb/react-fabric/plugins'
 
 async function timeout(ms: number): Promise<unknown> {

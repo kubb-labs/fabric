@@ -1,5 +1,15 @@
 # @kubb/fabric-core
 
+## 0.11.6
+
+### Patch Changes
+
+- [#131](https://github.com/kubb-labs/fabric/pull/131) [`118ef3f`](https://github.com/kubb-labs/fabric/commit/118ef3f856fb98bd8e419301362b0f683b6f7488) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Fix React Devtools setup
+
+## 0.11.5
+
+## 0.11.4
+
 ## 0.11.3
 
 ## 0.11.2

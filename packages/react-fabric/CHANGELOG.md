@@ -1,5 +1,32 @@
 # @kubb/react-fabric
 
+## 0.11.6
+
+### Patch Changes
+
+- [#131](https://github.com/kubb-labs/fabric/pull/131) [`118ef3f`](https://github.com/kubb-labs/fabric/commit/118ef3f856fb98bd8e419301362b0f683b6f7488) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Fix React Devtools setup
+
+- Updated dependencies [[`118ef3f`](https://github.com/kubb-labs/fabric/commit/118ef3f856fb98bd8e419301362b0f683b6f7488)]:
+  - @kubb/fabric-core@0.11.6
+
+## 0.11.5
+
+### Patch Changes
+
+- [#127](https://github.com/kubb-labs/fabric/pull/127) [`f48fc56`](https://github.com/kubb-labs/fabric/commit/f48fc565ef7529e2ac12e9b26f3b2fb47c9ed998) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix React DevTools stuck at "Loading React element tree" by ensuring renderer injection happens after react-devtools-core is imported but before connectToDevTools() is called
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.5
+
+## 0.11.4
+
+### Patch Changes
+
+- [#125](https://github.com/kubb-labs/fabric/pull/125) [`9110c73`](https://github.com/kubb-labs/fabric/commit/9110c73a2c44cd9d9be4dcb6bd6c1a334b9196ec) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix React DevTools integration by setting up globals before import and properly destructuring functions
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.4
+
 ## 0.11.3
 
 ### Patch Changes
