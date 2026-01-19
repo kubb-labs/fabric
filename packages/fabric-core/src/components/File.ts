@@ -4,6 +4,7 @@ import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import { type ComponentBuilder, createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { KubbFile } from '../types.ts'
 import { Text } from './Text.ts'
@@ -31,7 +32,7 @@ export type FileProps<TMeta extends object = object> = {
 /**
  * Adds files to the FileManager
  */
-export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>) {
+export const File = createComponent(({ children, ...props }: FileProps) => {
   const { baseName, path, meta = {}, footer, banner } = props
 
   const fileManager = useFileManager()
@@ -58,7 +59,7 @@ export function File<TMeta extends object = object>({ children, ...props }: File
   provide(FileContext, resolvedFile)
 
   return Text({ children })
-}
+}) as ComponentBuilder<FileProps<object>> & { Source: typeof FileSource; Import: typeof FileImport; Export: typeof FileExport }
 
 type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
   /**
@@ -72,7 +73,7 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export function FileSource({ children, ...props }: FileSourceProps) {
+export const FileSource = createComponent(({ children, ...props }: FileSourceProps) => {
   const { name, isExportable, isIndexable, isTypeOnly } = props
 
   const nodeTree = useNodeTree()
@@ -97,7 +98,7 @@ export function FileSource({ children, ...props }: FileSourceProps) {
   }
 
   return value
-}
+})
 
 export type FileExportProps = KubbFile.Export
 

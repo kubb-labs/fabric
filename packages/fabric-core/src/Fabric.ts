@@ -17,7 +17,7 @@ type ComponentCreator<TProps> = {
 }
 
 export type FabricElement<TProps = {}> = ComponentCreator<TProps> & {
-  children(...children: Array<FabricNode>): ComponentCreator<TProps>
+  children(...children: Array<FabricNode>): FabricElement<TProps>
 }
 
 export type FabricNode = (() => FabricNode) | Array<FabricNode> | string | number | boolean | null | undefined
