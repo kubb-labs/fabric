@@ -21,7 +21,6 @@ describe('App', () => {
   })
 
   it('should inject meta data', () => {
-    type Meta = { version: string; author: string }
 
     const Text = () => {
       const ctx = inject(AppContext)
@@ -29,7 +28,7 @@ describe('App', () => {
       return JSON.stringify(ctx?.meta)
     }
 
-    const output = App<Meta>({
+    const output = App({
       meta: { version: '1.0.0', author: 'test' },
       children() {
         return Text()

@@ -5,6 +5,7 @@ import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
+import {createComponent} from "../createComponent.ts";
 
 export type ConstProps = {
   /**
@@ -36,7 +37,7 @@ export type ConstProps = {
 /**
  * Generates a TypeScript constant declaration.
  */
-export function Const({ children, ...props }: ConstProps) {
+export const Const =createComponent(({ children, ...props }: ConstProps)=> {
   const { name, export: canExport, type, JSDoc, asConst } = props
 
   const nodeTree = useNodeTree()
@@ -71,6 +72,6 @@ export function Const({ children, ...props }: ConstProps) {
   }
 
   return Text({ children: result })
-}
+})
 
 Const.displayName = 'KubbConst'

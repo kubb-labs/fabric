@@ -5,8 +5,9 @@ import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
+import {type ComponentBuilder, createComponent} from "../createComponent.ts";
 
-type Props = {
+type FunctionProps = {
   /**
    * Name of the function.
    */
@@ -49,7 +50,7 @@ type Props = {
 /**
  * Generates a TypeScript function declaration.
  */
-export function Function({ children, ...props }: Props) {
+export const Function = createComponent(({ children, ...props }: FunctionProps) => {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -104,11 +105,11 @@ export function Function({ children, ...props }: Props) {
   }
 
   return Text({ children: `${parts.join('')}}` })
-}
+}) as ComponentBuilder<FunctionProps> & { Arrow: typeof ArrowFunction}
 
 Function.displayName = 'KubbFunction'
 
-type ArrowFunctionProps = Props & {
+type ArrowFunctionProps = FunctionProps & {
   /**
    * Create Arrow function in one line
    */
@@ -122,7 +123,7 @@ type ArrowFunctionProps = Props & {
  * the same options as `Function`. Use `singleLine` to produce a one-line
  * arrow expression.
  */
-function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
+const ArrowFunction = createComponent(({ children, ...props }: ArrowFunctionProps)=> {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine } = props
 
   const nodeTree = useNodeTree()
@@ -180,7 +181,7 @@ function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
   }
 
   return Text({ children: `${parts.join('')} => {}\n` })
-}
+})
 
 ArrowFunction.displayName = 'KubbArrowFunction'
 Function.Arrow = ArrowFunction
