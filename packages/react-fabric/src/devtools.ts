@@ -103,8 +103,6 @@ export function open() {
       rendererPackageName: 'kubb',
       // findFiberByHostInstance is required for DevTools to map elements to fibers
       findFiberByHostInstance: () => null,
-      // Set the bundler name for better DevTools integration
-      bundlerName: 'kubb',
     })
 
     initialize()
