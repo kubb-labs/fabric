@@ -1,11 +1,11 @@
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import { type ComponentBuilder, createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
-import {type ComponentBuilder, createComponent} from "../createComponent.ts";
 
 type FunctionProps = {
   /**
@@ -105,7 +105,7 @@ export const Function = createComponent(({ children, ...props }: FunctionProps) 
   }
 
   return Text({ children: `${parts.join('')}}` })
-}) as ComponentBuilder<FunctionProps> & { Arrow: typeof ArrowFunction}
+}) as ComponentBuilder<FunctionProps> & { Arrow: typeof ArrowFunction }
 
 Function.displayName = 'KubbFunction'
 
@@ -123,7 +123,7 @@ type ArrowFunctionProps = FunctionProps & {
  * the same options as `Function`. Use `singleLine` to produce a one-line
  * arrow expression.
  */
-const ArrowFunction = createComponent(({ children, ...props }: ArrowFunctionProps)=> {
+const ArrowFunction = createComponent(({ children, ...props }: ArrowFunctionProps) => {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine } = props
 
   const nodeTree = useNodeTree()

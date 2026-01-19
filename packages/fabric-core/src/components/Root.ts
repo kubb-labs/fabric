@@ -2,11 +2,11 @@ import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
+import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { FileManager } from '../FileManager.ts'
 import type { TreeNode } from '../utils/TreeNode.ts'
 import { Text } from './Text.ts'
-import {createComponent} from "../createComponent.ts";
 
 export type RootProps = {
   /**
@@ -34,7 +34,7 @@ export type RootProps = {
 /**
  * This component provides the root behavior for the Fabric runtime.
  */
-export const Root =  createComponent(({ onError, onExit, treeNode, fileManager, children }: RootProps)=> {
+export const Root = createComponent(({ onError, onExit, treeNode, fileManager, children }: RootProps) => {
   provide(RootContext, { exit: onExit, treeNode, fileManager })
   provide(NodeTreeContext, treeNode)
 

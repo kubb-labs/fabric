@@ -1,11 +1,11 @@
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
-import {createComponent} from "../createComponent.ts";
 
 export type TypeProps = {
   /**
@@ -29,7 +29,7 @@ export type TypeProps = {
 /**
  * Generates a TypeScript type declaration.
  */
-export const Type = createComponent(({ children, ...props }: TypeProps) =>{
+export const Type = createComponent(({ children, ...props }: TypeProps) => {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()

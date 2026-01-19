@@ -21,7 +21,6 @@ describe('App', () => {
   })
 
   it('should inject meta data', () => {
-
     const Text = () => {
       const ctx = inject(AppContext)
 
