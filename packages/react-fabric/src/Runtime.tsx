@@ -77,12 +77,6 @@ export class Runtime {
       },
       { alwaysLast: false },
     ).bind(this)
-
-    Renderer.injectIntoDevTools({
-      bundleType: 1,
-      version: '19.1.0',
-      rendererPackageName: 'kubb',
-    })
   }
 
   get fileManager() {

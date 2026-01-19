@@ -81,7 +81,7 @@ export function open() {
 
   // biome-ignore lint/suspicious/noTsIgnore: cannot find types
   // @ts-ignore
-  import('react-devtools-core').then((devtools) => {
+  import('react-devtools-core').then(async (devtools) => {
     console.info('Opening devtools')
     const controller = new AbortController()
     execa({
@@ -94,7 +94,23 @@ export function open() {
     // Destructure the functions from the module
     const { initialize, connectToDevTools } = devtools
 
+    // Initialize DevTools BEFORE importing Renderer (which imports React)
     initialize()
+    console.info('Initializing devtools')
+
+    // Now dynamically import the Renderer after DevTools is initialized
+    const { Renderer } = await import('./Renderer.ts')
+
+    // Inject the renderer BEFORE connecting to DevTools
+    // This ensures DevTools can properly discover the custom renderer
+    Renderer.injectIntoDevTools({
+      bundleType: 1,
+      version: '19.1.0',
+      rendererPackageName: 'kubb',
+      // findFiberByHostInstance is required for DevTools to map elements to fibers
+      findFiberByHostInstance: () => null,
+    })
+
     console.info('Connecting devtools')
 
     try {
