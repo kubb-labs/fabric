@@ -20,7 +20,7 @@ describe('Function', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const output = Function(props)
+    const output = Function(props)()
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
@@ -35,10 +35,10 @@ describe('Function', () => {
       onExit: vi.fn(),
       children: () => {
         return App({
-          children: () => Function({ name: 'myFunc', children: 'return true' }),
-        })
+          children: () => Function({ name: 'myFunc', children: 'return true' })(),
+        })()
       },
-    })
+    })()
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)
@@ -64,7 +64,7 @@ describe('Function.Arrow', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const output = Function.Arrow(props)
+    const output = Function.Arrow(props)()
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
@@ -79,10 +79,10 @@ describe('Function.Arrow', () => {
       onExit: vi.fn(),
       children: () => {
         return App({
-          children: () => Function.Arrow({ name: 'myFunc', children: 'return true' }),
-        })
+          children: () => Function.Arrow({ name: 'myFunc', children: 'return true' })(),
+        })()
       },
-    })
+    })()
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

@@ -10,13 +10,13 @@ describe('App', () => {
 
   it('should return children when provided', () => {
     const children = 'const x = 1'
-    const output = App({ children })
+    const output = App({ children })()
 
     expect(output).toBe(children)
   })
 
   it('should handle undefined children', () => {
-    const output = App({ meta: { test: true } })
+    const output = App({ meta: { test: true } })()
     expect(output).toBe('')
   })
 
@@ -32,7 +32,7 @@ describe('App', () => {
       children() {
         return Text()
       },
-    })
+    })()
 
     expect(output).toMatchInlineSnapshot(`"{"version":"1.0.0","author":"test"}"`)
   })

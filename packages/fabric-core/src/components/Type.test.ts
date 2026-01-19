@@ -23,14 +23,14 @@ describe('Type', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const output = Type(props)
+    const output = Type(props)()
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
   it('should throw error if name does not start with capital letter', () => {
     expect(() => {
-      Type({ name: 'myType', children: 'string' })
+      Type({ name: 'myType', children: 'string' })()
     }).toThrow('Name should start with a capital letter')
   })
 
@@ -44,10 +44,10 @@ describe('Type', () => {
       onExit: vi.fn(),
       children: () => {
         return App({
-          children: () => Type({ name: 'MyType', children: '{ a: string }' }),
-        })
+          children: () => Type({ name: 'MyType', children: '{ a: string }' })(),
+        })()
       },
-    })
+    })()
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)
