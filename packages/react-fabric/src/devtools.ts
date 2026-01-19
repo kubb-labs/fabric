@@ -1,7 +1,6 @@
 import { execa } from 'execa'
 import { onExit } from 'signal-exit'
 import ws from 'ws'
-import { Renderer } from './Renderer.ts'
 
 declare global {
   var WebSocket: typeof WebSocket
@@ -82,7 +81,7 @@ export function open() {
 
   // biome-ignore lint/suspicious/noTsIgnore: cannot find types
   // @ts-ignore
-  import('react-devtools-core').then((devtools) => {
+  import('react-devtools-core').then(async (devtools) => {
     console.info('Opening devtools')
     const controller = new AbortController()
     execa({
@@ -95,7 +94,14 @@ export function open() {
     // Destructure the functions from the module
     const { initialize, connectToDevTools } = devtools
 
-    // Inject the renderer BEFORE initializing and connecting
+    // Initialize DevTools BEFORE importing Renderer (which imports React)
+    initialize()
+    console.info('Initializing devtools')
+
+    // Now dynamically import the Renderer after DevTools is initialized
+    const { Renderer } = await import('./Renderer.ts')
+
+    // Inject the renderer BEFORE connecting to DevTools
     // This ensures DevTools can properly discover the custom renderer
     Renderer.injectIntoDevTools({
       bundleType: 1,
@@ -105,7 +111,6 @@ export function open() {
       findFiberByHostInstance: () => null,
     })
 
-    initialize()
     console.info('Connecting devtools')
 
     try {
