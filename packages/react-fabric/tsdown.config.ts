@@ -14,7 +14,7 @@ export default defineConfig({
   target: 'es2019',
   platform: 'node',
   format: ['esm', 'cjs'],
-  sourcemap: 'hidden', // TODO see if we can enable this again to help with debugging, issue with React Devtools
+  sourcemap: 'hidden', // TODO see if we can enable this again to help with debugging, issue with React DevTools
   shims: true,
   exports: true,
   noExternal: [/indent-string/],
