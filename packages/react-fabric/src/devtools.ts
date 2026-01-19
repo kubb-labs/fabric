@@ -11,6 +11,8 @@ declare global {
   var isDevtoolsEnabled: any
 }
 
+let isOpen = false
+
 export function openDevtools() {
   // Set up global polyfills BEFORE importing react-devtools-core
   // This is required because react-devtools-core expects these to be available
@@ -86,15 +88,19 @@ export function openDevtools() {
   import('react-devtools-core').then(async (devtools) => {
     console.info('Opening devtools')
     const controller = new AbortController()
-    execa({
-      stdio: 'pipe',
-      preferLocal: true,
-      cancelSignal: controller.signal,
-      gracefulCancel: true,
-    })`npx react-devtools@6.1.5`
+    if (!isOpen) {
+      execa({
+        stdio: 'pipe',
+        preferLocal: true,
+        cancelSignal: controller.signal,
+        gracefulCancel: true,
+      })`npx react-devtools@6.1.5`
+    }
+
+    isOpen = true
 
     // Destructure the functions from the module
-    const { initialize, connectToDevTools } = devtools
+    const { initialize, connectToDevTools } = devtools?.default || devtools
 
     // Initialize DevTools BEFORE importing Renderer (which imports React)
     initialize()
