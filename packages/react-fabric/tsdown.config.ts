@@ -20,5 +20,7 @@ export default defineConfig({
   exports: true,
   noExternal: [/indent-string/],
   fixedExtension: false,
-  keepNames: true,
+  outputOptions: {
+    keepNames: true,
+  },
 })
