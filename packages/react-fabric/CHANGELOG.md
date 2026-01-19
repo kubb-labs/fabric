@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.11.5
+
+### Patch Changes
+
+- [#127](https://github.com/kubb-labs/fabric/pull/127) [`f48fc56`](https://github.com/kubb-labs/fabric/commit/f48fc565ef7529e2ac12e9b26f3b2fb47c9ed998) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix React DevTools stuck at "Loading React element tree" by ensuring renderer injection happens after react-devtools-core is imported but before connectToDevTools() is called
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.5
+
 ## 0.11.4
 
 ### Patch Changes
