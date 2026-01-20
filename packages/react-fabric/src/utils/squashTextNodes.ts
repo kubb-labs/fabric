@@ -1,5 +1,5 @@
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
-import { inject, provide, RenderContext } from '@kubb/fabric-core'
+import { inject, RenderContext } from '@kubb/fabric-core'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
@@ -7,7 +7,6 @@ import type { DOMElement, KubbFile } from '../types.ts'
 export function squashTextNodes(node: DOMElement): string {
   // Initialize RenderContext for this render
   const renderContext = inject(RenderContext, { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false })
-  provide(RenderContext, renderContext)
 
   let text = ''
 
@@ -103,7 +102,7 @@ export function squashTextNodes(node: DOMElement): string {
         }
 
         if (child.nodeName === 'dedent') {
-          renderContext.indentLevel = Math.max(0, renderContext.indentLevel - 1)
+          renderContext.indentLevel = renderContext.indentLevel > 0 ? renderContext.indentLevel - 1 : 0
           nodeText = ''
         }
 
