@@ -1,19 +1,16 @@
-import { renderIndent } from '@kubb/fabric-core'
+import { renderIndent, type RenderContextProps } from '@kubb/fabric-core'
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
 
-/**
- * Global context, used to keep track of the current indentation level and line length
- * // TODO this could be move to options in Runtime.tsx
- */
-const renderContext = { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false }
-
-export function squashTextNodes(node: DOMElement): string {
+export function squashTextNodes(
+  node: DOMElement,
+  renderContext: RenderContextProps = { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false },
+): string {
   let text = ''
 
-  const walk = (current: DOMElement): string => {
+  const walk = (current: DOMElement, context: RenderContextProps): string => {
     let content = ''
 
     for (const child of current.childNodes) {
@@ -57,26 +54,26 @@ export function squashTextNodes(node: DOMElement): string {
       }
 
       if (child.nodeName === '#text') {
-        nodeText = renderIndent(child.nodeValue, renderContext)
+        nodeText = renderIndent(child.nodeValue, context)
       } else {
         if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
-          nodeText = walk(child)
+          nodeText = walk(child, context)
         }
 
         nodeText = getPrintText(nodeText)
 
         if (child.nodeName === 'br') {
           nodeText = '\n'
-          renderContext.currentLineLength = 0
+          context.currentLineLength = 0
         }
 
         if (child.nodeName === 'indent') {
-          renderContext.indentLevel++
+          context.indentLevel++
           nodeText = ''
         }
 
         if (child.nodeName === 'dedent') {
-          renderContext.indentLevel = Math.max(0, renderContext.indentLevel - 1)
+          context.indentLevel = Math.max(0, context.indentLevel - 1)
           nodeText = ''
         }
 
@@ -90,9 +87,9 @@ export function squashTextNodes(node: DOMElement): string {
           }
 
           if (hasAttributes) {
-            nodeText = `<${child.nodeName}${attrString}>${walk(child)}</${child.nodeName}>`
+            nodeText = `<${child.nodeName}${attrString}>${walk(child, context)}</${child.nodeName}>`
           } else {
-            nodeText = `<${child.nodeName}>${walk(child)}</${child.nodeName}>`
+            nodeText = `<${child.nodeName}>${walk(child, context)}</${child.nodeName}>`
           }
         }
       }
@@ -103,7 +100,7 @@ export function squashTextNodes(node: DOMElement): string {
     return content
   }
 
-  text = walk(node)
+  text = walk(node, renderContext)
 
   return text
 }
