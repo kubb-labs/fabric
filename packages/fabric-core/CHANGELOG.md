@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.11.8
+
+### Patch Changes
+
+- Make sure we can render functional non react components
+
 ## 0.11.7
 
 ## 0.11.6
