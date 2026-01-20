@@ -14,6 +14,9 @@ declare global {
 let isOpen = false
 
 export function openDevtools() {
+  if (isOpen) {
+    return undefined
+  }
   // Set up global polyfills BEFORE importing react-devtools-core
   // This is required because react-devtools-core expects these to be available
   const customGlobal = global as any
