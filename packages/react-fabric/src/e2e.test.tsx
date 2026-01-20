@@ -21,7 +21,7 @@ vi.mock('./Runtime.tsx', () => {
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from './plugins/reactPlugin.ts'
 
-const Component = () => 'test'
+const Component = <>'test'</>
 
 describe('e2e', () => {
   beforeEach(() => {

@@ -10,11 +10,23 @@ declare global {
   }
 }
 
-/**
- * Component placeholder type.
- * May later be extended to support specific runtime renderers.
- */
-export type Component = any
+export type ComponentCreator<TProps extends object = object> = {
+  (): FabricNode
+  component: FabricComponent<TProps>
+  props: TProps
+}
+
+export type FabricElement<TProps extends object = object> = ComponentCreator<TProps> & {
+  children(...children: Array<FabricNode>): FabricElement<TProps>
+}
+
+export type FabricNode = ComponentCreator<any> | Array<FabricNode> | string | number | boolean | null | undefined
+
+export interface FabricComponent<TProps extends object = object> {
+  (props: TProps): FabricNode
+  propTypes?: any
+  displayName?: string | undefined
+}
 
 /**
  * Defines core runtime options for Fabric.

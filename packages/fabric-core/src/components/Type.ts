@@ -1,6 +1,8 @@
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import { createComponent } from '../createComponent.ts'
+import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
@@ -18,14 +20,17 @@ type Props = {
    * Options for JSdocs.
    */
   JSDoc?: JSDoc
-  children?: string
+  /**
+   * Children nodes.
+   */
+  children?: FabricNode
 }
 
 /**
  * Renders a TypeScript type alias string for use with the fsx renderer.
  * Optionally emits JSDoc comments when `JSDoc.comments` is provided.
  */
-export function Type({ children, ...props }: Props): string {
+export const Type = createComponent(({ children, ...props }: TypeProps) => {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -54,6 +59,6 @@ export function Type({ children, ...props }: Props): string {
   result += `type ${name} = ${children || ''}`
 
   return Text({ children: result })
-}
+})
 
 Type.displayName = 'KubbType'

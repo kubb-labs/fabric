@@ -1,5 +1,5 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
-import type { JSDoc, Key, KubbNode } from '../types.ts'
+import type { JSDoc, Key, KubbElement, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Indent } from './Indent.tsx'
 
@@ -46,7 +46,7 @@ type Props = {
  * Renders a function definition using the Fabric templating primitives.
  * Supports optional export/default/async flags, generics, params and JSDoc.
  */
-export function Function({ children, ...props }: Props) {
+export function Function({ children, ...props }: Props): KubbElement {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
 
   const nodeTree = useNodeTree()

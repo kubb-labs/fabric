@@ -1,29 +1,50 @@
-import { describe, expect, it } from 'vitest'
+import path from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
+import { unprovide } from '../context.ts'
+import { AppContext } from '../contexts/AppContext.ts'
+import { createFabric } from '../createFabric.ts'
+import { fsxPlugin } from '../plugins'
+import { TreeNode } from '../utils/TreeNode.ts'
+import { App } from './App.ts'
 import { Function } from './Function.ts'
 
 describe('Function', () => {
-  it('should create a basic function', () => {
-    const result = Function({ name: 'myFunc', children: 'return true' })
-
-    expect(result).toMatchInlineSnapshot(`
-      "function myFunc() {
-        return true
-      }"
-    `)
+  afterEach(() => {
+    unprovide(AppContext)
   })
 
-  it('should create an exported function', () => {
-    const result = Function({ name: 'myFunc', export: true, children: 'return true' })
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
+    { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'function with generics', props: { name: 'myFunc', generics: 'T', children: 'return true' } },
+    { name: 'function with return type', props: { name: 'myFunc', returnType: 'boolean', children: 'return true' } },
+    { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
+    { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
+    { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
 
-    expect(result).toMatchInlineSnapshot(`
-      "export function myFunc() {
-        return true
-      }"
-    `)
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const output = Function(props)()
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  it('should create a function with parameters', () => {
-    const result = Function({ name: 'myFunc', params: 'a: string, b: number', children: 'return true' })
+  it('should add nodes to the NodeTreeContext', async () => {
+    const fabric = createFabric()
+    const treeNode = new TreeNode({ type: 'root', props: {} })
+
+    fabric.use(fsxPlugin, { treeNode })
+
+    const component = App({
+      children: Function({ name: 'myFunc', children: 'return true' }),
+    })
+
+    const output = await fabric.render(component)
+
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
 
     expect(result).toMatchInlineSnapshot(`
       "function myFunc(a: string, b: number) {
@@ -110,21 +131,26 @@ describe('Function.Arrow', () => {
   it('should create a basic arrow function', () => {
     const result = Function.Arrow({ name: 'myFunc', children: 'return true' })
 
-    expect(result).toMatchInlineSnapshot(`
-      "const myFunc = () => {
-        return true
-      }"
-    `)
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const output = Function.Arrow(props)()
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  it('should create a single line arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', singleLine: true, children: 'true' })
+  it('should add nodes to the NodeTreeContext', async () => {
+    const fabric = createFabric()
+    const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    expect(result).toMatchInlineSnapshot(`"const myFunc = () => true"`)
-  })
+    fabric.use(fsxPlugin, { treeNode })
 
-  it('should create an exported arrow function', () => {
-    const result = Function.Arrow({ name: 'myFunc', export: true, children: 'return true' })
+    const component = App({
+      children: Function.Arrow({ name: 'myFunc', children: 'return true' }),
+    })
+
+    const output = await fabric.render(component)
+
+    expect(treeNode.data.type).toBe('root')
+    expect(treeNode.children).toHaveLength(1)
 
     expect(result).toMatchInlineSnapshot(`
       "export const myFunc = () => {

@@ -5,21 +5,17 @@ import { Indent } from './Indent.tsx'
 
 describe('<Indent/>', () => {
   it('indent string children by default size', async () => {
-    const Component = () => {
-      return (
-        <Indent>
-          {`
+    const fabric = createFabric()
+    fabric.use(reactPlugin)
+    const output = await fabric.renderToString(
+      <Indent>
+        {`
             line1
               line2
             line3
           `}
-        </Indent>
-      )
-    }
-
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+      </Indent>,
+    )
 
     expect(output).toMatchInlineSnapshot(`
       "  line1
@@ -29,23 +25,19 @@ describe('<Indent/>', () => {
   })
 
   it('indent mixed children and collapse br elements', async () => {
-    const Component = () => {
-      return (
-        <Indent size={4}>
-          Hello
-          <br />
-          <br />
-          <br />
-          world
-          <br />
-          <span>!</span>
-        </Indent>
-      )
-    }
-
     const fabric = createFabric()
     fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <Indent size={4}>
+        Hello
+        <br />
+        <br />
+        <br />
+        world
+        <br />
+        <span>!</span>
+      </Indent>,
+    )
 
     expect(output).toMatchInlineSnapshot(`
       "    Hello    

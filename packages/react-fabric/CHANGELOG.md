@@ -1,5 +1,79 @@
 # @kubb/react-fabric
 
+## 0.11.7
+
+### Patch Changes
+
+- [`b19041c`](https://github.com/kubb-labs/fabric/commit/b19041c5addbf40c289afb34edc890681aaa6332) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Default check for react-devtools-core package
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.7
+
+## 0.11.6
+
+### Patch Changes
+
+- [#131](https://github.com/kubb-labs/fabric/pull/131) [`118ef3f`](https://github.com/kubb-labs/fabric/commit/118ef3f856fb98bd8e419301362b0f683b6f7488) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Fix React DevTools setup
+
+- Updated dependencies [[`118ef3f`](https://github.com/kubb-labs/fabric/commit/118ef3f856fb98bd8e419301362b0f683b6f7488)]:
+  - @kubb/fabric-core@0.11.6
+
+## 0.11.5
+
+### Patch Changes
+
+- [#127](https://github.com/kubb-labs/fabric/pull/127) [`f48fc56`](https://github.com/kubb-labs/fabric/commit/f48fc565ef7529e2ac12e9b26f3b2fb47c9ed998) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix React DevTools stuck at "Loading React element tree" by ensuring renderer injection happens after react-devtools-core is imported but before connectToDevTools() is called
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.5
+
+## 0.11.4
+
+### Patch Changes
+
+- [#125](https://github.com/kubb-labs/fabric/pull/125) [`9110c73`](https://github.com/kubb-labs/fabric/commit/9110c73a2c44cd9d9be4dcb6bd6c1a334b9196ec) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix React DevTools integration by setting up globals before import and properly destructuring functions
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.4
+
+## 0.11.3
+
+### Patch Changes
+
+- [`ebfe4c3`](https://github.com/kubb-labs/fabric/commit/ebfe4c370333a4e6ae807486fbd87e64091ef650) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Use of KubbNode
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.3
+
+## 0.11.2
+
+### Patch Changes
+
+- [`62cdbf8`](https://github.com/kubb-labs/fabric/commit/62cdbf838140bcc5fd28dea3b8b304bc98c2a9a8) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - revert custom KubbElement
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.2
+
+## 0.11.1
+
+### Patch Changes
+
+- [`e75992c`](https://github.com/kubb-labs/fabric/commit/e75992cda3b955a25f9956aaedf8b1a2bca23c77) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - correct exports
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.1
+
+## 0.11.0
+
+### Minor Changes
+
+- [`a84b6b0`](https://github.com/kubb-labs/fabric/commit/a84b6b0d166a0be1c4dabcb86afb07eb90131565) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - FSX first release
+
+### Patch Changes
+
+- Updated dependencies [[`a84b6b0`](https://github.com/kubb-labs/fabric/commit/a84b6b0d166a0be1c4dabcb86afb07eb90131565)]:
+  - @kubb/fabric-core@0.11.0
+
 ## 0.10.0
 
 ### Minor Changes

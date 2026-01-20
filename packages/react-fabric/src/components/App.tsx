@@ -1,5 +1,5 @@
-import { AppContext, FileCollector, FileCollectorContext, NodeTreeContext, provide, RootContext, TreeNode, useContext } from '@kubb/fabric-core'
-import type { ComponentNode, KubbNode } from '../types.ts'
+import { AppContext, NodeTreeContext, provide, RootContext, useContext, useNodeTree } from '@kubb/fabric-core'
+import type { KubbElement, KubbNode } from '../types.ts'
 
 type Props<TMeta = unknown> = {
   readonly meta: TMeta
@@ -12,12 +12,9 @@ type Props<TMeta = unknown> = {
  * Provides the current app context (meta and exit) to descendants.
  * This component mirrors the Fabric app container in React.
  */
-export function App<TMeta = unknown>({
-  meta,
-  fileCollector = new FileCollector(),
-  tree = new TreeNode<ComponentNode>({ type: 'App', props: { meta } }),
-  children,
-}: Props<TMeta>) {
+export function App<TMeta extends object = object>({ children, ...props }: AppProps<TMeta>): KubbElement {
+  const { meta = {} } = props
+
   const { exit } = useContext(RootContext)
 
   tree.data.props = { meta }
@@ -26,7 +23,7 @@ export function App<TMeta = unknown>({
   provide(FileCollectorContext, fileCollector)
   provide(NodeTreeContext, tree)
 
-  return children
+  return <>{children}</>
 }
 
 App.displayName = 'KubbApp'

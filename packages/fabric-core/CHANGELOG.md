@@ -1,5 +1,29 @@
 # @kubb/fabric-core
 
+## 0.11.7
+
+## 0.11.6
+
+### Patch Changes
+
+- [#131](https://github.com/kubb-labs/fabric/pull/131) [`118ef3f`](https://github.com/kubb-labs/fabric/commit/118ef3f856fb98bd8e419301362b0f683b6f7488) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Fix React DevTools setup
+
+## 0.11.5
+
+## 0.11.4
+
+## 0.11.3
+
+## 0.11.2
+
+## 0.11.1
+
+## 0.11.0
+
+### Minor Changes
+
+- [`a84b6b0`](https://github.com/kubb-labs/fabric/commit/a84b6b0d166a0be1c4dabcb86afb07eb90131565) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - FSX first release
+
 ## 0.10.0
 
 ### Minor Changes

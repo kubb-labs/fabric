@@ -71,7 +71,7 @@ async function start() {
   fabric.use(fsPlugin)
   fabric.use(reactPlugin)
 
-  await fabric.render(App)
+  await fabric.render(<App />)
 
   await fabric.waitUntilExit()
 

@@ -16,7 +16,7 @@ describe('useFile', () => {
 
     const meta = { flag: true }
 
-    const Component = () => (
+    const Component = (
       <File baseName="index.ts" path="/tmp/index.ts" meta={meta}>
         <Test />
       </File>

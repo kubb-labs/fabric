@@ -1,5 +1,9 @@
 import { provide } from '../context.ts'
 import { RootContext } from '../contexts/RootContext.ts'
+import { createComponent } from '../createComponent.ts'
+import type { FabricNode } from '../Fabric.ts'
+import type { FileManager } from '../FileManager.ts'
+import type { TreeNode } from '../utils/TreeNode.ts'
 import { Text } from './Text.ts'
 
 type Props = {
@@ -10,8 +14,19 @@ type Props = {
   /**
    * Error hook
    */
-  readonly onError?: (error: Error) => void
-  readonly children?: string | (() => string | Array<string>)
+  onError: (error: Error) => void
+  /**
+   * TreeNode representing the tree structure of the app.
+   */
+  treeNode: TreeNode<ComponentNode>
+  /**
+   * FileManager instance for managing files within the app.
+   */
+  fileManager: FileManager
+  /**
+   * Children nodes.
+   */
+  children?: FabricNode
 }
 
 /**
@@ -19,8 +34,9 @@ type Props = {
  * `onError` is called for runtime exceptions. Provides a RootContext with
  * an `exit` hook for downstream consumers.
  */
-export function Root({ onError, onExit, children }: Props): string {
-  provide(RootContext, { exit: onExit })
+export const Root = createComponent(({ onError, onExit, treeNode, fileManager, children }: RootProps) => {
+  provide(RootContext, { exit: onExit, treeNode, fileManager })
+  provide(NodeTreeContext, treeNode)
 
   try {
     return Text({ children })
@@ -30,6 +46,6 @@ export function Root({ onError, onExit, children }: Props): string {
     }
     return ''
   }
-}
+})
 
 Root.displayName = 'KubbRoot'

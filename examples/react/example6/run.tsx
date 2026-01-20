@@ -44,7 +44,7 @@ async function start() {
   fabric.use(reactPlugin)
   fabric.use(vueParser)
 
-  await fabric.render(App)
+  await fabric.render(<App />)
 
   await fabric.write()
 }

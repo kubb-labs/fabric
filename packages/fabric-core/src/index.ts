@@ -1,4 +1,5 @@
 // components
+
 export { App } from './components/App.ts'
 export { Const } from './components/Const.ts'
 export { File } from './components/File.ts'
@@ -23,10 +24,12 @@ export { FileCollectorContext } from './contexts/FileCollectorContext.ts'
 export { FileContext } from './contexts/FileContext.ts'
 export { NodeTreeContext } from './contexts/NodeTreeContext.ts'
 export { RootContext } from './contexts/RootContext.ts'
-
+export { createComponent } from './createComponent.ts'
 // helpers
+export { code } from './code.ts'
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
+export { br, dedent, indent } from './intrinsic.ts'
 export { createJSDoc } from './utils/createJSDoc.ts'
 export { FileCollector } from './utils/FileCollector.ts'
 

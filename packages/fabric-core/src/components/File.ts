@@ -3,6 +3,9 @@ import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import { type ComponentBuilder, createComponent, transform } from '../createComponent.ts'
+import type { FabricNode } from '../Fabric.ts'
+import { createExport, createImport, print } from '../parsers/typescriptParser.ts'
 import type { KubbFile } from '../types.ts'
 import { Text } from './Text.ts'
 
@@ -16,11 +19,14 @@ export type FileProps<TMeta extends object = object> = {
   /**
    * Path will be full qualified path to a specified file.
    */
-  readonly path: KubbFile.Path
-  readonly meta?: TMeta
-  readonly banner?: string
-  readonly footer?: string
-  readonly children?: string | (() => string | Array<string>)
+  path: KubbFile.Path
+  meta?: TMeta
+  banner?: string
+  footer?: string
+  /**
+   * Children nodes.
+   */
+  children?: FabricNode
 }
 
 /**
@@ -30,7 +36,7 @@ export type FileProps<TMeta extends object = object> = {
  * register the file (baseName/path) so it can be emitted later. Returns the
  * children string content for fsx renderers.
  */
-export function File<TMeta extends object = object>({ children, ...props }: FileProps<TMeta>): string {
+export const File = createComponent(({ children, ...props }: FileProps) => {
   const { baseName, path, meta = {}, footer, banner } = props
 
   const fileCollector = useFileCollector()
@@ -57,10 +63,13 @@ export function File<TMeta extends object = object>({ children, ...props }: File
   provide(FileContext, file)
 
   return Text({ children })
-}
+}) as ComponentBuilder<FileProps<object>> & { Source: typeof FileSource; Import: typeof FileImport; Export: typeof FileExport }
 
 type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
-  readonly children?: string | (() => string | Array<string>)
+  /**
+   * Children nodes.
+   */
+  children?: FabricNode
 }
 
 /**
@@ -68,7 +77,9 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export function FileSource({ children, ...props }: FileSourceProps): string {
+export const FileSource = createComponent(({ children, ...props }: FileSourceProps) => {
+  const { name, isExportable, isIndexable, isTypeOnly } = props
+
   const nodeTree = useNodeTree()
 
   if (nodeTree) {
@@ -77,8 +88,20 @@ export function FileSource({ children, ...props }: FileSourceProps): string {
     provide(NodeTreeContext, childTree)
   }
 
-  return Text({ children })
-}
+  const value = transform(children)
+
+  if (file) {
+    file.sources.push({
+      name,
+      isExportable,
+      isIndexable,
+      isTypeOnly,
+      value,
+    })
+  }
+
+  return value
+})
 
 type FileExportProps = KubbFile.Export
 
@@ -87,7 +110,9 @@ type FileExportProps = KubbFile.Export
  *
  * No-op function used by renderers to record exports.
  */
-export function FileExport(props: FileExportProps): string {
+export const FileExport = createComponent((props: FileExportProps) => {
+  const { name, path, isTypeOnly, asAlias } = props
+
   const nodeTree = useNodeTree()
 
   if (nodeTree) {
@@ -96,8 +121,17 @@ export function FileExport(props: FileExportProps): string {
     provide(NodeTreeContext, childTree)
   }
 
-  return Text({ children: '' })
-}
+  if (file) {
+    file.exports.push({
+      name,
+      path,
+      asAlias,
+      isTypeOnly,
+    })
+  }
+
+  return Text({ children: print(createExport({ name, path, isTypeOnly, asAlias })) })
+})
 
 type FileImportProps = KubbFile.Import
 
@@ -106,7 +140,9 @@ type FileImportProps = KubbFile.Import
  *
  * No-op function used by renderers to record imports.
  */
-export function FileImport(props: FileImportProps): string {
+export const FileImport = createComponent((props: FileImportProps) => {
+  const { name, path, root, isNameSpace, isTypeOnly } = props
+
   const nodeTree = useNodeTree()
 
   if (nodeTree) {
@@ -115,8 +151,18 @@ export function FileImport(props: FileImportProps): string {
     provide(NodeTreeContext, childTree)
   }
 
-  return Text({ children: '' })
-}
+  if (file) {
+    file.imports.push({
+      name,
+      path,
+      root,
+      isNameSpace,
+      isTypeOnly,
+    })
+  }
+
+  return Text({ children: print(createImport({ name, path, root, isNameSpace, isTypeOnly })) })
+})
 
 File.Source = FileSource
 File.Import = FileImport
