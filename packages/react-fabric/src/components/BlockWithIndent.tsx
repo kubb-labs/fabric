@@ -1,4 +1,4 @@
-import type { KubbElement } from '../types.ts'
+import type { KubbElement } from '@kubb/react-fabric/types'
 import { Indent } from './Indent.tsx'
 
 type BlockWithIndentProps = {
