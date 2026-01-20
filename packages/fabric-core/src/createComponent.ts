@@ -25,7 +25,7 @@ export function createComponent<TProps extends object>(type: string, Component: 
       const fnChild = (() => renderIntrinsic(Component(propsWithChildren) as FabricNode)) as FabricElement<TProps>
       fnChild.component = Component
       fnChild.props = args[0]! as TProps
-      fn.type = type
+      fnChild.type = type
       return fnChild
     }
 
