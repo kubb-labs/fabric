@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createComponent } from './createComponent.ts'
-import type {FabricComponent, FabricNode} from './Fabric.ts'
+import type { FabricComponent, FabricNode } from './Fabric.ts'
 
 describe('createComponent', () => {
   it('should create a component builder', () => {
@@ -29,7 +29,7 @@ describe('createComponent', () => {
     const child1 = 'Hello'
     const child2 = 'World'
 
-    const element = builder({ }).children(child1, child2)
+    const element = builder({}).children(child1, child2)
 
     expect(element.props).toBeDefined()
 
@@ -49,7 +49,7 @@ describe('createComponent', () => {
   })
 
   it('should pass children to props correctly as function', () => {
-    const MyComponent = createComponent(({ children }:{ children?: FabricNode}) => {
+    const MyComponent = createComponent(({ children }: { children?: FabricNode }) => {
       return `wrapped: ${children}`
     })
 

@@ -1,17 +1,17 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { inject, unprovide } from '../context.ts'
 import { AppContext } from '../contexts/AppContext.ts'
+import { createComponent } from '../createComponent.ts'
+import { createFabric } from '../createFabric.ts'
+import { fsxPlugin } from '../plugins'
 import { App } from './App.ts'
-import {createFabric} from "../createFabric.ts";
-import {fsxPlugin} from "../plugins";
-import {createComponent} from "../createComponent.ts";
 
 describe('App', () => {
   afterEach(() => {
     unprovide(AppContext)
   })
 
-  it('should return children when provided', async() => {
+  it('should return children when provided', async () => {
     const fabric = createFabric()
 
     fabric.use(fsxPlugin)
@@ -21,44 +21,39 @@ describe('App', () => {
 
     const output = await fabric.render(component)
 
-
     expect(output).toBe(children)
   })
 
-  it('should return fsx children when provided with children helper', async() => {
+  it('should return fsx children when provided with children helper', async () => {
     const fabric = createFabric()
 
     fabric.use(fsxPlugin)
 
-    const Const = createComponent(()=>{
+    const Const = createComponent(() => {
       return 'const x = 1'
     })
 
-
-    const component = App().children([Const(),Const()])
+    const component = App().children([Const(), Const()])
 
     const output = await fabric.render(component)
-
 
     expect(output).toMatchInlineSnapshot(`"const x = 1const x = 1"`)
   })
 
-  it('should return fsx children when provided with children prop', async() => {
+  it('should return fsx children when provided with children prop', async () => {
     const fabric = createFabric()
 
     fabric.use(fsxPlugin)
 
-    const Const = createComponent(()=>{
+    const Const = createComponent(() => {
       return 'const x = 1'
     })
 
-
     const component = App({
-      children: [Const(),Const()],
+      children: [Const(), Const()],
     })
 
     const output = await fabric.render(component)
-
 
     expect(output).toMatchInlineSnapshot(`"const x = 1const x = 1"`)
   })
@@ -78,7 +73,6 @@ describe('App', () => {
     const output = App({
       meta: { version: '1.0.0', author: 'test' },
     }).children(Text())
-
 
     expect(output()).toMatchInlineSnapshot(`"{"version":"1.0.0","author":"test"}"`)
   })

@@ -1,13 +1,12 @@
 import path from 'node:path'
-import { describe, afterEach, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
+import { unprovide } from '../context.ts'
+import { AppContext } from '../contexts/AppContext.ts'
+import { createFabric } from '../createFabric.ts'
+import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { App } from './App.ts'
-
 import { Type, type TypeProps } from './Type.ts'
-import {unprovide} from "../context.ts";
-import {AppContext} from "../contexts/AppContext.ts";
-import {createFabric} from "../createFabric.ts";
-import {fsxPlugin} from "../plugins";
 
 describe('Type', () => {
   afterEach(() => {
@@ -45,7 +44,7 @@ describe('Type', () => {
     const fabric = createFabric()
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    fabric.use(fsxPlugin, {treeNode})
+    fabric.use(fsxPlugin, { treeNode })
 
     const component = App({
       meta: {

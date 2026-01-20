@@ -1,9 +1,7 @@
+import type { TreeNode } from '@kubb/fabric-core'
 import { definePlugin } from '@kubb/fabric-core/plugins'
-
 import { Runtime } from '../Runtime.tsx'
-
-import type {ComponentNode, KubbElement} from '../types.ts'
-import {TreeNode} from "@kubb/fabric-core";
+import type { ComponentNode, KubbElement } from '../types.ts'
 
 export type Options = {
   stdout?: NodeJS.WriteStream

@@ -1,12 +1,12 @@
 import path from 'node:path'
-import { describe, expect, it, afterEach } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
+import { unprovide } from '../context.ts'
+import { AppContext } from '../contexts/AppContext.ts'
+import { createFabric } from '../createFabric.ts'
+import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { App } from './App.ts'
 import { Function } from './Function.ts'
-import {unprovide} from "../context.ts";
-import {AppContext} from "../contexts/AppContext.ts";
-import {fsxPlugin} from "../plugins";
-import {createFabric} from "../createFabric.ts";
 
 describe('Function', () => {
   afterEach(() => {
@@ -31,14 +31,14 @@ describe('Function', () => {
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  it('should add nodes to the NodeTreeContext',async () => {
+  it('should add nodes to the NodeTreeContext', async () => {
     const fabric = createFabric()
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    fabric.use(fsxPlugin, {treeNode})
+    fabric.use(fsxPlugin, { treeNode })
 
     const component = App({
-      children: Function({ name: 'myFunc', children: 'return true' })
+      children: Function({ name: 'myFunc', children: 'return true' }),
     })
 
     const output = await fabric.render(component)
@@ -76,15 +76,13 @@ describe('Function.Arrow', () => {
     const fabric = createFabric()
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    fabric.use(fsxPlugin, {treeNode})
+    fabric.use(fsxPlugin, { treeNode })
 
     const component = App({
-      children: Function.Arrow({ name: 'myFunc', children: 'return true' })
+      children: Function.Arrow({ name: 'myFunc', children: 'return true' }),
     })
 
     const output = await fabric.render(component)
-
-
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

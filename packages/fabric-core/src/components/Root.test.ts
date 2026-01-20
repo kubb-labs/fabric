@@ -3,13 +3,12 @@ import { useContext } from '../composables/useContext.ts'
 import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { unprovide } from '../context.ts'
 import { RootContext, type RootContextProps } from '../contexts/RootContext.ts'
+import { createComponent } from '../createComponent.ts'
+import { createFabric } from '../createFabric.ts'
 import { FileManager } from '../FileManager.ts'
+import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { Root } from './Root.ts'
-import {createComponent} from "../createComponent.ts";
-import {createFabric} from "../createFabric.ts";
-import {fsxPlugin} from "../plugins";
-
 
 function getProps() {
   return {
@@ -33,7 +32,7 @@ describe('Root', () => {
     expect(output).toMatchInlineSnapshot('""')
   })
 
-  it('should return children when provided',  () => {
+  it('should return children when provided', () => {
     const props = getProps()
 
     const output = Root({ ...props, children: 'Hello from Root' })()
@@ -41,7 +40,7 @@ describe('Root', () => {
     expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
 
-  it('should throw when Error occurs',async () => {
+  it('should throw when Error occurs', async () => {
     const fabric = createFabric()
 
     fabric.use(fsxPlugin)
@@ -50,13 +49,12 @@ describe('Root', () => {
       throw new Error('boom')
     })
 
-    try{
+    try {
       await fabric.render(Test())
-    }catch (e){
+    } catch (e) {
       expect(e).toBeInstanceOf(Error)
       expect((e as Error).message).toBe('boom')
     }
-
   })
 
   it('should have RootContext being defined', () => {

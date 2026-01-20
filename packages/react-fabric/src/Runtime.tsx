@@ -128,7 +128,6 @@ export class Runtime {
   }
 
   onError(error: Error): void {
-
     // Store the error to be thrown after render completes
     this.#renderError = error
   }

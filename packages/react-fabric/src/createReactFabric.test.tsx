@@ -29,7 +29,7 @@ describe('e2e', () => {
   it('should delegate rendering to Runtime.render', async () => {
     const fabric = createReactFabric()
 
-    await fabric.render(Component)
+    await fabric.render(<Component />)
 
     expect(hoisted.instance.render).toHaveBeenCalledTimes(1)
   })
@@ -37,7 +37,7 @@ describe('e2e', () => {
   it('should return runtime result from renderToString', async () => {
     const fabric = createReactFabric()
 
-    await expect(fabric.renderToString(Component)).resolves.toBe('hello')
+    await expect(fabric.renderToString(<Component />)).resolves.toBe('hello')
     expect(hoisted.instance.renderToString).toHaveBeenCalledTimes(1)
   })
 

@@ -54,19 +54,18 @@ export class Runtime {
       onError: this.onError.bind(this),
     }
 
-   try{
+    try {
+      treeNode.data.props = props
 
-     treeNode.data.props = props
+      const element = Root({ ...props, children: node })
 
-     const element = Root({...props, children: node})
+      await this.#renderPromise
 
-     await this.#renderPromise
-
-     return element()?.toString() || ''
-   }catch (e){
+      return element()?.toString() || ''
+    } catch (e) {
       props.onError(e as Error)
-     return ''
-   }
+      return ''
+    }
   }
 
   unmount(error?: Error | number | null): void {

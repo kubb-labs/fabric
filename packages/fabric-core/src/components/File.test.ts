@@ -1,24 +1,15 @@
 import path from 'node:path'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
 import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { inject, unprovide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
-import { FileManager } from '../FileManager.ts'
+import { createComponent } from '../createComponent.ts'
+import { createFabric } from '../createFabric.ts'
+import { fsxPlugin } from '../plugins/fsxPlugin/fsxPlugin.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { File, type FileExportProps, type FileImportProps } from './File.ts'
-import { Root } from './Root.ts'
-import {createFabric} from "../createFabric.ts";
-import {fsxPlugin} from "../plugins";
-
-function getRootProps() {
-  return {
-    onError: vi.fn(),
-    onExit: vi.fn(),
-    treeNode: new TreeNode<ComponentNode>({ type: 'Root', props: {} }),
-    fileManager: new FileManager(),
-  }
-}
+import { Text } from './Text.ts'
 
 describe('File', () => {
   afterEach(() => {
@@ -33,7 +24,6 @@ describe('File', () => {
 
     const output = await fabric.render(File({ baseName: 'test.ts', path: './test.ts' }))
 
-
     const files = fabric.files
 
     expect(files).toHaveLength(1)
@@ -46,112 +36,105 @@ describe('File', () => {
   })
 
   it('should not return files is disabled', async () => {
-    const rootProps = getRootProps()
+    const fabric = createFabric()
+
+    fabric.use(fsxPlugin)
 
     const enable = false
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return enable ? File({ baseName: 'test.ts', path: './test.ts' })() : undefined
-      },
-    })()
+    const Component = createComponent(() => {
+      return enable ? File({ baseName: 'test.ts', path: './test.ts' }) : undefined
+    })
 
-    const files = rootProps.fileManager.files
+    await fabric.render(Component())
+
+    const files = fabric.files
 
     expect(files).toMatchInlineSnapshot('[]')
   })
 
-  it('should add a file with a banner', () => {
-    const rootProps = getRootProps()
+  it('should add a file with a banner', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return File({
-          baseName: 'api.ts',
-          path: './api.ts',
-          banner: '/* eslint-disable */',
-        })()
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'api.ts',
+        path: './api.ts',
+        banner: '/* eslint-disable */',
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files[0]?.banner).toBe('/* eslint-disable */')
   })
 
-  it('should register file with footer', () => {
-    const rootProps = getRootProps()
+  it('should register file with footer', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return File({
-          baseName: 'export.ts',
-          path: './export.ts',
-          meta: { model: 'User' },
-        })()
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'export.ts',
+        path: './export.ts',
+        meta: { model: 'User' },
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files[0]?.meta).toEqual({ model: 'User' })
   })
 
-  it('should register file with footer', () => {
-    const rootProps = getRootProps()
+  it('should register file with footer', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return File({
-          baseName: 'export.ts',
-          path: './export.ts',
-          footer: 'export default API;',
-        })()
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'export.ts',
+        path: './export.ts',
+        footer: 'export default API;',
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files[0]?.footer).toBe('export default API;')
   })
 
-  it('should register multiple files', () => {
-    const rootProps = getRootProps()
+  it('should register multiple files', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return [
+    fabric.use(fsxPlugin)
+
+    await fabric.render(
+      Text({
+        children: [
           File({
             baseName: 'file1.ts',
             path: './file1.ts',
-            children() {
-              return File.Source({ children: () => 'const test = 1;' })()
-            },
-          })(),
+            children: File.Source({ children: 'const test = 1;' }),
+          }),
           File({
             baseName: 'file2.ts',
             path: './file2.ts',
-            children() {
-              return File.Source({ children: () => 'const test = 2;' })()
-            },
-          })(),
+            children: File.Source({ children: 'const test = 2;' }),
+          }),
           File({
             baseName: 'file3.ts',
             path: './file3.ts',
-            children() {
-              return File.Source({ children: () => 'const test = 3;' })()
-            },
-          })(),
-        ]
-      },
-    })()
+            children: File.Source({ children: 'const test = 3;' }),
+          }),
+        ],
+      }),
+    )
 
-    const files = rootProps.fileManager.files
+    const files = fabric.files
 
     expect(files).toHaveLength(3)
     expect(files.map((f) => f?.baseName)).toMatchInlineSnapshot(`
@@ -169,29 +152,22 @@ describe('File', () => {
     expect(file3!.sources.map(({ value }) => value).join('\n')).toMatchInlineSnapshot(`"const test = 3;"`)
   })
 
-  it('should set the import when using File and File.Import', () => {
-    const rootProps = getRootProps()
+  it('should set the import when using File and File.Import', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return [
-          File({
-            baseName: 'file1.ts',
-            path: './file1.ts',
-            children() {
-              return File.Source({
-                children() {
-                  return File.Import({ name: 'test', path: './test.ts' })
-                },
-              })()
-            },
-          })(),
-        ]
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'file1.ts',
+        path: './file1.ts',
+        children: File.Source({
+          children: File.Import({ name: 'test', path: './test.ts' }),
+        }),
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files).toHaveLength(1)
     expect(files[0]?.imports).toHaveLength(1)
@@ -201,25 +177,20 @@ describe('File', () => {
     })
   })
 
-  it('should set the export when using File and File.Export', () => {
-    const rootProps = getRootProps()
+  it('should set the export when using File and File.Export', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return [
-          File({
-            baseName: 'file1.ts',
-            path: './file1.ts',
-            children() {
-              return File.Export({ name: 'test', path: './test.ts' })
-            },
-          })(),
-        ]
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'file1.ts',
+        path: './file1.ts',
+        children: File.Export({ name: 'test', path: './test.ts' }),
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files).toHaveLength(1)
     expect(files[0]?.exports).toHaveLength(1)
@@ -229,23 +200,20 @@ describe('File', () => {
     })
   })
 
-  it('should set the source when using File and File.Source', () => {
-    const rootProps = getRootProps()
+  it('should set the source when using File and File.Source', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return [
-          File({
-            baseName: 'file1.ts',
-            path: './file1.ts',
-            children: () => File.Source({ children: () => "const test = 'hello';" })(),
-          })(),
-        ]
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'file1.ts',
+        path: './file1.ts',
+        children: File.Source({ children: "const test = 'hello';" }),
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files).toHaveLength(1)
     expect(files[0]?.sources).toHaveLength(1)
@@ -254,23 +222,20 @@ describe('File', () => {
     })
   })
 
-  it('should set the source when using File, File.Import and File.Source', () => {
-    const rootProps = getRootProps()
+  it('should set the source when using File, File.Import and File.Source', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return [
-          File({
-            baseName: 'file1.ts',
-            path: './file1.ts',
-            children: () => [File.Import({ name: 'test', path: 'test.ts' }), File.Source({ children: () => "const test = 'hello';" })()],
-          })(),
-        ]
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'file1.ts',
+        path: './file1.ts',
+        children: [File.Import({ name: 'test', path: 'test.ts' }), File.Source({ children: "const test = 'hello';" })],
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files).toHaveLength(1)
     const file = files.at(0)!
@@ -286,49 +251,40 @@ describe('File', () => {
     })
   })
 
-  it('should save the file in the FileContext for child components to use', () => {
-    const rootProps = getRootProps()
+  it('should save the file in the FileContext for child components to use', async () => {
+    const fabric = createFabric()
 
-    const ChildComponent = (): string => {
+    fabric.use(fsxPlugin)
+
+    const ChildComponent = createComponent(() => {
       const currentFile = inject(FileContext)
-      return currentFile ? `File: ${currentFile.baseName}` : 'No file'
-    }
+      return Text({ children: currentFile ? `File: ${currentFile.baseName}` : 'No file' })
+    })
 
-    const result = Root({
-      ...rootProps,
-      children: () => {
-        return [
-          File({
-            baseName: 'file1.ts',
-            path: './file1.ts',
-            children: () => ChildComponent(),
-          })(),
-        ]
-      },
-    })()
+    const result = await fabric.render(
+      File({
+        baseName: 'file1.ts',
+        path: './file1.ts',
+        children: ChildComponent({}),
+      }),
+    )
 
     expect(result).toBe('File: file1.ts')
   })
 
-  it('should add nodes to the NodeTreeContext', () => {
-    const rootProps = getRootProps()
+  it('should add nodes to the NodeTreeContext', async () => {
+    const fabric = createFabric()
+    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return [
-          File({
-            baseName: 'test.ts',
-            path: './test.ts',
-            children() {
-              return File.Import({ name: 'MyClass', path: './MyClass.ts' })
-            },
-          })(),
-        ]
-      },
-    })()
+    fabric.use(fsxPlugin, { treeNode })
 
-    const treeNode = rootProps.treeNode
+    await fabric.render(
+      File({
+        baseName: 'test.ts',
+        path: './test.ts',
+        children: File.Import({ name: 'MyClass', path: './MyClass.ts' }),
+      }),
+    )
 
     expect(treeNode.children).toHaveLength(1)
     const fileChild = treeNode.children[0]!
@@ -351,26 +307,20 @@ describe('File.Source', () => {
     unprovide(FileContext)
   })
 
-  it('should set multiple sources when using File.Source multiple times', () => {
-    const rootProps = getRootProps()
+  it('should set multiple sources when using File.Source multiple times', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return [
-          File({
-            baseName: 'file1.ts',
-            path: './file1.ts',
-            children: () => [
-              File.Source({ children: () => 'const file = 2;' })(),
-              File.Source({ name: 'test', isTypeOnly: true, children: () => ' export const test = 2;' })(),
-            ],
-          })(),
-        ]
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    await fabric.render(
+      File({
+        baseName: 'file1.ts',
+        path: './file1.ts',
+        children: [File.Source({ children: 'const file = 2;' }), File.Source({ name: 'test', isTypeOnly: true, children: ' export const test = 2;' })],
+      }),
+    )
+
+    const files = fabric.files
 
     expect(files).toHaveLength(1)
     expect(files?.[0]?.sources.map(({ value }) => value).join('/n')).toMatchInlineSnapshot(`"const file = 2;/n export const test = 2;"`)
@@ -417,9 +367,20 @@ describe('<File.Import/>', () => {
       props: { name: ['App', { propertyName: 'createFabric', name: 'create' }], path: '@kubb/fabric-core' },
     },
   ]
-  // TODO remove skip when we have render helper for FSX
-  it.skip.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const output = File.Import(props)
+
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const fabric = createFabric()
+    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+
+    fabric.use(fsxPlugin, { treeNode })
+
+    const output = await fabric.render(
+      File({
+        baseName: 'test.ts',
+        path: './test.ts',
+        children: File.Import(props),
+      }),
+    )
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
@@ -454,12 +415,23 @@ describe('<File.Export/>', () => {
     },
     {
       name: 'named export (object advanced)',
-      props: { name: ['App', 'createFrabric'], path: '@kubb/fabric-core' },
+      props: { name: ['App', 'createFabric'], path: '@kubb/fabric-core' },
     },
   ]
-  // TODO remove skip when we have render helper for FSX
-  it.skip.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const output = File.Export(props)
+
+  it.each(scenarios)('should create a $name', async ({ name, props }) => {
+    const fabric = createFabric()
+    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+
+    fabric.use(fsxPlugin, { treeNode })
+
+    const output = await fabric.render(
+      File({
+        baseName: 'test.ts',
+        path: './test.ts',
+        children: File.Export(props),
+      }),
+    )
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })

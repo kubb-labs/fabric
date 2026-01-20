@@ -1,8 +1,8 @@
+import type { ComponentNode } from '../../composables/useNodeTree.ts'
 import type { FabricElement } from '../../Fabric.ts'
 import { definePlugin } from '../../plugins/definePlugin.ts'
+import type { TreeNode } from '../../utils/TreeNode.ts'
 import { Runtime } from './Runtime.ts'
-import type {TreeNode} from "../../utils/TreeNode.ts";
-import type {ComponentNode} from "../../composables/useNodeTree.ts";
 
 export type Options = {
   treeNode?: TreeNode<ComponentNode>

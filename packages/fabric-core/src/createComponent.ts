@@ -43,9 +43,9 @@ export function createComponent<T extends object>(Component: FabricComponent<T>)
     fn.children = (...children: Array<FabricNode>) => {
       const propsWithChildren = {
         ...(args[0] ?? {}),
-        children(){
+        children() {
           return transform(children)
-        }
+        },
       } as unknown as T
 
       const fn = (() => transform(Component(propsWithChildren) as FabricNode)) as FabricElement<T>

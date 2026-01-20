@@ -16,17 +16,17 @@ async function run() {
         baseName: 'file1.ts',
         path: './file1.ts',
         children: File.Source({
-          children: 'const test = 1;'
-        })
+          children: 'const test = 1;',
+        }),
       }),
       File({
         baseName: 'file2.ts',
         path: './file2.ts',
         children: File.Source({
-          children: 'const test = 2;'
-        })
-      })
-    ]
+          children: 'const test = 2;',
+        }),
+      }),
+    ],
   })
   //
   // const appChildren = App().children(
@@ -42,9 +42,9 @@ async function run() {
 
   // app.component()
 
-  const output= await fabric.render(app)
+  const output = await fabric.render(app)
 
-  console.log(output,JSON.stringify(fabric.files, null, 2))
+  console.log(output, JSON.stringify(fabric.files, null, 2))
 
   await fabric.write()
 }
