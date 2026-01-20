@@ -1,6 +1,6 @@
-import { type RenderContextProps, renderIndent } from '@kubb/fabric-core'
+import { renderIndent } from '@kubb/fabric-core'
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
-
+import type { RenderContextProps } from '@kubb/fabric-core/types'
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
 
