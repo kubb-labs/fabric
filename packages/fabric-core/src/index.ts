@@ -5,7 +5,6 @@ export { Const } from './components/Const.ts'
 export { File } from './components/File.ts'
 export { Function } from './components/Function.ts'
 export { Root } from './components/Root.ts'
-export { Text } from './components/Text.ts'
 export { Type } from './components/Type.ts'
 
 // composables
