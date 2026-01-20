@@ -102,7 +102,7 @@ export function squashTextNodes(node: DOMElement): string {
         }
 
         if (child.nodeName === 'dedent') {
-          renderContext.indentLevel = renderContext.indentLevel > 0 ? renderContext.indentLevel - 1 : 0
+          renderContext.indentLevel = Math.max(0, renderContext.indentLevel - 1)
           nodeText = ''
         }
 
