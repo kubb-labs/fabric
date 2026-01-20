@@ -17,6 +17,7 @@ describe('<Function/>', () => {
     { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
     { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
     { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+    { name: 'exported async function with generics', props: { name: 'getData', export: true, async: true, generics: 'TData', returnType: 'number', children: 'return 2' } },
   ]
 
   it.each(scenarios)('should render $name', async ({ name, props }) => {
@@ -63,6 +64,7 @@ describe('<Function.Arrow/>', () => {
     { name: 'async arrow function', props: { name: 'myFunc', async: true, children: 'return true' } },
     { name: 'arrow function with generics', props: { name: 'getData', generics: 'TData', returnType: 'number', children: 'return 2' } },
     { name: 'default exported arrow function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+    { name: 'exported async arrow function with generics', props: { name: 'getData', export: true, async: true, generics: 'TData', returnType: 'number', children: 'return 2' } },
   ]
 
   it.each(scenarios)('should render $name', async ({ name, props }) => {
