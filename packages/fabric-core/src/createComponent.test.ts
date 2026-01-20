@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { Text } from './components/Text.ts'
 import { createComponent } from './createComponent.ts'
 import type { FabricComponent, FabricNode } from './Fabric.ts'
-import { Text } from "./components/Text.ts"
 
 describe('createComponent', () => {
   it('should create a component builder', () => {
