@@ -177,7 +177,7 @@ const ArrowFunction = createComponent('ArrowFunction', ({ children, ...props }: 
   }
 
   if (children) {
-    return [parts.join(''), Br(), Indent(), children, Br(), Dedent(), '}']
+    return [parts.join(''), ' => {', Br(), Indent(), children, Br(), Dedent(), '}']
   }
 
   return [parts.join(''), '=> {}']

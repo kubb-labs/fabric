@@ -103,7 +103,7 @@ describe('Function.Arrow', () => {
     expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
 
     expect(output).toMatchInlineSnapshot(`
-      "const myFunc = ()
+      "const myFunc = () => {
         return true
       }"
     `)
