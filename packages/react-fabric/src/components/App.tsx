@@ -12,10 +12,6 @@ export type AppProps<TMeta extends object = object> = {
   children?: KubbNode
 }
 
-export function Div(props: { children: React.ReactNode }) {
-  return <div>{props.children}</div>
-}
-
 /**
  * App container containing the AppContext carrying `meta` and an `exit` hook.
  */

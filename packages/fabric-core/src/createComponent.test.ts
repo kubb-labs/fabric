@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createComponent } from './createComponent.ts'
 import type { FabricComponent, FabricNode } from './Fabric.ts'
+import { Text } from "./components/Text.ts"
 
 describe('createComponent', () => {
   it('should create a component builder', () => {
@@ -50,12 +51,14 @@ describe('createComponent', () => {
 
   it('should pass children to props correctly as function', () => {
     const MyComponent = createComponent(({ children }: { children?: FabricNode }) => {
-      return `wrapped: ${children}`
+      return Text({
+        children,
+      })
     })
 
     const element = MyComponent({}).children('child content')
 
-    expect(element()).toBe('wrapped: child content')
+    expect(element()).toBe('child content')
   })
 
   it('should allow calling the builder without props and adding children', () => {
