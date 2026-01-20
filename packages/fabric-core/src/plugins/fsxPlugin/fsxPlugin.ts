@@ -1,8 +1,11 @@
 import type { FabricElement } from '../../Fabric.ts'
 import { definePlugin } from '../../plugins/definePlugin.ts'
 import { Runtime } from './Runtime.ts'
+import type {TreeNode} from "../../utils/TreeNode.ts";
+import type {ComponentNode} from "../../composables/useNodeTree.ts";
 
 export type Options = {
+  treeNode?: TreeNode<ComponentNode>
   /**
    * Set this to true to always see the result of the render in the console(line per render)
    */
@@ -10,14 +13,14 @@ export type Options = {
 }
 
 type ExtendOptions = {
-  render(App: FabricElement): Promise<string>
+  render(App: FabricElement<any>): Promise<string>
   waitUntilExit(): Promise<void>
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(App: FabricElement): Promise<string>
+      render(App: FabricElement<any>): Promise<string>
       waitUntilExit(): Promise<void>
     }
   }

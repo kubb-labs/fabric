@@ -4,7 +4,7 @@ import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
-import { type ComponentBuilder, createComponent } from '../createComponent.ts'
+import {type ComponentBuilder, createComponent, transform} from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { KubbFile } from '../types.ts'
 import { Text } from './Text.ts'
@@ -85,7 +85,6 @@ export const FileSource = createComponent(({ children, ...props }: FileSourcePro
     provide(NodeTreeContext, childTree)
   }
 
-  const value = Text({ children })
 
   if (file) {
     file.sources.push({
@@ -93,11 +92,11 @@ export const FileSource = createComponent(({ children, ...props }: FileSourcePro
       isExportable,
       isIndexable,
       isTypeOnly,
-      value,
+      value: transform(children),
     })
   }
 
-  return value
+  return Text({ children })
 })
 
 export type FileExportProps = KubbFile.Export

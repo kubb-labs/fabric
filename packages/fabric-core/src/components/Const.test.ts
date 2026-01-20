@@ -1,12 +1,18 @@
 import path from 'node:path'
-import { describe, expect, it, vi } from 'vitest'
-import { FileManager } from '../FileManager.ts'
+import { describe, afterEach,expect, it } from 'vitest'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { App } from './App.ts'
 import { Const, type ConstProps } from './Const.ts'
-import { Root } from './Root.ts'
+import {createFabric} from "../createFabric.ts";
+import {fsxPlugin} from "../plugins";
+import {AppContext} from "../contexts/AppContext.ts";
+import {unprovide} from "../context.ts";
 
 describe('Const', () => {
+  afterEach(() => {
+    unprovide(AppContext)
+  })
+
   const scenarios: Array<{ name: string; props: ConstProps }> = [
     {
       name: 'basic const',
@@ -36,23 +42,20 @@ describe('Const', () => {
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
-  it('should add nodes to the NodeTreeContext', () => {
+  it('should add nodes to the NodeTreeContext', async () => {
+    const fabric = createFabric()
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    const output = Root({
-      treeNode,
-      fileManager: new FileManager(),
-      onError: vi.fn(),
-      onExit: vi.fn(),
-      children: () => {
-        return App({
-          meta: {
-            name: 'TestApp',
-          },
-          children: () => Const({ name: 'myVar', children: '"hello"' })(),
-        })()
+    fabric.use(fsxPlugin, {treeNode})
+
+    const component = App({
+      meta: {
+        name: 'TestApp',
       },
-    })()
+      children: Const({ name: 'myVar', children: '"hello"' }),
+    })
+
+    const output = await fabric.render(component)
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

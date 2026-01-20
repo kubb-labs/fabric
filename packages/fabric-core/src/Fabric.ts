@@ -10,20 +10,20 @@ declare global {
   }
 }
 
-type ComponentCreator<TProps> = {
-  (): string
+export type ComponentCreator<TProps extends object=object> = {
+  (): FabricNode
   component: FabricComponent<TProps>
   props: TProps
 }
 
-export type FabricElement<TProps = {}> = ComponentCreator<TProps> & {
+export type FabricElement<TProps extends object=object> = ComponentCreator<TProps> & {
   children(...children: Array<FabricNode>): FabricElement<TProps>
 }
 
-export type FabricNode = (() => FabricNode) | Array<FabricNode> | string | number | boolean | null | undefined
+export type FabricNode = ComponentCreator<any> | Array<FabricNode> | string | number | boolean | null | undefined
 
-export interface FabricComponent<TProps = {}> {
-  (props: TProps): string
+export interface FabricComponent<TProps extends object=object> {
+  (props: TProps): FabricNode
   propTypes?: any
   displayName?: string | undefined
 }

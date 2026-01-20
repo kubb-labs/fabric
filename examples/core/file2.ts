@@ -1,1 +1,1 @@
-const _test = 2
+const test = 2;

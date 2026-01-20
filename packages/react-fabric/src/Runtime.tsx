@@ -12,6 +12,7 @@ import { squashTextNodes } from './utils/squashTextNodes.ts'
 
 type Options = {
   fileManager: FileManager
+  treeNode?: TreeNode<ComponentNode>
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
@@ -127,9 +128,6 @@ export class Runtime {
   }
 
   onError(error: Error): void {
-    if (process.env.NODE_ENV === 'test') {
-      console.warn(error)
-    }
 
     // Store the error to be thrown after render completes
     this.#renderError = error
@@ -160,7 +158,7 @@ export class Runtime {
   }
 
   async render(node: KubbElement): Promise<void> {
-    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+    const treeNode = this.#options.treeNode || new TreeNode<ComponentNode>({ type: 'Root', props: {} })
     const props = {
       fileManager: this.fileManager,
       treeNode,
@@ -184,7 +182,7 @@ export class Runtime {
   }
 
   async renderToString(node: KubbElement): Promise<string> {
-    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+    const treeNode = this.#options.treeNode || new TreeNode<ComponentNode>({ type: 'Root', props: {} })
     const props = {
       fileManager: this.fileManager,
       treeNode,

@@ -2,12 +2,14 @@ import { definePlugin } from '@kubb/fabric-core/plugins'
 
 import { Runtime } from '../Runtime.tsx'
 
-import type { KubbElement } from '../types.ts'
+import type {ComponentNode, KubbElement} from '../types.ts'
+import {TreeNode} from "@kubb/fabric-core";
 
 export type Options = {
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
+  treeNode?: TreeNode<ComponentNode>
   /**
    * Set this to true to always see the result of the render in the console(line per render)
    */

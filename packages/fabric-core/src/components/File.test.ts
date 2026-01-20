@@ -8,6 +8,8 @@ import { FileManager } from '../FileManager.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { File, type FileExportProps, type FileImportProps } from './File.ts'
 import { Root } from './Root.ts'
+import {createFabric} from "../createFabric.ts";
+import {fsxPlugin} from "../plugins";
 
 function getRootProps() {
   return {
@@ -24,23 +26,23 @@ describe('File', () => {
     unprovide(FileContext)
   })
 
-  it('should add files with the FileManager', () => {
-    const rootProps = getRootProps()
+  it('should add files with the FileManager', async () => {
+    const fabric = createFabric()
 
-    Root({
-      ...rootProps,
-      children: () => {
-        return File({ baseName: 'test.ts', path: './test.ts' })()
-      },
-    })()
+    fabric.use(fsxPlugin)
 
-    const files = rootProps.fileManager.files
+    const output = await fabric.render(File({ baseName: 'test.ts', path: './test.ts' }))
+
+
+    const files = fabric.files
 
     expect(files).toHaveLength(1)
     expect(files[0]).toMatchObject({
       baseName: 'test.ts',
       path: './test.ts',
     })
+
+    expect(output).toMatchInlineSnapshot(`""`)
   })
 
   it('should not return files is disabled', async () => {

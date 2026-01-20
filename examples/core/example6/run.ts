@@ -10,22 +10,41 @@ async function run() {
 
   fabric.use(fsxPlugin)
 
-  const app = App().children(
-    File({
-      baseName: 'file1.ts',
-      path: './file1.ts',
-    }).children(File.Source({ children: () => 'const test = 1;' })),
-    File({
-      baseName: 'file2.ts',
-      path: './file2.ts',
-    }).children(File.Source({ children: () => 'const test = 2;' })),
-  )
+  const app = App({
+    children: [
+      File({
+        baseName: 'file1.ts',
+        path: './file1.ts',
+        children: File.Source({
+          children: 'const test = 1;'
+        })
+      }),
+      File({
+        baseName: 'file2.ts',
+        path: './file2.ts',
+        children: File.Source({
+          children: 'const test = 2;'
+        })
+      })
+    ]
+  })
+  //
+  // const appChildren = App().children(
+  //   File({
+  //     baseName: 'file1.ts',
+  //     path: './file1.ts',
+  //   }).children(File.Source().children( 'const test = 1;')),
+  //   File({
+  //     baseName: 'file2.ts',
+  //     path: './file2.ts',
+  //   }).children(File.Source().children( 'const test = 2;')),
+  // )
 
   // app.component()
 
-  await fabric.render(app)
+  const output= await fabric.render(app)
 
-  console.log(JSON.stringify(fabric.files, null, 2))
+  console.log(output,JSON.stringify(fabric.files, null, 2))
 
   await fabric.write()
 }

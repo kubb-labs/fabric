@@ -1,12 +1,19 @@
 import path from 'node:path'
-import { describe, expect, it, vi } from 'vitest'
-import { FileManager } from '../FileManager.ts'
+import { describe, afterEach, expect, it } from 'vitest'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { App } from './App.ts'
-import { Root } from './Root.ts'
+
 import { Type, type TypeProps } from './Type.ts'
+import {unprovide} from "../context.ts";
+import {AppContext} from "../contexts/AppContext.ts";
+import {createFabric} from "../createFabric.ts";
+import {fsxPlugin} from "../plugins";
 
 describe('Type', () => {
+  afterEach(() => {
+    unprovide(AppContext)
+  })
+
   const scenarios: Array<{ name: string; props: TypeProps }> = [
     {
       name: 'basic type',
@@ -34,20 +41,20 @@ describe('Type', () => {
     }).toThrow('Name should start with a capital letter')
   })
 
-  it('should add nodes to the NodeTreeContext', () => {
+  it('should add nodes to the NodeTreeContext', async () => {
+    const fabric = createFabric()
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    const output = Root({
-      treeNode,
-      fileManager: new FileManager(),
-      onError: vi.fn(),
-      onExit: vi.fn(),
-      children: () => {
-        return App({
-          children: () => Type({ name: 'MyType', children: '{ a: string }' })(),
-        })()
+    fabric.use(fsxPlugin, {treeNode})
+
+    const component = App({
+      meta: {
+        name: 'TestApp',
       },
-    })()
+      children: Type({ name: 'MyType', children: '{ a: string }' }),
+    })
+
+    const output = await fabric.render(component)
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

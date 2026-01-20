@@ -2,17 +2,65 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { inject, unprovide } from '../context.ts'
 import { AppContext } from '../contexts/AppContext.ts'
 import { App } from './App.ts'
+import {createFabric} from "../createFabric.ts";
+import {fsxPlugin} from "../plugins";
+import {createComponent} from "../createComponent.ts";
 
 describe('App', () => {
   afterEach(() => {
     unprovide(AppContext)
   })
 
-  it('should return children when provided', () => {
+  it('should return children when provided', async() => {
+    const fabric = createFabric()
+
+    fabric.use(fsxPlugin)
+
     const children = 'const x = 1'
-    const output = App({ children })()
+    const component = App().children([children])
+
+    const output = await fabric.render(component)
+
 
     expect(output).toBe(children)
+  })
+
+  it('should return fsx children when provided with children helper', async() => {
+    const fabric = createFabric()
+
+    fabric.use(fsxPlugin)
+
+    const Const = createComponent(()=>{
+      return 'const x = 1'
+    })
+
+
+    const component = App().children([Const(),Const()])
+
+    const output = await fabric.render(component)
+
+
+    expect(output).toMatchInlineSnapshot(`"const x = 1const x = 1"`)
+  })
+
+  it('should return fsx children when provided with children prop', async() => {
+    const fabric = createFabric()
+
+    fabric.use(fsxPlugin)
+
+    const Const = createComponent(()=>{
+      return 'const x = 1'
+    })
+
+
+    const component = App({
+      children: [Const(),Const()],
+    })
+
+    const output = await fabric.render(component)
+
+
+    expect(output).toMatchInlineSnapshot(`"const x = 1const x = 1"`)
   })
 
   it('should handle undefined children', () => {
@@ -21,19 +69,17 @@ describe('App', () => {
   })
 
   it('should inject meta data', () => {
-    const Text = () => {
+    const Text = createComponent(() => {
       const ctx = inject(AppContext)
-
+      console.log('Test Text ctx:', ctx)
       return JSON.stringify(ctx?.meta)
-    }
+    })
 
     const output = App({
       meta: { version: '1.0.0', author: 'test' },
-      children() {
-        return Text()
-      },
-    })()
+    }).children(Text())
 
-    expect(output).toMatchInlineSnapshot(`"{"version":"1.0.0","author":"test"}"`)
+
+    expect(output()).toMatchInlineSnapshot(`"{"version":"1.0.0","author":"test"}"`)
   })
 })

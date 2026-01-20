@@ -1,4 +1,3 @@
-import process from 'node:process'
 import { onExit } from 'signal-exit'
 import { Root } from '../../components/Root.ts'
 import type { ComponentNode } from '../../composables/useNodeTree.ts'
@@ -8,6 +7,7 @@ import { TreeNode } from '../../utils/TreeNode.ts'
 
 type Options = {
   fileManager: FileManager
+  treeNode?: TreeNode<ComponentNode>
   debug?: boolean
 }
 
@@ -37,10 +37,6 @@ export class Runtime {
   unsubscribeExit: () => void = () => {}
 
   onError(error: Error): void {
-    if (process.env.NODE_ENV === 'test') {
-      console.warn(error)
-    }
-
     throw error
   }
 
@@ -49,25 +45,28 @@ export class Runtime {
   }
 
   async render(node: FabricElement): Promise<string> {
-    const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+    const treeNode = this.#options.treeNode || new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+
     const props = {
       fileManager: this.fileManager,
       treeNode,
       onExit: this.onExit.bind(this),
       onError: this.onError.bind(this),
     }
-    treeNode.data.props = props
 
-    const element = Root({
-      ...props,
-      children() {
-        return node()
-      },
-    })
+   try{
 
-    await this.#renderPromise
+     treeNode.data.props = props
 
-    return element.toString()
+     const element = Root({...props, children: node})
+
+     await this.#renderPromise
+
+     return element()?.toString() || ''
+   }catch (e){
+      props.onError(e as Error)
+     return ''
+   }
   }
 
   unmount(error?: Error | number | null): void {
