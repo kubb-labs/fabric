@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.12.0
+
+### Minor Changes
+
+- [#145](https://github.com/kubb-labs/fabric/pull/145) [`ae7a4a3`](https://github.com/kubb-labs/fabric/commit/ae7a4a3ede64d2c0f09e737cf4157a1ebc161672) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Refactor indentation system with custom implementation using intrinsic elements. This change removes the external `dedent` dependency and introduces a new indentation mechanism using `<indent>`, `<dedent>`, and `<br>` intrinsic elements along with a `RenderContext` to track and apply indentation during code generation. The new approach provides more precise control over indentation and improves performance by eliminating third-party dependencies.
+
 ## 0.11.8
 
 ### Patch Changes
