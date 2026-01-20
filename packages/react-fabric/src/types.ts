@@ -2,7 +2,7 @@ import type { KubbFile } from '@kubb/fabric-core/types'
 import type React from 'react'
 import type { JSX, ReactNode } from 'react'
 
-type ReactElementNames = 'br' | 'div'
+type ReactElementNames = 'br' | 'div' | 'indent' | 'dedent'
 
 export type ElementNames = ReactElementNames | 'kubb-text' | 'kubb-file' | 'kubb-source' | 'kubb-import' | 'kubb-export' | 'kubb-root' | 'kubb-app'
 

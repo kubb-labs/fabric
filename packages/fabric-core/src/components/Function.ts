@@ -3,9 +3,11 @@ import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { type ComponentBuilder, createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
-import { Br, Dedent, Indent } from '../transform.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import { Br } from './Br.ts'
+import { Dedent } from './Dedent.ts'
+import { Indent } from './Indent.ts'
 
 type FunctionProps = {
   /**

@@ -1,6 +1,6 @@
 import { createContext } from '../context.ts'
 
-type RenderContextProps = {
+export type RenderContextProps = {
   indentLevel: number
   indentSize: number
   currentLineLength: number

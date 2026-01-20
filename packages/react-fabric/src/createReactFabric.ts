@@ -1,6 +1,5 @@
-import type { Fabric } from '@kubb/fabric-core'
 import { createFabric } from '@kubb/fabric-core'
-import type { FabricConfig, FabricMode } from '@kubb/fabric-core/types'
+import type { Fabric, FabricConfig, FabricMode } from '@kubb/fabric-core/types'
 import { openDevtools } from './devtools.ts'
 import type { Options } from './plugins/reactPlugin.ts'
 import { reactPlugin } from './plugins/reactPlugin.ts'

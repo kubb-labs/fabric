@@ -1,6 +1,5 @@
 import { inject, provide } from './context.ts'
-import { RenderContext } from './contexts/RenderContext.ts'
-import { createComponent } from './createComponent.ts'
+import { RenderContext, type RenderContextProps } from './contexts/RenderContext.ts'
 import type { FabricElement, FabricNode } from './Fabric.ts'
 
 type IntrinsicType =
@@ -27,9 +26,7 @@ export function isIntrinsic(value: any): value is Intrinsic {
 /**
  * Render a single intrinsic node
  */
-function renderIntrinsicNode(node: Intrinsic): string {
-  const renderContext = inject(RenderContext)
-
+function renderIntrinsicNode(node: Intrinsic, renderContext: RenderContextProps): string {
   switch (node.type) {
     case 'br':
       renderContext.currentLineLength = 0
@@ -53,9 +50,7 @@ function renderIntrinsicNode(node: Intrinsic): string {
  * start of each logical line. This ensures `${indent}` intrinsics affect
  * subsequent string content.
  */
-function renderString(content: string): string {
-  const renderContext = inject(RenderContext)
-
+export function renderIndent(content: string, renderContext: RenderContextProps): string {
   if (content.length === 0) {
     return ''
   }
@@ -84,8 +79,8 @@ function renderString(content: string): string {
   return out
 }
 
-export function transform(children: FabricNode): string {
-  const renderContext = inject(RenderContext)
+export function renderIntrinsic(children: FabricNode, context?: RenderContextProps): string {
+  const renderContext = context || inject(RenderContext)
 
   provide(RenderContext, renderContext)
 
@@ -98,40 +93,40 @@ export function transform(children: FabricNode): string {
       // FabricElements are already wrapped in transform by createComponent
       // Just call them and return the result (which is already a string)
       const result = children()
-      return transform(result)
+      return renderIntrinsic(result)
     } catch {
       return ''
     }
   }
 
   if (Array.isArray(children)) {
-    return children.map((child) => transform(child)).join('')
+    return children.map((child) => renderIntrinsic(child)).join('')
   }
 
   if (isIntrinsic(children)) {
     // Render intrinsic node(s) using the shared render context
-    return renderIntrinsicNode(children)
+    return renderIntrinsicNode(children, renderContext)
   }
 
   if (typeof children === 'function') {
-    return transform(children())
+    return renderIntrinsic(children())
   }
 
   if (typeof children === 'string') {
-    return renderString(children)
+    return renderIndent(children, renderContext)
   }
 
   if (typeof children === 'number') {
-    return renderString(String(children))
+    return renderIndent(String(children), renderContext)
   }
 
   if (typeof children === 'boolean') {
-    return renderString(children ? 'true' : 'false')
+    return renderIndent(children ? 'true' : 'false', renderContext)
   }
 
   // Fallback for FabricElement/object-like values
   try {
-    return renderString(children)
+    return renderIndent(children, renderContext)
   } catch {
     return ''
   }
@@ -140,25 +135,9 @@ export function transform(children: FabricNode): string {
 /**
  * Create an intrinsic element
  */
-function createIntrinsic(type: IntrinsicType): Intrinsic {
+export function createIntrinsic(type: IntrinsicType): Intrinsic {
   return {
     type,
     __intrinsic: true,
   }
 }
-
-export const Br = createComponent('br', () => {
-  return createIntrinsic('br')
-})
-
-Br.displayName = 'Br'
-
-export const Dedent = createComponent('indent', () => {
-  return createIntrinsic('dedent')
-})
-Dedent.displayName = 'Dedent'
-
-export const Indent = createComponent('indent', () => {
-  return createIntrinsic('indent')
-})
-Indent.displayName = 'Indent'

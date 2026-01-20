@@ -1,7 +1,14 @@
+import { renderIndent } from '@kubb/fabric-core'
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
+
+/**
+ * Global context, used to keep track of the current indentation level and line length
+ * // TODO this could be move to options in Runtime.tsx
+ */
+const renderContext = { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false }
 
 export function squashTextNodes(node: DOMElement): string {
   let text = ''
@@ -50,7 +57,7 @@ export function squashTextNodes(node: DOMElement): string {
       }
 
       if (child.nodeName === '#text') {
-        nodeText = child.nodeValue
+        nodeText = renderIndent(child.nodeValue, renderContext)
       } else {
         if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
           nodeText = walk(child)
@@ -60,6 +67,17 @@ export function squashTextNodes(node: DOMElement): string {
 
         if (child.nodeName === 'br') {
           nodeText = '\n'
+          renderContext.currentLineLength = 0
+        }
+
+        if (child.nodeName === 'indent') {
+          renderContext.indentLevel++
+          nodeText = ''
+        }
+
+        if (child.nodeName === 'dedent') {
+          renderContext.indentLevel = Math.max(0, renderContext.indentLevel - 1)
+          nodeText = ''
         }
 
         if (!nodeNames.has(child.nodeName)) {
