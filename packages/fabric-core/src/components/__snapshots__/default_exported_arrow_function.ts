@@ -1,3 +1,3 @@
 export default const myFunc = ()
-return true
+  return true
 }

@@ -1,3 +1,4 @@
+import { inject, provide } from './context.ts'
 import { createComponent, isFabricElement } from './createComponent.ts'
 import type { FabricNode } from './Fabric.ts'
 
@@ -26,11 +27,17 @@ type RenderContext = {
 }
 
 /**
+ * Context key for sharing render state across the component tree
+ */
+const RenderContextKey = Symbol('RenderContext')
+
+/**
  * Render a single intrinsic node
  */
 function renderIntrinsicNode(node: Intrinsic, context: RenderContext): string {
   switch (node.type) {
     case 'br':
+      context.currentLineLength = 0
       return '\n'
 
     case 'indent':
@@ -80,13 +87,26 @@ function renderString(content: string, context: RenderContext): string {
   return out
 }
 
-export function transform(children: FabricNode, context: RenderContext = { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false }): string {
+export function transform(children: FabricNode, passedContext?: RenderContext): string {
+  // Get or create the shared render context
+  let context: RenderContext
+
+  try {
+    context = inject<RenderContext>(RenderContextKey)
+  } catch {
+    // No context exists yet, create one and provide it
+    context = passedContext || { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false }
+    provide(RenderContextKey, context)
+  }
+
   if (!children) {
     return ''
   }
 
   if (isFabricElement(children)) {
     try {
+      // FabricElements are already wrapped in transform by createComponent
+      // Just call them and return the result (which is already a string)
       const result = children()
       return transform(result, context)
     } catch {
@@ -95,16 +115,16 @@ export function transform(children: FabricNode, context: RenderContext = { inden
   }
 
   if (Array.isArray(children)) {
-    return children.map((child) => transform(child, context)).join('')
+    return children.map((child) => transform(child)).join('')
   }
 
   if (isIntrinsic(children)) {
-    // Render intrinsic node(s) using the intrinsic renderer with default context
+    // Render intrinsic node(s) using the shared render context
     return renderIntrinsicNode(children, context)
   }
 
   if (typeof children === 'function') {
-    return transform(children(), context)
+    return transform(children())
   }
 
   if (typeof children === 'string') {

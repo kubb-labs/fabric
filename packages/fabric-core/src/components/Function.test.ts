@@ -59,7 +59,7 @@ describe('Function', () => {
 
     expect(output).toMatchInlineSnapshot(`
       "function myFunc() {
-      return true
+        return true
       }"
     `)
   })
@@ -104,7 +104,7 @@ describe('Function.Arrow', () => {
 
     expect(output).toMatchInlineSnapshot(`
       "const myFunc = ()
-      return true
+        return true
       }"
     `)
   })

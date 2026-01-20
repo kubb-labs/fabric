@@ -1,3 +1,3 @@
 function myFunc() {
-return true
+  return true
 }
