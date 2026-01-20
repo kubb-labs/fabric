@@ -3,13 +3,12 @@ import { useContext } from '../composables/useContext.ts'
 import type { ComponentNode } from '../composables/useNodeTree.ts'
 import { unprovide } from '../context.ts'
 import { RootContext, type RootContextProps } from '../contexts/RootContext.ts'
+import { createComponent } from '../createComponent.ts'
+import { createFabric } from '../createFabric.ts'
 import { FileManager } from '../FileManager.ts'
+import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { Root } from './Root.ts'
-
-function Thrower(): string {
-  throw new Error('boom')
-}
 
 function getProps() {
   return {
@@ -28,7 +27,7 @@ describe('Root', () => {
   it('should return empty string when no children', () => {
     const props = getProps()
 
-    const output = Root(props)
+    const output = Root(props)()
 
     expect(output).toMatchInlineSnapshot('""')
   })
@@ -36,31 +35,39 @@ describe('Root', () => {
   it('should return children when provided', () => {
     const props = getProps()
 
-    const output = Root({ ...props, children: 'Hello from Root' })
+    const output = Root({ ...props, children: 'Hello from Root' })()
 
     expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
 
-  it('should throw when Error occurs', () => {
-    const props = getProps()
+  it('should throw when Error occurs', async () => {
+    const fabric = createFabric()
 
-    const output = Root({ ...props, children: () => Thrower() })
+    fabric.use(fsxPlugin)
 
-    expect(props.onError).toHaveBeenCalled()
-    expect(output).toMatchInlineSnapshot(`""`)
+    const Test = createComponent(() => {
+      throw new Error('boom')
+    })
+
+    try {
+      await fabric.render(Test())
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error)
+      expect((e as Error).message).toBe('boom')
+    }
   })
 
   it('should have RootContext being defined', () => {
     const props = getProps()
 
     let context: RootContextProps
-    const Test = () => {
+    const Test = createComponent(() => {
       context = useContext(RootContext)
 
       return ''
-    }
+    })
 
-    const output = Root({ ...props, children: () => Test() })
+    const output = Root({ ...props, children: Test() })()
 
     expect(context!).toBeDefined()
     expect(output).toMatchInlineSnapshot(`""`)
@@ -76,7 +83,7 @@ describe('Root', () => {
         test()
       }
     `
-    const output = Root({ ...props, children })
+    const output = Root({ ...props, children })()
 
     expect(output).toContain('import { test }')
     expect(output).toContain('export function main()')
@@ -86,7 +93,7 @@ describe('Root', () => {
     const props = getProps()
 
     const children = '  indented\n    more indented'
-    const output = Root({ ...props, children })
+    const output = Root({ ...props, children })()
 
     expect(output).toBe(children)
   })

@@ -1,7 +1,7 @@
 import { type FileManager, NodeTreeContext, provide, RootContext, type TreeNode } from '@kubb/fabric-core'
 import { Component } from 'react'
 
-import type { ComponentNode, KubbNode } from '../types.ts'
+import type { ComponentNode, KubbElement, KubbNode } from '../types.ts'
 
 type ErrorBoundaryProps = {
   onError: (error: Error) => void
@@ -59,7 +59,7 @@ export type RootProps = {
 /**
  * This component provides the root behavior for the Fabric runtime.
  */
-export function Root({ onError, onExit, treeNode, fileManager, children }: RootProps) {
+export function Root({ onError, onExit, treeNode, fileManager, children }: RootProps): KubbElement {
   provide(RootContext, { exit: onExit, treeNode, fileManager })
   provide(NodeTreeContext, treeNode)
 

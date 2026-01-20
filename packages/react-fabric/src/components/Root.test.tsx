@@ -25,12 +25,9 @@ describe('<Root/>', () => {
 
   it('should return empty string when no children', async () => {
     const props = getProps()
-    const Component = () => {
-      return <Root {...props}>Hello from Root</Root>
-    }
 
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(<Root {...props}>Hello from Root</Root>)
 
     expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
@@ -38,12 +35,8 @@ describe('<Root/>', () => {
   it('should return children when provided', async () => {
     const props = getProps()
 
-    const Component = () => {
-      return <Root {...props}>Hello from Root</Root>
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(<Root {...props}>Hello from Root</Root>)
 
     expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
@@ -51,17 +44,13 @@ describe('<Root/>', () => {
   it('should throw when Error occurs', async () => {
     const props = getProps()
 
-    const Component = () => {
-      return (
-        <Root {...props}>
-          <Thrower />
-        </Root>
-      )
-    }
-
     const fabric = createReactFabric()
 
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <Root {...props}>
+        <Thrower />
+      </Root>,
+    )
 
     expect(props.onError).toHaveBeenCalled()
     expect(output).toMatchInlineSnapshot(`""`)
@@ -78,17 +67,13 @@ describe('<Root/>', () => {
       return ''
     }
 
-    const Component = () => {
-      return (
-        <Root {...props}>
-          <Test />
-        </Root>
-      )
-    }
-
     const fabric = createReactFabric()
 
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <Root {...props}>
+        <Test />
+      </Root>,
+    )
 
     expect(context!).toBeDefined()
     expect(output).toMatchInlineSnapshot(`""`)
@@ -97,22 +82,18 @@ describe('<Root/>', () => {
   it('should work with multiline', async () => {
     const props = getProps()
 
-    const Component = () => {
-      return (
-        <Root {...props}>
-          {`
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(
+      <Root {...props}>
+        {`
       import { test } from 'test'
 
       export function main() {
         test()
       }
     `}
-        </Root>
-      )
-    }
-
-    const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+      </Root>,
+    )
 
     expect(output).toContain('import { test }')
     expect(output).toContain('export function main()')
@@ -123,12 +104,8 @@ describe('<Root/>', () => {
 
     const children = '  indented\n    more indented'
 
-    const Component = () => {
-      return <Root {...props}>{children}</Root>
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(<Root {...props}>{children}</Root>)
 
     expect(output).toBe(children)
   })

@@ -20,17 +20,8 @@ describe('<Function/>', () => {
   ]
 
   it.each(scenarios)('should render $name', async ({ name, props }) => {
-    const Component = () => {
-      // Use Function or Function.Arrow depending on scenario name containing 'arrow'
-      if (/arrow/i.test(name)) {
-        return <Function.Arrow {...(props as any)}>{(props as any).children}</Function.Arrow>
-      }
-
-      return <Function {...(props as any)}>{(props as any).children}</Function>
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(<Function {...(props as any)}>{(props as any).children}</Function>)
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
@@ -38,18 +29,14 @@ describe('<Function/>', () => {
   it('should add nodes to the NodeTreeContext', async () => {
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    const Component = () => {
-      return (
-        <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
-          <App>
-            <Function name={'myFunc'}>return true;</Function>
-          </App>
-        </Root>
-      )
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+        <App>
+          <Function name={'myFunc'}>return true;</Function>
+        </App>
+      </Root>,
+    )
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)
@@ -79,12 +66,8 @@ describe('<Function.Arrow/>', () => {
   ]
 
   it.each(scenarios)('should render $name', async ({ name, props }) => {
-    const Component = () => {
-      return <Function.Arrow {...(props as any)}>{(props as any).children}</Function.Arrow>
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(<Function.Arrow {...(props as any)}>{(props as any).children}</Function.Arrow>)
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
@@ -92,18 +75,14 @@ describe('<Function.Arrow/>', () => {
   it('should add nodes to the NodeTreeContext', async () => {
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    const Component = () => {
-      return (
-        <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
-          <App>
-            <Function.Arrow name={'myFunc'}>return true;</Function.Arrow>
-          </App>
-        </Root>
-      )
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+        <App>
+          <Function.Arrow name={'myFunc'}>return true;</Function.Arrow>
+        </App>
+      </Root>,
+    )
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

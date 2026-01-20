@@ -134,8 +134,8 @@ importers:
   packages/fabric-core:
     dependencies:
       '@clack/prompts':
-        specifier: 1.0.0-alpha.8
-        version: 1.0.0-alpha.8
+        specifier: 1.0.0-alpha.9
+        version: 1.0.0-alpha.9
       fs-extra:
         specifier: ^11.3.3
         version: 11.3.3
@@ -151,6 +151,9 @@ importers:
       serve-handler:
         specifier: ^6.1.6
         version: 6.1.6
+      signal-exit:
+        specifier: ^4.1.0
+        version: 4.1.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
@@ -373,8 +376,8 @@ packages:
   '@clack/core@1.0.0-alpha.7':
     resolution: {integrity: sha512-3vdh6Ar09D14rVxJZIm3VQJkU+ZOKKT5I5cC0cOVazy70CNyYYjiwRj9unwalhESndgxx6bGc/m6Hhs4EKF5XQ==}
 
-  '@clack/prompts@1.0.0-alpha.8':
-    resolution: {integrity: sha512-YZGC4BmTKSF5OturNKEz/y4xNjYGmGk6NI785CQucJ7OEdX0qbMmL/zok+9bL6c7qE3WSYffyK5grh2RnkGNtQ==}
+  '@clack/prompts@1.0.0-alpha.9':
+    resolution: {integrity: sha512-sKs0UjiHFWvry4SiRfBi5Qnj0C/6AYx8aKkFPZQSuUZXgAram25ZDmhQmP7vj1aFyLpfHWtLQjWvOvcat0TOLg==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -2790,7 +2793,7 @@ snapshots:
       picocolors: 1.1.1
       sisteransi: 1.0.5
 
-  '@clack/prompts@1.0.0-alpha.8':
+  '@clack/prompts@1.0.0-alpha.9':
     dependencies:
       '@clack/core': 1.0.0-alpha.7
       picocolors: 1.1.1

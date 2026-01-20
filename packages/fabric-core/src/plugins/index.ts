@@ -1,5 +1,6 @@
 export { barrelPlugin } from './barrelPlugin.ts'
 export { definePlugin } from './definePlugin.ts'
 export { fsPlugin } from './fsPlugin.ts'
+export { fsxPlugin } from './fsxPlugin/fsxPlugin.ts'
 export { graphPlugin } from './graphPlugin.ts'
 export { loggerPlugin } from './loggerPlugin.ts'

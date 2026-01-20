@@ -24,40 +24,29 @@ describe('<Type/>', () => {
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {
-    const Component = () => {
-      return <Type {...props} />
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(<Type {...props} />)
 
     await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
   })
 
   it('should throw error if name does not start with capital letter', async () => {
-    const Component = () => {
-      return <Type name="myType">string</Type>
-    }
     const fabric = createReactFabric()
 
-    await expect(fabric.renderToString(Component)).rejects.toThrow('Name should start with a capital letter')
+    await expect(fabric.renderToString(<Type name="myType">string</Type>)).rejects.toThrow('Name should start with a capital letter')
   })
 
   it('should add nodes to the NodeTreeContext', async () => {
     const treeNode = new TreeNode({ type: 'root', props: {} })
 
-    const Component = () => {
-      return (
-        <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
-          <App>
-            <Type name={'MyType'}>{'{ a: string }'}</Type>
-          </App>
-        </Root>
-      )
-    }
-
     const fabric = createReactFabric()
-    const output = await fabric.renderToString(Component)
+    const output = await fabric.renderToString(
+      <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+        <App>
+          <Type name={'MyType'}>{'{ a: string }'}</Type>
+        </App>
+      </Root>,
+    )
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)

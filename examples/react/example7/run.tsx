@@ -36,7 +36,7 @@ async function start() {
   fabric.use(loggerPlugin, { progress: true, websocket: false })
   fabric.use(graphPlugin, { root: path.resolve(__dirname, './gen'), open: false })
 
-  await fabric.render(App)
+  await fabric.render(<App />)
   await fabric.write()
 }
 

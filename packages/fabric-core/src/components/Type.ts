@@ -1,6 +1,8 @@
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
+import { createComponent } from '../createComponent.ts'
+import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 import { Text } from './Text.ts'
@@ -21,13 +23,13 @@ export type TypeProps = {
   /**
    * Children nodes.
    */
-  children?: string
+  children?: FabricNode
 }
 
 /**
  * Generates a TypeScript type declaration.
  */
-export function Type({ children, ...props }: TypeProps): string {
+export const Type = createComponent(({ children, ...props }: TypeProps) => {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -56,6 +58,6 @@ export function Type({ children, ...props }: TypeProps): string {
   result += `type ${name} = ${children || ''}`
 
   return Text({ children: result })
-}
+})
 
 Type.displayName = 'KubbType'
