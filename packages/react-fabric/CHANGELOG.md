@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.11.7
+
+### Patch Changes
+
+- [`b19041c`](https://github.com/kubb-labs/fabric/commit/b19041c5addbf40c289afb34edc890681aaa6332) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Default check for react-devtools-core package
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.11.7
+
 ## 0.11.6
 
 ### Patch Changes
