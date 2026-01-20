@@ -6,7 +6,6 @@ import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { FileManager } from '../FileManager.ts'
 import type { TreeNode } from '../utils/TreeNode.ts'
-import { Text } from './Text.ts'
 
 export type RootProps = {
   /**
@@ -39,7 +38,7 @@ export const Root = createComponent('Root', ({ onError, onExit, treeNode, fileMa
   provide(NodeTreeContext, treeNode)
 
   try {
-    return Text({ children })
+    return children
   } catch (e) {
     if (e instanceof Error) {
       onError?.(e)

@@ -6,7 +6,6 @@ import type { FabricNode } from '../Fabric.ts'
 import { Br, Dedent, Indent } from '../transform.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Text } from './Text.ts'
 
 type FunctionProps = {
   /**
@@ -102,10 +101,10 @@ export const Function = createComponent('Function', ({ children, ...props }: Fun
   parts.push(' {')
 
   if (children) {
-    return Text({ children: [parts.join(''), Br(), Indent(), children, Br(), Dedent(), '}'] })
+    return [parts.join(''), Br(), Indent(), children, Br(), Dedent(), '}']
   }
 
-  return Text({ children: [parts.join(''), '}'] })
+  return [parts.join(''), '}']
 }) as ComponentBuilder<FunctionProps> & { Arrow: typeof ArrowFunction }
 
 Function.displayName = 'KubbFunction'
@@ -174,14 +173,14 @@ const ArrowFunction = createComponent('ArrowFunction', ({ children, ...props }: 
 
   if (singleLine) {
     parts.push(` => ${children || ''}\n`)
-    return Text({ children: parts.join('') })
+    return parts.join('')
   }
 
   if (children) {
-    return Text({ children: [parts.join(''), Br(), Indent(), children, Br(), Dedent(), '}'] })
+    return [parts.join(''), Br(), Indent(), children, Br(), Dedent(), '}']
   }
 
-  return Text({ children: [parts.join(''), '=> {}'] })
+  return [parts.join(''), '=> {}']
 })
 
 ArrowFunction.displayName = 'KubbArrowFunction'

@@ -5,7 +5,6 @@ import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Text } from './Text.ts'
 
 export type ConstProps = {
   /**
@@ -71,7 +70,7 @@ export const Const = createComponent('Const', ({ children, ...props }: ConstProp
     result += ' as const'
   }
 
-  return Text({ children: result })
+  return result
 })
 
 Const.displayName = 'KubbConst'

@@ -1,8 +1,9 @@
 import { inject, provide } from './context.ts'
-import { createComponent, isFabricElement } from './createComponent.ts'
-import type { FabricNode } from './Fabric.ts'
+import { RenderContext } from './contexts/RenderContext.ts'
+import { createComponent } from './createComponent.ts'
+import type { FabricElement, FabricNode } from './Fabric.ts'
 
-export type IntrinsicType =
+type IntrinsicType =
   | 'br' // Line break - adds newline with current indentation
   | 'indent' // Increase indentation level
   | 'dedent' // Decrease indentation level
@@ -12,6 +13,10 @@ export type Intrinsic = {
   __intrinsic: true
 }
 
+function isFabricElement<TProps extends object = object>(value: any): value is FabricElement<TProps> {
+  return typeof value === 'function' && 'type' in value && 'component' in value
+}
+
 /**
  * Type guard to check if a value is an intrinsic element
  */
@@ -19,33 +24,23 @@ export function isIntrinsic(value: any): value is Intrinsic {
   return value && typeof value === 'object' && value.__intrinsic === true
 }
 
-type RenderContext = {
-  indentLevel: number
-  indentSize: number
-  currentLineLength: number
-  shouldBreak: boolean
-}
-
-/**
- * Context key for sharing render state across the component tree
- */
-const RenderContextKey = Symbol('RenderContext')
-
 /**
  * Render a single intrinsic node
  */
-function renderIntrinsicNode(node: Intrinsic, context: RenderContext): string {
+function renderIntrinsicNode(node: Intrinsic): string {
+  const renderContext = inject(RenderContext)
+
   switch (node.type) {
     case 'br':
-      context.currentLineLength = 0
+      renderContext.currentLineLength = 0
       return '\n'
 
     case 'indent':
-      context.indentLevel++
+      renderContext.indentLevel++
       return ''
 
     case 'dedent':
-      context.indentLevel = Math.max(0, context.indentLevel - 1)
+      renderContext.indentLevel = Math.max(0, renderContext.indentLevel - 1)
       return ''
 
     default:
@@ -58,46 +53,41 @@ function renderIntrinsicNode(node: Intrinsic, context: RenderContext): string {
  * start of each logical line. This ensures `${indent}` intrinsics affect
  * subsequent string content.
  */
-function renderString(content: string, context: RenderContext): string {
+function renderString(content: string): string {
+  const renderContext = inject(RenderContext)
+
   if (content.length === 0) {
     return ''
   }
 
-  const indentStr = ' '.repeat(context.indentLevel * context.indentSize)
+  const indentStr = ' '.repeat(renderContext.indentLevel * renderContext.indentSize)
   const lines = content.split('\n')
   let out = ''
 
   for (const [i, line] of lines.entries()) {
-    if (context.currentLineLength === 0 && line.length > 0) {
+    if (renderContext.currentLineLength === 0 && line.length > 0) {
       // At start of a (logical) line: prefix indentation
       out += indentStr + line
-      context.currentLineLength = indentStr.length + line.length
+      renderContext.currentLineLength = indentStr.length + line.length
     } else {
       out += line
-      context.currentLineLength += line.length
+      renderContext.currentLineLength += line.length
     }
 
     // If not the last line, add newline and reset line length so next line gets indentation
     if (i !== lines.length - 1) {
       out += '\n'
-      context.currentLineLength = 0
+      renderContext.currentLineLength = 0
     }
   }
 
   return out
 }
 
-export function transform(children: FabricNode, passedContext?: RenderContext): string {
-  // Get or create the shared render context
-  let context: RenderContext
+export function transform(children: FabricNode): string {
+  const renderContext = inject(RenderContext)
 
-  try {
-    context = inject<RenderContext>(RenderContextKey)
-  } catch {
-    // No context exists yet, create one and provide it
-    context = passedContext || { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false }
-    provide(RenderContextKey, context)
-  }
+  provide(RenderContext, renderContext)
 
   if (!children) {
     return ''
@@ -108,7 +98,7 @@ export function transform(children: FabricNode, passedContext?: RenderContext): 
       // FabricElements are already wrapped in transform by createComponent
       // Just call them and return the result (which is already a string)
       const result = children()
-      return transform(result, context)
+      return transform(result)
     } catch {
       return ''
     }
@@ -120,7 +110,7 @@ export function transform(children: FabricNode, passedContext?: RenderContext): 
 
   if (isIntrinsic(children)) {
     // Render intrinsic node(s) using the shared render context
-    return renderIntrinsicNode(children, context)
+    return renderIntrinsicNode(children)
   }
 
   if (typeof children === 'function') {
@@ -128,20 +118,20 @@ export function transform(children: FabricNode, passedContext?: RenderContext): 
   }
 
   if (typeof children === 'string') {
-    return renderString(children, context)
+    return renderString(children)
   }
 
   if (typeof children === 'number') {
-    return renderString(String(children), context)
+    return renderString(String(children))
   }
 
   if (typeof children === 'boolean') {
-    return renderString(children ? 'true' : 'false', context)
+    return renderString(children ? 'true' : 'false')
   }
 
   // Fallback for FabricElement/object-like values
   try {
-    return renderString(children, context)
+    return renderString(children)
   } catch {
     return ''
   }

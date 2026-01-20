@@ -6,7 +6,6 @@ import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
 import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
-import { Text } from './Text.ts'
 
 export type AppProps<TMeta extends Object = Object> = {
   /**
@@ -37,7 +36,7 @@ export const App = createComponent('App', ({ children, ...props }: AppProps) => 
 
   provide(AppContext, { exit, meta })
 
-  return Text({ children })
+  return children
 })
 
 App.displayName = 'KubbApp'

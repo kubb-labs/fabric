@@ -4,19 +4,15 @@ import { transform } from './transform.ts'
 type MakeChildrenOptional<T extends object> = T extends { children?: any } ? Omit<T, 'children'> & Partial<Pick<T, 'children'>> : T
 
 export type ComponentBuilder<T extends object> = {
-  (...args: unknown extends T ? [] : {} extends Omit<T, 'children'> ? [props?: MakeChildrenOptional<T>] : [props: MakeChildrenOptional<T>]): FabricElement<T>
+  (...args: unknown extends T ? [] : {} extends Omit<T, 'children'> ? [props?: MakeChildrenOptional<T>] : [props: MakeChildrenOptional<T>]): FabricComponent<T>
   displayName?: string | undefined
 }
 
-export function isFabricElement<TProps extends object = object>(value: any): value is FabricElement<TProps> {
-  return typeof value === 'function' && 'type' in value && 'component' in value
-}
-
-export function createComponent<T extends object>(type: string, Component: FabricComponent<T>): ComponentBuilder<T> {
+export function createComponent<TProps extends object>(type: string, Component: (props: TProps) => FabricNode): ComponentBuilder<TProps> {
   return (...args) => {
-    const fn: FabricElement<T> = (() => transform(Component(args[0] as T) as FabricNode)) as any
+    const fn: FabricComponent<TProps> = (() => transform(Component(args[0] as TProps) as FabricNode)) as any
     fn.component = Component
-    fn.props = args[0]! as T
+    fn.props = args[0]! as TProps
     fn.type = type
     fn.children = (...children: Array<FabricNode>) => {
       const propsWithChildren = {
@@ -24,11 +20,11 @@ export function createComponent<T extends object>(type: string, Component: Fabri
         children() {
           return transform(children)
         },
-      } as unknown as T
+      } as unknown as TProps
 
-      const fnChild = (() => transform(Component(propsWithChildren) as FabricNode)) as FabricElement<T>
+      const fnChild = (() => transform(Component(propsWithChildren) as FabricNode)) as FabricElement<TProps>
       fnChild.component = Component
-      fnChild.props = args[0]! as T
+      fnChild.props = args[0]! as TProps
       fn.type = type
       return fnChild
     }

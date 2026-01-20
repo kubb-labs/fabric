@@ -1,31 +1,28 @@
 import { describe, expect, it } from 'vitest'
-import { Text } from './components/Text.ts'
 import { createComponent } from './createComponent.ts'
-import type { FabricComponent, FabricNode } from './Fabric.ts'
+import type { FabricNode } from './Fabric.ts'
 
 describe('createComponent', () => {
   it('should create a component builder', () => {
-    const MyComponent: FabricComponent<{ name: string }> = ({ name }) => `Hello ${name}`
-    const builder = createComponent('MyComponent', MyComponent)
+    const builder = createComponent('MyComponent', ({ name }: { name: string }) => `Hello ${name}`)
 
     expect(builder).toBeDefined()
   })
 
   it('should allow calling the builder with props', () => {
-    const MyComponent: FabricComponent<{ name: string }> = ({ name }) => `Hello ${name}`
-    const builder = createComponent('MyComponent', MyComponent)
+    const component = ({ name }: { name: string }) => `Hello ${name}`
+    const builder = createComponent('MyComponent', component)
     const element = builder({ name: 'World' })
 
     expect(element.props).toEqual({ name: 'World' })
-    expect(element.component).toBe(MyComponent)
+    expect(element.component).toBe(component)
 
     // Element is also a function that executes the component
     expect(element()).toBe('Hello World')
   })
 
   it('should allow adding children', () => {
-    const MyComponent: FabricComponent<{ children?: () => string }> = ({ children }) => `${children?.() ?? ''}`
-    const builder = createComponent('MyComponent', MyComponent)
+    const builder = createComponent('MyComponent', ({ children }: { children?: () => string }) => `${children?.() ?? ''}`)
 
     const child1 = 'Hello'
     const child2 = 'World'
@@ -39,8 +36,7 @@ describe('createComponent', () => {
   })
 
   it('should handle function children', () => {
-    const MyComponent: FabricComponent<{ children?: () => string }> = ({ children }) => `${children?.() ?? ''}`
-    const builder = createComponent('MyComponent', MyComponent)
+    const builder = createComponent('MyComponent', ({ children }: { children?: () => string }) => `${children?.() ?? ''}`)
 
     const child = 'Dynamic'
 
@@ -51,9 +47,7 @@ describe('createComponent', () => {
 
   it('should pass children to props correctly as function', () => {
     const MyComponent = createComponent('MyComponent', ({ children }: { children?: FabricNode }) => {
-      return Text({
-        children,
-      })
+      return children
     })
 
     const element = MyComponent({}).children('child content')
@@ -62,8 +56,7 @@ describe('createComponent', () => {
   })
 
   it('should allow calling the builder without props and adding children', () => {
-    const MyComponent: FabricComponent<{ children?: () => string }> = ({ children }) => `${children?.() ?? ''}`
-    const builder = createComponent('MyComponent', MyComponent)
+    const builder = createComponent('MyComponent', ({ children }: { children?: () => string }) => `${children?.() ?? ''}`)
 
     const element = builder().children('child content')
 

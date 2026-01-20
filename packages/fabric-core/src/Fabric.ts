@@ -11,20 +11,18 @@ declare global {
   }
 }
 
-type ComponentCreator<TProps extends object = object> = {
+export type FabricElement<TProps extends object = object> = {
   (): FabricNode
   type: string
-  component: FabricComponent<TProps>
+  component: (props: TProps) => FabricNode
   props: TProps
 }
 
-export type FabricElement<TProps extends object = object> = ComponentCreator<TProps> & {
+export type FabricNode = FabricElement<any> | string | number | boolean | null | undefined | Intrinsic | Array<FabricNode>
+
+export type FabricComponent<TProps extends object = object> = FabricElement<TProps> & {
   children(...children: Array<FabricNode>): FabricElement<TProps>
 }
-
-export type FabricNode = ComponentCreator<any> | Array<FabricNode> | string | number | boolean | null | undefined | Intrinsic
-
-export type FabricComponent<TProps extends object = object> = (props: TProps) => FabricNode
 
 /**
  * Defines core runtime options for Fabric.

@@ -9,7 +9,6 @@ import type { FabricNode } from '../Fabric.ts'
 import { createExport, createImport, print } from '../parsers/typescriptParser.ts'
 import { transform } from '../transform.ts'
 import type { KubbFile } from '../types.ts'
-import { Text } from './Text.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**
@@ -60,7 +59,7 @@ export const File = createComponent('File', ({ children, ...props }: FileProps) 
   const [resolvedFile] = fileManager.add(file)
   provide(FileContext, resolvedFile)
 
-  return Text({ children })
+  return children
 }) as ComponentBuilder<FileProps<object>> & { Source: typeof FileSource; Import: typeof FileImport; Export: typeof FileExport }
 
 type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
@@ -130,7 +129,7 @@ export const FileExport = createComponent('FileExport', (props: FileExportProps)
     })
   }
 
-  return Text({ children: print(createExport({ name, path, isTypeOnly, asAlias })) })
+  return print(createExport({ name, path, isTypeOnly, asAlias }))
 })
 
 export type FileImportProps = KubbFile.Import
@@ -162,7 +161,7 @@ export const FileImport = createComponent('FileImport', (props: FileImportProps)
     })
   }
 
-  return Text({ children: print(createImport({ name, path, root, isNameSpace, isTypeOnly })) })
+  return print(createImport({ name, path, root, isNameSpace, isTypeOnly }))
 })
 
 File.Source = FileSource

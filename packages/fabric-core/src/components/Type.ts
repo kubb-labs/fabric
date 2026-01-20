@@ -5,7 +5,6 @@ import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Text } from './Text.ts'
 
 export type TypeProps = {
   /**
@@ -57,7 +56,7 @@ export const Type = createComponent('Type', ({ children, ...props }: TypeProps) 
 
   result += `type ${name} = ${children || ''}`
 
-  return Text({ children: result })
+  return result
 })
 
 Type.displayName = 'KubbType'
