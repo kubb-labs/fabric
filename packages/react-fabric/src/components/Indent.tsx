@@ -1,3 +1,4 @@
+import type { KubbElement } from '@kubb/react-fabric/types'
 import dedent from 'dedent'
 import indentString from 'indent-string'
 import React from 'react'
@@ -14,8 +15,10 @@ type IndentProps = {
  * Indent will dedent and re-indent string children and will prefix
  * non-string children with the requested number of spaces.
  */
-export function Indent({ size = 2, children }: IndentProps) {
-  if (!children) return null
+export function Indent({ size = 2, children }: IndentProps): KubbElement {
+  if (!children) {
+    return <></>
+  }
 
   const childrenArray = React.Children.toArray(children)
   const result: React.ReactNode[] = []

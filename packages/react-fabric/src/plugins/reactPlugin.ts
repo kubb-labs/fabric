@@ -1,11 +1,13 @@
+import type { TreeNode } from '@kubb/fabric-core'
 import { definePlugin } from '@kubb/fabric-core/plugins'
-import { createElement, type ElementType } from 'react'
 import { Runtime } from '../Runtime.tsx'
+import type { ComponentNode, KubbElement } from '../types.ts'
 
 export type Options = {
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
+  treeNode?: TreeNode<ComponentNode>
   /**
    * Set this to true to always see the result of the render in the console(line per render)
    */
@@ -13,16 +15,16 @@ export type Options = {
 }
 
 type ExtendOptions = {
-  render(App: ElementType): Promise<void>
-  renderToString(App: ElementType): Promise<string>
+  render(App: KubbElement): Promise<void>
+  renderToString(App: KubbElement): Promise<string>
   waitUntilExit(): Promise<void>
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(App: ElementType): Promise<void>
-      renderToString(App: ElementType): Promise<string>
+      render(App: KubbElement): Promise<void>
+      renderToString(App: KubbElement): Promise<string>
       waitUntilExit(): Promise<void>
     }
   }
@@ -37,11 +39,11 @@ export const reactPlugin = definePlugin<Options, ExtendOptions>({
     return {
       async render(App) {
         await ctx.emit('lifecycle:start')
-        await runtime.render(createElement(App))
+        await runtime.render(App)
       },
       async renderToString(App) {
         await ctx.emit('lifecycle:start')
-        return runtime.renderToString(createElement(App))
+        return runtime.renderToString(App)
       },
       async waitUntilExit() {
         await runtime.waitUntilExit()

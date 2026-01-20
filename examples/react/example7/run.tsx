@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { createReactFabric, File } from '@kubb/react-fabric'
+
 import { fsPlugin, graphPlugin, loggerPlugin } from '@kubb/react-fabric/plugins'
 
 async function timeout(ms: number): Promise<unknown> {
@@ -35,7 +36,7 @@ async function start() {
   fabric.use(loggerPlugin, { progress: true, websocket: false })
   fabric.use(graphPlugin, { root: path.resolve(__dirname, './gen'), open: false })
 
-  await fabric.render(App)
+  await fabric.render(<App />)
   await fabric.write()
 }
 

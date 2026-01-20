@@ -4,17 +4,36 @@ import { reactPlugin } from '../plugins/reactPlugin.ts'
 import { Function } from './Function.tsx'
 
 describe('<Function/>', () => {
-  it('render Function', async () => {
-    const Component = () => {
-      return (
-        <Function name="getData" export async>
-          return 2;
-        </Function>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
+    { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'function with generics', props: { name: 'myFunc', generics: 'T', children: 'return true' } },
+    { name: 'function with return type', props: { name: 'myFunc', returnType: 'boolean', children: 'return true' } },
+    { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
+    { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
+    { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should render $name', async ({ name, props }) => {
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(<Function {...(props as any)}>{(props as any).children}</Function>)
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
+  })
+
+  it('should add nodes to the NodeTreeContext', async () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
+
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(
+      <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+        <App>
+          <Function name={'myFunc'}>return true;</Function>
+        </App>
+      </Root>,
+    )
 
     expect(output).toMatchInlineSnapshot(`
       "export async function getData() {
@@ -22,18 +41,36 @@ describe('<Function/>', () => {
       }"
     `)
   })
+})
 
-  it('render default Function', async () => {
-    const Component = () => {
-      return (
-        <Function name="getData" export async default>
-          return 2;
-        </Function>
-      )
-    }
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+describe('<Function.Arrow/>', () => {
+  const scenarios: Array<{ name: string; props: any }> = [
+    { name: 'basic arrow function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'single line arrow function', props: { name: 'myFunc', singleLine: true, children: 'true' } },
+    { name: 'exported arrow function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'async arrow function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'arrow function with generics', props: { name: 'getData', generics: 'TData', returnType: 'number', children: 'return 2' } },
+    { name: 'default exported arrow function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+  ]
+
+  it.each(scenarios)('should render $name', async ({ name, props }) => {
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(<Function.Arrow {...(props as any)}>{(props as any).children}</Function.Arrow>)
+
+    await expect(output).toMatchFileSnapshot(path.join(__dirname, '__snapshots__', `${name.replace(/ /g, '_')}.ts`))
+  })
+
+  it('should add nodes to the NodeTreeContext', async () => {
+    const treeNode = new TreeNode({ type: 'root', props: {} })
+
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(
+      <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
+        <App>
+          <Function.Arrow name={'myFunc'}>return true;</Function.Arrow>
+        </App>
+      </Root>,
+    )
 
     expect(output).toMatchInlineSnapshot(`
       "export default async function getData() {

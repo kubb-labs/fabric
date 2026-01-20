@@ -1,21 +1,16 @@
+import { createComponent } from '../createComponent.ts'
+import type { FabricNode } from '../Fabric.ts'
+
 type Props = {
-  readonly children?: string | (() => string | Array<string>)
+  /**
+   * Children nodes.
+   */
+  children?: FabricNode
 }
 
-export function Text({ children }: Props): string {
-  if (!children) {
-    return ''
-  }
-
-  if (typeof children === 'string') {
-    return children
-  }
-
-  const value = children()
-
-  if (Array.isArray(value)) {
-    return value.join('\n')
-  }
-
-  return value
-}
+/**
+ * Generates a text node from string or function returning string/array of strings.
+ */
+export const Text = createComponent(({ children }: Props) => {
+  return children
+})

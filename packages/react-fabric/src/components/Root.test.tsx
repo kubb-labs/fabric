@@ -8,57 +8,93 @@ function Thrower(): React.ReactNode {
 }
 
 describe('<Root/>', () => {
-  it('render Root with children', async () => {
-    const Component = () => {
-      return (
-        <Root onExit={() => {}} onError={() => {}}>
-          Hello from Root
-        </Root>
-      )
-    }
+  afterEach(() => {
+    unprovide(RootContext)
+  })
 
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+  it('should return empty string when no children', async () => {
+    const props = getProps()
+
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(<Root {...props}>Hello from Root</Root>)
 
     expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
   })
 
-  it('render Root with multiline children', async () => {
-    const Component = () => {
-      return (
-        <Root onExit={() => {}} onError={() => {}}>
-          {`
+  it('should return children when provided', async () => {
+    const props = getProps()
+
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(<Root {...props}>Hello from Root</Root>)
+
+    expect(output).toMatchInlineSnapshot(`"Hello from Root"`)
+  })
+
+  it('should throw when Error occurs', async () => {
+    const props = getProps()
+
+    const fabric = createReactFabric()
+
+    const output = await fabric.renderToString(
+      <Root {...props}>
+        <Thrower />
+      </Root>,
+    )
+
+    expect(props.onError).toHaveBeenCalled()
+    expect(output).toMatchInlineSnapshot(`""`)
+  })
+
+  it('should have RootContext being defined', async () => {
+    const props = getProps()
+
+    let context: RootContextProps
+
+    const Test = () => {
+      context = useContext(RootContext)
+
+      return ''
+    }
+
+    const fabric = createReactFabric()
+
+    const output = await fabric.renderToString(
+      <Root {...props}>
+        <Test />
+      </Root>,
+    )
+
+    expect(context!).toBeDefined()
+    expect(output).toMatchInlineSnapshot(`""`)
+  })
+
+  it('should work with multiline', async () => {
+    const props = getProps()
+
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(
+      <Root {...props}>
+        {`
       import { test } from 'test'
 
       export function main() {
         test()
       }
     `}
-        </Root>
-      )
-    }
-
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+      </Root>,
+    )
 
     expect(output).toContain('import { test }')
     expect(output).toContain('export function main()')
   })
 
-  it('render Root with whitespace preservation', async () => {
-    const Component = () => {
-      return (
-        <Root onExit={() => {}} onError={() => {}}>
-          {'  indented\n    more indented'}
-        </Root>
-      )
-    }
+  it('should preserve whitespace', async () => {
+    const props = getProps()
 
-    const fabric = createFabric()
-    fabric.use(reactPlugin)
-    const output = await fabric.renderToString(Component)
+    const children = '  indented\n    more indented'
+
+    const fabric = createReactFabric()
+    const output = await fabric.renderToString(<Root {...props}>{children}</Root>)
 
     expect(output).toBe('  indented\n    more indented')
   })

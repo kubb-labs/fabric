@@ -1,5 +1,3 @@
-// import '@kubb/react-fabric/devtools'
-
 import * as process from 'node:process'
 import { createFabric, useEffect, useLifecycle, useRef, useState } from '@kubb/react-fabric'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
@@ -43,4 +41,4 @@ const fabric = createFabric()
 
 fabric.use(reactPlugin, { stderr: process.stderr, stdout: process.stdout, stdin: process.stdin })
 
-fabric.render(App)
+fabric.render(<App />)

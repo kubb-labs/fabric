@@ -1,18 +1,18 @@
 import process from 'node:process'
-import type { FileManager } from '@kubb/fabric-core'
-import type { ReactNode } from 'react'
+import { type FileManager, TreeNode } from '@kubb/fabric-core'
 import { ConcurrentRoot } from 'react-reconciler/constants.js'
 import { onExit } from 'signal-exit'
 import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './Renderer.ts'
 import { Renderer } from './Renderer.ts'
-import type { DOMElement } from './types.ts'
+import type { ComponentNode, DOMElement, KubbElement } from './types.ts'
 import { processFiles } from './utils/processFiles.ts'
 import { squashTextNodes } from './utils/squashTextNodes.ts'
 
 type Options = {
   fileManager: FileManager
+  treeNode?: TreeNode<ComponentNode>
   stdout?: NodeJS.WriteStream
   stdin?: NodeJS.ReadStream
   stderr?: NodeJS.WriteStream
@@ -77,12 +77,6 @@ export class Runtime {
       },
       { alwaysLast: false },
     ).bind(this)
-
-    Renderer.injectIntoDevTools({
-      bundleType: 1,
-      version: '19.1.0',
-      rendererPackageName: 'kubb',
-    })
   }
 
   get fileManager() {
@@ -134,10 +128,6 @@ export class Runtime {
   }
 
   onError(error: Error): void {
-    if (process.env.NODE_ENV === 'test') {
-      console.warn(error)
-    }
-
     // Store the error to be thrown after render completes
     this.#renderError = error
   }
@@ -166,12 +156,17 @@ export class Runtime {
     return [...values].join('\n\n')
   }
 
-  async render(node: ReactNode): Promise<void> {
-    const element = (
-      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
-        {node}
-      </Root>
-    )
+  async render(node: KubbElement): Promise<void> {
+    const treeNode = this.#options.treeNode || new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+    const props = {
+      fileManager: this.fileManager,
+      treeNode,
+      onExit: this.onExit.bind(this),
+      onError: this.onError.bind(this),
+    }
+    treeNode.data.props = props
+
+    const element = <Root {...props}>{node}</Root>
 
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()
@@ -185,12 +180,17 @@ export class Runtime {
     }
   }
 
-  async renderToString(node: ReactNode): Promise<string> {
-    const element = (
-      <Root onExit={this.onExit.bind(this)} onError={this.onError.bind(this)}>
-        {node}
-      </Root>
-    )
+  async renderToString(node: KubbElement): Promise<string> {
+    const treeNode = this.#options.treeNode || new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+    const props = {
+      fileManager: this.fileManager,
+      treeNode,
+      onExit: this.onExit.bind(this),
+      onError: this.onError.bind(this),
+    }
+    treeNode.data.props = props
+
+    const element = <Root {...props}>{node}</Root>
 
     Renderer.updateContainerSync(element, this.#container, null, null)
     Renderer.flushSyncWork()

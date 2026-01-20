@@ -1,5 +1,5 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
-import type { JSDoc, Key, KubbNode } from '../types.ts'
+import type { JSDoc, Key, KubbElement, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
  * Renders a TypeScript type alias. Validates that the provided name starts
  * with a capital letter and optionally emits JSDoc comments.
  */
-export function Type({ children, ...props }: Props) {
+export function Type({ children, ...props }: TypeProps): KubbElement {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()
