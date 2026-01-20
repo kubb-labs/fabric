@@ -6,8 +6,8 @@ import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { type ComponentBuilder, createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
+import { intrinsic } from '../intrinsic.ts'
 import { createExport, createImport, print } from '../parsers/typescriptParser.ts'
-import { transform } from '../transform.ts'
 import type { KubbFile } from '../types.ts'
 
 export type FileProps<TMeta extends object = object> = {
@@ -86,7 +86,7 @@ export const FileSource = createComponent('FileSource', ({ children, ...props }:
     provide(NodeTreeContext, childTree)
   }
 
-  const value = transform(children)
+  const value = intrinsic(children)
 
   if (file) {
     file.sources.push({

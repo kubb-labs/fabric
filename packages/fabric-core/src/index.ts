@@ -1,9 +1,11 @@
 // components
-
 export { App } from './components/App.ts'
+export { Br } from './components/Br.ts'
 export { Const } from './components/Const.ts'
+export { Dedent } from './components/Dedent.ts'
 export { File } from './components/File.ts'
 export { Function } from './components/Function.ts'
+export { Indent } from './components/Indent.ts'
 export { Root } from './components/Root.ts'
 export { Type } from './components/Type.ts'
 
@@ -27,7 +29,6 @@ export { createComponent } from './createComponent.ts'
 // helpers
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
-export { Br, Dedent, Indent } from './transform.ts'
 export { createJSDoc } from './utils/createJSDoc.ts'
 export { getRelativePath } from './utils/getRelativePath.ts'
 
