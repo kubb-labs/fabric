@@ -1,5 +1,5 @@
 import { inject, provide } from './context.ts'
-import { RenderContext } from './contexts/RenderContext.ts'
+import { RenderContext, type RenderContextProps } from './contexts/RenderContext.ts'
 import type { FabricElement, FabricNode } from './Fabric.ts'
 
 type IntrinsicType =
@@ -26,9 +26,7 @@ export function isIntrinsic(value: any): value is Intrinsic {
 /**
  * Render a single intrinsic node
  */
-function renderIntrinsicNode(node: Intrinsic): string {
-  const renderContext = inject(RenderContext)
-
+function renderIntrinsicNode(node: Intrinsic, renderContext: RenderContextProps): string {
   switch (node.type) {
     case 'br':
       renderContext.currentLineLength = 0
@@ -52,9 +50,7 @@ function renderIntrinsicNode(node: Intrinsic): string {
  * start of each logical line. This ensures `${indent}` intrinsics affect
  * subsequent string content.
  */
-function renderString(content: string): string {
-  const renderContext = inject(RenderContext)
-
+export function renderIndent(content: string, renderContext: RenderContextProps): string {
   if (content.length === 0) {
     return ''
   }
@@ -83,8 +79,8 @@ function renderString(content: string): string {
   return out
 }
 
-export function intrinsic(children: FabricNode): string {
-  const renderContext = inject(RenderContext)
+export function renderIntrinsic(children: FabricNode, context?: RenderContextProps): string {
+  const renderContext = context || inject(RenderContext)
 
   provide(RenderContext, renderContext)
 
@@ -97,40 +93,40 @@ export function intrinsic(children: FabricNode): string {
       // FabricElements are already wrapped in transform by createComponent
       // Just call them and return the result (which is already a string)
       const result = children()
-      return intrinsic(result)
+      return renderIntrinsic(result)
     } catch {
       return ''
     }
   }
 
   if (Array.isArray(children)) {
-    return children.map((child) => intrinsic(child)).join('')
+    return children.map((child) => renderIntrinsic(child)).join('')
   }
 
   if (isIntrinsic(children)) {
     // Render intrinsic node(s) using the shared render context
-    return renderIntrinsicNode(children)
+    return renderIntrinsicNode(children, renderContext)
   }
 
   if (typeof children === 'function') {
-    return intrinsic(children())
+    return renderIntrinsic(children())
   }
 
   if (typeof children === 'string') {
-    return renderString(children)
+    return renderIndent(children, renderContext)
   }
 
   if (typeof children === 'number') {
-    return renderString(String(children))
+    return renderIndent(String(children), renderContext)
   }
 
   if (typeof children === 'boolean') {
-    return renderString(children ? 'true' : 'false')
+    return renderIndent(children ? 'true' : 'false', renderContext)
   }
 
   // Fallback for FabricElement/object-like values
   try {
-    return renderString(children)
+    return renderIndent(children, renderContext)
   } catch {
     return ''
   }

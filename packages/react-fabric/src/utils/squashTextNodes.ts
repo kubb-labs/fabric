@@ -1,13 +1,16 @@
-import { inject, RenderContext } from '@kubb/fabric-core'
+import { renderIndent } from '@kubb/fabric-core'
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
 
-export function squashTextNodes(node: DOMElement): string {
-  // Initialize RenderContext for this render
-  const renderContext = inject(RenderContext, { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false })
+/**
+ * Global context, used to keep track of the current indentation level and line length
+ * // TODO this could be move to options in Runtime.tsx
+ */
+const renderContext = { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false }
 
+export function squashTextNodes(node: DOMElement): string {
   let text = ''
 
   const walk = (current: DOMElement): string => {
@@ -53,37 +56,8 @@ export function squashTextNodes(node: DOMElement): string {
         }
       }
 
-      const applyIndent = (text: string): string => {
-        if (text.length === 0) {
-          return ''
-        }
-
-        const indentStr = ' '.repeat(renderContext.indentLevel * renderContext.indentSize)
-        const lines = text.split('\n')
-        let out = ''
-
-        for (const [i, line] of lines.entries()) {
-          if (renderContext.currentLineLength === 0 && line.length > 0) {
-            // At start of a line: prefix indentation
-            out += indentStr + line
-            renderContext.currentLineLength = indentStr.length + line.length
-          } else {
-            out += line
-            renderContext.currentLineLength += line.length
-          }
-
-          // If not the last line, add newline and reset line length
-          if (i !== lines.length - 1) {
-            out += '\n'
-            renderContext.currentLineLength = 0
-          }
-        }
-
-        return out
-      }
-
       if (child.nodeName === '#text') {
-        nodeText = applyIndent(child.nodeValue)
+        nodeText = renderIndent(child.nodeValue, renderContext)
       } else {
         if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
           nodeText = walk(child)
