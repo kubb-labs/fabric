@@ -24,6 +24,8 @@ export namespace JSX {
     'kubb-import': KubbImportProps
     'kubb-export': KubbExportProps
     br: LineBreakProps
+    indent: {}
+    dedent: {}
   }
   type LibraryManagedAttributes<C, P> = React.JSX.LibraryManagedAttributes<C, P>
   interface IntrinsicClassAttributes<T> extends React.JSX.IntrinsicClassAttributes<T> {}

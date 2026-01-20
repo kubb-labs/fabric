@@ -86,9 +86,11 @@ export function Function({ children, ...props }: Props): KubbElement {
       )}
       {' {'}
       <br />
+      <indent />
       {/* Indent component to handle indentation*/}
       {children}
       <br />
+      <dedent />
       {/* Indent component to handle indentation*/}
       {'}'}
     </>
@@ -157,9 +159,11 @@ function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
         <>
           {' => {'}
           <br />
+          <indent />
           {/* Indent component to handle indentation*/}
           {children}
           <br />
+          <dedent />
           {/* Indent component to handle indentation*/}
           {'}'}
           <br />
