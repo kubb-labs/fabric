@@ -5,7 +5,6 @@ import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Text } from './Text.ts'
 
 export type TypeProps = {
   /**
@@ -29,7 +28,7 @@ export type TypeProps = {
 /**
  * Generates a TypeScript type declaration.
  */
-export const Type = createComponent(({ children, ...props }: TypeProps) => {
+export const Type = createComponent('Type', ({ children, ...props }: TypeProps) => {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -57,7 +56,7 @@ export const Type = createComponent(({ children, ...props }: TypeProps) => {
 
   result += `type ${name} = ${children || ''}`
 
-  return Text({ children: result })
+  return result
 })
 
 Type.displayName = 'KubbType'

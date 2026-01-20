@@ -1,3 +1,3 @@
-export default function myFunc() { 
-return true 
+export default function myFunc() {
+  return true
 }

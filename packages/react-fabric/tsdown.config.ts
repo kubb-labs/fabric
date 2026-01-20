@@ -17,7 +17,6 @@ export default defineConfig({
   sourcemap: 'hidden', // TODO see if we can enable this again to help with debugging, issue with React DevTools
   shims: true,
   exports: true,
-  noExternal: [/indent-string/],
   fixedExtension: false,
   outputOptions: {
     keepNames: true,

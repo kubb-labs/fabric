@@ -45,7 +45,7 @@ describe('Root', () => {
 
     fabric.use(fsxPlugin)
 
-    const Test = createComponent(() => {
+    const Test = createComponent('Test', () => {
       throw new Error('boom')
     })
 
@@ -61,7 +61,7 @@ describe('Root', () => {
     const props = getProps()
 
     let context: RootContextProps
-    const Test = createComponent(() => {
+    const Test = createComponent('Test', () => {
       context = useContext(RootContext)
 
       return ''

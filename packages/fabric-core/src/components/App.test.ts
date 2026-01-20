@@ -29,7 +29,7 @@ describe('App', () => {
 
     fabric.use(fsxPlugin)
 
-    const Const = createComponent(() => {
+    const Const = createComponent('Const', () => {
       return 'const x = 1'
     })
 
@@ -45,7 +45,7 @@ describe('App', () => {
 
     fabric.use(fsxPlugin)
 
-    const Const = createComponent(() => {
+    const Const = createComponent('Const', () => {
       return 'const x = 1'
     })
 
@@ -64,7 +64,7 @@ describe('App', () => {
   })
 
   it('should inject meta data', () => {
-    const Text = createComponent(() => {
+    const Text = createComponent('Text', () => {
       const ctx = inject(AppContext)
       console.log('Test Text ctx:', ctx)
       return JSON.stringify(ctx?.meta)

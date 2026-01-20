@@ -2,7 +2,7 @@
 import * as React from 'react'
 
 // expose fabric core helpers
-export { createFabric, createFile, type Fabric, FileManager, FileProcessor } from '@kubb/fabric-core'
+export { createFabric, createFile, FileManager, FileProcessor } from '@kubb/fabric-core'
 
 // react helpers
 export const useState = React.useState
@@ -19,7 +19,6 @@ export { App } from './components/App.tsx'
 export { Const } from './components/Const.tsx'
 export { File } from './components/File.tsx'
 export { Function } from './components/Function.tsx'
-export { Indent } from './components/Indent.tsx'
 export { Type } from './components/Type.tsx'
 
 // composables

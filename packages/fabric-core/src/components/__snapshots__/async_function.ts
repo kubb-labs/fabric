@@ -1,3 +1,3 @@
-async function myFunc() { 
-return true 
+async function myFunc() {
+  return true
 }

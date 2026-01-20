@@ -10,11 +10,7 @@ function App() {
     <File path={path.resolve(__dirname, 'gen/App.tsx')} baseName={'App.tsx'}>
       <File.Source>
         <Function export name={'Users'}>
-          {`
-        return (
-          <div className="test" />
-          )
-        `}
+          {`return (<div className="test" />)`}
         </Function>
       </File.Source>
     </File>

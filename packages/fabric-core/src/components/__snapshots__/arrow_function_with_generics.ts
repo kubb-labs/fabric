@@ -1,3 +1,3 @@
-const getData = <TData>(): number => { 
-return 2 
+const getData = <TData>(): number => {
+  return 2
 }

@@ -4,11 +4,11 @@ import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
-import { type ComponentBuilder, createComponent, transform } from '../createComponent.ts'
+import { type ComponentBuilder, createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
+import { renderIntrinsic } from '../intrinsic.ts'
 import { createExport, createImport, print } from '../parsers/typescriptParser.ts'
 import type { KubbFile } from '../types.ts'
-import { Text } from './Text.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**
@@ -33,7 +33,7 @@ export type FileProps<TMeta extends object = object> = {
 /**
  * Adds files to the FileManager
  */
-export const File = createComponent(({ children, ...props }: FileProps) => {
+export const File = createComponent('File', ({ children, ...props }: FileProps) => {
   const { baseName, path, meta = {}, footer, banner } = props
 
   const fileManager = useFileManager()
@@ -59,7 +59,7 @@ export const File = createComponent(({ children, ...props }: FileProps) => {
   const [resolvedFile] = fileManager.add(file)
   provide(FileContext, resolvedFile)
 
-  return Text({ children })
+  return children
 }) as ComponentBuilder<FileProps<object>> & { Source: typeof FileSource; Import: typeof FileImport; Export: typeof FileExport }
 
 type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
@@ -74,7 +74,7 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export const FileSource = createComponent(({ children, ...props }: FileSourceProps) => {
+export const FileSource = createComponent('FileSource', ({ children, ...props }: FileSourceProps) => {
   const { name, isExportable, isIndexable, isTypeOnly } = props
 
   const nodeTree = useNodeTree()
@@ -86,7 +86,7 @@ export const FileSource = createComponent(({ children, ...props }: FileSourcePro
     provide(NodeTreeContext, childTree)
   }
 
-  const value = transform(children)
+  const value = renderIntrinsic(children)
 
   if (file) {
     file.sources.push({
@@ -108,7 +108,7 @@ export type FileExportProps = KubbFile.Export
  *
  * No-op function used by renderers to record exports.
  */
-export const FileExport = createComponent((props: FileExportProps) => {
+export const FileExport = createComponent('FileExport', (props: FileExportProps) => {
   const { name, path, isTypeOnly, asAlias } = props
 
   const nodeTree = useNodeTree()
@@ -129,7 +129,7 @@ export const FileExport = createComponent((props: FileExportProps) => {
     })
   }
 
-  return Text({ children: print(createExport({ name, path, isTypeOnly, asAlias })) })
+  return print(createExport({ name, path, isTypeOnly, asAlias }))
 })
 
 export type FileImportProps = KubbFile.Import
@@ -139,7 +139,7 @@ export type FileImportProps = KubbFile.Import
  *
  * No-op function used by renderers to record imports.
  */
-export const FileImport = createComponent((props: FileImportProps) => {
+export const FileImport = createComponent('FileImport', (props: FileImportProps) => {
   const { name, path, root, isNameSpace, isTypeOnly } = props
 
   const nodeTree = useNodeTree()
@@ -161,7 +161,7 @@ export const FileImport = createComponent((props: FileImportProps) => {
     })
   }
 
-  return Text({ children: print(createImport({ name, path, root, isNameSpace, isTypeOnly })) })
+  return print(createImport({ name, path, root, isNameSpace, isTypeOnly }))
 })
 
 File.Source = FileSource

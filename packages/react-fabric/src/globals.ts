@@ -16,6 +16,8 @@ declare global {
       'kubb-import': KubbImportProps
       'kubb-export': KubbExportProps
       br: LineBreakProps
+      indent: {}
+      dedent: {}
     }
   }
 }

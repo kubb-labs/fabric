@@ -1,5 +1,3 @@
-type BasePath<T extends string = string> = `${T}/`
-
 export type Import = {
   /**
    * Import name to be used
@@ -86,8 +84,6 @@ export type BaseName = `${string}.${string}`
  */
 export type Path = string
 
-export type AdvancedPath<T extends BaseName = BaseName> = `${BasePath}${T}`
-
 export type File<TMeta extends object = object> = {
   /**
    * Name to be used to create the path
@@ -98,7 +94,7 @@ export type File<TMeta extends object = object> = {
   /**
    * Path will be full qualified path to a specified file
    */
-  path: AdvancedPath<BaseName> | Path
+  path: Path
   sources: Array<Source>
   imports: Array<Import>
   exports: Array<Export>
@@ -109,10 +105,6 @@ export type File<TMeta extends object = object> = {
   banner?: string
   footer?: string
 }
-
-export type ResolvedImport = Import
-
-export type ResolvedExport = Export
 
 export type ResolvedFile<TMeta extends object = object> = File<TMeta> & {
   /**
@@ -125,6 +117,6 @@ export type ResolvedFile<TMeta extends object = object> = File<TMeta> & {
    */
   name: string
   extname: Extname
-  imports: Array<ResolvedImport>
-  exports: Array<ResolvedExport>
+  imports: Array<Import>
+  exports: Array<Export>
 }

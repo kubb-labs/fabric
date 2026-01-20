@@ -1,57 +1,32 @@
 import type { FabricComponent, FabricElement, FabricNode } from './Fabric.ts'
+import { renderIntrinsic } from './intrinsic.ts'
 
 type MakeChildrenOptional<T extends object> = T extends { children?: any } ? Omit<T, 'children'> & Partial<Pick<T, 'children'>> : T
 
 export type ComponentBuilder<T extends object> = {
-  (...args: unknown extends T ? [] : {} extends Omit<T, 'children'> ? [props?: MakeChildrenOptional<T>] : [props: MakeChildrenOptional<T>]): FabricElement<T>
+  (...args: unknown extends T ? [] : {} extends Omit<T, 'children'> ? [props?: MakeChildrenOptional<T>] : [props: MakeChildrenOptional<T>]): FabricComponent<T>
   displayName?: string | undefined
 }
 
-export function transform(children: FabricNode): string {
-  if (!children) {
-    return ''
-  }
-
-  if (typeof children === 'function') {
-    return transform(children())
-  }
-
-  if (typeof children === 'string') {
-    return children
-  }
-
-  if (typeof children === 'number') {
-    return `${children}`
-  }
-
-  if (typeof children === 'boolean') {
-    return `${children}`
-  }
-
-  if (Array.isArray(children)) {
-    return children.map(transform).join('')
-  }
-
-  return children
-}
-
-export function createComponent<T extends object>(Component: FabricComponent<T>): ComponentBuilder<T> {
+export function createComponent<TProps extends object>(type: string, Component: (props: TProps) => FabricNode): ComponentBuilder<TProps> {
   return (...args) => {
-    const fn: FabricElement<T> = (() => transform(Component(args[0] as T) as FabricNode)) as any
+    const fn: FabricComponent<TProps> = (() => renderIntrinsic(Component(args[0] as TProps) as FabricNode)) as any
     fn.component = Component
-    fn.props = args[0]! as T
+    fn.props = args[0]! as TProps
+    fn.type = type
     fn.children = (...children: Array<FabricNode>) => {
       const propsWithChildren = {
         ...(args[0] ?? {}),
         children() {
-          return transform(children)
+          return renderIntrinsic(children)
         },
-      } as unknown as T
+      } as unknown as TProps
 
-      const fn = (() => transform(Component(propsWithChildren) as FabricNode)) as FabricElement<T>
-      fn.component = Component
-      fn.props = args[0]! as T
-      return fn
+      const fnChild = (() => renderIntrinsic(Component(propsWithChildren) as FabricNode)) as FabricElement<TProps>
+      fnChild.component = Component
+      fnChild.props = args[0]! as TProps
+      fnChild.type = type
+      return fnChild
     }
 
     return fn

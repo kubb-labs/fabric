@@ -1,12 +1,16 @@
+import { renderIndent } from '@kubb/fabric-core'
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
-
+import type { RenderContextProps } from '@kubb/fabric-core/types'
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
 
-export function squashTextNodes(node: DOMElement): string {
+export function squashTextNodes(
+  node: DOMElement,
+  renderContext: RenderContextProps = { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false },
+): string {
   let text = ''
 
-  const walk = (current: DOMElement): string => {
+  const walk = (current: DOMElement, context: RenderContextProps): string => {
     let content = ''
 
     for (const child of current.childNodes) {
@@ -50,16 +54,27 @@ export function squashTextNodes(node: DOMElement): string {
       }
 
       if (child.nodeName === '#text') {
-        nodeText = child.nodeValue
+        nodeText = renderIndent(child.nodeValue, context)
       } else {
         if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
-          nodeText = walk(child)
+          nodeText = walk(child, context)
         }
 
         nodeText = getPrintText(nodeText)
 
         if (child.nodeName === 'br') {
           nodeText = '\n'
+          context.currentLineLength = 0
+        }
+
+        if (child.nodeName === 'indent') {
+          context.indentLevel++
+          nodeText = ''
+        }
+
+        if (child.nodeName === 'dedent') {
+          context.indentLevel = Math.max(0, context.indentLevel - 1)
+          nodeText = ''
         }
 
         if (!nodeNames.has(child.nodeName)) {
@@ -72,9 +87,9 @@ export function squashTextNodes(node: DOMElement): string {
           }
 
           if (hasAttributes) {
-            nodeText = `<${child.nodeName}${attrString}>${walk(child)}</${child.nodeName}>`
+            nodeText = `<${child.nodeName}${attrString}>${walk(child, context)}</${child.nodeName}>`
           } else {
-            nodeText = `<${child.nodeName}>${walk(child)}</${child.nodeName}>`
+            nodeText = `<${child.nodeName}>${walk(child, context)}</${child.nodeName}>`
           }
         }
       }
@@ -85,7 +100,7 @@ export function squashTextNodes(node: DOMElement): string {
     return content
   }
 
-  text = walk(node)
+  text = walk(node, renderContext)
 
   return text
 }

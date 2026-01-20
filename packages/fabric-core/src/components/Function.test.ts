@@ -2,6 +2,7 @@ import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { unprovide } from '../context.ts'
 import { AppContext } from '../contexts/AppContext.ts'
+import { createComponent } from '../createComponent.ts'
 import { createFabric } from '../createFabric.ts'
 import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
@@ -13,8 +14,12 @@ describe('Function', () => {
     unprovide(AppContext)
   })
 
+  const Component = createComponent('test', () => {
+    return 'return true'
+  })
+
   const scenarios: Array<{ name: string; props: any }> = [
-    { name: 'basic function', props: { name: 'myFunc', children: 'return true' } },
+    { name: 'basic function', props: { name: 'myFunc', children: Component() } },
     { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
     { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
     { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
@@ -37,11 +42,11 @@ describe('Function', () => {
 
     fabric.use(fsxPlugin, { treeNode })
 
-    const component = App({
-      children: Function({ name: 'myFunc', children: 'return true' }),
-    })
-
-    const output = await fabric.render(component)
+    const output = await fabric.render(
+      App({
+        children: Function({ name: 'myFunc', children: 'return true' }),
+      }),
+    )
 
     expect(treeNode.data.type).toBe('root')
     expect(treeNode.children).toHaveLength(1)
@@ -52,7 +57,11 @@ describe('Function', () => {
     expect(functionChild.data.type).toBe('Function')
     expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
 
-    expect(output).toMatchInlineSnapshot(`"function myFunc() { \nreturn true \n}"`)
+    expect(output).toMatchInlineSnapshot(`
+      "function myFunc() {
+        return true
+      }"
+    `)
   })
 })
 
@@ -93,6 +102,10 @@ describe('Function.Arrow', () => {
     expect(functionChild.data.type).toBe('ArrowFunction')
     expect(functionChild.data.props).toMatchObject({ name: 'myFunc' })
 
-    expect(output).toMatchInlineSnapshot(`"const myFunc = () => { \nreturn true \n}\n"`)
+    expect(output).toMatchInlineSnapshot(`
+      "const myFunc = () => {
+        return true
+      }"
+    `)
   })
 })

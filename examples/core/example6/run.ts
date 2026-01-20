@@ -14,14 +14,14 @@ async function run() {
     children: [
       File({
         baseName: 'file1.ts',
-        path: './file1.ts',
+        path: './example6/gen/file1.ts',
         children: File.Source({
           children: 'const test = 1;',
         }),
       }),
       File({
         baseName: 'file2.ts',
-        path: './file2.ts',
+        path: './example6/gen/file2.ts',
         children: File.Source({
           children: 'const test = 2;',
         }),
@@ -32,11 +32,11 @@ async function run() {
   // const appChildren = App().children(
   //   File({
   //     baseName: 'file1.ts',
-  //     path: './file1.ts',
+  //     path: './example6/gen/file1.ts',
   //   }).children(File.Source().children( 'const test = 1;')),
   //   File({
   //     baseName: 'file2.ts',
-  //     path: './file2.ts',
+  //     path: './example6/gen/file2.ts',
   //   }).children(File.Source().children( 'const test = 2;')),
   // )
 

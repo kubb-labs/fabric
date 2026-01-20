@@ -3,8 +3,8 @@ import type { KubbFile } from '@kubb/fabric-core/types'
 import { nodeNames } from '../dom.ts'
 import type { DOMElement } from '../types.ts'
 
-export function squashExportNodes(node: DOMElement): Set<KubbFile.ResolvedExport> {
-  const exports = new Set<KubbFile.ResolvedExport>()
+export function squashExportNodes(node: DOMElement): Set<KubbFile.Export> {
+  const exports = new Set<KubbFile.Export>()
 
   const walk = (current: DOMElement): void => {
     for (const child of current.childNodes) {

@@ -6,7 +6,6 @@ import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
 import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
-import { Text } from './Text.ts'
 
 export type AppProps<TMeta extends Object = Object> = {
   /**
@@ -22,7 +21,7 @@ export type AppProps<TMeta extends Object = Object> = {
 /**
  * App container containing the AppContext carrying `meta` and an `exit` hook.
  */
-export const App = createComponent(({ children, ...props }: AppProps) => {
+export const App = createComponent('App', ({ children, ...props }: AppProps) => {
   const { meta = {} } = props
 
   const { exit } = useContext(RootContext)
@@ -37,7 +36,7 @@ export const App = createComponent(({ children, ...props }: AppProps) => {
 
   provide(AppContext, { exit, meta })
 
-  return Text({ children })
+  return children
 })
 
 App.displayName = 'KubbApp'

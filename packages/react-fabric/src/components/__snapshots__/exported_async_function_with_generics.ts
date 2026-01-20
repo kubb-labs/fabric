@@ -1,3 +1,3 @@
 export async function getData<TData>(): Promise<number> {
-  2;
+  return 2
 }

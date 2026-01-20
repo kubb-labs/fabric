@@ -1,3 +1,3 @@
-function myFunc<T>() { 
-return true 
+function myFunc<T>() {
+  return true
 }

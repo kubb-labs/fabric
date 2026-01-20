@@ -5,7 +5,9 @@ import { type ComponentBuilder, createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Text } from './Text.ts'
+import { Br } from './Br.ts'
+import { Dedent } from './Dedent.ts'
+import { Indent } from './Indent.ts'
 
 type FunctionProps = {
   /**
@@ -50,7 +52,7 @@ type FunctionProps = {
 /**
  * Generates a TypeScript function declaration.
  */
-export const Function = createComponent(({ children, ...props }: FunctionProps) => {
+export const Function = createComponent('Function', ({ children, ...props }: FunctionProps) => {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -101,10 +103,10 @@ export const Function = createComponent(({ children, ...props }: FunctionProps) 
   parts.push(' {')
 
   if (children) {
-    return Text({ children: `${parts.join('')}${' '}${'\n'}${children}${' '}${'\n'}}` })
+    return [parts.join(''), Br(), Indent(), children, Br(), Dedent(), '}']
   }
 
-  return Text({ children: `${parts.join('')}}` })
+  return [parts.join(''), '}']
 }) as ComponentBuilder<FunctionProps> & { Arrow: typeof ArrowFunction }
 
 Function.displayName = 'KubbFunction'
@@ -123,7 +125,7 @@ type ArrowFunctionProps = FunctionProps & {
  * the same options as `Function`. Use `singleLine` to produce a one-line
  * arrow expression.
  */
-const ArrowFunction = createComponent(({ children, ...props }: ArrowFunctionProps) => {
+const ArrowFunction = createComponent('ArrowFunction', ({ children, ...props }: ArrowFunctionProps) => {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc, singleLine } = props
 
   const nodeTree = useNodeTree()
@@ -173,14 +175,14 @@ const ArrowFunction = createComponent(({ children, ...props }: ArrowFunctionProp
 
   if (singleLine) {
     parts.push(` => ${children || ''}\n`)
-    return Text({ children: parts.join('') })
+    return parts.join('')
   }
 
   if (children) {
-    return Text({ children: `${parts.join('')} => {${' '}${'\n'}${children}${' '}${'\n'}}${'\n'}` })
+    return [parts.join(''), ' => {', Br(), Indent(), children, Br(), Dedent(), '}']
   }
 
-  return Text({ children: `${parts.join('')} => {}\n` })
+  return [parts.join(''), ' => {}']
 })
 
 ArrowFunction.displayName = 'KubbArrowFunction'

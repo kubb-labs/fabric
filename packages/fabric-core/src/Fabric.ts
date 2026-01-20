@@ -1,4 +1,5 @@
 import type { FileManager } from './FileManager.ts'
+import type { Intrinsic } from './intrinsic.ts'
 import type * as KubbFile from './KubbFile.ts'
 import type { Parser } from './parsers/types.ts'
 import type { Plugin } from './plugins/types.ts'
@@ -10,22 +11,17 @@ declare global {
   }
 }
 
-export type ComponentCreator<TProps extends object = object> = {
+export type FabricElement<TProps extends object = object> = {
   (): FabricNode
-  component: FabricComponent<TProps>
+  type: string
+  component: (props: TProps) => FabricNode
   props: TProps
 }
 
-export type FabricElement<TProps extends object = object> = ComponentCreator<TProps> & {
+export type FabricNode = FabricElement<any> | string | number | boolean | null | undefined | Intrinsic | Array<FabricNode>
+
+export type FabricComponent<TProps extends object = object> = FabricElement<TProps> & {
   children(...children: Array<FabricNode>): FabricElement<TProps>
-}
-
-export type FabricNode = ComponentCreator<any> | Array<FabricNode> | string | number | boolean | null | undefined
-
-export interface FabricComponent<TProps extends object = object> {
-  (props: TProps): FabricNode
-  propTypes?: any
-  displayName?: string | undefined
 }
 
 /**

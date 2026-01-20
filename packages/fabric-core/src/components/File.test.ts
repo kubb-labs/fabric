@@ -9,7 +9,6 @@ import { createFabric } from '../createFabric.ts'
 import { fsxPlugin } from '../plugins/fsxPlugin/fsxPlugin.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { File, type FileExportProps, type FileImportProps } from './File.ts'
-import { Text } from './Text.ts'
 
 describe('File', () => {
   afterEach(() => {
@@ -42,7 +41,7 @@ describe('File', () => {
 
     const enable = false
 
-    const Component = createComponent(() => {
+    const Component = createComponent('Component', () => {
       return enable ? File({ baseName: 'test.ts', path: './test.ts' }) : undefined
     })
 
@@ -112,27 +111,27 @@ describe('File', () => {
 
     fabric.use(fsxPlugin)
 
-    await fabric.render(
-      Text({
-        children: [
-          File({
-            baseName: 'file1.ts',
-            path: './file1.ts',
-            children: File.Source({ children: 'const test = 1;' }),
-          }),
-          File({
-            baseName: 'file2.ts',
-            path: './file2.ts',
-            children: File.Source({ children: 'const test = 2;' }),
-          }),
-          File({
-            baseName: 'file3.ts',
-            path: './file3.ts',
-            children: File.Source({ children: 'const test = 3;' }),
-          }),
-        ],
-      }),
-    )
+    const Component = createComponent('Component', () => {
+      return [
+        File({
+          baseName: 'file1.ts',
+          path: './file1.ts',
+          children: File.Source({ children: 'const test = 1;' }),
+        }),
+        File({
+          baseName: 'file2.ts',
+          path: './file2.ts',
+          children: File.Source({ children: 'const test = 2;' }),
+        }),
+        File({
+          baseName: 'file3.ts',
+          path: './file3.ts',
+          children: File.Source({ children: 'const test = 3;' }),
+        }),
+      ]
+    })
+
+    await fabric.render(Component())
 
     const files = fabric.files
 
@@ -256,9 +255,9 @@ describe('File', () => {
 
     fabric.use(fsxPlugin)
 
-    const ChildComponent = createComponent(() => {
+    const ChildComponent = createComponent('Child', () => {
       const currentFile = inject(FileContext)
-      return Text({ children: currentFile ? `File: ${currentFile.baseName}` : 'No file' })
+      return currentFile ? `File: ${currentFile.baseName}` : 'No file'
     })
 
     const result = await fabric.render(

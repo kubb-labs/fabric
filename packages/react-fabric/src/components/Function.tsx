@@ -1,7 +1,6 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
 import type { JSDoc, Key, KubbElement, KubbNode } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import { Indent } from './Indent.tsx'
 
 type Props = {
   key?: Key
@@ -87,8 +86,12 @@ export function Function({ children, ...props }: Props): KubbElement {
       )}
       {' {'}
       <br />
-      <Indent size={2}>{children}</Indent>
+      <indent />
+      {/* Indent component to handle indentation*/}
+      {children}
       <br />
+      <dedent />
+      {/* Indent component to handle indentation*/}
       {'}'}
     </>
   )
@@ -156,8 +159,12 @@ function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
         <>
           {' => {'}
           <br />
-          <Indent size={2}>{children}</Indent>
+          <indent />
+          {/* Indent component to handle indentation*/}
+          {children}
           <br />
+          <dedent />
+          {/* Indent component to handle indentation*/}
           {'}'}
           <br />
         </>
