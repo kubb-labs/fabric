@@ -34,7 +34,7 @@ export type RootProps = {
 /**
  * This component provides the root behavior for the Fabric runtime.
  */
-export const Root = createComponent(({ onError, onExit, treeNode, fileManager, children }: RootProps) => {
+export const Root = createComponent('Root', ({ onError, onExit, treeNode, fileManager, children }: RootProps) => {
   provide(RootContext, { exit: onExit, treeNode, fileManager })
   provide(NodeTreeContext, treeNode)
 

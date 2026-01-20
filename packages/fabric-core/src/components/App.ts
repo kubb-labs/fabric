@@ -22,7 +22,7 @@ export type AppProps<TMeta extends Object = Object> = {
 /**
  * App container containing the AppContext carrying `meta` and an `exit` hook.
  */
-export const App = createComponent(({ children, ...props }: AppProps) => {
+export const App = createComponent('App', ({ children, ...props }: AppProps) => {
   const { meta = {} } = props
 
   const { exit } = useContext(RootContext)

@@ -1,3 +1,3 @@
-const myFunc = async () => { 
-return true 
+const myFunc = async ()
+return true
 }

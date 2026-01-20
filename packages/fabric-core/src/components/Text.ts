@@ -9,8 +9,8 @@ type Props = {
 }
 
 /**
- * Generates a text node from string or function returning string/array of strings.
+ * Generates a text node from string
  */
-export const Text = createComponent(({ children }: Props) => {
+export const Text = createComponent('Text', ({ children }: Props) => {
   return children
 })

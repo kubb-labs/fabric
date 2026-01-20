@@ -2,6 +2,7 @@ import type { FileManager } from './FileManager.ts'
 import type * as KubbFile from './KubbFile.ts'
 import type { Parser } from './parsers/types.ts'
 import type { Plugin } from './plugins/types.ts'
+import type { Intrinsic } from './transform.ts'
 import type { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 declare global {
@@ -10,8 +11,9 @@ declare global {
   }
 }
 
-export type ComponentCreator<TProps extends object = object> = {
+type ComponentCreator<TProps extends object = object> = {
   (): FabricNode
+  type: string
   component: FabricComponent<TProps>
   props: TProps
 }
@@ -20,13 +22,9 @@ export type FabricElement<TProps extends object = object> = ComponentCreator<TPr
   children(...children: Array<FabricNode>): FabricElement<TProps>
 }
 
-export type FabricNode = ComponentCreator<any> | Array<FabricNode> | string | number | boolean | null | undefined
+export type FabricNode = ComponentCreator<any> | Array<FabricNode> | string | number | boolean | null | undefined | Intrinsic
 
-export interface FabricComponent<TProps extends object = object> {
-  (props: TProps): FabricNode
-  propTypes?: any
-  displayName?: string | undefined
-}
+export type FabricComponent<TProps extends object = object> = (props: TProps) => FabricNode
 
 /**
  * Defines core runtime options for Fabric.

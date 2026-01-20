@@ -6,14 +6,14 @@ import type { FabricComponent, FabricNode } from './Fabric.ts'
 describe('createComponent', () => {
   it('should create a component builder', () => {
     const MyComponent: FabricComponent<{ name: string }> = ({ name }) => `Hello ${name}`
-    const builder = createComponent(MyComponent)
+    const builder = createComponent('MyComponent', MyComponent)
 
     expect(builder).toBeDefined()
   })
 
   it('should allow calling the builder with props', () => {
     const MyComponent: FabricComponent<{ name: string }> = ({ name }) => `Hello ${name}`
-    const builder = createComponent(MyComponent)
+    const builder = createComponent('MyComponent', MyComponent)
     const element = builder({ name: 'World' })
 
     expect(element.props).toEqual({ name: 'World' })
@@ -25,7 +25,7 @@ describe('createComponent', () => {
 
   it('should allow adding children', () => {
     const MyComponent: FabricComponent<{ children?: () => string }> = ({ children }) => `${children?.() ?? ''}`
-    const builder = createComponent(MyComponent)
+    const builder = createComponent('MyComponent', MyComponent)
 
     const child1 = 'Hello'
     const child2 = 'World'
@@ -40,7 +40,7 @@ describe('createComponent', () => {
 
   it('should handle function children', () => {
     const MyComponent: FabricComponent<{ children?: () => string }> = ({ children }) => `${children?.() ?? ''}`
-    const builder = createComponent(MyComponent)
+    const builder = createComponent('MyComponent', MyComponent)
 
     const child = 'Dynamic'
 
@@ -50,7 +50,7 @@ describe('createComponent', () => {
   })
 
   it('should pass children to props correctly as function', () => {
-    const MyComponent = createComponent(({ children }: { children?: FabricNode }) => {
+    const MyComponent = createComponent('MyComponent', ({ children }: { children?: FabricNode }) => {
       return Text({
         children,
       })
@@ -63,7 +63,7 @@ describe('createComponent', () => {
 
   it('should allow calling the builder without props and adding children', () => {
     const MyComponent: FabricComponent<{ children?: () => string }> = ({ children }) => `${children?.() ?? ''}`
-    const builder = createComponent(MyComponent)
+    const builder = createComponent('MyComponent', MyComponent)
 
     const element = builder().children('child content')
 

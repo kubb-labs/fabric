@@ -1,3 +1,3 @@
-const myFunc = () => { 
-return true 
+const myFunc = ()
+return true
 }

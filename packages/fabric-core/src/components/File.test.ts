@@ -42,7 +42,7 @@ describe('File', () => {
 
     const enable = false
 
-    const Component = createComponent(() => {
+    const Component = createComponent('Component', () => {
       return enable ? File({ baseName: 'test.ts', path: './test.ts' }) : undefined
     })
 
@@ -256,7 +256,7 @@ describe('File', () => {
 
     fabric.use(fsxPlugin)
 
-    const ChildComponent = createComponent(() => {
+    const ChildComponent = createComponent('Child', () => {
       const currentFile = inject(FileContext)
       return Text({ children: currentFile ? `File: ${currentFile.baseName}` : 'No file' })
     })

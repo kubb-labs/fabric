@@ -29,7 +29,7 @@ export type TypeProps = {
 /**
  * Generates a TypeScript type declaration.
  */
-export const Type = createComponent(({ children, ...props }: TypeProps) => {
+export const Type = createComponent('Type', ({ children, ...props }: TypeProps) => {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()

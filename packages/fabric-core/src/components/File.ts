@@ -4,9 +4,10 @@ import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
 import { FileContext } from '../contexts/FileContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
-import { type ComponentBuilder, createComponent, transform } from '../createComponent.ts'
+import { type ComponentBuilder, createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import { createExport, createImport, print } from '../parsers/typescriptParser.ts'
+import { transform } from '../transform.ts'
 import type { KubbFile } from '../types.ts'
 import { Text } from './Text.ts'
 
@@ -33,7 +34,7 @@ export type FileProps<TMeta extends object = object> = {
 /**
  * Adds files to the FileManager
  */
-export const File = createComponent(({ children, ...props }: FileProps) => {
+export const File = createComponent('File', ({ children, ...props }: FileProps) => {
   const { baseName, path, meta = {}, footer, banner } = props
 
   const fileManager = useFileManager()
@@ -74,7 +75,7 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  *
  * Returns the provided children string so the fsx renderer can collect it.
  */
-export const FileSource = createComponent(({ children, ...props }: FileSourceProps) => {
+export const FileSource = createComponent('FileSource', ({ children, ...props }: FileSourceProps) => {
   const { name, isExportable, isIndexable, isTypeOnly } = props
 
   const nodeTree = useNodeTree()
@@ -108,7 +109,7 @@ export type FileExportProps = KubbFile.Export
  *
  * No-op function used by renderers to record exports.
  */
-export const FileExport = createComponent((props: FileExportProps) => {
+export const FileExport = createComponent('FileExport', (props: FileExportProps) => {
   const { name, path, isTypeOnly, asAlias } = props
 
   const nodeTree = useNodeTree()
@@ -139,7 +140,7 @@ export type FileImportProps = KubbFile.Import
  *
  * No-op function used by renderers to record imports.
  */
-export const FileImport = createComponent((props: FileImportProps) => {
+export const FileImport = createComponent('FileImport', (props: FileImportProps) => {
   const { name, path, root, isNameSpace, isTypeOnly } = props
 
   const nodeTree = useNodeTree()

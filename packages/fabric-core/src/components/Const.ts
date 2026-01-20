@@ -37,7 +37,7 @@ export type ConstProps = {
 /**
  * Generates a TypeScript constant declaration.
  */
-export const Const = createComponent(({ children, ...props }: ConstProps) => {
+export const Const = createComponent('Const', ({ children, ...props }: ConstProps) => {
   const { name, export: canExport, type, JSDoc, asConst } = props
 
   const nodeTree = useNodeTree()
