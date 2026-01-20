@@ -1,5 +1,5 @@
-import { inject, provide, RenderContext } from '@kubb/fabric-core'
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
+import { inject, RenderContext } from '@kubb/fabric-core'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
@@ -7,7 +7,6 @@ import type { DOMElement, KubbFile } from '../types.ts'
 export function squashTextNodes(node: DOMElement): string {
   // Initialize RenderContext for this render
   const renderContext = inject(RenderContext, { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false })
-  provide(RenderContext, renderContext)
 
   let text = ''
 
