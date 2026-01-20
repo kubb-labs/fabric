@@ -1,9 +1,14 @@
 import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
+import { inject, provide, RenderContext } from '@kubb/fabric-core'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
 
 export function squashTextNodes(node: DOMElement): string {
+  // Initialize RenderContext for this render
+  const renderContext = inject(RenderContext, { indentLevel: 0, indentSize: 2, currentLineLength: 0, shouldBreak: false })
+  provide(RenderContext, renderContext)
+
   let text = ''
 
   const walk = (current: DOMElement): string => {
@@ -49,8 +54,37 @@ export function squashTextNodes(node: DOMElement): string {
         }
       }
 
+      const applyIndent = (text: string): string => {
+        if (text.length === 0) {
+          return ''
+        }
+
+        const indentStr = ' '.repeat(renderContext.indentLevel * renderContext.indentSize)
+        const lines = text.split('\n')
+        let out = ''
+
+        for (const [i, line] of lines.entries()) {
+          if (renderContext.currentLineLength === 0 && line.length > 0) {
+            // At start of a line: prefix indentation
+            out += indentStr + line
+            renderContext.currentLineLength = indentStr.length + line.length
+          } else {
+            out += line
+            renderContext.currentLineLength += line.length
+          }
+
+          // If not the last line, add newline and reset line length
+          if (i !== lines.length - 1) {
+            out += '\n'
+            renderContext.currentLineLength = 0
+          }
+        }
+
+        return out
+      }
+
       if (child.nodeName === '#text') {
-        nodeText = child.nodeValue
+        nodeText = applyIndent(child.nodeValue)
       } else {
         if (child.nodeName === 'kubb-text' || child.nodeName === 'kubb-file' || child.nodeName === 'kubb-source') {
           nodeText = walk(child)
@@ -60,6 +94,17 @@ export function squashTextNodes(node: DOMElement): string {
 
         if (child.nodeName === 'br') {
           nodeText = '\n'
+          renderContext.currentLineLength = 0
+        }
+
+        if (child.nodeName === 'indent') {
+          renderContext.indentLevel++
+          nodeText = ''
+        }
+
+        if (child.nodeName === 'dedent') {
+          renderContext.indentLevel = Math.max(0, renderContext.indentLevel - 1)
+          nodeText = ''
         }
 
         if (!nodeNames.has(child.nodeName)) {
