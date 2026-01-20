@@ -27,7 +27,7 @@ export { createComponent } from './createComponent.ts'
 // helpers
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
-export { Br, Dedent, Indent, isIntrinsic, type Intrinsic } from './transform.ts'
+export { Br, Dedent, Indent } from './transform.ts'
 export { createJSDoc } from './utils/createJSDoc.ts'
 export { getRelativePath } from './utils/getRelativePath.ts'
 

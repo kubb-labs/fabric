@@ -1,5 +1,5 @@
-import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 import { inject, provide, RenderContext } from '@kubb/fabric-core'
+import { createExport, createImport, print } from '@kubb/fabric-core/parsers/typescript'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, KubbFile } from '../types.ts'
