@@ -182,7 +182,7 @@ const ArrowFunction = createComponent('ArrowFunction', ({ children, ...props }: 
     return [parts.join(''), ' => {', Br(), Indent(), children, Br(), Dedent(), '}']
   }
 
-  return [parts.join(''), '=> {}']
+  return [parts.join(''), ' => {}']
 })
 
 ArrowFunction.displayName = 'KubbArrowFunction'
