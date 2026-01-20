@@ -1,3 +1,3 @@
-async function myFunc(): Promise<boolean> { 
-return true 
+async function myFunc(): Promise<boolean> {
+  return true
 }

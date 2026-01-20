@@ -1,6 +1,6 @@
 /**
  * @deprecated
  */
-function myFunc() { 
-return true 
+function myFunc() {
+  return true
 }

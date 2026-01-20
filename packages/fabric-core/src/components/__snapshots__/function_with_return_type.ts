@@ -1,3 +1,3 @@
-function myFunc(): boolean { 
-return true 
+function myFunc(): boolean {
+  return true
 }

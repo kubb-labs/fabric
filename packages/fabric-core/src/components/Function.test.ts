@@ -20,14 +20,14 @@ describe('Function', () => {
 
   const scenarios: Array<{ name: string; props: any }> = [
     { name: 'basic function', props: { name: 'myFunc', children: Component() } },
-    // { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
-    // { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
-    // { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
-    // { name: 'function with generics', props: { name: 'myFunc', generics: 'T', children: 'return true' } },
-    // { name: 'function with return type', props: { name: 'myFunc', returnType: 'boolean', children: 'return true' } },
-    // { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
-    // { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
-    // { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
+    { name: 'exported function', props: { name: 'myFunc', export: true, children: 'return true' } },
+    { name: 'function with parameters', props: { name: 'myFunc', params: 'a: string, b: number', children: 'return true' } },
+    { name: 'async function', props: { name: 'myFunc', async: true, children: 'return true' } },
+    { name: 'function with generics', props: { name: 'myFunc', generics: 'T', children: 'return true' } },
+    { name: 'function with return type', props: { name: 'myFunc', returnType: 'boolean', children: 'return true' } },
+    { name: 'async function with Promise return type', props: { name: 'myFunc', async: true, returnType: 'boolean', children: 'return true' } },
+    { name: 'function with JSDoc', props: { name: 'myFunc', JSDoc: { comments: ['@deprecated'] }, children: 'return true' } },
+    { name: 'default exported function', props: { name: 'myFunc', export: true, default: true, children: 'return true' } },
   ]
 
   it.each(scenarios)('should create a $name', async ({ name, props }) => {

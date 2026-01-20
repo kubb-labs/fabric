@@ -1,3 +1,3 @@
-function myFunc(a: string, b: number) { 
-return true 
+function myFunc(a: string, b: number) {
+  return true
 }
