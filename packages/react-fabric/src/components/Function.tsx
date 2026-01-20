@@ -86,6 +86,7 @@ export function Function({ children, ...props }: Props): KubbElement {
         </>
       )}
       {' {'}
+      {/* Alternative using BlockWithIndent: <BlockWithIndent>{children}</BlockWithIndent> */}
       <br />
       <Indent size={2}>{children}</Indent>
       <br />
@@ -155,6 +156,7 @@ function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
       {!singleLine && (
         <>
           {' => {'}
+          {/* Alternative using BlockWithIndent: <BlockWithIndent>{children}</BlockWithIndent> */}
           <br />
           <Indent size={2}>{children}</Indent>
           <br />

@@ -16,6 +16,7 @@ export const useReducer = React.useReducer
 export const useRef = React.useRef
 // components
 export { App } from './components/App.tsx'
+export { BlockWithIndent } from './components/BlockWithIndent.tsx'
 export { Const } from './components/Const.tsx'
 export { File } from './components/File.tsx'
 export { Function } from './components/Function.tsx'
