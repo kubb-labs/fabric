@@ -1,6 +1,7 @@
 // import './globals.ts'
 import * as React from 'react'
 
+export type { Fabric } from '@kubb/fabric-core'
 // expose fabric core helpers
 export { createFabric, createFile, FileManager, FileProcessor } from '@kubb/fabric-core'
 
