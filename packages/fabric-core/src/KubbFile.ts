@@ -1,4 +1,4 @@
-export type ImportName =
+type ImportName =
   | string
   | Array<
       | string
