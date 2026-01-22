@@ -15,7 +15,6 @@ export default defineConfig({
   sourcemap: true,
   shims: true,
   exports: true,
-  noExternal: [/remeda/],
   fixedExtension: false,
   outputOptions: {
     keepNames: true,
