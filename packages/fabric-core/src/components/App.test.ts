@@ -66,7 +66,6 @@ describe('App', () => {
   it('should inject meta data', () => {
     const Text = createComponent('Text', () => {
       const ctx = inject(AppContext)
-      console.log('Test Text ctx:', ctx)
       return JSON.stringify(ctx?.meta)
     })
 
