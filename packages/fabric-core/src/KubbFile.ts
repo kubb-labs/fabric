@@ -1,18 +1,21 @@
+export type ImportName =
+  | string
+  | Array<
+      | string
+      | {
+          propertyName: string
+          name?: string
+        }
+    >
+
 export type Import = {
   /**
    * Import name to be used
    * @example ["useState"]
    * @example "React"
    */
-  name:
-    | string
-    | Array<
-        | string
-        | {
-            propertyName: string
-            name?: string
-          }
-      >
+  name: ImportName
+
   /**
    * Path for the import
    * @example '@kubb/core'
