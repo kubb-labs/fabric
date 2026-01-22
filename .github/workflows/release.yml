@@ -93,10 +93,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const publishedPackages = JSON.parse(process.env.PUBLISHED_PACKAGES || '[]');
-            const corePackage = publishedPackages.find(pkg => pkg.name === '@kubb/core');
+            const corePackage = publishedPackages.find(pkg => pkg.name === '@kubb/fabric-core');
             const version = corePackage?.version || '';
             const versionSlug = version.replace(/\./g, '-');
-            const docsUrl = version ? `https://www.kubb.dev/changelog#_${versionSlug}` : 'https://www.kubb.dev/changelog';
+            const docsUrl = version ? `https://www.kubb.dev/fabric/changelog#_${versionSlug}` : 'https://www.kubb.dev/fabirc/changelog';
 
             fetch(process.env.DISCORD_WEBHOOK_URL, {
               method: 'POST',
@@ -104,7 +104,7 @@ jobs:
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                content: `A new release is available 🎉. \n [Read the changelog](https://github.com/kubb-labs/kubb/releases) \n [View docs changelog](${docsUrl})`
+                content: `A new release is available 🎉. \n [Read the changelog](https://github.com/kubb-labs/fabric/releases) \n [View docs changelog](${docsUrl})`
               }),
             })
             .then((res) => {
