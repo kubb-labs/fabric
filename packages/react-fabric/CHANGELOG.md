@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.12.4
+
+### Patch Changes
+
+- [`5267c48`](https://github.com/kubb-labs/fabric/commit/5267c48cff8d1e15e864cf2ac9042d7808bb54a0) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Expose fabric
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.12.4
+
 ## 0.12.3
 
 ### Patch Changes
