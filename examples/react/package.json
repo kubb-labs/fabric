@@ -6,7 +6,7 @@
   "description": "React example",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kubb-labs/kubb.git",
+    "url": "https://github.com/kubb-labs/fabric.git",
     "directory": "examples/react"
   },
   "license": "MIT",

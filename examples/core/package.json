@@ -6,7 +6,7 @@
   "description": "Core example",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kubb-labs/kubb.git",
+    "url": "https://github.com/kubb-labs/fabric.git",
     "directory": "examples/core"
   },
   "license": "MIT",
