@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://kubb.dev" target="_blank" rel="noopener noreferrer">
+  <a href="https://kubb.dev/fabric" target="_blank" rel="noopener noreferrer">
     <img width="180" src="https://raw.githubusercontent.com/kubb-labs/fabric/main/assets/logo.png" alt="Kubb fabric logo">
   </a>
 
@@ -9,7 +9,7 @@
 [![License][license-src]][license-href]
 [![Sponsors][sponsors-src]][sponsors-href]
 <h4>
-    <a href="https://kubb.dev/" target="_blank">Documentation</a>
+    <a href="https://kubb.dev/fabric" target="_blank">Documentation</a>
     <span> · </span>
       <a href="https://github.com/kubb-labs/fabric/issues/" target="_blank">Report Bug</a>
     <span> · </span>
