@@ -19,4 +19,5 @@ export default defineConfig({
   outputOptions: {
     keepNames: true,
   },
+  inlineOnly: false,
 })
