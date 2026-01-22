@@ -24,8 +24,8 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Setup
-        uses: ./.github/setup
+      - name: Setup Tools
+        uses: kubb-labs/config/.github/setup@main
 
       - name: Fix formatting
         run: pnpm run format
@@ -37,4 +37,4 @@ jobs:
         uses: autofix-ci/action@v1
         with:
           commit-message: 'ci: apply linting and formating'
-          comment: Auto fix applied for linting anf formating
+          comment: Auto fix applied for linting and formating

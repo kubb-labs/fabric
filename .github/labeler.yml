@@ -1,0 +1,20 @@
+'docs':
+  - any:
+      [
+        'docs/**',
+        '!docs/**/package.json',
+        'examples/**',
+        '!examples/**/package.json',
+      ]
+
+'@kubb/fabric-core':
+  - any: ['packages/fabric-core/**', '!packages/fabric-core/package.json']
+
+'@kubb/react-fabric':
+  - any: ['packages/react-fabric/**', '!packages/react-fabric/package.json']
+
+feature:
+  - head-branch: ['^feat', 'feat']
+
+bug:
+  - head-branch: [ '^bug', 'bug', '^fix', 'fix', ]
