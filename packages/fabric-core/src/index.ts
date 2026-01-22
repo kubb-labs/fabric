@@ -30,6 +30,8 @@ export { createComponent } from './createComponent.ts'
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
 // utils
+export type { Fabric } from './Fabric.ts'
+
 export { FileManager } from './FileManager.ts'
 export { FileProcessor } from './FileProcessor.ts'
 export { renderIndent, renderIntrinsic } from './intrinsic.ts'
