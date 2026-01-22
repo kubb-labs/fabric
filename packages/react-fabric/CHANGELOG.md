@@ -1,5 +1,12 @@
 # @kubb/react-fabric
 
+## 0.12.3
+
+### Patch Changes
+
+- Updated dependencies [[`9dce22e`](https://github.com/kubb-labs/fabric/commit/9dce22e9aa5bb2a708eb2d925697a377cb1780ca)]:
+  - @kubb/fabric-core@0.12.3
+
 ## 0.12.2
 
 ### Patch Changes
