@@ -28,7 +28,7 @@ features:
   - icon: 📦
     title: Cross-Runtime Support
     details: Works seamlessly with Node.js and Bun for maximum compatibility.
-    link: /getting-started/installation/
+    link: /getting-started/introduction/
     linkText: Learn more
   - icon: 🧩
     title: Plugin System
