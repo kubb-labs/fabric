@@ -127,12 +127,7 @@ jobs:
       - name: Linting
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
-        continue-on-error: true
-        run: pnpm run lint:ci
-
-      - name: Knip
-        continue-on-error: true
-        run: pnpm run knip --reporter github-actions
+        run: pnpm run lint
 
   prerelease:
     name: Prerelease
@@ -159,6 +154,31 @@ jobs:
 
       - name: Publish preview packages
         run: pnpx pkg-pr-new publish --pnpm --owner=stijnvanhulle --repo=https://github.com/kubb-labs/fabric.git './packages/*' --template './examples/*'
+
+  spellcheck:
+    name: Linting
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    needs: build
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Tools
+        uses: kubb-labs/config/.github/setup@main
+
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            packages/*/dist
+            packages/*/node_modules/.cache
+          key: build-${{ github.sha }}
+      - name: Spell Check
+        uses: streetsidesoftware/cspell-action@v8
 
   dependency-diff:
     name: Dependency Diff

@@ -6,7 +6,7 @@ import { fsPlugin, write } from './fsPlugin.ts'
 
 describe('write', () => {
   const mocksPath = path.resolve(__dirname, '../../mocks')
-  const filePath = path.resolve(mocksPath, './hellowWorld.js')
+  const filePath = path.resolve(mocksPath, './helloWorld.js')
 
   it('should create a file in the mocks folder', async () => {
     const text = `export const hallo = 'world'`
@@ -85,7 +85,7 @@ describe('write', () => {
 
   it('should call onBeforeWrite callback', async () => {
     const onBeforeWriteMock = vi.fn()
-    const testFilePath = path.resolve(mocksPath, './onbeforewrite-test.js')
+    const testFilePath = path.resolve(mocksPath, './onBeforeWrite-test.js')
 
     const ctxStub = {
       on: vi.fn((event, handler) => {

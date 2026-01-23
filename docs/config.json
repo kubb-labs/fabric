@@ -1,0 +1,164 @@
+{
+  "$schema": "https://kubb.dev/schemas/config/schema.json",
+  "sidebars": [
+    {
+      "name": "gettingStarted",
+      "value": [
+        {
+          "text": "Getting Started",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "Introduction",
+              "link": "/getting-started/introduction/"
+            },
+            {
+              "text": "Installation",
+              "link": "/getting-started/installation/"
+            },
+            {
+              "text": "Quick Start",
+              "link": "/getting-started/quick-start/"
+            },
+            {
+              "text": "Configuration",
+              "link": "/getting-started/configuration/"
+            },
+            {
+              "text": "Troubleshooting",
+              "link": "/getting-started/troubleshooting/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "api",
+      "value": [
+        {
+          "text": "Core",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "createFabric",
+              "link": "/api/core/create-fabric/"
+            },
+            {
+              "text": "Events",
+              "link": "/api/core/events/"
+            }
+          ]
+        },
+        {
+          "text": "Plugins",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "fsPlugin",
+              "link": "/api/plugins/fs-plugin/"
+            },
+            {
+              "text": "loggerPlugin",
+              "link": "/api/plugins/logger-plugin/"
+            },
+            {
+              "text": "barrelPlugin",
+              "link": "/api/plugins/barrel-plugin/"
+            }
+          ]
+        },
+        {
+          "text": "Parsers",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "typescriptParser",
+              "link": "/api/parsers/typescript-parser/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "guides",
+      "value": [
+        {
+          "text": "Guides",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "Creating Plugins",
+              "link": "/guide/creating-plugins/"
+            },
+            {
+              "text": "File Generation Patterns",
+              "link": "/guide/file-generation-patterns/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tutorials",
+      "value": [
+        {
+          "text": "Tutorials",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "Building a Code Generator",
+              "link": "/tutorials/building-code-generator/"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "nav": [
+    {
+      "text": "Docs",
+      "items": [
+        {
+          "text": "Getting Started",
+          "link": "/getting-started/introduction/"
+        },
+        {
+          "text": "API Reference",
+          "items": [
+            {
+              "text": "Core",
+              "link": "/api/core/create-fabric/"
+            },
+            {
+              "text": "Plugins",
+              "link": "/api/plugins/fs-plugin/"
+            },
+            {
+              "text": "Parsers",
+              "link": "/api/parsers/typescript-parser/"
+            }
+          ]
+        },
+        {
+          "text": "Guides",
+          "link": "/guide/creating-plugins/"
+        },
+        {
+          "text": "Tutorials",
+          "link": "/tutorials/building-code-generator/"
+        }
+      ]
+    },
+    {
+      "text": "GitHub",
+      "link": "https://github.com/kubb-labs/fabric",
+      "target": "_blank"
+    }
+  ],
+  "sidebar": {
+    "/getting-started": "gettingStarted",
+    "/api": "api",
+    "/guide": "guides",
+    "/tutorials": "tutorials"
+  }
+}

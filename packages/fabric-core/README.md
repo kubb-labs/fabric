@@ -12,7 +12,7 @@
 [![Sponsors][sponsors-src]][sponsors-href]
 
 <h4>
-    <a href="https://kubb.dev/" target="_blank">Documentation</a>
+    <a href="https://kubb.dev/fabric" target="_blank">Documentation</a>
     <span> · </span>
       <a href="https://github.com/kubb-labs/fabric/issues/" target="_blank">Report Bug</a>
     <span> · </span>
@@ -27,7 +27,6 @@ It offers a lightweight layer for file generation while orchestrating the overal
 
 > [!WARNING]
 > Fabric is under active development. Until a stable 1.0 release, minor versions may occasionally include breaking changes. Please check release notes and PR titles for breaking changes.
-
 
 # Features
 
