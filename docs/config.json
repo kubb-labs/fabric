@@ -35,27 +35,27 @@
           "items": [
             {
               "text": "Introduction",
-              "link": "/getting-started/introduction/",
+              "link": "/getting-started/introduction",
               "activeMatch": "^/getting-started/introduction/?$"
             },
             {
               "text": "Installation",
-              "link": "/getting-started/installation/",
+              "link": "/getting-started/installation",
               "activeMatch": "^/getting-started/installation/?$"
             },
             {
               "text": "Quick Start",
-              "link": "/getting-started/quick-start/",
+              "link": "/getting-started/quick-start",
               "activeMatch": "^/getting-started/quick-start/?$"
             },
             {
               "text": "Configure",
-              "link": "/getting-started/Configure/",
+              "link": "/getting-started/Configure",
               "activeMatch": "^/getting-started/configure/?$"
             },
             {
               "text": "Troubleshooting",
-              "link": "/getting-started/troubleshooting/",
+              "link": "/getting-started/troubleshooting",
               "activeMatch": "^/getting-started/troubleshooting/?$"
             }
           ]
@@ -66,12 +66,12 @@
           "items": [
             {
               "text": "createFabric",
-              "link": "/api/core/create-fabric/",
+              "link": "/api/core/create-fabric",
               "activeMatch": "^/api/core/create-fabric/?$"
             },
             {
               "text": "Events",
-              "link": "/api/core/events/",
+              "link": "/api/core/events",
               "activeMatch": "^/api/core/events/?$"
             }
           ]
@@ -81,18 +81,18 @@
           "collapsed": false,
           "items": [
             {
-              "text": "fsPlugin",
-              "link": "/api/plugins/fs-plugin/",
+              "text": "Fs Plugin",
+              "link": "/api/plugins/fs-plugin",
               "activeMatch": "^/api/plugins/fs-plugin/?$"
             },
             {
-              "text": "loggerPlugin",
-              "link": "/api/plugins/logger-plugin/",
+              "text": "Logger Plugin",
+              "link": "/api/plugins/logger-plugin",
               "activeMatch": "^/api/plugins/logger-plugin/?$"
             },
             {
-              "text": "barrelPlugin",
-              "link": "/api/plugins/barrel-plugin/",
+              "text": "Barrel Plugin",
+              "link": "/api/plugins/barrel-plugin",
               "activeMatch": "^/api/plugins/barrel-plugin/?$"
             }
           ]
@@ -102,8 +102,8 @@
           "collapsed": false,
           "items": [
             {
-              "text": "typescriptParser",
-              "link": "/api/parsers/typescript-parser/",
+              "text": "TypeScript Parser",
+              "link": "/api/parsers/typescript-parser",
               "activeMatch": "^/api/parsers/typescript-parser/?$"
             }
           ]
@@ -114,7 +114,7 @@
           "items": [
             {
               "text": "Building a Code Generator",
-              "link": "/tutorials/basic/",
+              "link": "/tutorials/basic",
               "activeMatch": "^/tutorials/basic/?$"
             }
           ]
@@ -126,12 +126,12 @@
       "value": [
         {
           "text": "Creating Plugins",
-          "link": "/guide/creating-plugins/",
+          "link": "/guide/creating-plugins",
           "activeMatch": "^/guide/creating-plugins/?$"
         },
         {
           "text": "File Generation Patterns",
-          "link": "/guide/file-generation-patterns/",
+          "link": "/guide/file-generation-patterns",
           "activeMatch": "^/guide/file-generation-patterns/?$"
         }
       ]
