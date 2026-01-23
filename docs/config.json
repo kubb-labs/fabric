@@ -2,50 +2,77 @@
   "$schema": "https://kubb.dev/schemas/config/schema.json",
   "sidebars": [
     {
-      "name": "gettingStarted",
+      "name": "default",
       "value": [
+        {
+          "text": "Menu",
+          "items": [
+            {
+              "text": "Home",
+              "link": "/",
+              "activeMatch": "^/$"
+            },
+            {
+              "text": "Github",
+              "link": "https://github.com/kubb-labs/fabric",
+              "target": "_blank"
+            },
+            {
+              "text": "Releases",
+              "link": "https://github.com/kubb-labs/fabric/releases",
+              "target": "_blank"
+            },
+            {
+              "text": "Changelog",
+              "link": "/changelog",
+              "activeMatch": "^/changelog/?$"
+            }
+          ]
+        },
         {
           "text": "Getting Started",
           "collapsed": false,
           "items": [
             {
               "text": "Introduction",
-              "link": "/getting-started/introduction/"
+              "link": "/getting-started/introduction/",
+              "activeMatch": "^/getting-started/introduction/?$"
             },
             {
               "text": "Installation",
-              "link": "/getting-started/installation/"
+              "link": "/getting-started/installation/",
+              "activeMatch": "^/getting-started/installation/?$"
             },
             {
               "text": "Quick Start",
-              "link": "/getting-started/quick-start/"
+              "link": "/getting-started/quick-start/",
+              "activeMatch": "^/getting-started/quick-start/?$"
             },
             {
-              "text": "Configuration",
-              "link": "/getting-started/configuration/"
+              "text": "Configure",
+              "link": "/getting-started/Configure/",
+              "activeMatch": "^/getting-started/configure/?$"
             },
             {
               "text": "Troubleshooting",
-              "link": "/getting-started/troubleshooting/"
+              "link": "/getting-started/troubleshooting/",
+              "activeMatch": "^/getting-started/troubleshooting/?$"
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "api",
-      "value": [
+        },
         {
-          "text": "Core",
+          "text": "Core API",
           "collapsed": false,
           "items": [
             {
               "text": "createFabric",
-              "link": "/api/core/create-fabric/"
+              "link": "/api/core/create-fabric/",
+              "activeMatch": "^/api/core/create-fabric/?$"
             },
             {
               "text": "Events",
-              "link": "/api/core/events/"
+              "link": "/api/core/events/",
+              "activeMatch": "^/api/core/events/?$"
             }
           ]
         },
@@ -55,15 +82,18 @@
           "items": [
             {
               "text": "fsPlugin",
-              "link": "/api/plugins/fs-plugin/"
+              "link": "/api/plugins/fs-plugin/",
+              "activeMatch": "^/api/plugins/fs-plugin/?$"
             },
             {
               "text": "loggerPlugin",
-              "link": "/api/plugins/logger-plugin/"
+              "link": "/api/plugins/logger-plugin/",
+              "activeMatch": "^/api/plugins/logger-plugin/?$"
             },
             {
               "text": "barrelPlugin",
-              "link": "/api/plugins/barrel-plugin/"
+              "link": "/api/plugins/barrel-plugin/",
+              "activeMatch": "^/api/plugins/barrel-plugin/?$"
             }
           ]
         },
@@ -73,92 +103,44 @@
           "items": [
             {
               "text": "typescriptParser",
-              "link": "/api/parsers/typescript-parser/"
+              "link": "/api/parsers/typescript-parser/",
+              "activeMatch": "^/api/parsers/typescript-parser/?$"
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "guides",
-      "value": [
-        {
-          "text": "Guides",
-          "collapsed": false,
-          "items": [
-            {
-              "text": "Creating Plugins",
-              "link": "/guide/creating-plugins/"
-            },
-            {
-              "text": "File Generation Patterns",
-              "link": "/guide/file-generation-patterns/"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "tutorials",
-      "value": [
+        },
         {
           "text": "Tutorials",
-          "collapsed": false,
+          "collapsed": true,
           "items": [
             {
               "text": "Building a Code Generator",
-              "link": "/tutorials/building-code-generator/"
+              "link": "/tutorials/basic/",
+              "activeMatch": "^/tutorials/basic/?$"
             }
           ]
-        }
-      ]
-    }
-  ],
-  "nav": [
-    {
-      "text": "Docs",
-      "items": [
-        {
-          "text": "Getting Started",
-          "link": "/getting-started/introduction/"
-        },
-        {
-          "text": "API Reference",
-          "items": [
-            {
-              "text": "Core",
-              "link": "/api/core/create-fabric/"
-            },
-            {
-              "text": "Plugins",
-              "link": "/api/plugins/fs-plugin/"
-            },
-            {
-              "text": "Parsers",
-              "link": "/api/parsers/typescript-parser/"
-            }
-          ]
-        },
-        {
-          "text": "Guides",
-          "link": "/guide/creating-plugins/"
-        },
-        {
-          "text": "Tutorials",
-          "link": "/tutorials/building-code-generator/"
         }
       ]
     },
     {
-      "text": "GitHub",
-      "link": "https://github.com/kubb-labs/fabric",
-      "target": "_blank"
+      "name": "guide",
+      "value": [
+        {
+          "text": "Creating Plugins",
+          "link": "/guide/creating-plugins/",
+          "activeMatch": "^/guide/creating-plugins/?$"
+        },
+        {
+          "text": "File Generation Patterns",
+          "link": "/guide/file-generation-patterns/",
+          "activeMatch": "^/guide/file-generation-patterns/?$"
+        }
+      ]
     }
   ],
   "sidebar": {
-    "/getting-started": "gettingStarted",
-    "/api": "api",
-    "/guide": "guides",
-    "/tutorials": "tutorials"
+    "/getting-started": "default",
+    "/api": "default",
+    "/tutorials": "default",
+    "/guide": "guide"
   }
 }

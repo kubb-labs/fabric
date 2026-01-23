@@ -34,9 +34,9 @@ await fabric.addFile({
   baseName: 'user.ts',
   path: './generated/user.ts',
   sources: [
-    { 
+    {
       value: 'export type User = { id: number; name: string }',
-      isExportable: true 
+      isExportable: true
     },
   ],
 })
@@ -239,7 +239,7 @@ await fabric.write()
       <h3>Creating Plugins</h3>
       <p>Build custom plugins</p>
     </a>
-    <a href="/tutorials/building-code-generator" class="vp-card">
+    <a href="/tutorials/basic" class="vp-card">
       <h3>Tutorials</h3>
       <p>Step-by-step guides</p>
     </a>

@@ -9,7 +9,7 @@ Fabric is a language-agnostic toolkit for generating code and files using JSX an
 ```
 docs/
 ├── config.json              # Navigation and sidebar (Kubb.dev schema)
-├── getting-started/         # Installation, quick-start, configuration
+├── guide/                   # Installation, quick-start, configuration
 ├── api/                     # API references (core, plugins, parsers)
 ├── guide/                   # Plugin development, best practices
 ├── tutorials/               # End-to-end tutorials
