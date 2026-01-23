@@ -146,7 +146,7 @@ render(App: FabricElement<any>): Promise<string>
 
 **Example:**
 
-```tsx [render-example.ts]
+```ts [render-example.ts]
 import { createComponent } from '@kubb/fabric-core'
 
 const App = createComponent('App', () => {
@@ -169,7 +169,7 @@ waitUntilExit(): Promise<void>
 
 **Example:**
 
-```tsx [wait-example.ts]
+```ts [wait-example.ts]
 await fabric.render(App())
 await fabric.waitUntilExit()
 console.log('Rendering completed')
