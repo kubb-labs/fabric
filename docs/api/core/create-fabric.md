@@ -220,9 +220,37 @@ await fabric.writeEntry('./generated', 'named')
 
 ### fabric.render()
 
-*Injected by `reactPlugin`*
+*Injected by `fsxPlugin` or `reactPlugin`*
 
-Renders a React component tree to the terminal.
+Renders a component tree and returns the output as a string.
+
+When using `fsxPlugin`, it renders FabricElements to generate file content:
+
+```ts
+fabric.render(App: FabricElement<any>): Promise<string>
+```
+
+**Parameters:**
+
+- `App` — FabricElement component to render
+
+**Example:**
+
+```ts [render-fsx.ts]
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { createComponent } from '@kubb/fabric-core'
+
+fabric.use(fsxPlugin)
+
+const App = createComponent('App', () => {
+  return 'const value = "hello"'
+})
+
+const output = await fabric.render(App())
+console.log(output) // "const value = "hello""
+```
+
+When using `reactPlugin`, it renders React components to the terminal:
 
 ```ts
 fabric.render(App: React.ElementType): Promise<void> | void
@@ -271,9 +299,29 @@ console.log(output)
 
 ### fabric.waitUntilExit()
 
-*Injected by `reactPlugin`*
+*Injected by `fsxPlugin` or `reactPlugin`*
 
-Waits until the rendered React app exits.
+Waits until the rendering process exits.
+
+When using `fsxPlugin`, it waits until the FabricElement rendering completes:
+
+```ts
+fabric.waitUntilExit(): Promise<void>
+```
+
+**Example:**
+
+```ts [wait-fsx.ts]
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+
+fabric.use(fsxPlugin)
+
+await fabric.render(App())
+await fabric.waitUntilExit()
+console.log('Rendering completed')
+```
+
+When using `reactPlugin`, it waits until the rendered React app exits:
 
 ```ts
 fabric.waitUntilExit(): Promise<void>
