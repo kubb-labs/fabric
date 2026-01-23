@@ -83,7 +83,7 @@ When adding new documentation:
 4. Follow the documentation style guide in `.skills/documentation/`
 5. Test locally with `npm run dev`
 
-## Links
+## See Also
 
 - [VitePress Documentation](https://vitepress.dev)
 - [Fabric Repository](https://github.com/kubb-labs/fabric)
