@@ -22,10 +22,19 @@ export type Import = {
    */
   path: string
   /**
-   * Add `type` prefix to the import, this will result in: `import type { Type } from './path'`.
+   * Add type-only import prefix.
+   * - `true` generates `import type { Type } from './path'`
+   * - `false` generates `import { Type } from './path'`
+   * @default false
    */
   isTypeOnly?: boolean
 
+  /**
+   * Import entire module as namespace.
+   * - `true` generates `import * as Name from './path'`
+   * - `false` generates standard import
+   * @default false
+   */
   isNameSpace?: boolean
   /**
    * When root is set it will get the path with relative getRelativePath(root, path).
@@ -36,14 +45,24 @@ export type Import = {
 export type Source = {
   name?: string
   value?: string
+  /**
+   * Make this source a type-only export.
+   * - `true` marks source as type export
+   * - `false` marks source as value export
+   * @default false
+   */
   isTypeOnly?: boolean
   /**
-   * Has const or type 'export'
+   * Include export keyword in source.
+   * - `true` generates exportable const or type
+   * - `false` generates internal declaration
    * @default false
    */
   isExportable?: boolean
   /**
-   * When set, barrel generation will add this
+   * Include in barrel file generation.
+   * - `true` adds to barrel exports
+   * - `false` excludes from barrel exports
    * @default false
    */
   isIndexable?: boolean
@@ -62,11 +81,17 @@ export type Export = {
    */
   path: string
   /**
-   * Add `type` prefix to the export, this will result in: `export type { Type } from './path'`.
+   * Add type-only export prefix.
+   * - `true` generates `export type { Type } from './path'`
+   * - `false` generates `export { Type } from './path'`
+   * @default false
    */
   isTypeOnly?: boolean
   /**
-   * Make it possible to override the name, this will result in: `export * as aliasName from './path'`.
+   * Export as aliased namespace.
+   * - `true` generates `export * as aliasName from './path'`
+   * - `false` generates standard export
+   * @default false
    */
   asAlias?: boolean
 }

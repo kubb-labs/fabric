@@ -8,25 +8,35 @@ import { createJSDoc } from '../utils/createJSDoc.ts'
 
 export type TypeProps = {
   /**
-   * Name of the type, this needs to start with a capital letter.
+   * Name of the type (must start with a capital letter).
    */
   name: string
   /**
-   * Does this type need to be exported.
+   * Export this type.
+   * - `true` generates `export type`
+   * - `false` generates internal type
+   * @default false
    */
   export?: boolean
   /**
-   * Options for JSdocs.
+   * JSDoc comments for the type.
    */
   JSDoc?: JSDoc
   /**
-   * Children nodes.
+   * Type definition.
    */
   children?: FabricNode
 }
 
 /**
  * Generates a TypeScript type declaration.
+ *
+ * @example
+ * ```tsx
+ * <Type name="User" export>
+ *   {'{'} id: number; name: string {'}'}
+ * </Type>
+ * ```
  */
 export const Type = createComponent('Type', ({ children, ...props }: TypeProps) => {
   const { name, export: canExport, JSDoc } = props

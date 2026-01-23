@@ -2,9 +2,18 @@ import { AppContext, type AppContextProps } from '../contexts/AppContext.ts'
 import { useContext } from './useContext.ts'
 
 /**
- * `useApp` will return the current App with meta and exit function.
+ * Accesses the App context with metadata and exit function.
  *
- * Throws an error when there is no AppContext available.
+ * Use this composable to access metadata defined in the App component
+ * or to exit the rendering process early.
+ *
+ * @throws Error when no AppContext is available
+ *
+ * @example
+ * ```ts
+ * const { meta, exit } = useApp<{ version: string }>()
+ * console.log(meta.version)
+ * ```
  */
 export function useApp<TMeta extends object = object>(): AppContextProps<TMeta> {
   return useContext(AppContext) as AppContextProps<TMeta>

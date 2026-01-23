@@ -8,33 +8,48 @@ import { createJSDoc } from '../utils/createJSDoc.ts'
 
 export type ConstProps = {
   /**
-   * Name of the const
+   * Name of the constant.
    */
   name: string
   /**
-   * Does this type need to be exported.
+   * Export this constant.
+   * - `true` generates `export const`
+   * - `false` generates internal const
+   * @default false
    */
   export?: boolean
   /**
-   * Type to make the const being typed
+   * TypeScript type annotation.
+   *
+   * @example 'string' or 'User[]'
    */
   type?: string
   /**
-   * Options for JSdocs.
+   * JSDoc comments for the constant.
    */
   JSDoc?: JSDoc
   /**
-   * Use of `const` assertions
+   * Use const assertion.
+   * - `true` adds `as const` for deep readonly
+   * - `false` uses inferred or explicit type
+   * @default false
    */
   asConst?: boolean
   /**
-   * Children nodes.
+   * Constant value.
    */
   children?: FabricNode
 }
 
 /**
  * Generates a TypeScript constant declaration.
+ *
+ * @example
+ * ```tsx
+ * <Const name="API_URL" export type="string">
+ *   'https://api.example.com'
+ * </Const>
+ * ```
  */
 export const Const = createComponent('Const', ({ children, ...props }: ConstProps) => {
   const { name, export: canExport, type, JSDoc, asConst } = props

@@ -3,10 +3,21 @@ import type * as KubbFile from '../KubbFile.ts'
 import { useContext } from './useContext.ts'
 
 /**
- * `useFile` will return the current FileCollector for registering files.
+ * Accesses the current File context.
  *
- * Throws when no FileCollector is present in context — ensure a Fabric that
- * provides a FileCollector is mounted before calling this hook.
+ * Use this composable to access or modify the current file's properties,
+ * sources, imports, or exports.
+ *
+ * @returns The current file object or null if not within a File component
+ *
+ * @example
+ * ```ts
+ * const file = useFile()
+ * if (file) {
+ *   console.log(file.path)
+ *   file.sources.push({ value: 'export const x = 1', isExportable: true })
+ * }
+ * ```
  */
 export function useFile(): KubbFile.ResolvedFile | null {
   return useContext(FileContext)

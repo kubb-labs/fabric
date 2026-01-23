@@ -9,17 +9,31 @@ import type { FabricNode } from '../Fabric.ts'
 
 export type AppProps<TMeta extends Object = Object> = {
   /**
-   * Metadata associated with the App.
+   * Metadata attached to the App context.
+   *
+   * Use this to pass custom data to child components via useApp.
    */
   meta?: TMeta
   /**
-   * Children nodes.
+   * Child components.
    */
   children?: FabricNode
 }
 
 /**
- * App container containing the AppContext carrying `meta` and an `exit` hook.
+ * Container component providing App context with metadata and lifecycle.
+ *
+ * Use this component to wrap your application and provide shared metadata
+ * that can be accessed by child components using the useApp composable.
+ *
+ * @example
+ * ```tsx
+ * <App meta={{ version: '1.0.0', author: 'John Doe' }}>
+ *   <File baseName="user.ts" path="./user.ts">
+ *     <File.Source>export type User = {}</File.Source>
+ *   </File>
+ * </App>
+ * ```
  */
 export const App = createComponent('App', ({ children, ...props }: AppProps) => {
   const { meta = {} } = props

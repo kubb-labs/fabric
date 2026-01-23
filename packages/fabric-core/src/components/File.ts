@@ -12,26 +12,52 @@ import type { KubbFile } from '../types.ts'
 
 export type FileProps<TMeta extends object = object> = {
   /**
-   * Name to be used to dynamically create the baseName(based on input.path).
-   * Based on UNIX basename
-   * @link https://nodejs.org/api/path.html#pathbasenamepath-suffix
+   * File name with extension.
+   *
+   * @example 'user.ts'
    */
   baseName: KubbFile.BaseName
   /**
-   * Path will be full qualified path to a specified file.
+   * Full path to the file including directory and file name.
+   *
+   * The path must include the baseName at the end.
+   *
+   * @example './generated/types/user.ts'
    */
   path: KubbFile.Path
+  /**
+   * Optional metadata attached to the file.
+   *
+   * Use this to store custom information about the file.
+   */
   meta?: TMeta
+  /**
+   * Optional banner text added at the top of the file.
+   */
   banner?: string
+  /**
+   * Optional footer text added at the bottom of the file.
+   */
   footer?: string
   /**
-   * Children nodes.
+   * Child components (File.Source, File.Import, File.Export).
    */
   children?: FabricNode
 }
 
 /**
- * Adds files to the FileManager
+ * Component for generating files with sources, imports, and exports.
+ *
+ * Creates files in the FileManager that can be written to disk.
+ *
+ * @example
+ * ```tsx
+ * <File baseName="user.ts" path="./generated/user.ts">
+ *   <File.Source isExportable>
+ *     export type User = {{ '{' }} id: number {{ '}' }}
+ *   </File.Source>
+ * </File>
+ * ```
  */
 export const File = createComponent('File', ({ children, ...props }: FileProps) => {
   const { baseName, path, meta = {}, footer, banner } = props
@@ -64,15 +90,22 @@ export const File = createComponent('File', ({ children, ...props }: FileProps) 
 
 type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
   /**
-   * Children nodes.
+   * Source code content.
    */
   children?: FabricNode
 }
 
 /**
- * FileSource - for adding source code to a file
+ * Adds source code to a file.
  *
- * Returns the provided children string so the fsx renderer can collect it.
+ * Use this component inside a File component to add code blocks.
+ *
+ * @example
+ * ```tsx
+ * <File.Source isExportable name="User">
+ *   export type User = {{ '{' }} id: number {{ '}' }}
+ * </File.Source>
+ * ```
  */
 export const FileSource = createComponent('FileSource', ({ children, ...props }: FileSourceProps) => {
   const { name, isExportable, isIndexable, isTypeOnly } = props
@@ -104,9 +137,14 @@ export const FileSource = createComponent('FileSource', ({ children, ...props }:
 export type FileExportProps = KubbFile.Export
 
 /**
- * FileExport - for adding exports to a file
+ * Adds export statements to a file.
  *
- * No-op function used by renderers to record exports.
+ * Use this component to create re-exports from other files.
+ *
+ * @example
+ * ```tsx
+ * <File.Export name="User" path="./types/user" isTypeOnly />
+ * ```
  */
 export const FileExport = createComponent('FileExport', (props: FileExportProps) => {
   const { name, path, isTypeOnly, asAlias } = props
@@ -135,9 +173,14 @@ export const FileExport = createComponent('FileExport', (props: FileExportProps)
 export type FileImportProps = KubbFile.Import
 
 /**
- * FileImport - for adding imports to a file
+ * Adds import statements to a file.
  *
- * No-op function used by renderers to record imports.
+ * Use this component to import types or values from other files.
+ *
+ * @example
+ * ```tsx
+ * <File.Import name="User" path="./types/user" isTypeOnly />
+ * ```
  */
 export const FileImport = createComponent('FileImport', (props: FileImportProps) => {
   const { name, path, root, isNameSpace, isTypeOnly } = props

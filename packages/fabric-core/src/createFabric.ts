@@ -7,11 +7,32 @@ import type { Plugin } from './plugins/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
 /**
- * Creates a new Fabric instance
+ * Creates a new Fabric instance for file generation.
+ *
+ * The Fabric instance provides methods for registering plugins,
+ * adding files, and triggering file generation.
+ *
+ * @param config - Optional configuration object
+ * @returns A new Fabric instance
  *
  * @example
+ * ```ts
+ * import { createFabric } from '@kubb/fabric-core'
+ * import { fsPlugin } from '@kubb/fabric-core/plugins'
+ * import { typescriptParser } from '@kubb/fabric-core/parsers'
+ *
  * const fabric = createFabric()
- * fabric.use(myPlugin())
+ * fabric.use(fsPlugin)
+ * fabric.use(typescriptParser)
+ *
+ * await fabric.addFile({
+ *   baseName: 'user.ts',
+ *   path: './generated/user.ts',
+ *   sources: [{ value: 'export type User = {}', isExportable: true }]
+ * })
+ *
+ * await fabric.write({ extension: { '.ts': '.ts' } })
+ * ```
  */
 export function createFabric<T extends FabricOptions>(config: FabricConfig<T> = { mode: 'sequential' } as FabricConfig<T>): Fabric<T> {
   const events = new AsyncEventEmitter<FabricEvents>()

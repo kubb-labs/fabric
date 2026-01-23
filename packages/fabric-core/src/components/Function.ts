@@ -15,42 +15,69 @@ type FunctionProps = {
    */
   name: string
   /**
-   * Add default when export is being used
+   * Export with default keyword.
+   * - `true` generates `export default function`
+   * - `false` generates named export or no export
+   * @default false
    */
   default?: boolean
   /**
-   * Parameters/options/props that need to be used.
+   * Function parameters.
+   *
+   * @example 'id: number, name: string'
    */
   params?: string
   /**
-   * Does this function need to be exported.
+   * Export this function.
+   * - `true` generates `export function`
+   * - `false` generates internal function
+   * @default false
    */
   export?: boolean
   /**
-   * Does the function has async/promise behavior.
-   * This will also add `Promise<returnType>` as the returnType.
+   * Make the function async.
+   * - `true` adds async keyword and wraps return type in Promise
+   * - `false` generates synchronous function
+   * @default false
    */
   async?: boolean
   /**
-   * Generics that needs to be added for TypeScript.
+   * TypeScript generics.
+   *
+   * @example 'T' or ['T', 'U']
    */
   generics?: string | string[]
   /**
-   * ReturnType(see async for adding Promise type).
+   * Return type of the function.
+   *
+   * When async is true, this is automatically wrapped in Promise.
    */
   returnType?: string
   /**
-   * Options for JSdocs.
+   * JSDoc comments for the function.
    */
   JSDoc?: JSDoc
   /**
-   * Children nodes.
+   * Function body.
    */
   children?: FabricNode
 }
 
 /**
  * Generates a TypeScript function declaration.
+ *
+ * @example
+ * ```tsx
+ * <Function
+ *   name="getUser"
+ *   export
+ *   async
+ *   params="id: number"
+ *   returnType="User"
+ * >
+ *   return fetch(`/users/${id}`).then(r => r.json())
+ * </Function>
+ * ```
  */
 export const Function = createComponent('Function', ({ children, ...props }: FunctionProps) => {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props

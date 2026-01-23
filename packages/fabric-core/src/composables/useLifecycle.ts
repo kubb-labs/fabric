@@ -2,10 +2,22 @@ import { RootContext } from '../contexts/RootContext.ts'
 import { useContext } from './useContext.ts'
 
 /**
- * `useLifecycle` will return some helpers to exit/restart the generation.
+ * Accesses lifecycle helpers for controlling generation flow.
  *
- * This hook reads the RootContext and exposes lifecycle helpers (like `exit`)
- * for consumers to programmatically stop generation or perform teardown.
+ * Use this composable to exit the rendering process early or perform
+ * cleanup operations.
+ *
+ * @returns Object with lifecycle methods (exit)
+ *
+ * @example
+ * ```ts
+ * const { exit } = useLifecycle()
+ *
+ * // Stop generation on error
+ * if (invalidData) {
+ *   exit(new Error('Invalid data'))
+ * }
+ * ```
  */
 export function useLifecycle() {
   const { exit } = useContext(RootContext)
