@@ -313,14 +313,180 @@ fabric.use(reactPlugin)
 }
 ```
 
+## Common Error Messages
+
+### "Cannot read property 'files' of undefined"
+
+**Problem**: Accessing `fabric.files` before adding files
+
+**Solution**: Add files before accessing them:
+
+```ts [access-after-add.ts]
+const fabric = createFabric()
+
+// ❌ Error - no files yet
+console.log(fabric.files.length)
+
+// ✅ Correct - add files first
+await fabric.addFile({ /* ... */ })
+console.log(fabric.files.length)
+```
+
+### "No parser found for extension .xxx"
+
+**Problem**: No parser registered for the file extension
+
+**Solution**: Register a parser or use the default parser:
+
+```ts [register-parser-for-ext.ts]
+import { defaultParser } from '@kubb/fabric-core/parsers'
+
+fabric.use(defaultParser)
+
+// Or create a custom parser
+import { defineParser } from '@kubb/fabric-core/parsers'
+
+const myParser = defineParser({
+  name: 'my-parser',
+  extNames: ['.xxx'],
+  parse: ({ file }) => file.sources?.map(s => s.value).join('\n') || '',
+})
+
+fabric.use(myParser)
+```
+
+### "Path must include baseName"
+
+**Problem**: File path doesn't end with baseName
+
+**Solution**: Ensure path includes the file name:
+
+```ts [path-with-basename.ts]
+// ❌ Incorrect - path missing baseName
+await fabric.addFile({
+  baseName: 'user.ts',
+  path: './generated/types', // Missing file name
+  sources: [],
+})
+
+// ✅ Correct - path includes baseName
+await fabric.addFile({
+  baseName: 'user.ts',
+  path: './generated/types/user.ts', // Includes file name
+  sources: [],
+})
+```
+
+## Environment-Specific Issues
+
+### Node.js vs Bun Differences
+
+**Problem**: Code works in Bun but not Node.js (or vice versa)
+
+**Solutions**:
+
+1. Use Node.js 20+ for proper ESM support:
+
+```bash
+node --version # Should be >= 20
+```
+
+2. Use `--loader` flag for TypeScript in Node.js:
+
+```bash
+node --loader tsx generate.ts
+```
+
+3. In Bun, TypeScript works natively:
+
+```bash
+bun generate.ts
+```
+
+### Windows Path Issues
+
+**Problem**: File paths not working on Windows
+
+**Solution**: Use forward slashes or `path.join()`:
+
+```ts [windows-paths.ts]
+import { join } from 'path'
+
+// ✅ Good - Use forward slashes (cross-platform)
+await fabric.addFile({
+  path: './generated/types/user.ts',
+  baseName: 'user.ts',
+  sources: [],
+})
+
+// ✅ Good - Use path.join()
+await fabric.addFile({
+  path: join('generated', 'types', 'user.ts'),
+  baseName: 'user.ts',
+  sources: [],
+})
+```
+
+## Debugging Tips
+
+### Enable Verbose Logging
+
+See what's happening during generation:
+
+```ts [verbose-logging.ts]
+fabric.context.on('lifecycle:start', () => console.log('Started'))
+fabric.context.on('file:processing:update', ({ processed, total }) => {
+  console.log(`Processing: ${processed}/${total}`)
+})
+fabric.context.on('files:writing:start', ({ files }) => {
+  console.log('Files to write:', files.map(f => f.path))
+})
+fabric.context.on('lifecycle:end', () => console.log('Complete'))
+```
+
+### Inspect Generated Files
+
+Check files before writing:
+
+```ts [inspect-files.ts]
+fabric.context.on('files:writing:start', ({ files }) => {
+  for (const file of files) {
+    console.log(`\nFile: ${file.path}`)
+    console.log('Sources:', file.sources?.length || 0)
+    console.log('Imports:', file.imports?.length || 0)
+    
+    // Print first source
+    if (file.sources?.[0]) {
+      console.log('Content preview:', file.sources[0].value.slice(0, 100))
+    }
+  }
+})
+```
+
+### Use Dry Run for Testing
+
+Test without writing files:
+
+```ts [use-dry-run.ts]
+fabric.use(fsPlugin, {
+  dryRun: true, // Test mode
+})
+
+await fabric.write()
+
+// Check what would be written
+console.log('Would write:', fabric.files.length, 'files')
+```
+
 ## Getting Help
 
 If you encounter issues not covered here:
 
 1. Check the [GitHub Issues](https://github.com/kubb-labs/fabric/issues)
 2. Review the [API Reference](/api/core/create-fabric)
-3. Look at [Examples](/examples/)
-4. [Open a new issue](https://github.com/kubb-labs/fabric/issues/new)
+3. Look at [Recipes](/guide/recipes) for common patterns
+4. Check [Best Practices](/guide/best-practices)
+5. [Open a new issue](https://github.com/kubb-labs/fabric/issues/new)
 
 ## Next Steps
 

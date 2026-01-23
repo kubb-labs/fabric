@@ -30,6 +30,24 @@ fabric.context.on('lifecycle:end', async () => {
 })
 ```
 
+## Quick Reference
+
+| Event | When | Payload | Common Use |
+|:------|:-----|:--------|:-----------|
+| `lifecycle:start` | Generation begins | None | Initialize resources, start timers |
+| `lifecycle:end` | Generation completes | None | Cleanup, final logging, stop timers |
+| `lifecycle:render` | Rendering starts | `{ fabric }` | React rendering setup |
+| `files:added` | Files added to cache | `{ files }` | Track added files |
+| `file:resolve:path` | Path resolution | `{ file }` | Modify file paths |
+| `file:resolve:name` | Name resolution | `{ file }` | Modify file names |
+| `files:writing:start` | Before writing files | `{ files }` | Validation, file transformation |
+| `files:writing:end` | After writing files | `{ files }` | Post-processing, notifications |
+| `files:processing:start` | Before processing | `{ files }` | Processing setup |
+| `file:processing:start` | File processing starts | `{ file, index, total }` | Per-file logging |
+| `file:processing:update` | Processing progress | `{ file, source, processed, percentage, total }` | Progress bars |
+| `file:processing:end` | File processing ends | `{ file, index, total }` | Per-file completion |
+| `files:processing:end` | All processing ends | `{ files }` | Processing summary |
+
 ## Event Categories
 
 Events are organized into categories based on their purpose.
@@ -402,8 +420,72 @@ fabric.context.on('file:processing:update', async ({ file }) => {
 })
 ```
 
+## Complete Example
+
+Here's a comprehensive example using multiple events:
+
+```ts [complete-example.ts]
+import { createFabric } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
+
+const fabric = createFabric()
+
+// Lifecycle tracking
+let stats = {
+  startTime: 0,
+  filesAdded: 0,
+  filesProcessed: 0,
+  filesWritten: 0,
+}
+
+fabric.context.on('lifecycle:start', () => {
+  stats.startTime = Date.now()
+  console.log('🚀 Generation started')
+})
+
+fabric.context.on('files:added', ({ files }) => {
+  stats.filesAdded += files.length
+  console.log(`📁 Added ${files.length} files (total: ${stats.filesAdded})`)
+})
+
+fabric.context.on('file:processing:update', ({ processed, total, percentage }) => {
+  const bar = '█'.repeat(Math.floor(percentage / 5)) + '░'.repeat(20 - Math.floor(percentage / 5))
+  process.stdout.write(`\r${bar} ${percentage.toFixed(1)}% (${processed}/${total})`)
+})
+
+fabric.context.on('files:writing:start', ({ files }) => {
+  stats.filesWritten = files.length
+  console.log(`\n📝 Writing ${files.length} files...`)
+})
+
+fabric.context.on('files:writing:end', ({ files }) => {
+  console.log(`✓ Wrote ${files.length} files`)
+})
+
+fabric.context.on('lifecycle:end', () => {
+  const elapsed = Date.now() - stats.startTime
+  console.log('\n✨ Generation complete!')
+  console.log(`   Time: ${elapsed}ms`)
+  console.log(`   Files: ${stats.filesWritten}`)
+})
+
+// Configure and run
+fabric.use(fsPlugin, { clean: { path: './generated' } })
+fabric.use(typescriptParser)
+
+await fabric.addFile({
+  baseName: 'user.ts',
+  path: './generated/user.ts',
+  sources: [{ value: 'export type User = {}', isExportable: true }],
+})
+
+await fabric.write({ extension: { '.ts': '.ts' } })
+```
+
 ## See Also
 
 - [createFabric](/api/core/create-fabric) — Create a Fabric instance
 - [loggerPlugin](/api/plugins/logger-plugin) — Built-in event logging
+- [Event System](/guide/event-system) — Event system explained
 - [Creating Plugins](/guide/creating-plugins) — Build plugins with events

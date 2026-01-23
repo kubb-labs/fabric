@@ -77,6 +77,146 @@
           ]
         },
         {
+          "text": "Fabric Core",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "Components",
+              "collapsed": false,
+              "items": [
+                {
+                  "text": "App",
+                  "link": "/api/fabric-core/components/app",
+                  "activeMatch": "^/api/fabric-core/components/app/?$"
+                },
+                {
+                  "text": "Root",
+                  "link": "/api/fabric-core/components/root",
+                  "activeMatch": "^/api/fabric-core/components/root/?$"
+                },
+                {
+                  "text": "File",
+                  "link": "/api/fabric-core/components/file",
+                  "activeMatch": "^/api/fabric-core/components/file/?$"
+                },
+                {
+                  "text": "Function",
+                  "link": "/api/fabric-core/components/function",
+                  "activeMatch": "^/api/fabric-core/components/function/?$"
+                },
+                {
+                  "text": "Const",
+                  "link": "/api/fabric-core/components/const",
+                  "activeMatch": "^/api/fabric-core/components/const/?$"
+                },
+                {
+                  "text": "Type",
+                  "link": "/api/fabric-core/components/type",
+                  "activeMatch": "^/api/fabric-core/components/type/?$"
+                },
+                {
+                  "text": "Br",
+                  "link": "/api/fabric-core/components/br",
+                  "activeMatch": "^/api/fabric-core/components/br/?$"
+                },
+                {
+                  "text": "Indent",
+                  "link": "/api/fabric-core/components/indent",
+                  "activeMatch": "^/api/fabric-core/components/indent/?$"
+                },
+                {
+                  "text": "Dedent",
+                  "link": "/api/fabric-core/components/dedent",
+                  "activeMatch": "^/api/fabric-core/components/dedent/?$"
+                }
+              ]
+            },
+            {
+              "text": "Composables",
+              "collapsed": false,
+              "items": [
+                {
+                  "text": "useApp",
+                  "link": "/api/fabric-core/composables/use-app",
+                  "activeMatch": "^/api/fabric-core/composables/use-app/?$"
+                },
+                {
+                  "text": "useContext",
+                  "link": "/api/fabric-core/composables/use-context",
+                  "activeMatch": "^/api/fabric-core/composables/use-context/?$"
+                },
+                {
+                  "text": "useFile",
+                  "link": "/api/fabric-core/composables/use-file",
+                  "activeMatch": "^/api/fabric-core/composables/use-file/?$"
+                },
+                {
+                  "text": "useFileManager",
+                  "link": "/api/fabric-core/composables/use-file-manager",
+                  "activeMatch": "^/api/fabric-core/composables/use-file-manager/?$"
+                },
+                {
+                  "text": "useLifecycle",
+                  "link": "/api/fabric-core/composables/use-lifecycle",
+                  "activeMatch": "^/api/fabric-core/composables/use-lifecycle/?$"
+                },
+                {
+                  "text": "useNodeTree",
+                  "link": "/api/fabric-core/composables/use-node-tree",
+                  "activeMatch": "^/api/fabric-core/composables/use-node-tree/?$"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "text": "React Fabric",
+          "collapsed": false,
+          "items": [
+            {
+              "text": "Overview",
+              "link": "/api/overview",
+              "activeMatch": "^/api/overview/?$"
+            },
+            {
+              "text": "Components",
+              "collapsed": false,
+              "items": [
+                {
+                  "text": "App",
+                  "link": "/api/react-fabric/components/app",
+                  "activeMatch": "^/api/react-fabric/components/app/?$"
+                },
+                {
+                  "text": "Root",
+                  "link": "/api/react-fabric/components/root",
+                  "activeMatch": "^/api/react-fabric/components/root/?$"
+                },
+                {
+                  "text": "File",
+                  "link": "/api/react-fabric/components/file",
+                  "activeMatch": "^/api/react-fabric/components/file/?$"
+                },
+                {
+                  "text": "Function",
+                  "link": "/api/react-fabric/components/function",
+                  "activeMatch": "^/api/react-fabric/components/function/?$"
+                },
+                {
+                  "text": "Const",
+                  "link": "/api/react-fabric/components/const",
+                  "activeMatch": "^/api/react-fabric/components/const/?$"
+                },
+                {
+                  "text": "Type",
+                  "link": "/api/react-fabric/components/type",
+                  "activeMatch": "^/api/react-fabric/components/type/?$"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "text": "Plugins",
           "collapsed": false,
           "items": [
