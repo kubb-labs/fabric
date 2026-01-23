@@ -12,6 +12,99 @@ Kubb Fabric is a language-agnostic toolkit for generating code and files using J
 
 Fabric is a file generation framework that combines the flexibility of JavaScript/TypeScript with the power of a plugin-based architecture. You can generate any type of file—TypeScript types, API clients, configuration files, or documentation—using either imperative code or declarative JSX components.
 
+## Fabric Core vs React Fabric
+
+Fabric provides two packages with similar component names but different implementations.
+
+### Fabric Core (@kubb/fabric-core)
+
+Uses **FSX** (Fabric's custom JSX renderer) and `createComponent`.
+
+**Characteristics:**
+- Custom JSX runtime (not React)
+- Uses `createComponent` from fabric-core
+- Works with `FabricNode` types
+- Lighter weight, no React dependency
+- Direct control over rendering
+
+**Example:**
+
+```tsx [fabric-core.tsx]
+import { createComponent } from '@kubb/fabric-core'
+
+// Custom component using createComponent
+export const MyComponent = createComponent('MyComponent', ({ children }) => {
+  return children
+})
+```
+
+### React Fabric (@kubb/react-fabric)
+
+Uses **React** with standard JSX and React components.
+
+**Characteristics:**
+- Standard React components
+- Uses React hooks and features
+- Works with React ecosystem
+- Familiar React patterns
+- `ReactNode` and `ReactElement` types
+
+**Example:**
+
+```tsx [react-fabric.tsx]
+import type { ReactNode } from 'react'
+
+// React component
+export function MyComponent({ children }: { children?: ReactNode }) {
+  return <>{children}</>
+}
+```
+
+### Same Names, Different Implementations
+
+Both packages export components with the same names:
+
+| Component | fabric-core | react-fabric |
+|-----------|-------------|--------------|
+| App | FSX + createComponent | React component |
+| File | FSX + createComponent | React component |
+| Function | FSX + createComponent | React component |
+| Const | FSX + createComponent | React component |
+| Type | FSX + createComponent | React component |
+
+### When to Use Which?
+
+**Use fabric-core when:**
+- Building custom generators without React
+- Want minimal dependencies
+- Need direct control over rendering
+- Working in non-React environments
+
+**Use react-fabric when:**
+- Integrating with React applications
+- Want familiar React patterns
+- Need React ecosystem features
+- Building React-based generators
+
+### Import Paths
+
+```ts
+// Fabric Core
+import { App, File, Function } from '@kubb/fabric-core'
+
+// React Fabric  
+import { App, File, Function } from '@kubb/react-fabric'
+```
+
+### Documentation Structure
+
+Our documentation separates the two packages:
+
+- **Fabric Core** - `/core/components/...`
+- **React Fabric** - `/react/components/...`
+
+Each component page clearly indicates which package it belongs to with a badge.
+
 ## Why Fabric?
 
 ### Declarative File Generation
@@ -20,7 +113,7 @@ Create files using familiar JSX syntax or simple JavaScript objects. Fabric hand
 
 ```ts [declarative-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { fsPlugin } from '@kubb/core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -38,7 +131,7 @@ await fabric.addFile({
 Extend Fabric with plugins that add new capabilities. Plugins can listen to lifecycle events, transform files, or add new methods to the Fabric API.
 
 ```ts [plugin-example.ts]
-import { loggerPlugin } from '@kubb/fabric-core/plugins'
+import { loggerPlugin } from '@kubb/core/plugins'
 
 fabric.use(loggerPlugin, {
   progress: true,
@@ -51,7 +144,7 @@ fabric.use(loggerPlugin, {
 Parsers control how files are converted to strings. Use built-in parsers for TypeScript, TSX, or create custom parsers for any file format.
 
 ```ts [parser-example.ts]
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { typescriptParser } from '@kubb/core/parsers'
 
 fabric.use(typescriptParser)
 ```

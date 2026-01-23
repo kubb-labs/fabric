@@ -61,73 +61,67 @@
           ]
         },
         {
-          "text": "Core API",
+          "text": "Fabric Core",
           "collapsed": false,
           "items": [
             {
               "text": "createFabric",
-              "link": "/api/core/create-fabric",
-              "activeMatch": "^/api/core/create-fabric/?$"
+              "link": "/core/create-fabric",
+              "activeMatch": "^/core/create-fabric/?$"
             },
             {
               "text": "Events",
-              "link": "/api/core/events",
-              "activeMatch": "^/api/core/events/?$"
-            }
-          ]
-        },
-        {
-          "text": "Fabric Core",
-          "collapsed": false,
-          "items": [
+              "link": "/core/events",
+              "activeMatch": "^/core/events/?$"
+            },
             {
               "text": "Components",
               "collapsed": false,
               "items": [
                 {
                   "text": "App",
-                  "link": "/api/fabric-core/components/app",
-                  "activeMatch": "^/api/fabric-core/components/app/?$"
+                  "link": "/core/components/app",
+                  "activeMatch": "^/core/components/app/?$"
                 },
                 {
                   "text": "Root",
-                  "link": "/api/fabric-core/components/root",
-                  "activeMatch": "^/api/fabric-core/components/root/?$"
+                  "link": "/core/components/root",
+                  "activeMatch": "^/core/components/root/?$"
                 },
                 {
                   "text": "File",
-                  "link": "/api/fabric-core/components/file",
-                  "activeMatch": "^/api/fabric-core/components/file/?$"
+                  "link": "/core/components/file",
+                  "activeMatch": "^/core/components/file/?$"
                 },
                 {
                   "text": "Function",
-                  "link": "/api/fabric-core/components/function",
-                  "activeMatch": "^/api/fabric-core/components/function/?$"
+                  "link": "/core/components/function",
+                  "activeMatch": "^/core/components/function/?$"
                 },
                 {
                   "text": "Const",
-                  "link": "/api/fabric-core/components/const",
-                  "activeMatch": "^/api/fabric-core/components/const/?$"
+                  "link": "/core/components/const",
+                  "activeMatch": "^/core/components/const/?$"
                 },
                 {
                   "text": "Type",
-                  "link": "/api/fabric-core/components/type",
-                  "activeMatch": "^/api/fabric-core/components/type/?$"
+                  "link": "/core/components/type",
+                  "activeMatch": "^/core/components/type/?$"
                 },
                 {
                   "text": "Br",
-                  "link": "/api/fabric-core/components/br",
-                  "activeMatch": "^/api/fabric-core/components/br/?$"
+                  "link": "/core/components/br",
+                  "activeMatch": "^/core/components/br/?$"
                 },
                 {
                   "text": "Indent",
-                  "link": "/api/fabric-core/components/indent",
-                  "activeMatch": "^/api/fabric-core/components/indent/?$"
+                  "link": "/core/components/indent",
+                  "activeMatch": "^/core/components/indent/?$"
                 },
                 {
                   "text": "Dedent",
-                  "link": "/api/fabric-core/components/dedent",
-                  "activeMatch": "^/api/fabric-core/components/dedent/?$"
+                  "link": "/core/components/dedent",
+                  "activeMatch": "^/core/components/dedent/?$"
                 }
               ]
             },
@@ -137,33 +131,33 @@
               "items": [
                 {
                   "text": "useApp",
-                  "link": "/api/fabric-core/composables/use-app",
-                  "activeMatch": "^/api/fabric-core/composables/use-app/?$"
+                  "link": "/core/composables/use-app",
+                  "activeMatch": "^/core/composables/use-app/?$"
                 },
                 {
                   "text": "useContext",
-                  "link": "/api/fabric-core/composables/use-context",
-                  "activeMatch": "^/api/fabric-core/composables/use-context/?$"
+                  "link": "/core/composables/use-context",
+                  "activeMatch": "^/core/composables/use-context/?$"
                 },
                 {
                   "text": "useFile",
-                  "link": "/api/fabric-core/composables/use-file",
-                  "activeMatch": "^/api/fabric-core/composables/use-file/?$"
+                  "link": "/core/composables/use-file",
+                  "activeMatch": "^/core/composables/use-file/?$"
                 },
                 {
                   "text": "useFileManager",
-                  "link": "/api/fabric-core/composables/use-file-manager",
-                  "activeMatch": "^/api/fabric-core/composables/use-file-manager/?$"
+                  "link": "/core/composables/use-file-manager",
+                  "activeMatch": "^/core/composables/use-file-manager/?$"
                 },
                 {
                   "text": "useLifecycle",
-                  "link": "/api/fabric-core/composables/use-lifecycle",
-                  "activeMatch": "^/api/fabric-core/composables/use-lifecycle/?$"
+                  "link": "/core/composables/use-lifecycle",
+                  "activeMatch": "^/core/composables/use-lifecycle/?$"
                 },
                 {
                   "text": "useNodeTree",
-                  "link": "/api/fabric-core/composables/use-node-tree",
-                  "activeMatch": "^/api/fabric-core/composables/use-node-tree/?$"
+                  "link": "/core/composables/use-node-tree",
+                  "activeMatch": "^/core/composables/use-node-tree/?$"
                 }
               ]
             }
@@ -174,43 +168,38 @@
           "collapsed": false,
           "items": [
             {
-              "text": "Overview",
-              "link": "/api/overview",
-              "activeMatch": "^/api/overview/?$"
-            },
-            {
               "text": "Components",
               "collapsed": false,
               "items": [
                 {
                   "text": "App",
-                  "link": "/api/react-fabric/components/app",
-                  "activeMatch": "^/api/react-fabric/components/app/?$"
+                  "link": "/react/components/app",
+                  "activeMatch": "^/react/components/app/?$"
                 },
                 {
                   "text": "Root",
-                  "link": "/api/react-fabric/components/root",
-                  "activeMatch": "^/api/react-fabric/components/root/?$"
+                  "link": "/react/components/root",
+                  "activeMatch": "^/react/components/root/?$"
                 },
                 {
                   "text": "File",
-                  "link": "/api/react-fabric/components/file",
-                  "activeMatch": "^/api/react-fabric/components/file/?$"
+                  "link": "/react/components/file",
+                  "activeMatch": "^/react/components/file/?$"
                 },
                 {
                   "text": "Function",
-                  "link": "/api/react-fabric/components/function",
-                  "activeMatch": "^/api/react-fabric/components/function/?$"
+                  "link": "/react/components/function",
+                  "activeMatch": "^/react/components/function/?$"
                 },
                 {
                   "text": "Const",
-                  "link": "/api/react-fabric/components/const",
-                  "activeMatch": "^/api/react-fabric/components/const/?$"
+                  "link": "/react/components/const",
+                  "activeMatch": "^/react/components/const/?$"
                 },
                 {
                   "text": "Type",
-                  "link": "/api/react-fabric/components/type",
-                  "activeMatch": "^/api/react-fabric/components/type/?$"
+                  "link": "/react/components/type",
+                  "activeMatch": "^/react/components/type/?$"
                 }
               ]
             }
@@ -222,38 +211,38 @@
           "items": [
             {
               "text": "Fsx Plugin",
-              "link": "/api/plugins/fsx-plugin",
-              "activeMatch": "^/api/plugins/fsx-plugin/?$"
+              "link": "/plugins/fsx-plugin",
+              "activeMatch": "^/plugins/fsx-plugin/?$"
             },
             {
               "text": "Fs Plugin",
-              "link": "/api/plugins/fs-plugin",
-              "activeMatch": "^/api/plugins/fs-plugin/?$"
+              "link": "/plugins/fs-plugin",
+              "activeMatch": "^/plugins/fs-plugin/?$"
             },
             {
               "text": "Logger Plugin",
-              "link": "/api/plugins/logger-plugin",
-              "activeMatch": "^/api/plugins/logger-plugin/?$"
+              "link": "/plugins/logger-plugin",
+              "activeMatch": "^/plugins/logger-plugin/?$"
             },
             {
               "text": "Barrel Plugin",
-              "link": "/api/plugins/barrel-plugin",
-              "activeMatch": "^/api/plugins/barrel-plugin/?$"
+              "link": "/plugins/barrel-plugin",
+              "activeMatch": "^/plugins/barrel-plugin/?$"
             },
             {
               "text": "Graph Plugin",
-              "link": "/api/plugins/graph-plugin",
-              "activeMatch": "^/api/plugins/graph-plugin/?$"
+              "link": "/plugins/graph-plugin",
+              "activeMatch": "^/plugins/graph-plugin/?$"
             },
             {
               "text": "React Plugin",
-              "link": "/api/plugins/react-plugin",
-              "activeMatch": "^/api/plugins/react-plugin/?$"
+              "link": "/plugins/react-plugin",
+              "activeMatch": "^/plugins/react-plugin/?$"
             },
             {
               "text": "definePlugin",
-              "link": "/api/plugins/define-plugin",
-              "activeMatch": "^/api/plugins/define-plugin/?$"
+              "link": "/plugins/define-plugin",
+              "activeMatch": "^/plugins/define-plugin/?$"
             }
           ]
         },
@@ -263,23 +252,23 @@
           "items": [
             {
               "text": "TypeScript Parser",
-              "link": "/api/parsers/typescript-parser",
-              "activeMatch": "^/api/parsers/typescript-parser/?$"
+              "link": "/parsers/typescript-parser",
+              "activeMatch": "^/parsers/typescript-parser/?$"
             },
             {
               "text": "TSX Parser",
-              "link": "/api/parsers/tsx-parser",
-              "activeMatch": "^/api/parsers/tsx-parser/?$"
+              "link": "/parsers/tsx-parser",
+              "activeMatch": "^/parsers/tsx-parser/?$"
             },
             {
               "text": "Default Parser",
-              "link": "/api/parsers/default-parser",
-              "activeMatch": "^/api/parsers/default-parser/?$"
+              "link": "/parsers/default-parser",
+              "activeMatch": "^/parsers/default-parser/?$"
             },
             {
               "text": "defineParser",
-              "link": "/api/parsers/define-parser",
-              "activeMatch": "^/api/parsers/define-parser/?$"
+              "link": "/parsers/define-parser",
+              "activeMatch": "^/parsers/define-parser/?$"
             }
           ]
         },

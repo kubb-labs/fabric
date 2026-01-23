@@ -143,8 +143,8 @@ Build the main generator using Fabric:
 
 ```ts [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, loggerPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin, loggerPlugin, barrelPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 import { schema } from './schema'
 import { generateType } from './generators/types'
 import { generateApiFunction } from './generators/api'
@@ -354,7 +354,7 @@ async function watchAndGenerate() {
       <h3>Creating Plugins</h3>
       <p>Build custom plugins</p>
     </a>
-    <a href="/api/core/create-fabric" class="vp-card">
+    <a href="/core/create-fabric" class="vp-card">
       <h3>API Reference</h3>
       <p>Explore the complete API</p>
     </a>

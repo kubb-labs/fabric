@@ -24,7 +24,7 @@ Fabric includes built-in parsers for TypeScript, TSX, and default fallback parsi
 Create parsers using the `defineParser` factory:
 
 ```ts [parser-structure.ts]
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 
 const myParser = defineParser({
   name: 'myParser',
@@ -66,7 +66,7 @@ defineParser<TOptions>(config: ParserConfig): Parser
 Create a simple JSON parser:
 
 ```ts [json-parser.ts]
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const jsonParser = defineParser({
@@ -99,7 +99,7 @@ await fabric.write({ extension: { '.json': '' } })
 Create a parser that accepts configuration:
 
 ```ts [vue-parser.ts]
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 type VueParserOptions = {
@@ -154,7 +154,7 @@ await fabric.write({ extension: { '.vue': '' } })
 Set up event listeners during parser installation:
 
 ```ts [markdown-parser.ts]
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const markdownParser = defineParser({
@@ -183,8 +183,8 @@ Use extension mapping to select parsers during `fabric.write()`:
 
 ```ts [extension-mapping.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/core/plugins'
+import { typescriptParser, tsxParser } from '@kubb/core/parsers'
 
 const fabric = createFabric()
 
@@ -221,7 +221,7 @@ await fabric.write({
 Create a fallback parser for unhandled extensions:
 
 ```ts [default-parser.ts]
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const customDefaultParser = defineParser({
@@ -253,7 +253,7 @@ await fabric.write()
 Create a YAML parser with validation:
 
 ```ts [yaml-parser.ts]
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 import YAML from 'yaml'
 
@@ -317,7 +317,7 @@ await fabric.write({ extension: { '.yaml': '' } })
 Use file properties in your parser:
 
 ```ts [metadata-parser.ts]
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const metadataParser = defineParser({
@@ -392,9 +392,9 @@ fabric.use(defaultParser)    // fallback
 
 ## See Also
 
-- [defineParser](/api/parsers/define-parser) — Parser factory API
-- [typescriptParser](/api/parsers/typescript-parser) — TypeScript parser reference
-- [tsxParser](/api/parsers/tsx-parser) — TSX parser reference
-- [defaultParser](/api/parsers/default-parser) — Fallback parser
+- [defineParser](/parsers/define-parser) — Parser factory API
+- [typescriptParser](/parsers/typescript-parser) — TypeScript parser reference
+- [tsxParser](/parsers/tsx-parser) — TSX parser reference
+- [defaultParser](/parsers/default-parser) — Fallback parser
 - [Creating Plugins](/guide/creating-plugins) — Build custom plugins
 - [File Generation Patterns](/guide/file-generation-patterns) — Best practices

@@ -63,7 +63,7 @@ Check your `package.json`:
 1. Check that `fsPlugin` is registered:
 
 ```ts [check-fs-plugin.ts]
-import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { fsPlugin } from '@kubb/core/plugins'
 
 fabric.use(fsPlugin)
 ```
@@ -104,7 +104,7 @@ await fabric.addFile({
 2. Verify a parser is registered:
 
 ```ts [register-parser.ts]
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { typescriptParser } from '@kubb/core/parsers'
 
 fabric.use(typescriptParser)
 ```
@@ -158,11 +158,11 @@ await fabric.write({
 
 ```ts [use-correct-parser.ts]
 // For .ts files
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { typescriptParser } from '@kubb/core/parsers'
 fabric.use(typescriptParser)
 
 // For .tsx files with JSX
-import { tsxParser } from '@kubb/fabric-core/parsers'
+import { tsxParser } from '@kubb/core/parsers'
 fabric.use(tsxParser)
 ```
 
@@ -227,7 +227,7 @@ fabric.use(loggerPlugin, {
 1. Register `barrelPlugin`:
 
 ```ts [register-barrel.ts]
-import { barrelPlugin } from '@kubb/fabric-core/plugins'
+import { barrelPlugin } from '@kubb/core/plugins'
 
 fabric.use(barrelPlugin, {
   root: './generated',
@@ -293,7 +293,7 @@ await fabric.write()
 **Solution**: Ensure `reactPlugin` is registered:
 
 ```ts [register-react.ts]
-import { reactPlugin } from '@kubb/react-fabric/plugins'
+import { reactPlugin } from '@kubb/react/plugins'
 
 fabric.use(reactPlugin)
 ```
@@ -339,12 +339,12 @@ console.log(fabric.files.length)
 **Solution**: Register a parser or use the default parser:
 
 ```ts [register-parser-for-ext.ts]
-import { defaultParser } from '@kubb/fabric-core/parsers'
+import { defaultParser } from '@kubb/core/parsers'
 
 fabric.use(defaultParser)
 
 // Or create a custom parser
-import { defineParser } from '@kubb/fabric-core/parsers'
+import { defineParser } from '@kubb/core/parsers'
 
 const myParser = defineParser({
   name: 'my-parser',
@@ -483,7 +483,7 @@ console.log('Would write:', fabric.files.length, 'files')
 If you encounter issues not covered here:
 
 1. Check the [GitHub Issues](https://github.com/kubb-labs/fabric/issues)
-2. Review the [API Reference](/api/core/create-fabric)
+2. Review the [API Reference](/core/create-fabric)
 3. Look at [Recipes](/guide/recipes) for common patterns
 4. Check [Best Practices](/guide/best-practices)
 5. [Open a new issue](https://github.com/kubb-labs/fabric/issues/new)
@@ -496,7 +496,7 @@ If you encounter issues not covered here:
       <h3>Guides</h3>
       <p>In-depth guides for common tasks</p>
     </a>
-    <a href="/api/core/create-fabric" class="vp-card">
+    <a href="/core/create-fabric" class="vp-card">
       <h3>API Reference</h3>
       <p>Complete API documentation</p>
     </a>

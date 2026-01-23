@@ -120,7 +120,7 @@ You should see "Fabric initialized successfully!" in the console.
       <h3>configure</h3>
       <p>Learn how to configure Fabric</p>
     </a>
-    <a href="/api/core/create-fabric" class="vp-card">
+    <a href="/core/create-fabric" class="vp-card">
       <h3>API Reference</h3>
       <p>Explore the Fabric API</p>
     </a>

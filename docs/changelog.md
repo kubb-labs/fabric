@@ -10,4 +10,4 @@ outline: deep
 
 ### ✨ Features
 
-#### [`@kubb/fabric-core`](/api/core/create-fabric)
+#### [`@kubb/fabric-core`](/core/create-fabric)

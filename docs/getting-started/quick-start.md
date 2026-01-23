@@ -14,8 +14,8 @@ Create a simple script that generates a TypeScript file:
 
 ```ts [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 
 // Create a Fabric instance
 const fabric = createFabric()
@@ -71,8 +71,8 @@ Generate multiple related files:
 
 ```ts [generate-multiple.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 
 const fabric = createFabric()
 
@@ -110,8 +110,8 @@ Add progress tracking and visual feedback:
 
 ```ts [generate-with-logger.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, loggerPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin, loggerPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 
 const fabric = createFabric()
 
@@ -145,8 +145,8 @@ Use the barrel plugin to automatically create index files:
 
 ```ts [generate-barrels.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin, barrelPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 
 const fabric = createFabric()
 
@@ -195,8 +195,8 @@ React to lifecycle events:
 
 ```ts [generate-with-events.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 
 const fabric = createFabric()
 

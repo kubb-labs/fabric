@@ -14,8 +14,8 @@ Fabric is configured through code using the `createFabric()` function and plugin
 
 ```ts [fabric-setup.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, loggerPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin, loggerPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 
 const fabric = createFabric()
 
@@ -34,7 +34,7 @@ Each plugin accepts its own configuration options when registered with `fabric.u
 Controls file writing behavior:
 
 ```ts [fs-plugin-config.ts]
-import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { fsPlugin } from '@kubb/core/plugins'
 
 fabric.use(fsPlugin, {
   dryRun: false,
@@ -50,7 +50,7 @@ fabric.use(fsPlugin, {
 Configures progress tracking and websocket server:
 
 ```ts [logger-plugin-config.ts]
-import { loggerPlugin } from '@kubb/fabric-core/plugins'
+import { loggerPlugin } from '@kubb/core/plugins'
 
 fabric.use(loggerPlugin, {
   progress: true,
@@ -66,7 +66,7 @@ fabric.use(loggerPlugin, {
 Controls barrel file generation:
 
 ```ts [barrel-plugin-config.ts]
-import { barrelPlugin } from '@kubb/fabric-core/plugins'
+import { barrelPlugin } from '@kubb/core/plugins'
 
 fabric.use(barrelPlugin, {
   root: './src/generated',
@@ -84,7 +84,7 @@ Parsers are registered with `fabric.use()` and automatically selected based on f
 Handles `.ts` files:
 
 ```ts [typescript-parser-config.ts]
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { typescriptParser } from '@kubb/core/parsers'
 
 fabric.use(typescriptParser)
 ```
@@ -94,7 +94,7 @@ fabric.use(typescriptParser)
 Handles `.tsx` files with JSX support:
 
 ```ts [tsx-parser-config.ts]
-import { tsxParser } from '@kubb/fabric-core/parsers'
+import { tsxParser } from '@kubb/core/parsers'
 
 fabric.use(tsxParser)
 ```
@@ -104,7 +104,7 @@ fabric.use(tsxParser)
 Register multiple parsers for different file types:
 
 ```ts [multiple-parsers-config.ts]
-import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'
+import { typescriptParser, tsxParser } from '@kubb/core/parsers'
 
 fabric.use(typescriptParser)
 fabric.use(tsxParser)
@@ -265,7 +265,7 @@ await fabric.write()
       <h3>Troubleshooting</h3>
       <p>Common issues and solutions</p>
     </a>
-    <a href="/api/core/create-fabric" class="vp-card">
+    <a href="/core/create-fabric" class="vp-card">
       <h3>API Reference</h3>
       <p>Complete API documentation</p>
     </a>

@@ -22,7 +22,7 @@ Plugins extend Fabric with reusable functionality. They can:
 Create plugins using the `definePlugin` factory:
 
 ```ts [plugin-structure.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 
 const myPlugin = definePlugin({
   name: 'myPlugin',
@@ -62,7 +62,7 @@ definePlugin<TOptions, TInject>(config: PluginConfig): Plugin
 Create a simple logging plugin:
 
 ```ts [hello-plugin.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 
 const helloPlugin = definePlugin({
   name: 'helloPlugin',
@@ -83,7 +83,7 @@ fabric.use(helloPlugin)
 Create a plugin that accepts configuration:
 
 ```ts [logger-plugin.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 
 type LoggerOptions = {
   prefix?: string
@@ -124,7 +124,7 @@ fabric.use(loggerPlugin, {
 Plugins can add methods to the Fabric instance using the `inject` function:
 
 ```ts [inject-methods.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 
 type ValidatorOptions = {
   strict?: boolean
@@ -172,7 +172,7 @@ const isValid = await fabric.validate()
 Create plugins that react to lifecycle events:
 
 ```ts [event-plugin.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 import { writeFile } from 'fs/promises'
 
 type MetricsOptions = {
@@ -221,7 +221,7 @@ fabric.use(metricsPlugin, {
 Transform files during processing:
 
 ```ts [transform-plugin.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 
 type TransformOptions = {
   addHeader?: boolean
@@ -334,7 +334,7 @@ const timestampPlugin = definePlugin({ ... })
 ### File Counter Plugin
 
 ```ts [file-counter.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 
 type CounterMethods = {
   getFileCount: () => number
@@ -361,7 +361,7 @@ console.log(`Files to generate: ${fabric.getFileCount()}`)
 ### Backup Plugin
 
 ```ts [backup-plugin.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
+import { definePlugin } from '@kubb/core/plugins'
 import { cp } from 'fs/promises'
 
 type BackupOptions = {
@@ -394,7 +394,7 @@ fabric.use(backupPlugin, {
 
 ## See Also
 
-- [definePlugin](/api/plugins/define-plugin) — Plugin factory API
-- [Events](/api/core/events) — Available lifecycle events
+- [definePlugin](/plugins/define-plugin) — Plugin factory API
+- [Events](/core/events) — Available lifecycle events
 - [Creating Parsers](/guide/creating-parsers) — Create custom parsers
-- [fsPlugin](/api/plugins/fs-plugin) — File system plugin example
+- [fsPlugin](/plugins/fs-plugin) — File system plugin example

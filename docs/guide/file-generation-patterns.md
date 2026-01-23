@@ -16,8 +16,8 @@ Generate a standalone file:
 
 ```ts [single-file.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/core/plugins'
+import { typescriptParser } from '@kubb/core/parsers'
 
 const fabric = createFabric()
 
@@ -191,7 +191,7 @@ for (const entity of schema.entities) {
 Create barrel files for clean imports:
 
 ```ts [barrel-pattern.ts]
-import { barrelPlugin } from '@kubb/fabric-core/plugins'
+import { barrelPlugin } from '@kubb/core/plugins'
 
 fabric.use(barrelPlugin, {
   root: './output',
@@ -330,7 +330,7 @@ for (const model of models) {
 Test generation without creating files:
 
 ```ts [dry-run-test.ts]
-import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { fsPlugin } from '@kubb/core/plugins'
 
 fabric.use(fsPlugin, {
   dryRun: true,
@@ -376,7 +376,7 @@ expect(outputs['./output/user.ts']).toMatchSnapshot()
 
 ## See Also
 
-- [createFabric](/api/core/create-fabric) — Fabric API
-- [barrelPlugin](/api/plugins/barrel-plugin) — Barrel file generation
-- [fsPlugin](/api/plugins/fs-plugin) — File system operations
+- [createFabric](/core/create-fabric) — Fabric API
+- [barrelPlugin](/plugins/barrel-plugin) — Barrel file generation
+- [fsPlugin](/plugins/fs-plugin) — File system operations
 - [Creating Plugins](/guide/creating-plugins) — Custom plugins
