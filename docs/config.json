@@ -94,6 +94,21 @@
               "text": "Barrel Plugin",
               "link": "/api/plugins/barrel-plugin",
               "activeMatch": "^/api/plugins/barrel-plugin/?$"
+            },
+            {
+              "text": "Graph Plugin",
+              "link": "/api/plugins/graph-plugin",
+              "activeMatch": "^/api/plugins/graph-plugin/?$"
+            },
+            {
+              "text": "React Plugin",
+              "link": "/api/plugins/react-plugin",
+              "activeMatch": "^/api/plugins/react-plugin/?$"
+            },
+            {
+              "text": "definePlugin",
+              "link": "/api/plugins/define-plugin",
+              "activeMatch": "^/api/plugins/define-plugin/?$"
             }
           ]
         },
@@ -105,6 +120,21 @@
               "text": "TypeScript Parser",
               "link": "/api/parsers/typescript-parser",
               "activeMatch": "^/api/parsers/typescript-parser/?$"
+            },
+            {
+              "text": "TSX Parser",
+              "link": "/api/parsers/tsx-parser",
+              "activeMatch": "^/api/parsers/tsx-parser/?$"
+            },
+            {
+              "text": "Default Parser",
+              "link": "/api/parsers/default-parser",
+              "activeMatch": "^/api/parsers/default-parser/?$"
+            },
+            {
+              "text": "defineParser",
+              "link": "/api/parsers/define-parser",
+              "activeMatch": "^/api/parsers/define-parser/?$"
             }
           ]
         },
@@ -128,6 +158,11 @@
           "text": "Creating Plugins",
           "link": "/guide/creating-plugins",
           "activeMatch": "^/guide/creating-plugins/?$"
+        },
+        {
+          "text": "Creating Parsers",
+          "link": "/guide/creating-parsers",
+          "activeMatch": "^/guide/creating-parsers/?$"
         },
         {
           "text": "File Generation Patterns",

@@ -392,7 +392,9 @@ fabric.use(defaultParser)    // fallback
 
 ## See Also
 
-- [typescriptParser](/api/parsers/typescript-parser/) - TypeScript parser reference
-- [tsxParser](/api/parsers/tsx-parser/) - TSX parser reference
-- [Creating Plugins](/guide/creating-plugins/) - Build custom plugins
-- [File Generation Patterns](/guide/file-generation-patterns/) - Best practices
+- [defineParser](/api/parsers/define-parser) — Parser factory API
+- [typescriptParser](/api/parsers/typescript-parser) — TypeScript parser reference
+- [tsxParser](/api/parsers/tsx-parser) — TSX parser reference
+- [defaultParser](/api/parsers/default-parser) — Fallback parser
+- [Creating Plugins](/guide/creating-plugins) — Build custom plugins
+- [File Generation Patterns](/guide/file-generation-patterns) — Best practices

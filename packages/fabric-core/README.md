@@ -1,7 +1,6 @@
 <div align="center">
-  <h1>Fabric Core</h1>
-  <a href="https://kubb.dev" target="_blank" rel="noopener noreferrer">
-    <img width="180" src="https://raw.githubusercontent.com/kubb-labs/fabric/main/assets/logo.png" alt="Kubb fabric logo">
+  <a href="https://kubb.dev/fabric" target="_blank" rel="noopener noreferrer">
+    <img width="180" src="https://raw.githubusercontent.com/kubb-labs/fabric/main/assets/logo.png" alt="Fabric logo">
   </a>
 
 
@@ -10,330 +9,65 @@
 [![Coverage][coverage-src]][coverage-href]
 [![License][license-src]][license-href]
 [![Sponsors][sponsors-src]][sponsors-href]
-
 <h4>
-    <a href="https://kubb.dev/fabric" target="_blank">Documentation</a>
-    <span> · </span>
-      <a href="https://github.com/kubb-labs/fabric/issues/" target="_blank">Report Bug</a>
-    <span> · </span>
-      <a href="https://github.com/kubb-labs/fabric/issues/" target="_blank">Request Feature</a>
+<a href="https://kubb.dev/fabric" target="_blank">Documentation</a>
+<span> · </span>
+<a href="https://github.com/kubb-labs/fabric/issues/" target="_blank">Report Bug</a>
+<span> · </span>
+<a href="https://github.com/kubb-labs/fabric/issues/" target="_blank">Request Feature</a>
 </h4>
 </div>
 
 <br />
 
-Kubb Fabric is a language-agnostic toolkit for generating code and files using JSX and TypeScript.
-It offers a lightweight layer for file generation while orchestrating the overall process of creating and managing files.
+## Features
+- Language-agnostic toolkit for generating code and files using JSX and TypeScript.
+- Works with Node.js 20+ and Bun.
+- Plugin ecosystem with fsPlugin, barrelPlugin, loggerPlugin, graphPlugin, and reactPlugin.
+- Parser system for TypeScript, TSX, and custom file formats.
+- Event-driven architecture for file generation lifecycle.
+- Built-in debugging utilities and progress tracking.
+- And so much more ...
 
-> [!WARNING]
-> Fabric is under active development. Until a stable 1.0 release, minor versions may occasionally include breaking changes. Please check release notes and PR titles for breaking changes.
+## Supporting Fabric
 
-# Features
+Fabric uses an MIT-licensed open source project with its ongoing development made possible entirely by the support of Sponsors. If you would like to become a sponsor, please consider:
 
-- 🎨 Declarative file generation — Create files effortlessly using JSX or JavaScript syntax.
-- 📦 Cross-runtime support — Works seamlessly with Node.js and Bun.
-- 🧩 Built-in debugging utilities — Simplify development and inspect generation flows with ease.
-- ⚡ Fast and lightweight — Minimal overhead, maximum performance.
+- [Become a Sponsor on GitHub](https://github.com/sponsors/stijnvanhulle)
 
-## Write a TypeScript file
+<p align="center">
+  <a href="https://github.com/sponsors/stijnvanhulle">
+    <img src="https://raw.githubusercontent.com/stijnvanhulle/sponsors/main/sponsors.svg" alt="My sponsors" />
+  </a>
+</p>
 
-Below is a minimal example showing how `createFabric` works together with plugins and parsers via `fabric.use`.
+## Contributors [![Contributors][contributors-src]][contributors-href]
 
-```ts
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 
-const fabric = createFabric()
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-fabric.use(fsPlugin, {
-  dryRun: false,
-  onBeforeWrite: (path, data) => {
-    console.log('About to write:', path)
-  },
-  clean: { path: './generated' },
-})
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
 
-fabric.use(typescriptParser)
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 
-await fabric.addFile({
-  baseName: 'index.ts',
-  path: './generated/index.ts',
-  sources: [
-    { value: 'export const x = 1', isExportable: true },
-  ],
-})
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
-await fabric.write()
-```
+## Star History
 
-Creates a file `generated/index.ts` with the following content:
-```ts
-export const x = 1
-```
-
-# API Reference
-
-## Core
-### `createFabric(options?): Fabric`
-Returns a Fabric instance with:
-- `fabric.use(pluginOrParser, ...options) => Fabric` — register plugins and parsers.
-- `fabric.addFile(...files)` — queue in-memory files to generate.
-- `fabric.files` — getter with all queued files.
-- `fabric.context` — internal context holding events, options, FileManager, installed plugins/parsers.
-
-
-### Events (emitted by the core during processing)
-
-Fabric emits events throughout its lifecycle that plugins and custom code can listen to. These events provide hooks for monitoring progress, transforming files, and performing custom operations.
-
-#### Lifecycle Events
-- **`lifecycle:start`** — Emitted when Fabric begins execution
-- **`lifecycle:end`** — Emitted when Fabric completes execution
-- **`lifecycle:render { fabric }`** — Emitted when rendering starts (with reactPlugin)
-
-#### File Management Events
-- **`files:added { files }`** — Emitted when files are added to the FileManager cache
-- **`file:resolve:path { file }`** — Emitted during file path resolution (allows modification)
-- **`file:resolve:name { file }`** — Emitted during file name resolution (allows modification)
-
-#### File Writing Events
-- **`files:writing:start { files }`** — Emitted before writing files to disk
-- **`files:writing:end { files }`** — Emitted after files are written to disk
-
-#### File Processing Events
-- **`files:processing:start { files }`** — Emitted before processing begins
-- **`file:processing:start { file, index, total }`** — Emitted when each file starts processing
-- **`file:processing:end { file, index, total }`** — Emitted when each file finishes processing
-- **`file:processing:update { file, source, processed, percentage, total }`** — Emitted with progress updates
-- **`files:processing:end { files }`** — Emitted when all processing completes
-
-#### Listening to Events
-
-You can listen to events using the Fabric context:
-
-```ts
-const fabric = createFabric()
-
-fabric.context.on('lifecycle:start', async () => {
-  console.log('Starting Fabric...')
-})
-
-fabric.context.on('file:processing:update', async ({ processed, total, percentage }) => {
-  console.log(`Progress: ${percentage.toFixed(1)}% (${processed}/${total})`)
-})
-
-fabric.context.on('lifecycle:end', async () => {
-  console.log('Fabric completed!')
-})
-```
-
-
-## Plugins
-#### `fsPlugin`
-Writes files to disk on `file:processing:update`, supports dry runs and cleaning an output folder before writing.
-
-```
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-```
-
-| Option | Type                                                                 | Default | Description                                                           |
-|---|----------------------------------------------------------------------|---|-----------------------------------------------------------------------|
-| dryRun | `boolean`                                                            | `false` | If true, do not write files to disk.               |
-| onBeforeWrite | `(path: string, data: string \| undefined) => void \| Promise<void>` | — | Called right before each file write on `file:processing:update`.            |
-| clean | `{ path: string }`                                                   | — | If provided, removes the directory at `path` before writing any files. |
-
-Injected `fabric.write` options (via `fsPlugin`):
-
-| Option | Type                             | Default | Description |
-|---|----------------------------------|---|---|
-| extension | `Record<Extname, Extname \| ''>` | — | Maps input file extensions to output extensions. When set, the matching parser (by extNames) is used. |
-
-#### `barrelPlugin`
-Generates `index.ts` barrel files per folder when `files:writing:start` is triggered. `writeEntry` creates a single entry barrel at `root`.
-
-```
-import { barrelPlugin } from '@kubb/fabric-core/plugins'
-```
-
-| Option | Type                                       | Default | Description |
-|---|--------------------------------------------|---|---|
-| root | `string`                                   | — | Root directory to generate barrel files for. |
-| mode | `'all' \| 'named' \| 'propagate' \| false` | — | Controls how exports are generated: all exports, only named exports, propagate (skip barrels), or disabled. |
-| dryRun | `boolean`                                  | `false` | If true, computes barrels but skips writing. |
-
-Injected `fabric.writeEntry` parameters (via `barrelPlugin`):
-
-| Param | Type                                       | Description |
-|---|--------------------------------------------|---|
-| root | `string`                                   | Root directory where the entry `index.ts` should be created. |
-| mode | `'all' \| 'named' \| 'propagate' \| false` | Controls which export style to use for the entry barrel. |
-
-#### `loggerPlugin`
-Streams Fabric lifecycle activity with beautiful @clack/prompts output, progress bars, and websocket messages that you can consume from custom tooling.
-
-```
-import { loggerPlugin } from '@kubb/fabric-core/plugins'
-```
-
-| Option | Type | Default | Description |
-|---|---|---|---|
-| progress | `boolean` | `true` | Enable/disable the integrated CLI progress bar. |
-| websocket | `boolean \| { host?: string; port?: number }` | `true` | Toggle or configure the websocket server that broadcasts Fabric events for future GUIs. |
-
-By default the plugin displays a beautiful progress bar using @clack/prompts, starts a websocket server on an ephemeral port, and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with colored output and symbols, animated in the progress bar, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
-
-
-#### `graphPlugin`
-Shows a graph of all files
-
-```
-import { graphPlugin } from '@kubb/fabric-core/plugins'
-```
-
-| Option | Type      | Default | Description                                   |
-|--------|-----------|---------|-----------------------------------------------|
-| root   | `string`  |         | Root directory where to start searching from. |
-| open   | `boolean` | false   | Open a webpage with the generated graph       |
-
-
-#### `reactPlugin`
-Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.
-
-```
-import { reactPlugin } from '@kubb/react-fabric/plugins'
-```
-
-| Option | Type | Default | Description |
-|---|---|---|---|
-| stdout | `NodeJS.WriteStream` | — | Optional output stream used to print the rendered content while the app is running. If set, the output is written progressively. |
-| stdin | `NodeJS.ReadStream` | — | Optional input stream for interactive components. |
-| stderr | `NodeJS.WriteStream` | — | Optional error output stream. |
-| debug | `boolean` | — | When true, logs render/unmount information to the console to aid debugging. |
-
-Injected methods (via `reactPlugin`):
-
-| Method | Signature | Description                                                                                        |
-|---|---|----------------------------------------------------------------------------------------------------|
-| `render` | `(App: React.ElementType) => Promise<void> \| void` | Render a React component tree to the terminal and emit the core `start` event.                     |
-| `renderToString` | `(App: React.ElementType) => Promise<string> \| string` | Render a React component tree and return the final output as a string (without writing to stdout). |
-| `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
-
-#### `definePlugin`
-
-Factory to declare a plugin that can be registered via `fabric.use`.
-
-| Field                      | Required | Description                                                                                                                  |
-|----------------------------|---|------------------------------------------------------------------------------------------------------------------------------|
-| `name`                     | Yes | String identifier of your plugin.                                                                                            |
-| `install(fabric, options)` | Yes | Called when the plugin is registered. You can subscribe to core events and perform side effects here.                        |
-| `inject?(fabric, options)` | No | Return synchronously the runtime methods/properties to merge into `fabric` (e.g. `write`, `render`). This must not be async. |
-
-Example:
-
-```ts
-import { createFabric } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/fabric-core/plugins'
-
-const helloPlugin = definePlugin<{ name?: string }, { sayHello: (msg?: string) => void }>({
-  name: 'helloPlugin',
-  install(fabric, options) {
-    fabric.context.events.on('lifecycle:start', () => {
-      console.log('Fabric started')
-    })
-  },
-  inject(fabric, options) {
-    return {
-      sayHello(msg = options?.name ?? 'world') {
-        console.log(`Hello ${msg}!`)
-      },
-    }
-  },
-})
-
-const fabric = createFabric()
-await fabric.use(helloPlugin, { name: 'Fabric' })
-fabric.sayHello() // -> Hello Fabric!
-```
-
-## Parsers
-#### `typescriptParser`
-
-Prints TS/JS imports/exports and sources, supports extname mapping for generated import/export paths.
-
-```
-import { typescriptParser } from '@kubb/fabric-core/parsers'
-```
-
-| Option | Type | Default | Description                                                                                 |
-|---|---|---|---------------------------------------------------------------------------------------------|
-| file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
-| extname | `string` | `'.ts'` | Extension to use when emitting import/export paths (e.g., rewrite `./file` to `./file.ts`). |
-
-#### `tsxParser`
-
-Delegates to `typescriptParser` with TSX printing settings.
-
-```
-import { tsxParser } from '@kubb/fabric-core/parsers'
-```
-
-| Option | Type | Default | Description |
-|---|---|---|---|
-| file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
-| extname | `string` | `'.tsx'` | Extension to use when emitting import/export paths for TSX/JSX files. |
-
-#### `defaultParser`
-
-Fallback parser used when no extension mapping is provided to `fabric.write`.
-
-```
-import { defaultParser } @kubb/fabric-core/parsers`
-```
-
-| Option | Type | Default | Description                                                              |
-|---|---|---|--------------------------------------------------------------------------|
-| file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
-
-#### `defineParser`
-Factory to declare a parser that can be registered via `fabric.use` and selected by `extNames` during `fabric.write`.
-
-| Field                      | Required | Description                                                                                                     |
-|----------------------------|---|-----------------------------------------------------------------------------------------------------------------|
-| `name`                     | Yes | String identifier of your parser.                                                                               |
-| `extNames`                 | Yes | List of file extensions this parser can handle (e.g. ['.ts']). Use `undefined` for the default parser fallback. |
-| `install(fabric, options)` | No | Optional setup when the parser is registered (subscribe to events, set state, etc.).                            |
-| `parse(file, { extname })` | Yes | Must return the final string that will be written for the given file.                                           |
-
-Example:
-
-```ts
-import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/fabric-core/parsers'
-
-const vueParser = defineParser<{ banner?: string }>({
-  name: 'vueParser',
-  extNames: ['.vue'],
-  async install(fabric, options) {
-    // Optional setup
-  },
-  async parse(file, { extname }) {
-    const banner = file.options?.banner ?? ''
-    const sources = file.sources.map(s => s.value).join('\n')
-    return `${banner}\n${sources}`
-  },
-})
-
-const fabric = createFabric()
-fabric.use(vueParser)
-fabric.use(fsPlugin); // make it possible to write to the filesystem
-
-fabric.write({ extension: { '.vue': '.ts' } })
-```
-
-> [!NOTE]
-> - `fabric.use` accepts both plugins and parsers. The `fsPlugin` handles I/O and adds `fabric.write`. Parsers decide how files are converted to strings for specific extensions.
-> - When extension mapping is provided to `fabric.write`, Fabric picks a parser whose `extNames` include the file’s extension. Otherwise, the default parser is used.
+<a href="https://star-history.com/#kubb-labs/fabric&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=kubb-labs/fabric&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=kubb-labs/fabric&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kubb-labs/fabric&type=Date" />
+  </picture>
+</a>
 
 
 <!-- Badges -->
