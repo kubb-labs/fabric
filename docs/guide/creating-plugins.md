@@ -32,6 +32,31 @@ const myPlugin = definePlugin({
 })
 ```
 
+## definePlugin API
+
+The `definePlugin` factory creates plugins that can be registered with `fabric.use()`.
+
+### Signature
+
+```ts
+definePlugin<TOptions, TInject>(config: PluginConfig): Plugin
+```
+
+### Configuration Fields
+
+| Field      | Required | Type                                      | Description                                                                                                  |
+|------------|----------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| `name`     | Yes      | `string`                                  | Unique identifier for your plugin.                                                                            |
+| `install`  | Yes      | `(fabric, options) => void \| Promise<void>` | Called when the plugin is registered. Subscribe to events and perform setup here.                            |
+| `inject`   | No       | `(fabric, options) => TInject`            | Return synchronously the runtime methods/properties to merge into `fabric` (e.g., `write`, `render`). Must not be async. |
+
+### Type Parameters
+
+| Parameter  | Description                                                  |
+|------------|--------------------------------------------------------------|
+| `TOptions` | Type of options accepted by the plugin.                      |
+| `TInject`  | Type of methods/properties injected into the Fabric instance. |
+
 ## Basic Plugin
 
 Create a simple logging plugin:
