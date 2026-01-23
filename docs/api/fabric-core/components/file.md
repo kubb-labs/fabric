@@ -45,7 +45,7 @@ await fabric.render(component)
 
 ### baseName
 
-The file name with extension.
+File name with extension.
 
 |           |          |
 |----------:|:---------|
@@ -54,15 +54,15 @@ The file name with extension.
 
 ### path
 
-The full path including directory and file name.
+Full path to the file including directory and file name.
+
+> [!IMPORTANT]
+> The `path` must include the `baseName` at the end.
 
 |           |          |
 |----------:|:---------|
 |     Type: | `string` |
 | Required: | `true`   |
-
-> [!IMPORTANT]
-> The `path` must include the `baseName` at the end.
 
 ### meta
 
@@ -91,19 +91,72 @@ Optional footer text added at the bottom of the file.
 |     Type: | `string` |
 | Required: | `false`  |
 
+### children
+
+Child components (File.Source, File.Import, File.Export).
+
+|           |             |
+|----------:|:------------|
+|     Type: | `FabricNode` |
+| Required: | `false`     |
+
 ## File.Source
 
 Adds source code to a file.
 
-### Props
+### name
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Optional name for the source block |
-| `isTypeOnly` | `boolean` | `false` | Mark source as type-only export |
-| `isExportable` | `boolean` | `false` | Include export keyword in source |
-| `isIndexable` | `boolean` | `false` | Include in barrel file generation |
-| `children` | `FabricNode` | - | Source code content |
+Optional name for the source block.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### isTypeOnly
+
+Mark source as type-only export.
+- `true` marks source as type export
+- `false` marks source as value export
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### isExportable
+
+Include export keyword in source.
+- `true` generates exportable const or type
+- `false` generates internal declaration
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### isIndexable
+
+Include in barrel file generation.
+- `true` adds to barrel exports
+- `false` excludes from barrel exports
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### children
+
+Source code content.
+
+|           |             |
+|----------:|:------------|
+|     Type: | `FabricNode` |
+| Required: | `false`     |
 
 ### Usage
 
@@ -131,15 +184,58 @@ await fabric.render(component)
 
 Adds import statements to a file.
 
-### Props
+### name
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string \| Array<string \| { propertyName: string, name?: string }>` | - | Import name(s) to be used |
-| `path` | `string` | - | Path for the import |
-| `isTypeOnly` | `boolean` | `false` | Add type-only import prefix |
-| `isNameSpace` | `boolean` | `false` | Import entire module as namespace |
-| `root` | `string` | - | Root path for relative imports |
+Import name(s) to be used.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string \| Array<string \| { propertyName: string, name?: string }>` |
+| Required: | `true`   |
+
+### path
+
+Path for the import.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+### isTypeOnly
+
+Add type-only import prefix.
+- `true` generates `import type { Type } from './path'`
+- `false` generates `import { Type } from './path'`
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### isNameSpace
+
+Import entire module as namespace.
+- `true` generates `import * as Name from './path'`
+- `false` generates standard import
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### root
+
+Root path for relative imports.
+
+When root is set it will get the path with relative `getRelativePath(root, path)`.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
 
 ### Usage
 
@@ -191,14 +287,47 @@ File.Import({ name: 'React', path: 'react', isNameSpace: true })
 
 Adds export statements to a file.
 
-### Props
+### name
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string \| Array<string>` | - | Export name(s) to be used |
-| `path` | `string` | - | Path for the export |
-| `isTypeOnly` | `boolean` | `false` | Add type-only export prefix |
-| `asAlias` | `boolean` | `false` | Export as aliased namespace |
+Export name(s) to be used.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string \| Array<string>` |
+| Required: | `false`  |
+
+### path
+
+Path for the export.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+### isTypeOnly
+
+Add type-only export prefix.
+- `true` generates `export type { Type } from './path'`
+- `false` generates `export { Type } from './path'`
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### asAlias
+
+Export as aliased namespace.
+- `true` generates `export * as aliasName from './path'`
+- `false` generates standard export
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
 
 ### Usage
 

@@ -38,25 +38,35 @@ const component = Type({
 const output = await fabric.render(component)
 ```
 
-## API
+## Props
 
-```ts
-Type(props: TypeProps): ComponentBuilder
-```
+### name
 
-### Props
+Name of the type.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Name of the type |
-| `export` | `boolean` | `false` | Export the type |
-| `JSDoc` | `JSDoc` | - | JSDoc comments |
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
 
-### Methods
+### export
 
-| Method | Description |
-|--------|-------------|
-| `.children(nodes)` | Add type definition |
+Export the type.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### JSDoc
+
+JSDoc comments.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `JSDoc`   |
+| Required: | `false`   |
 
 ## Examples
 

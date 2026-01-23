@@ -36,14 +36,61 @@ export function Generator() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Name of the constant |
-| `export` | `boolean` | `false` | Export the constant |
-| `type` | `string` | - | Type annotation |
-| `asConst` | `boolean` | `false` | Use const assertion |
-| `JSDoc` | `JSDoc` | - | JSDoc comments |
-| `children` | `ReactNode` | - | Constant value |
+### name
+
+Name of the constant.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+### export
+
+Export the constant.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### type
+
+Type annotation.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### asConst
+
+Use const assertion.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### JSDoc
+
+JSDoc comments.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `JSDoc`   |
+| Required: | `false`   |
+
+### children
+
+Constant value.
+
+|           |            |
+|----------:|:-----------|
+|     Type: | `ReactNode` |
+| Required: | `false`    |
 
 ## Examples
 

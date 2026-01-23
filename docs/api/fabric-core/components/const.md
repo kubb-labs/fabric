@@ -39,27 +39,54 @@ const component = Const({
 const output = await fabric.render(component)
 ```
 
-## API
+## Props
 
-```ts
-Const(props: ConstProps): ComponentBuilder
-```
+### name
 
-### Props
+Name of the constant.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Name of the constant |
-| `export` | `boolean` | `false` | Export the constant |
-| `type` | `string` | - | Type annotation |
-| `asConst` | `boolean` | `false` | Use const assertion |
-| `JSDoc` | `JSDoc` | - | JSDoc comments |
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
 
-### Methods
+### export
 
-| Method | Description |
-|--------|-------------|
-| `.children(nodes)` | Add constant value |
+Export the constant.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### type
+
+Type annotation.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### asConst
+
+Use const assertion.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### JSDoc
+
+JSDoc comments.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `JSDoc`   |
+| Required: | `false`   |
 
 ## Examples
 

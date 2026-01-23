@@ -38,14 +38,60 @@ export function Generator() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `baseName` | `string` | - | File name with extension |
-| `path` | `string` | - | Full path to the file |
-| `meta` | `object` | `{}` | Optional metadata |
-| `banner` | `string` | - | Optional banner text |
-| `footer` | `string` | - | Optional footer text |
-| `children` | `ReactNode` | - | File.Source, File.Import, File.Export |
+### baseName
+
+File name with extension.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+### path
+
+Full path to the file.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+### meta
+
+Optional metadata.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `object` |
+| Required: | `false`  |
+|  Default: | `{}`     |
+
+### banner
+
+Optional banner text.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### footer
+
+Optional footer text.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### children
+
+File.Source, File.Import, File.Export.
+
+|           |            |
+|----------:|:-----------|
+|     Type: | `ReactNode` |
+| Required: | `false`    |
 
 ## Sub-components
 
@@ -53,15 +99,59 @@ export function Generator() {
 
 Adds source code to the file.
 
-**Props:**
+#### name
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Optional name for the source block |
-| `isTypeOnly` | `boolean` | `false` | Mark source as type-only export |
-| `isExportable` | `boolean` | `false` | Include export keyword in source |
-| `isIndexable` | `boolean` | `false` | Include in barrel file generation |
-| `children` | `ReactNode` | - | Source code content |
+Optional name for the source block.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+#### isTypeOnly
+
+Mark source as type-only export.
+- `true` marks source as type export
+- `false` marks source as value export
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+#### isExportable
+
+Include export keyword in source.
+- `true` generates exportable const or type
+- `false` generates internal declaration
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+#### isIndexable
+
+Include in barrel file generation.
+- `true` adds to barrel exports
+- `false` excludes from barrel exports
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+#### children
+
+Source code content.
+
+|           |             |
+|----------:|:------------|
+|     Type: | `ReactNode` |
+| Required: | `false`     |
 
 ```tsx [source.tsx]
 <File.Source isExportable name="User">
@@ -73,15 +163,58 @@ Adds source code to the file.
 
 Adds import statements to the file.
 
-**Props:**
+#### name
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string \| Array<string \| { propertyName: string, name?: string }>` | - | Import name(s) to be used |
-| `path` | `string` | - | Path for the import |
-| `isTypeOnly` | `boolean` | `false` | Add type-only import prefix |
-| `isNameSpace` | `boolean` | `false` | Import entire module as namespace |
-| `root` | `string` | - | Root path for relative imports |
+Import name(s) to be used.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string \| Array<string \| { propertyName: string, name?: string }>` |
+| Required: | `true`   |
+
+#### path
+
+Path for the import.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+#### isTypeOnly
+
+Add type-only import prefix.
+- `true` generates `import type { Type } from './path'`
+- `false` generates `import { Type } from './path'`
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+#### isNameSpace
+
+Import entire module as namespace.
+- `true` generates `import * as Name from './path'`
+- `false` generates standard import
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+#### root
+
+Root path for relative imports.
+
+When root is set it will get the path with relative `getRelativePath(root, path)`.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
 
 ```tsx [import.tsx]
 <File.Import name="User" path="./types/user" isTypeOnly />
@@ -114,14 +247,47 @@ Adds import statements to the file.
 
 Adds export statements to the file.
 
-**Props:**
+#### name
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string \| Array<string>` | - | Export name(s) to be used |
-| `path` | `string` | - | Path for the export |
-| `isTypeOnly` | `boolean` | `false` | Add type-only export prefix |
-| `asAlias` | `boolean` | `false` | Export as aliased namespace |
+Export name(s) to be used.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string \| Array<string>` |
+| Required: | `false`  |
+
+#### path
+
+Path for the export.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+#### isTypeOnly
+
+Add type-only export prefix.
+- `true` generates `export type { Type } from './path'`
+- `false` generates `export { Type } from './path'`
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+#### asAlias
+
+Export as aliased namespace.
+- `true` generates `export * as aliasName from './path'`
+- `false` generates standard export
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
 
 ```tsx [export.tsx]
 <File.Export name="User" path="./user" isTypeOnly />

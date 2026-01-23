@@ -43,16 +43,79 @@ export function Generator() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Name of the function |
-| `export` | `boolean` | `false` | Export the function |
-| `async` | `boolean` | `false` | Make function async |
-| `params` | `string` | - | Function parameters |
-| `returnType` | `string` | - | Return type annotation |
-| `generics` | `string \| string[]` | - | TypeScript generics |
-| `JSDoc` | `JSDoc` | - | JSDoc comments |
-| `children` | `ReactNode` | - | Function body |
+### name
+
+Name of the function.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+### export
+
+Export the function.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### async
+
+Make function async.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### params
+
+Function parameters.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### returnType
+
+Return type annotation.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### generics
+
+TypeScript generics.
+
+|           |                       |
+|----------:|:----------------------|
+|     Type: | `string \| string[]`  |
+| Required: | `false`               |
+
+### JSDoc
+
+JSDoc comments.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `JSDoc`   |
+| Required: | `false`   |
+
+### children
+
+Function body.
+
+|           |            |
+|----------:|:-----------|
+|     Type: | `ReactNode` |
+| Required: | `false`    |
 
 ## Examples
 

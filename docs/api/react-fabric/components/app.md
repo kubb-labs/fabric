@@ -40,10 +40,24 @@ export function Generator() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `meta` | `TMeta` | `{}` | Metadata attached to the App context |
-| `children` | `ReactNode` | - | Child React components |
+### meta
+
+Metadata attached to the App context.
+
+|           |        |
+|----------:|:-------|
+|     Type: | `TMeta` |
+| Required: | `false` |
+|  Default: | `{}`    |
+
+### children
+
+Child React components.
+
+|           |            |
+|----------:|:-----------|
+|     Type: | `ReactNode` |
+| Required: | `false`    |
 
 ## With Metadata
 

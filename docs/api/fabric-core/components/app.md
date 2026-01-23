@@ -39,23 +39,17 @@ const component = App().children([
 const output = await fabric.render(component)
 ```
 
-## API
+## Props
 
-```ts
-App(props?: AppProps): ComponentBuilder
-```
+### meta
 
-### Props
+Metadata attached to the App context.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `meta` | `TMeta` | `{}` | Metadata attached to the App context |
-
-### Methods
-
-| Method | Description |
-|--------|-------------|
-| `.children(nodes)` | Add child components |
+|           |        |
+|----------:|:-------|
+|     Type: | `TMeta` |
+| Required: | `false` |
+|  Default: | `{}`    |
 
 ## With Metadata
 

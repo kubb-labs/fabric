@@ -39,12 +39,42 @@ export function Generator() {
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Name of the type |
-| `export` | `boolean` | `false` | Export the type |
-| `JSDoc` | `JSDoc` | - | JSDoc comments |
-| `children` | `ReactNode` | - | Type definition |
+### name
+
+Name of the type.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+### export
+
+Export the type.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### JSDoc
+
+JSDoc comments.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `JSDoc`   |
+| Required: | `false`   |
+
+### children
+
+Type definition.
+
+|           |            |
+|----------:|:-----------|
+|     Type: | `ReactNode` |
+| Required: | `false`    |
 
 ## Examples
 

@@ -39,29 +39,72 @@ const component = Function({
 const output = await fabric.render(component)
 ```
 
-## API
+## Props
 
-```ts
-Function(props: FunctionProps): ComponentBuilder
-```
+### name
 
-### Props
+Name of the function.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Name of the function |
-| `export` | `boolean` | `false` | Export the function |
-| `async` | `boolean` | `false` | Make function async |
-| `params` | `string` | - | Function parameters |
-| `returnType` | `string` | - | Return type annotation |
-| `generics` | `string \| string[]` | - | TypeScript generics |
-| `JSDoc` | `JSDoc` | - | JSDoc comments |
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
 
-### Methods
+### export
 
-| Method | Description |
-|--------|-------------|
-| `.children(nodes)` | Add function body |
+Export the function.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### async
+
+Make function async.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
+### params
+
+Function parameters.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### returnType
+
+Return type annotation.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `false`  |
+
+### generics
+
+TypeScript generics.
+
+|           |                       |
+|----------:|:----------------------|
+|     Type: | `string \| string[]`  |
+| Required: | `false`               |
+
+### JSDoc
+
+JSDoc comments.
+
+|           |           |
+|----------:|:----------|
+|     Type: | `JSDoc`   |
+| Required: | `false`   |
 
 ## Examples
 

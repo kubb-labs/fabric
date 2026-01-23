@@ -43,13 +43,50 @@ export function Generator() {
 
 ## Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `onExit` | `(error?: Error) => void` | Callback to exit the application |
-| `onError` | `(error: Error) => void` | Error handler for runtime exceptions |
-| `treeNode` | `TreeNode<ComponentNode>` | Tree structure for component hierarchy |
-| `fileManager` | `FileManager` | FileManager instance |
-| `children` | `ReactNode` | Child React components |
+### onExit
+
+Callback to exit the application.
+
+|           |                           |
+|----------:|:--------------------------|
+|     Type: | `(error?: Error) => void` |
+| Required: | `true`                    |
+
+### onError
+
+Error handler for runtime exceptions.
+
+|           |                      |
+|----------:|:---------------------|
+|     Type: | `(error: Error) => void` |
+| Required: | `true`               |
+
+### treeNode
+
+Tree structure for component hierarchy.
+
+|           |                               |
+|----------:|:------------------------------|
+|     Type: | `TreeNode<ComponentNode>`     |
+| Required: | `true`                        |
+
+### fileManager
+
+FileManager instance.
+
+|           |               |
+|----------:|:--------------|
+|     Type: | `FileManager` |
+| Required: | `true`        |
+
+### children
+
+Child React components.
+
+|           |            |
+|----------:|:-----------|
+|     Type: | `ReactNode` |
+| Required: | `false`    |
 
 ## See Also
 
