@@ -9,7 +9,7 @@ hero:
   name: A language-agnostic toolkit for code generation.
   tagline: Build code generators using JSX and TypeScript with a lightweight, declarative API.
   image:
-    src: ./fabric.png
+    src: ./logo.png
     alt: Fabric
   actions:
     - theme: brand
