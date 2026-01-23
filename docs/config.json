@@ -81,6 +81,11 @@
           "collapsed": false,
           "items": [
             {
+              "text": "Fsx Plugin",
+              "link": "/api/plugins/fsx-plugin",
+              "activeMatch": "^/api/plugins/fsx-plugin/?$"
+            },
+            {
               "text": "Fs Plugin",
               "link": "/api/plugins/fs-plugin",
               "activeMatch": "^/api/plugins/fs-plugin/?$"
