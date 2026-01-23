@@ -231,8 +231,8 @@ await fabric.write()
 
 <div class="vp-doc">
   <div class="vp-card-container">
-    <a href="/getting-started/configuration" class="vp-card">
-      <h3>Configuration</h3>
+    <a href="/getting-started/configure" class="vp-card">
+      <h3>Configure</h3>
       <p>Learn about configuration options</p>
     </a>
     <a href="/guide/creating-plugins" class="vp-card">

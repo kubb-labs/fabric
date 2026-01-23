@@ -117,8 +117,8 @@ Fabric emits events throughout its lifecycle. Plugins and custom code can listen
       <h3>Quick Start</h3>
       <p>Build your first code generator in minutes</p>
     </a>
-    <a href="/getting-started/configuration" class="vp-card">
-      <h3>Configuration</h3>
+    <a href="/getting-started/configure" class="vp-card">
+      <h3>Configure</h3>
       <p>Learn how to configure Fabric</p>
     </a>
   </div>

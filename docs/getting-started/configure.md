@@ -1,10 +1,10 @@
 ---
 layout: doc
-title: Configuration
+title: Configure
 outline: deep
 ---
 
-# Configuration
+# Configure
 
 Learn how to configure Fabric for your project.
 
@@ -119,11 +119,11 @@ Control how file extensions are transformed during generation:
 
 ```ts [extension-mapping.ts]
 // Map .vue files to .ts during generation
-await fabric.write({ 
-  extension: { 
+await fabric.write({
+  extension: {
     '.vue': '.ts',
-    '.tsx': '.tsx' 
-  } 
+    '.tsx': '.tsx'
+  }
 })
 ```
 
@@ -202,11 +202,11 @@ Create reusable configuration functions:
 ```ts [reusable-config.ts]
 function createDefaultFabric() {
   const fabric = createFabric()
-  
+
   fabric.use(loggerPlugin, { progress: true })
   fabric.use(fsPlugin, { clean: { path: './generated' } })
   fabric.use(typescriptParser)
-  
+
   return fabric
 }
 

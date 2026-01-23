@@ -116,8 +116,8 @@ You should see "Fabric initialized successfully!" in the console.
       <h3>Quick Start</h3>
       <p>Build your first code generator</p>
     </a>
-    <a href="/getting-started/configuration" class="vp-card">
-      <h3>Configuration</h3>
+    <a href="/getting-started/configure" class="vp-card">
+      <h3>configure</h3>
       <p>Learn how to configure Fabric</p>
     </a>
     <a href="/api/core/create-fabric" class="vp-card">
