@@ -30,13 +30,5 @@
     "websocket",
     "WebSocket"
   ],
-  "ignorePaths": [
-    "node_modules",
-    "dist",
-    "build",
-    ".git",
-    "*.min.js",
-    "pnpm-lock.yaml",
-    "package-lock.json"
-  ]
+  "ignorePaths": ["node_modules", "dist", "build", ".git", "*.min.js", "pnpm-lock.yaml", "package-lock.json"]
 }
