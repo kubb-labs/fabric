@@ -50,7 +50,7 @@
             },
             {
               "text": "Configure",
-              "link": "/getting-started/Configure",
+              "link": "/getting-started/configure",
               "activeMatch": "^/getting-started/configure/?$"
             },
             {
