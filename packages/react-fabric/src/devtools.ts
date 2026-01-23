@@ -25,7 +25,7 @@ export function openDevtools() {
   customGlobal.self ||= global
   customGlobal.isDevtoolsEnabled = true
 
-  // Filter out Kubbs's internal components from devtools for a cleaner view.
+  // Filter out Kubb internal components from devtools for a cleaner view.
   // See https://github.com/facebook/react/blob/edf6eac8a181860fd8a2d076a43806f1237495a1/packages/react-devtools-shared/src/types.js#L24
   customGlobal.window.__REACT_DEVTOOLS_COMPONENT_FILTERS__ = [
     {

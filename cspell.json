@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en-US",
+  "useGitignore": true,
+  "ignorePaths": [
+    "**/*.snap",
+    "__snapshots__",
+    "mocks",
+    "**/*.d.ts",
+    "*.lock",
+    "pnpm-lock.yaml",
+    "**/.changeset/**",
+    "**/CHANGELOG.md",
+    "**/changelog.md",
+    "README.md",
+    "examples/**/src/gen/**",
+    "jsx-runtime.ts"
+  ],
+  "ignoreRegExpList": ["https?://github\\.com/[a-zA-Z0-9-_]+(/[a-zA-Z0-9-_]+)?", "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b", "\\[kub[ːˑ]+\\]"],
+  "words": ["stijnvanhulle", "Stijn", "Van", "Hulle", "Kubb", "unprovide", "unprovides", "injecter"]
+}

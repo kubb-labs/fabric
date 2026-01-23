@@ -92,12 +92,12 @@
   "dependencies": {
     "@clack/prompts": "1.0.0-alpha.9",
     "fs-extra": "^11.3.3",
-    "signal-exit": "^4.1.0",
     "natural-orderby": "^5.0.0",
-    "remeda": "catalog:",
     "p-limit": "^7.2.0",
     "picocolors": "^1.1.1",
+    "remeda": "catalog:",
     "serve-handler": "^6.1.6",
+    "signal-exit": "^4.1.0",
     "typescript": "5.9.3",
     "ws": "^8.19.0"
   },

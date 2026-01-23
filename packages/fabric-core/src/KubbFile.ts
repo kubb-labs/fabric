@@ -76,7 +76,7 @@ export type Extname = '.ts' | '.js' | '.tsx' | '.json' | `.${string}`
 export type Mode = 'single' | 'split'
 
 /**
- * Name to be used to dynamicly create the baseName(based on input.path)
+ * Name to be used to dynamically create the baseName(based on input.path)
  * Based on UNIX basename
  * @link https://nodejs.org/api/path.html#pathbasenamepath-suffix
  */

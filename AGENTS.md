@@ -1,68 +1,64 @@
 # AGENTS.md
-This repository contains Fabric — a language-agnostic toolkit for generating code and files using JSX and TypeScript.
 
+Fabric is a language-agnostic toolkit for generating code and files using JSX and TypeScript.
 
-## Folder structure
+## Folder Structure
 
-Expanded overview focused on plugins and where to find their docs and source code.
+### Documentation
 
 ```
 docs/
-├── changelog.md          # Updated with every PR (via changeset)
-├── getting-started/      # Getting started guides (quick-start, configure, troubleshooting)
-├── tutorials/            # Step-by-step tutorials
-├── examples/             # Playground and examples used in docs
+├── config.json              # Navigation and sidebar (Kubb.dev schema)
+├── getting-started/         # Installation, quick-start, configuration
+├── api/                     # API references (core, plugins, parsers)
+├── guide/                   # Plugin development, best practices
+├── tutorials/               # End-to-end tutorials
+└── public/                  # Static assets
 ```
 
-Repository-level layout with focus on plugin packages and their source layout:
+All markdown files follow VitePress conventions. The `config.json` file uses the Kubb.dev schema for navigation. See `.skills/documentation/` for writing guidelines.
+
+### Packages
 
 ```
 packages/
-├── fabric-core/                 # Core utilities and shared runtime
-└── react-fabric/                # React-fabric layer
+├── fabric-core/             # Core utilities and runtime
+└── react-fabric/            # React-fabric layer
 ```
 
-Notes:
-- The `docs/plugins/*` folders contain user-facing documentation for each plugin and usually mirror the `packages/plugin-*/` source layout (options, examples, and usage).
-- Plugin source convention: `packages/plugin-*/src/components/` holds React-fabric components, `src/generators/` holds generator implementations, and `src/*.test.ts` or `src/tests/` contains tests.
-- When adding a new plugin, add both a `packages/plugin-name/` package and a corresponding `docs/plugins/plugin-name/` docs folder (see `docs/plugins/*` for examples).
+Plugins follow this convention:
+- `src/components/` - React-fabric components
+- `src/generators/` - Generator implementations
+- `src/*.test.ts` - Tests
 
-## Repository facts
+## Repository Setup
 
-- **Monorepo**: Managed by pnpm workspaces and Turborepo
-- **Module system**: ESM-only (`type: "module" across repo)
-- **Node version**: 20
-- **Versioning**: Changesets for versioning and publishing
-- **CI/CD**: GitHub Actions
+- **Monorepo** - Uses pnpm workspaces and Turborepo
+- **Module system** - ESM-only (`type: "module"`)
+- **Node version** - 20
+- **Versioning** - Changesets
+- **CI/CD** - GitHub Actions
 
-## Setup commands
+## Commands
 
 ```bash
-pnpm install                # Install dependencies
-pnpm clean                  # Clean build artifacts
-pnpm build                  # Build all packages
-pnpm generate               # Generate code from OpenAPI specs
-pnpm perf                   # Run performance tests
-pnpm test                   # Run tests
-pnpm typecheck              # Type check all packages
-pnpm format                 # Format code
-pnpm lint                   # Lint code
-pnpm lint:fix               # Lint and fix issues
-pnpm changeset              # Create changelog entry
+pnpm install                 # Install dependencies
+pnpm clean                   # Clean build artifacts
+pnpm build                   # Build all packages
+pnpm test                    # Run tests
+pnpm typecheck               # Type check packages
+pnpm lint                    # Lint code
+pnpm lint:fix                # Lint and fix issues
+pnpm changeset               # Create changelog entry
 pnpm run upgrade && pnpm i   # Upgrade dependencies
 ```
 
-This file is intentionally minimal. Agents and contributors should consult the repository's skills for detailed guidance:
-
-<skills>
-
 ## Skills
 
-You have new skills. If any skill might be relevant then you MUST read it.
+Use the skills in `.skills/` for detailed guidance:
 
-- [changelog](.skills/changelog/SKILL.md) - Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation.
-- [coding-style](.skills/coding-style/SKILL.md) - Coding style, testing, and PR guidelines for the Kubb ecosystem. Use when writing or reviewing code for the Kubb ecosystem.
-- [documentation](.skills/documentation/SKILL.md) - Use when writing blog posts or documentation markdown files - provides writing style guide (active voice, present tense) and content structure patterns. Overrides brevity rules for proper grammar.
-- [pr](.skills/pr/SKILL.md) - Rules and checklist for preparing PRs, creating changesets, and releasing packages in the monorepo.
-- [testing](.skills/testing/SKILL.md) - Testing, CI, and troubleshooting guidance for running the repository's test suite and interpreting CI failures.
-</skills>
+- **[changelog](.skills/changelog/SKILL.md)** - Generate changelogs from commits
+- **[coding-style](.skills/coding-style/SKILL.md)** - Code style and testing guidelines
+- **[documentation](.skills/documentation/SKILL.md)** - Writing style and content patterns
+- **[pr](.skills/pr/SKILL.md)** - PR preparation and changesets
+- **[testing](.skills/testing/SKILL.md)** - Test suite and CI guidance

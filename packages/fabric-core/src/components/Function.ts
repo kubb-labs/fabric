@@ -27,7 +27,7 @@ type FunctionProps = {
    */
   export?: boolean
   /**
-   * Does the function has async/promise behaviour.
+   * Does the function has async/promise behavior.
    * This will also add `Promise<returnType>` as the returnType.
    */
   async?: boolean

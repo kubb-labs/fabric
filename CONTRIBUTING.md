@@ -30,18 +30,23 @@ gh repo clone <your-github-name>/kubb
 
 ### Implement your changes
 
-When making commits, make sure to follow the [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) guidelines, i.e. prepending the message with `feat:`, `fix:`, `chore:`, `docs:`, etc... You can use `git status` to double check which files have not yet been staged for commit:
+This project includes several code quality tools to help maintain code standards:
 
-```bash
-git add <file> && git commit -m "feat/fix/chore/docs: commit message"
-```
+- **Linting**: Run `pnpm run lint` to check code style (uses Biome)
+- **Formatting**: Run `pnpm run format` to auto-format code
+- **Type checking**: Run `pnpm run typecheck` to verify TypeScript types
+- **Spell checking**: Run `pnpm run lint:spell` to check spelling in `.ts` and `.md` files (uses CSpell)
+- **Testing**: Run `pnpm run test` to run the test suite
 
-Next to [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) we also use [changesets](https://github.com/changesets/changesets). Run the following command and follow the steps in the CLI. You will be prompted to select the changed packages, select if the changes are major/minor/patch and a message that you want to add to generated changelog.
+#### Spell Checking
 
-```bash
-pnpm run changeset
-npx changeset
-```
+This project uses [CSpell](https://cspell.org/) to catch spelling errors in code and documentation. The configuration is in `cspell.json` and uses American English.
+
+If you encounter a spelling error:
+- For typos: Fix the spelling in your code
+- For technical terms, library names, or contributor names: Add them to the `words` array in `cspell.json`
+
+Common technical terms, framework names, and contributor names are already in the dictionary.
 
 ### When you're done
 
