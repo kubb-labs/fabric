@@ -4,22 +4,41 @@ title: File Component
 outline: deep
 ---
 
-# File
+# File <Badge type="info" text="fabric-core" />
 
 Component for generating files with sources, imports, and exports.
 
+> [!NOTE]
+> This is the **fabric-core** version using FSX functional API.
+> For the React version, see [File (React)](/api/react-fabric/components/file).
+
+## Package
+
+```bash
+@kubb/fabric-core
+```
+
 ## Usage
 
-The `File` component creates files in the FileManager with sources, imports, and exports.
+Uses functional API (not JSX):
 
-```tsx [basic-file.tsx]
-import { File } from '@kubb/fabric-core'
+```ts [file.ts]
+import { createFabric, File } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fsx-plugin'
 
-<File baseName="user.ts" path="./generated/user.ts">
-  <File.Source isExportable>
-    export type User = {'{'} id: number {'}'}
-  </File.Source>
-</File>
+const fabric = createFabric()
+fabric.use(fsxPlugin)
+
+const component = File({
+  baseName: 'user.ts',
+  path: './generated/user.ts',
+}).children([
+  File.Source({ isExportable: true }).children([
+    'export type User = { id: number }'
+  ])
+])
+
+await fabric.render(component)
 ```
 
 ## Props
@@ -72,83 +91,221 @@ Optional footer text added at the bottom of the file.
 |     Type: | `string` |
 | Required: | `false`  |
 
-## Sub-Components
+## File.Source
 
-### File.Source
+Adds source code to a file.
 
-Adds source code to the file.
+### Props
 
-**Props:**
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string` | - | Optional name for the source block |
+| `isTypeOnly` | `boolean` | `false` | Mark source as type-only export |
+| `isExportable` | `boolean` | `false` | Include export keyword in source |
+| `isIndexable` | `boolean` | `false` | Include in barrel file generation |
+| `children` | `FabricNode` | - | Source code content |
 
-- `name` (string, optional) - Source name
-- `isExportable` (boolean, default: false) - Include in barrel exports
-- `isIndexable` (boolean, optional) - Include in index files
-- `isTypeOnly` (boolean, optional) - Type-only export
+### Usage
 
-### File.Import
+```ts [file-source.ts]
+import { createFabric, File } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fsx-plugin'
 
-Adds import statements to the file.
+const fabric = createFabric()
+fabric.use(fsxPlugin)
 
-**Props:**
+const component = File({
+  baseName: 'user.ts',
+  path: './user.ts',
+}).children([
+  File.Source({
+    name: 'User',
+    isExportable: true,
+  }).children(['export type User = { id: number }'])
+])
 
-- `name` (string, required) - Import name
-- `path` (string, required) - Import path
-- `root` (string, optional) - Root directory
-- `isNameSpace` (boolean, optional) - Namespace import
-- `isTypeOnly` (boolean, optional) - Type-only import
+await fabric.render(component)
+```
 
-### File.Export
+## File.Import
 
-Adds export statements to the file.
+Adds import statements to a file.
 
-**Props:**
+### Props
 
-- `name` (string, required) - Export name
-- `path` (string, required) - Export path
-- `isTypeOnly` (boolean, optional) - Type-only export
-- `asAlias` (string, optional) - Export alias
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string \| Array<string \| { propertyName: string, name?: string }>` | - | Import name(s) to be used |
+| `path` | `string` | - | Path for the import |
+| `isTypeOnly` | `boolean` | `false` | Add type-only import prefix |
+| `isNameSpace` | `boolean` | `false` | Import entire module as namespace |
+| `root` | `string` | - | Root path for relative imports |
+
+### Usage
+
+```ts [file-import.ts]
+import { createFabric, File } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fsx-plugin'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
+
+const component = File({
+  baseName: 'index.ts',
+  path: './index.ts',
+}).children([
+  File.Import({
+    name: 'User',
+    path: './types/user',
+    isTypeOnly: true,
+  })
+])
+
+await fabric.render(component)
+```
+
+### Import Name Formats
+
+```ts
+// Simple string
+File.Import({ name: 'React', path: 'react' })
+// -> import React from 'react'
+
+// Array of strings
+File.Import({ name: ['useState', 'useEffect'], path: 'react' })
+// -> import { useState, useEffect } from 'react'
+
+// Named imports with aliases
+File.Import({ 
+  name: [{ propertyName: 'default', name: 'React' }], 
+  path: 'react' 
+})
+// -> import { default as React } from 'react'
+
+// Namespace import
+File.Import({ name: 'React', path: 'react', isNameSpace: true })
+// -> import * as React from 'react'
+```
+
+## File.Export
+
+Adds export statements to a file.
+
+### Props
+
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `string \| Array<string>` | - | Export name(s) to be used |
+| `path` | `string` | - | Path for the export |
+| `isTypeOnly` | `boolean` | `false` | Add type-only export prefix |
+| `asAlias` | `boolean` | `false` | Export as aliased namespace |
+
+### Usage
+
+```ts [file-export.ts]
+import { createFabric, File } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fsx-plugin'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
+
+const component = File({
+  baseName: 'index.ts',
+  path: './index.ts',
+}).children([
+  File.Export({
+    name: 'User',
+    path: './types/user',
+    isTypeOnly: true,
+  })
+])
+
+await fabric.render(component)
+```
+
+### Export Formats
+
+```ts
+// Named export
+File.Export({ name: 'User', path: './types/user' })
+// -> export { User } from './types/user'
+
+// Multiple named exports
+File.Export({ name: ['User', 'Post'], path: './types' })
+// -> export { User, Post } from './types'
+
+// Type-only export
+File.Export({ name: 'User', path: './types/user', isTypeOnly: true })
+// -> export type { User } from './types/user'
+
+// Namespace export with alias
+File.Export({ path: './types', asAlias: true })
+// -> export * as types from './types'
+```
 
 ## Examples
 
 ### Complete File
 
-```tsx [complete-file.tsx]
-<File baseName="user.ts" path="./generated/types/user.ts">
-  <File.Import name="BaseEntity" path="./base" isTypeOnly />
+```ts [complete-file.ts]
+import { createFabric, File } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fsx-plugin'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
+
+const component = File({
+  baseName: 'user.ts',
+  path: './generated/types/user.ts',
+}).children([
+  File.Import({ name: 'BaseEntity', path: './base', isTypeOnly: true }),
   
-  <File.Source isExportable name="User">
-    export type User = BaseEntity & {'{'}
+  File.Source({ name: 'User', isExportable: true }).children([
+    `export type User = BaseEntity & {
       name: string
       email: string
-    {'}'}
-  </File.Source>
+    }`
+  ]),
   
-  <File.Source isExportable name="createUser">
-    export function createUser(data: User): User {'{'}
-      return {'{'} ...data, id: Math.random() {'}'}
-    {'}'}
-  </File.Source>
-</File>
+  File.Source({ name: 'createUser', isExportable: true }).children([
+    `export function createUser(data: User): User {
+      return { ...data, id: Math.random() }
+    }`
+  ])
+])
+
+await fabric.render(component)
 ```
 
 ### Multiple Files
 
-```tsx [multiple-files.tsx]
-{['User', 'Post', 'Comment'].map(entity => (
-  <File 
-    key={entity}
-    baseName={`${entity.toLowerCase()}.ts`}
-    path={`./generated/types/${entity.toLowerCase()}.ts`}
-  >
-    <File.Source isExportable>
-      export type {entity} = {'{'} id: number {'}'}
-    </File.Source>
-  </File>
-))}
+```ts [multiple-files.ts]
+import { createFabric, File, Root } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fsx-plugin'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
+
+const entities = ['User', 'Post', 'Comment']
+
+const component = Root().children(
+  entities.map(entity =>
+    File({
+      baseName: `${entity.toLowerCase()}.ts`,
+      path: `./generated/types/${entity.toLowerCase()}.ts`,
+    }).children([
+      File.Source({ isExportable: true }).children([
+        `export type ${entity} = { id: number }`
+      ])
+    ])
+  )
+)
+
+await fabric.render(component)
 ```
 
 ## See Also
 
-- [useFile](/api/fabric-core/composables/use-file) — Access file context
-- [useFileManager](/api/fabric-core/composables/use-file-manager) — Manage files
-- [fsxPlugin](/api/plugins/fsx-plugin) — FSX rendering plugin
+- [File (React)](/api/react-fabric/components/file) - React version
+- [useFile](/api/fabric-core/composables/use-file) - Access file context
+- [useFileManager](/api/fabric-core/composables/use-file-manager) - Manage files collection
