@@ -296,7 +296,7 @@ import { defaultParser } @kubb/fabric-core/parsers`
 | file | `KubbFile.File` | -| File that will be used to be parsed.                                                        |
 
 #### `defineParser`
-Factory to declare a parser that can be registered via `fabric.use` and selected by `extNames` during `fabirc.write`.
+Factory to declare a parser that can be registered via `fabric.use` and selected by `extNames` during `fabric.write`.
 
 | Field                      | Required | Description                                                                                                     |
 |----------------------------|---|-----------------------------------------------------------------------------------------------------------------|
