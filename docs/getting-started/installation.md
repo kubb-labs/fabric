@@ -68,7 +68,7 @@ Fabric requires Node.js 20 or higher, or Bun 1.0 or higher.
 
 ## TypeScript Configuration
 
-Fabric is written in TypeScript and provides full type definitions. You should configure your TypeScript project with `module: "ESNext"` or `module: "NodeNext"` since Fabric is ESM-only.
+Fabric is written in TypeScript and provides full type definitions. You should configure your TypeScript project with `module: "ESNext"` or `module: "NodeNext"` since Kubb prefers ESM.
 
 ```json [tsconfig.json]
 {
@@ -80,9 +80,6 @@ Fabric is written in TypeScript and provides full type definitions. You should c
   }
 }
 ```
-
-> [!TIP]
-> Fabric uses `type: "module"` in its package.json and is ESM-only. Make sure your project is configured to support ESM.
 
 ## Verify Installation
 
