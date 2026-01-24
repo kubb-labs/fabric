@@ -60,8 +60,8 @@ fabric.use<TOptions, TInjectedMethods>(
 **Example:**
 
 ```ts [use-plugin.ts]
-import { fsPlugin, loggerPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin, loggerPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 fabric.use(loggerPlugin, { progress: true })
 fabric.use(fsPlugin, { clean: { path: './output' } })
@@ -173,7 +173,7 @@ fabric.write(options?: WriteOptions): Promise<void>
 **Example:**
 
 ```ts [write-files.ts]
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 fabric.use(fsPlugin)
 
@@ -210,7 +210,7 @@ fabric.writeEntry(
 **Example:**
 
 ```ts [write-entry.ts]
-import { barrelPlugin } from '@kubb/core/plugins'
+import { barrelPlugin } from '@kubb/fabric-core/plugins'
 
 fabric.use(barrelPlugin, { root: './generated', mode: 'named' })
 
@@ -237,7 +237,7 @@ fabric.render(App: FabricElement<any>): Promise<string>
 **Example:**
 
 ```ts [render-fsx.ts]
-import { fsxPlugin } from '@kubb/core/plugins'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { createComponent } from '@kubb/fabric-core'
 
 fabric.use(fsxPlugin)
@@ -312,7 +312,7 @@ fabric.waitUntilExit(): Promise<void>
 **Example:**
 
 ```ts [wait-fsx.ts]
-import { fsxPlugin } from '@kubb/core/plugins'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 fabric.use(fsxPlugin)
 
@@ -341,8 +341,8 @@ console.log('App exited')
 
 ```ts [basic-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -364,8 +364,8 @@ await fabric.write()
 
 ```ts [events-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, loggerPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin, loggerPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -384,8 +384,8 @@ await fabric.write()
 
 ```ts [multi-parser.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser, tsxParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
