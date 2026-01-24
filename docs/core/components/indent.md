@@ -10,17 +10,27 @@ Increases indentation level in the output.
 
 ## Usage
 
-```tsx [basic.tsx]
+```ts [basic.ts]
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core'
 import { Indent, Dedent, Br } from '@kubb/fabric-core'
 
-<>
-  function example() {'{'}<Br />
-  <Indent />
-    const x = 1<Br />
-    return x<Br />
-  <Dedent />
-  {'}'}
-</>
+const fabric = createFabric()
+fabric.use(fsxPlugin)
+
+const component = [
+  'function example() {',
+  Br(),
+  Indent(),
+  'const x = 1',
+  Br(),
+  'return x',
+  Br(),
+  Dedent(),
+  '}'
+]
+
+const output = await fabric.render(component)
 ```
 
 ## See Also

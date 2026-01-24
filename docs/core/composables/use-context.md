@@ -31,7 +31,7 @@ function useContext<T, TValue = T>(
 
 ```ts [basic.ts]
 import { useContext } from '@kubb/fabric-core'
-import { AppContext } from '@kubb/core/contexts'
+import { AppContext } from '@kubb/fabric-core'
 
 function MyComponent() {
   const { meta } = useContext(AppContext)
