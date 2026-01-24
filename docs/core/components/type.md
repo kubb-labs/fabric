@@ -24,7 +24,7 @@ Uses Fabric's functional API (not JSX):
 
 ```ts [basic-type.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { Type } from '@kubb/fabric-core'
 
 const fabric = createFabric()
