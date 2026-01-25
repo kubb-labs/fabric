@@ -73,8 +73,11 @@ await fabric.render(component)
 
 ```ts twoslash
 import { File, Function, createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
+
+fabric.use(fsxPlugin)
 
 const component = File({
   baseName: 'api.ts',
@@ -119,8 +122,11 @@ Use the `App` component for multiple files:
 
 ```ts twoslash
 import { App, File, Type, createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
+
+fabric.use(fsxPlugin)
 
 const models = ['User', 'Post', 'Comment']
 
