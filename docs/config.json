@@ -63,6 +63,7 @@
         {
           "text": "Fabric Core",
           "collapsed": false,
+          "link": "/core",
           "items": [
             {
               "text": "createFabric",
@@ -166,6 +167,7 @@
         {
           "text": "React Fabric",
           "collapsed": false,
+          "link": "/react",
           "items": [
             {
               "text": "Components",
