@@ -72,7 +72,9 @@ await fabric.render(component)
 ## Step 3: Add Imports and Functions
 
 ```ts twoslash
-import { File, Function } from '@kubb/fabric-core'
+import { File, Function, createFabric } from '@kubb/fabric-core'
+
+const fabric = createFabric()
 
 const component = File({
   baseName: 'api.ts',
@@ -116,7 +118,9 @@ export async function fetchUser(id: number): Promise<User> {
 Use the `App` component for multiple files:
 
 ```ts twoslash
-import { App, File, Type } from '@kubb/fabric-core'
+import { App, File, Type, createFabric } from '@kubb/fabric-core'
+
+const fabric = createFabric()
 
 const models = ['User', 'Post', 'Comment']
 
