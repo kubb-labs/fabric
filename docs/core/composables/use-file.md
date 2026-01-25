@@ -6,7 +6,7 @@ outline: deep
 
 # useFile
 
-Composable for accessing the current File context.
+Composable for accessing the current File context and its properties.
 
 ## Usage
 
@@ -38,7 +38,7 @@ Returns the current `File` object containing:
 Use `useFile` when you need to:
 - Access the current file's properties
 - Add sources, imports, or exports programmatically
-- Read file metadata
+- Read file metadata from within a component
 
 ## Examples
 
@@ -52,7 +52,6 @@ function FileInfo() {
 
   return `// File: ${file.baseName} at ${file.path}`
 }
-
 ```
 
 ### Add Source Dynamically
@@ -76,5 +75,7 @@ function DynamicSource({ types }: { types: string[] }) {
 
 ## See Also
 
-- [File](/core/components/file) — File component
-- [useFileManager](/core/composables/use-file-manager) — Manage multiple files
+- [File](/core/components/file) - File component
+- [useFileManager](/core/composables/use-file-manager) - Manage multiple files
+- [useApp](/core/composables/use-app) - Access app context
+

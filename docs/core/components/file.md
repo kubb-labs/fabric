@@ -100,11 +100,15 @@ Child components (File.Source, File.Import, File.Export).
 |     Type: | `FabricNode` |
 | Required: | `false`     |
 
-## `File.Source`
+## Sub-components
+
+File has three sub-components for managing imports, exports, and source code.
+
+### `File.Source`
 
 Adds source code to a file.
 
-### name
+#### name
 
 Optional name for the source block.
 
@@ -113,7 +117,7 @@ Optional name for the source block.
 |     Type: | `string` |
 | Required: | `false`  |
 
-### isTypeOnly
+#### isTypeOnly
 
 Mark source as type-only export.
 - `true` marks source as type export
@@ -125,7 +129,7 @@ Mark source as type-only export.
 | Required: | `false`   |
 |  Default: | `false`   |
 
-### isExportable
+#### isExportable
 
 Include export keyword in source.
 - `true` generates exportable const or type
@@ -137,7 +141,7 @@ Include export keyword in source.
 | Required: | `false`   |
 |  Default: | `false`   |
 
-### isIndexable
+#### isIndexable
 
 Include in barrel file generation.
 - `true` adds to barrel exports
@@ -149,7 +153,7 @@ Include in barrel file generation.
 | Required: | `false`   |
 |  Default: | `false`   |
 
-### children
+#### children
 
 Source code content.
 
@@ -158,7 +162,7 @@ Source code content.
 |     Type: | `FabricNode` |
 | Required: | `false`     |
 
-### Usage
+#### Example
 
 ```tsx twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -181,11 +185,11 @@ const component = File({
 await fabric.render(component)
 ```
 
-## `File.Import`
+### `File.Import`
 
 Adds import statements to a file.
 
-### name
+#### name
 
 Import name(s) to be used.
 
@@ -194,7 +198,7 @@ Import name(s) to be used.
 |     Type: | `string \| Array<string \| { propertyName: string, name?: string }>` |
 | Required: | `true`   |
 
-### path
+#### path
 
 Path for the import.
 
@@ -203,7 +207,7 @@ Path for the import.
 |     Type: | `string` |
 | Required: | `true`   |
 
-### isTypeOnly
+#### isTypeOnly
 
 Add type-only import prefix.
 - `true` generates `import type { Type } from './path'`
@@ -215,7 +219,7 @@ Add type-only import prefix.
 | Required: | `false`   |
 |  Default: | `false`   |
 
-### isNameSpace
+#### isNameSpace
 
 Import entire module as namespace.
 - `true` generates `import * as Name from './path'`
@@ -227,7 +231,7 @@ Import entire module as namespace.
 | Required: | `false`   |
 |  Default: | `false`   |
 
-### root
+#### root
 
 Root path for relative imports.
 
@@ -238,7 +242,7 @@ When root is set it will get the path with relative `getRelativePath(root, path)
 |     Type: | `string` |
 | Required: | `false`  |
 
-### Usage
+#### Example
 
 ```tsx twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -262,7 +266,7 @@ const component = File({
 await fabric.render(component)
 ```
 
-### Import Name Formats
+#### Import Name Formats
 
 ```ts
 // Simple string
@@ -285,11 +289,11 @@ File.Import({ name: 'React', path: 'react', isNameSpace: true })
 // -> import * as React from 'react'
 ```
 
-## `File.Export`
+### `File.Export`
 
 Adds export statements to a file.
 
-### name
+#### name
 
 Export name(s) to be used.
 
@@ -298,7 +302,7 @@ Export name(s) to be used.
 |     Type: | `string \| Array<string>` |
 | Required: | `false`  |
 
-### path
+#### path
 
 Path for the export.
 
@@ -307,7 +311,7 @@ Path for the export.
 |     Type: | `string` |
 | Required: | `true`   |
 
-### isTypeOnly
+#### isTypeOnly
 
 Add type-only export prefix.
 - `true` generates `export type { Type } from './path'`
@@ -319,7 +323,7 @@ Add type-only export prefix.
 | Required: | `false`   |
 |  Default: | `false`   |
 
-### asAlias
+#### asAlias
 
 Export as aliased namespace.
 - `true` generates `export * as aliasName from './path'`
@@ -331,7 +335,7 @@ Export as aliased namespace.
 | Required: | `false`   |
 |  Default: | `false`   |
 
-### Usage
+#### Example
 
 ```tsx twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -355,7 +359,7 @@ const component = File({
 await fabric.render(component)
 ```
 
-### Export Formats
+#### Export Formats
 
 ```ts
 // Named export

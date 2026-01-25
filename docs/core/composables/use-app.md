@@ -6,7 +6,7 @@ outline: deep
 
 # useApp
 
-Composable for accessing the App context with metadata and exit function.
+Composable for accessing the App context with metadata and lifecycle control.
 
 ## Usage
 
@@ -24,8 +24,8 @@ Returns the current App context containing:
 
 |        |            |                                |
 |-------:|:-----------|:-------------------------------|
-| `meta` | `object`   | Metadata passed to App component|
-| `exit` | `Function` | Function to exit the render    |
+| `meta` | `TMeta`    | Metadata passed to App component|
+| `exit` | `() => void` | Function to exit the render    |
 
 ## When to Use
 
@@ -46,7 +46,6 @@ function MyComponent() {
 
   return `// Version: ${meta.version}`
 }
-
 ```
 
 ### Exit Early
@@ -68,5 +67,7 @@ function ConditionalComponent({ shouldRender }: { shouldRender: boolean }) {
 
 ## See Also
 
-- [App](/core/components/app) — App component
-- [useContext](/core/composables/use-context) — Generic context access
+- [App](/core/components/app) - App component
+- [useContext](/core/composables/use-context) - Generic context access
+- [useLifecycle](/core/composables/use-lifecycle) - Lifecycle control
+

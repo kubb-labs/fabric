@@ -6,18 +6,9 @@ outline: deep
 
 # useLifecycle
 
-Composable for controlling generation lifecycle.
-
-
-## Returns
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `exit` | `(error?: Error) => void` | Function to stop rendering |
+Composable for controlling the rendering lifecycle and exit behavior.
 
 ## Usage
-
-### Basic Usage
 
 ```tsx twoslash
 import { useLifecycle } from '@kubb/fabric-core'
@@ -30,6 +21,21 @@ function MyComponent() {
   return null
 }
 ```
+
+## Return Value
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `exit` | `(error?: Error) => void` | Function to stop rendering and exit the process |
+
+## When to Use
+
+Use `useLifecycle` when you need to:
+- Stop the rendering process early
+- Exit with an error condition
+- Implement conditional rendering logic that may abort the generation
+
+## Examples
 
 ### Exit with Error
 

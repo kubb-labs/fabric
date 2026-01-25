@@ -16,7 +16,7 @@ import { createFabric } from '@kubb/fabric-core'
 const fabric = createFabric()
 ```
 
-## options
+## Options
 
 Optional configuration for the Fabric instance.
 

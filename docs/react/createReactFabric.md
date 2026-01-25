@@ -42,7 +42,7 @@ export const API_URL: string = 'https://api.example.com'
 ```
 :::
 
-## config
+## Options
 
 Optional configuration for the React Fabric instance.
 
