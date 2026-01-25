@@ -19,12 +19,12 @@ Increases indentation level in the output.
 ```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { Indent, Dedent, Br } from '@kubb/fabric-core'
+import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = [
+const component = App().children([
   'function example() {',
   Br(),
   Indent(),
@@ -32,7 +32,7 @@ const component = [
   Br(),
   Dedent(),
   '}'
-]
+])
 
 const output = await fabric.render(component)
 ```
@@ -77,12 +77,12 @@ const component = [
 ```tsx twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { Indent, Dedent, Br } from '@kubb/fabric-core'
+import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = [
+const component = App().children([
   'class Example {',
   Br(),
   Indent(),
@@ -96,7 +96,7 @@ const component = [
   Br(),
   Dedent(),
   '}'
-]
+])
 
 const output = await fabric.render(component)
 ```

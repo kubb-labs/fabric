@@ -189,7 +189,8 @@ fabric.use(fsPlugin, {
   dryRun: false
 })
 fabric.use(barrelPlugin, {
-  output: './generated/index.ts'
+  root: './generated',
+  mode: 'named'
 })
 
 // Add files...

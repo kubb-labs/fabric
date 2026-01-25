@@ -72,6 +72,8 @@ JSDoc comments.
 ### Union Type
 
 ```tsx twoslash
+import { Type } from '@kubb/fabric-core'
+
 const component = Type({
   name: 'Status',
   export: true

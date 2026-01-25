@@ -419,14 +419,14 @@ await fabric.render(component)
 ```tsx twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { File, Root } from '@kubb/fabric-core'
+import { File, App } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
 const entities = ['User', 'Post', 'Comment']
 
-const component = Root().children(
+const component = App().children(
   entities.map(entity =>
     File({
       baseName: `${entity.toLowerCase()}.ts`,

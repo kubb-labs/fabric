@@ -112,6 +112,8 @@ JSDoc comments.
 ### Async Function
 
 ```tsx twoslash
+import { Function } from '@kubb/fabric-core'
+
 const component = Function({
   name: 'fetchData',
   export: true,
@@ -127,6 +129,8 @@ const component = Function({
 ### With Generics
 
 ```tsx twoslash
+import { Function } from '@kubb/fabric-core'
+
 const component = Function({
   name: 'identity',
   export: true,
