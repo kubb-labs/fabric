@@ -84,6 +84,8 @@ await fabric.addFile({
   sources: [
     { value: '{"name": "app", "version": "1.0.0"}', isExportable: false },
   ],
+  imports: [],
+  exports: []
 })
 
 await fabric.write({ extension: { '.json': '' } })

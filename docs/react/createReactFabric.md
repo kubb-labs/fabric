@@ -203,7 +203,7 @@ function Generator() {
           </Type>
         </File.Source>
       </File>
-      
+
       <File baseName="post.ts" path="./generated/types/post.ts">
         <File.Source isExportable>
           <Type name="Post" export>
@@ -243,7 +243,7 @@ await fabric.render(<MyComponent />)
 
 Redirect output to custom streams:
 
-```tsx twoslash
+```tsx
 import { createReactFabric, Const } from '@kubb/react-fabric'
 import { createWriteStream } from 'fs'
 

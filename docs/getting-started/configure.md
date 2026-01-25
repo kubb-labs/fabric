@@ -121,8 +121,11 @@ Control how file extensions are transformed during generation:
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
+
+fabric.use(fsPlugin)
 // Map .vue files to .ts during generation
 await fabric.write({
   extension: {
