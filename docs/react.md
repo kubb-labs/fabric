@@ -90,12 +90,12 @@ React Fabric provides JSX components for generating TypeScript code:
 Standard React hooks are re-exported for convenience:
 
 ```tsx
-import { 
-  useState, 
-  useEffect, 
+import {
+  useState,
+  useEffect,
   useContext,
   useRef,
-  useReducer 
+  useReducer
 } from '@kubb/react-fabric'
 ```
 
@@ -165,13 +165,13 @@ const fabric = createReactFabric()
 
 function DynamicGenerator() {
   const [count, setCount] = useState(0)
-  
+
   return (
     <>
       {Array.from({ length: 3 }).map((_, i) => (
-        <File 
+        <File
           key={i}
-          baseName={`config-${i}.ts`} 
+          baseName={`config-${i}.ts`}
           path={`./generated/config-${i}.ts`}
         >
           <File.Source isExportable>
@@ -210,9 +210,9 @@ function Entity({ name, fields }: EntityProps) {
   const fieldTypes = Object.entries(fields)
     .map(([key, type]) => `${key}: ${type}`)
     .join('; ')
-  
+
   return (
-    <File 
+    <File
       baseName={`${name.toLowerCase()}.ts`}
       path={`./generated/types/${name.toLowerCase()}.ts`}
     >
@@ -231,7 +231,7 @@ function Generator() {
     { name: 'Post', fields: { id: 'number', title: 'string', userId: 'number' } },
     { name: 'Comment', fields: { id: 'number', text: 'string', postId: 'number' } }
   ]
-  
+
   return (
     <>
       {entities.map(entity => (
@@ -250,7 +250,7 @@ await fabric.waitUntilExit()
 Enable React DevTools for debugging component tree:
 
 ```tsx twoslash
-import { createReactFabric } from '@kubb/react-fabric'
+import { createReactFabric, Const } from '@kubb/react-fabric'
 
 const fabric = createReactFabric({
   devtools: true,
@@ -259,7 +259,7 @@ const fabric = createReactFabric({
 
 function App() {
   return (
-    <div>Your components...</div>
+    <Const name={'hello'}>"World!"</Const>
   )
 }
 
