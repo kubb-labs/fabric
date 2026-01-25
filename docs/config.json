@@ -261,8 +261,7 @@
               "text": "Default Parser",
               "link": "/parsers/default-parser",
               "activeMatch": "^/parsers/default-parser/?$"
-            },
-
+            }
           ]
         },
         {
