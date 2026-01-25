@@ -24,16 +24,20 @@ React Fabric is a React integration for Fabric that enables component-based file
 
 ::: code-group
 
-```bash [npm]
-npm install @kubb/react-fabric react
+```bash [bun]
+bun add -d @kubb/react-fabric
 ```
 
 ```bash [pnpm]
-pnpm add @kubb/react-fabric react
+pnpm add -D @kubb/react-fabric
 ```
 
-```bash [bun]
-bun add @kubb/react-fabric react
+```bash [npm]
+npm install --save-dev @kubb/react-fabric
+```
+
+```bash [yarn]
+yarn add -D @kubb/react-fabric
 ```
 
 :::

@@ -24,16 +24,20 @@ Fabric Core is a lightweight, dependency-free file generation framework that use
 
 ::: code-group
 
-```bash [npm]
-npm install @kubb/fabric-core
+```bash [bun]
+bun add -d @kubb/fabric-core
 ```
 
 ```bash [pnpm]
-pnpm add @kubb/fabric-core
+pnpm add -D @kubb/fabric-core
 ```
 
-```bash [bun]
-bun add @kubb/fabric-core
+```bash [npm]
+npm install --save-dev @kubb/fabric-core
+```
+
+```bash [yarn]
+yarn add -D @kubb/fabric-core
 ```
 
 :::

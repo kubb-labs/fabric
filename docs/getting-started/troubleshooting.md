@@ -26,6 +26,14 @@ bun add -d @kubb/fabric-core
 pnpm add -D @kubb/fabric-core
 ```
 
+```bash [npm]
+npm install --save-dev @kubb/fabric-core
+```
+
+```bash [yarn]
+yarn add -D @kubb/fabric-core
+```
+
 :::
 
 Check your `package.json`:
