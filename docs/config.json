@@ -297,7 +297,7 @@
           "text": "Creating Parsers",
           "link": "/guide/creating-parsers",
           "activeMatch": "^/guide/creating-parsers/?$"
-        },
+        }
       ]
     }
   ],
