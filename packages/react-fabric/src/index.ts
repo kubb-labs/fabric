@@ -3,7 +3,7 @@ import * as React from 'react'
 
 export type { Fabric } from '@kubb/fabric-core'
 // expose fabric core helpers
-export { createFabric, createFile, FileManager, FileProcessor } from '@kubb/fabric-core'
+export { createFabric, createFile, FileManager, FileProcessor, TreeNode } from '@kubb/fabric-core'
 
 // react helpers
 export const useState = React.useState
