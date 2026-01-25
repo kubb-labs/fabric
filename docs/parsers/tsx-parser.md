@@ -228,7 +228,7 @@ await fabric.write({
 
 - [typescriptParser](/parsers/typescript-parser) — TypeScript parser
 - [defaultParser](/parsers/default-parser) — Fallback parser
-- [defineParser](/parsers/define-parser) — Create custom parsers
+- [Creating Parsers](/guide/creating-parsers) — Create custom parsers
 - [fsPlugin](/plugins/fs-plugin) — File system operations
 - [Creating Parsers](/guide/creating-parsers) — Build custom parsers
 - [reactPlugin](/plugins/react-plugin) — Render React components

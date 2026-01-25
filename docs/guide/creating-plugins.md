@@ -42,20 +42,166 @@ The `definePlugin` factory creates plugins that can be registered with `fabric.u
 definePlugin<TOptions, TInject>(config: PluginConfig): Plugin
 ```
 
-### Configuration Fields
+### Configuration
 
-| Field      | Required | Type                                      | Description                                                                                                  |
-|------------|----------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| `name`     | Yes      | `string`                                  | Unique identifier for your plugin.                                                                            |
-| `install`  | Yes      | `(fabric, options) => void \| Promise<void>` | Called when the plugin is registered. Subscribe to events and perform setup here.                            |
-| `inject`   | No       | `(fabric, options) => TInject`            | Return synchronously the runtime methods/properties to merge into `fabric` (e.g., `write`, `render`). Must not be async. |
+#### name
+
+Unique identifier for your plugin.
+
+|           |          |
+|----------:|:---------|
+|     Type: | `string` |
+| Required: | `true`   |
+
+**Example:**
+
+```ts
+const myPlugin = definePlugin({
+  name: 'myPlugin', // Used for debugging and identification
+  install(fabric) {
+    // Plugin logic
+  },
+})
+```
+
+#### install
+
+Called when the plugin is registered via `fabric.use()`. Use this to subscribe to events and perform setup.
+
+|           |                                                    |
+|----------:|:---------------------------------------------------|
+|     Type: | `(fabric, options) => void \| Promise<void>` |
+| Required: | `true`                                             |
+
+**Parameters:**
+
+- `fabric` — The Fabric instance
+- `options` — Plugin options passed to `fabric.use()`
+
+**Example:**
+
+```ts
+const myPlugin = definePlugin({
+  name: 'myPlugin',
+  install(fabric, options) {
+    // Listen to events
+    fabric.context.events.on('lifecycle:start', () => {
+      console.log('Starting...')
+    })
+
+    // Access options
+    if (options?.verbose) {
+      console.log('Verbose mode enabled')
+    }
+  },
+})
+```
+
+#### inject
+
+Optionally return methods or properties to merge into the Fabric instance. Must be synchronous.
+
+> [!IMPORTANT]
+> The `inject` function must be synchronous and cannot be async.
+
+|           |                                    |
+|----------:|:-----------------------------------|
+|     Type: | `(fabric, options) => TInject`     |
+| Required: | `false`                            |
+
+**Parameters:**
+
+- `fabric` — The Fabric instance
+- `options` — Plugin options passed to `fabric.use()`
+
+**Returns:** Object with methods/properties to add to `fabric`
+
+**Example:**
+
+```ts
+const myPlugin = definePlugin<
+  { prefix?: string },
+  { log: (msg: string) => void }
+>({
+  name: 'myPlugin',
+  install(fabric, options) {
+    // Setup logic
+  },
+  inject(fabric, options) {
+    return {
+      log(msg: string) {
+        const prefix = options?.prefix ?? '[LOG]'
+        console.log(`${prefix} ${msg}`)
+      },
+    }
+  },
+})
+
+const fabric = createFabric()
+fabric.use(myPlugin, { prefix: '[INFO]' })
+
+// Injected method is now available
+fabric.log('Hello World') // -> [INFO] Hello World
+```
 
 ### Type Parameters
 
-| Parameter  | Description                                                  |
-|------------|--------------------------------------------------------------|
-| `TOptions` | Type of options accepted by the plugin.                      |
-| `TInject`  | Type of methods/properties injected into the Fabric instance. |
+#### TOptions
+
+Type definition for plugin options.
+
+```ts
+type MyPluginOptions = {
+  enabled?: boolean
+  logLevel?: 'info' | 'warn' | 'error'
+}
+
+const myPlugin = definePlugin<MyPluginOptions>({
+  name: 'myPlugin',
+  install(fabric, options) {
+    if (options?.enabled) {
+      console.log(`Log level: ${options.logLevel ?? 'info'}`)
+    }
+  },
+})
+```
+
+#### TInject
+
+Type definition for methods/properties injected into Fabric.
+
+```ts
+declare global {
+  namespace Kubb {
+    interface Fabric {
+      sayHello: (name: string) => void
+      getStatus: () => string
+    }
+  }
+}
+
+type MyPluginInject = {
+  sayHello: (name: string) => void
+  getStatus: () => string
+}
+
+const myPlugin = definePlugin<{}, MyPluginInject>({
+  name: 'myPlugin',
+  install(fabric) {
+    // Setup
+  },
+  inject(fabric) {
+    return {
+      sayHello(name: string) {
+        console.log(`Hello ${name}!`)
+      },
+      getStatus() {
+        return 'ready'
+      },
+    }
+  },
+})
+```
 
 ## Basic Plugin
 
@@ -132,6 +278,14 @@ type ValidatorOptions = {
 
 type InjectedMethods = {
   validate: () => Promise<boolean>
+}
+
+declare global {
+  namespace Kubb {
+    interface Fabric {
+      validate: () => Promise<boolean>
+    }
+  }
 }
 
 const validatorPlugin = definePlugin<ValidatorOptions, InjectedMethods>({
@@ -313,7 +467,19 @@ install(fabric, options) {
 }
 ```
 
-### 5. Document Your Plugin
+### 5. Use Default Values
+
+Provide sensible defaults for all options:
+
+```ts
+install(fabric, options) {
+  const enabled = options?.enabled ?? true
+  const level = options?.level ?? 'info'
+  // ...
+}
+```
+
+### 6. Document Your Plugin
 
 Add JSDoc comments:
 
@@ -338,6 +504,14 @@ import { definePlugin } from '@kubb/fabric-core/plugins'
 
 type CounterMethods = {
   getFileCount: () => number
+}
+
+declare global {
+  namespace Kubb {
+    interface Fabric {
+       getFileCount: () => number
+    }
+  }
 }
 
 const fileCounterPlugin = definePlugin<{}, CounterMethods>({
@@ -394,7 +568,7 @@ fabric.use(backupPlugin, {
 
 ## See Also
 
-- [definePlugin](/plugins/define-plugin) — Plugin factory API
 - [Events](/core/events) — Available lifecycle events
 - [Creating Parsers](/guide/creating-parsers) — Create custom parsers
 - [fsPlugin](/plugins/fs-plugin) — File system plugin example
+- [loggerPlugin](/plugins/logger-plugin) — Example plugin with options

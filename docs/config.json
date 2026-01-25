@@ -240,11 +240,6 @@
               "text": "React Plugin",
               "link": "/plugins/react-plugin",
               "activeMatch": "^/plugins/react-plugin/?$"
-            },
-            {
-              "text": "definePlugin",
-              "link": "/plugins/define-plugin",
-              "activeMatch": "^/plugins/define-plugin/?$"
             }
           ]
         },
@@ -267,21 +262,22 @@
               "link": "/parsers/default-parser",
               "activeMatch": "^/parsers/default-parser/?$"
             },
-            {
-              "text": "defineParser",
-              "link": "/parsers/define-parser",
-              "activeMatch": "^/parsers/define-parser/?$"
-            }
+
           ]
         },
         {
           "text": "Tutorials",
-          "collapsed": true,
+          "collapsed": false,
           "items": [
             {
-              "text": "Building a Code Generator",
-              "link": "/tutorials/basic",
-              "activeMatch": "^/tutorials/basic/?$"
+              "text": "Getting Started",
+              "link": "/tutorials/getting-started",
+              "activeMatch": "^/tutorials/getting-started/?$"
+            },
+            {
+              "text": "Using Components (FSX)",
+              "link": "/tutorials/using-components",
+              "activeMatch": "^/tutorials/using-components/?$"
             }
           ]
         }

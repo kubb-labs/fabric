@@ -275,5 +275,5 @@ For TypeScript files with JSX, use the [`tsxParser`](/parsers/tsx-parser).
 
 - [tsxParser](/parsers/tsx-parser) — Parse TSX files with JSX
 - [defaultParser](/parsers/default-parser) — Fallback parser
-- [defineParser](/parsers/define-parser) — Create custom parsers
+- [Creating Parsers](/guide/creating-parsers) — Create custom parsers
 - [fsPlugin](/plugins/fs-plugin) — Write files to disk
