@@ -303,7 +303,10 @@
   ],
   "sidebar": {
     "/getting-started": "default",
-    "/api": "default",
+    "/core": "default",
+    "/react": "default",
+    "/plugins": "default",
+    "/parsers": "default",
     "/tutorials": "default",
     "/guide": "guide"
   }
