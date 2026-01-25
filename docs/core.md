@@ -143,7 +143,9 @@ await fabric.addFile({
   path: './generated/user.ts',
   sources: [
     { value: 'export type User = { id: number; name: string }', isExportable: true }
-  ]
+  ],
+  imports: [],
+  exports: []
 })
 
 await fabric.write()
@@ -182,12 +184,12 @@ import { fsPlugin, loggerPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
 const fabric = createFabric()
 
 fabric.use(loggerPlugin, { progress: true })
-fabric.use(fsPlugin, { 
+fabric.use(fsPlugin, {
   clean: { path: './generated' },
-  dryRun: false 
+  dryRun: false
 })
-fabric.use(barrelPlugin, { 
-  output: './generated/index.ts' 
+fabric.use(barrelPlugin, {
+  output: './generated/index.ts'
 })
 
 // Add files...

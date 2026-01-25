@@ -224,15 +224,19 @@ await fabric.waitUntilExit()
 Enable React DevTools for debugging:
 
 ```tsx twoslash
-import { createReactFabric } from '@kubb/react-fabric'
+import { createReactFabric, Const } from '@kubb/react-fabric'
 
 const fabric = createReactFabric({
   devtools: true,
   debug: true
 })
 
+function MyComponent() {
+  return <Const name="API_URL" export type="string">'https://api.example.com'</Const>
+}
+
 // DevTools will open automatically
-await fabric.render(<YourComponent />)
+await fabric.render(<MyComponent />)
 ```
 
 ### Custom Streams
@@ -240,7 +244,7 @@ await fabric.render(<YourComponent />)
 Redirect output to custom streams:
 
 ```tsx twoslash
-import { createReactFabric } from '@kubb/react-fabric'
+import { createReactFabric, Const } from '@kubb/react-fabric'
 import { createWriteStream } from 'fs'
 
 const fabric = createReactFabric({
@@ -248,7 +252,11 @@ const fabric = createReactFabric({
   stderr: process.stderr
 })
 
-await fabric.render(<YourComponent />)
+function MyComponent() {
+  return <Const name="API_URL" export type="string">'https://api.example.com'</Const>
+}
+
+await fabric.render(<MyComponent />)
 ```
 
 ## See Also

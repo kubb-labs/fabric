@@ -67,12 +67,14 @@ await fabric.addFile({
   sources: [
     { value: 'export type User = { id: number; name: string }', isExportable: true },
   ],
+  imports: [],
+  exports: []
 })
 
 // Add multiple files
 await fabric.addFile(
-  { baseName: 'user.ts', path: './generated/user.ts', sources: [/* ... */] },
-  { baseName: 'post.ts', path: './generated/post.ts', sources: [/* ... */] }
+  { baseName: 'user.ts', path: './generated/user.ts', sources: [/* ... */], imports: [], exports: [] },
+  { baseName: 'post.ts', path: './generated/post.ts', sources: [/* ... */], imports: [], exports: [] }
 )
 ```
 

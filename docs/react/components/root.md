@@ -19,8 +19,7 @@ This component is typically used internally by the Fabric renderer.
 ::: code-group
 
 ```tsx twoslash [run.tsx]
-import { createFabric } from '@kubb/react-fabric'
-import { Root } from '@kubb/react-fabric'
+import { createReactFabric, Root, App } from '@kubb/react-fabric'
 
 const fabric = createReactFabric()
 
