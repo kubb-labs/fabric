@@ -76,7 +76,7 @@
             },
             {
               "text": "Components",
-              "collapsed": false,
+              "collapsed": true,
               "items": [
                 {
                   "text": "App",
@@ -127,7 +127,7 @@
             },
             {
               "text": "Composables",
-              "collapsed": false,
+              "collapsed": true,
               "items": [
                 {
                   "text": "useApp",
@@ -169,7 +169,7 @@
           "items": [
             {
               "text": "Components",
-              "collapsed": false,
+              "collapsed": true,
               "items": [
                 {
                   "text": "App",
