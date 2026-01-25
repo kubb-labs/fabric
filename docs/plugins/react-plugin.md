@@ -12,7 +12,7 @@ The `reactPlugin` uses React and JSX syntax to create files.
 
 ### Basic Example
 
-```tsx twoslash
+```tsx
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
 
@@ -31,7 +31,7 @@ await fabric.render(App)
 
 Use `renderToString` to generate template output without writing to stdout:
 
-```tsx twoslash
+```tsx
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
 

@@ -101,7 +101,7 @@ Track when files are added or modified.
 Emitted when files are added to the FileManager cache.
 
 ```ts [files-added.ts]
-fabric.context.on('files:added', async ({ files }) => {
+fabric.context.on('files:added', async (files) => {
   console.log(`Added ${files.length} files`)
 })
 ```
@@ -155,7 +155,7 @@ Track when files are written to disk.
 Emitted before writing files to disk.
 
 ```ts [files-writing-start.ts]
-fabric.context.on('files:writing:start', async ({ files }) => {
+fabric.context.on('files:writing:start', async (files) => {
   console.log(`Preparing to write ${files.length} files`)
 })
 ```
@@ -171,7 +171,7 @@ fabric.context.on('files:writing:start', async ({ files }) => {
 Emitted after files are written to disk.
 
 ```ts [files-writing-end.ts]
-fabric.context.on('files:writing:end', async ({ files }) => {
+fabric.context.on('files:writing:end', async (files) => {
   console.log(`Finished writing ${files.length} files`)
 })
 ```
@@ -191,7 +191,7 @@ Track individual file processing progress.
 Emitted before processing begins.
 
 ```ts [files-processing-start.ts]
-fabric.context.on('files:processing:start', async ({ files }) => {
+fabric.context.on('files:processing:start', async (files) => {
   console.log(`Processing ${files.length} files...`)
 })
 ```
@@ -269,7 +269,7 @@ fabric.context.on('file:processing:end', async ({ file, index, total }) => {
 Emitted when all processing completes.
 
 ```ts [files-processing-end.ts]
-fabric.context.on('files:processing:end', async ({ files }) => {
+fabric.context.on('files:processing:end', async (files) => {
   console.log(`All ${files.length} files processed`)
 })
 ```
@@ -328,7 +328,7 @@ fabric.context.on('file:resolve:name', async ({ file }) => {
 Handle errors during file operations:
 
 ```ts [error-handling.ts]
-fabric.context.on('files:writing:start', async ({ files }) => {
+fabric.context.on('files:writing:start', async (files) => {
   try {
     // Pre-write validation
     for (const file of files) {
@@ -393,7 +393,7 @@ fabric.context.on('lifecycle:start', () => {
   console.log('🚀 Generation started')
 })
 
-fabric.context.on('files:added', ({ files }) => {
+fabric.context.on('files:added', (files) => {
   stats.filesAdded += files.length
   console.log(`📁 Added ${files.length} files (total: ${stats.filesAdded})`)
 })
@@ -403,12 +403,12 @@ fabric.context.on('file:processing:update', ({ processed, total, percentage }) =
   process.stdout.write(`\r${bar} ${percentage.toFixed(1)}% (${processed}/${total})`)
 })
 
-fabric.context.on('files:writing:start', ({ files }) => {
+fabric.context.on('files:writing:start', (files) => {
   stats.filesWritten = files.length
   console.log(`\n📝 Writing ${files.length} files...`)
 })
 
-fabric.context.on('files:writing:end', ({ files }) => {
+fabric.context.on('files:writing:end', (files) => {
   console.log(`✓ Wrote ${files.length} files`)
 })
 

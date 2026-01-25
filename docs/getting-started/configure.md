@@ -150,7 +150,7 @@ fabric.context.on('file:processing:update', async ({ processed, total, percentag
   console.log(`Progress: ${percentage.toFixed(1)}%`)
 })
 
-fabric.context.on('files:writing:start', async ({ files }) => {
+fabric.context.on('files:writing:start', async (files) => {
   console.log(`Writing ${files.length} files...`)
 })
 
@@ -165,6 +165,7 @@ Organize generated files using path configuration:
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 

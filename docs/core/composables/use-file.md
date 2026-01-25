@@ -14,8 +14,11 @@ Composable for accessing the current File context and its properties.
 import { useFile } from '@kubb/fabric-core'
 
 const file = useFile()
-console.log(file.path)
-console.log(file.baseName)
+
+if (file) {
+  console.log(file.path)
+  console.log(file.baseName)
+}
 ```
 
 ## Return Value
@@ -50,6 +53,8 @@ import { useFile } from '@kubb/fabric-core'
 function FileInfo() {
   const file = useFile()
 
+  if (!file) return null
+
   return `// File: ${file.baseName} at ${file.path}`
 }
 ```
@@ -61,6 +66,8 @@ import { useFile } from '@kubb/fabric-core'
 
 function DynamicSource({ types }: { types: string[] }) {
   const file = useFile()
+
+  if (!file) return null
 
   types.forEach(type => {
     file.sources.push({

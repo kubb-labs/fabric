@@ -295,7 +295,7 @@ console.log(posts.length)
 Add runtime validation to the generator:
 
 ```ts [validate.ts]
-fabric.context.on('files:writing:start', ({ files }) => {
+fabric.context.on('files:writing:start', (files) => {
   for (const file of files) {
     if (!file.path || !file.baseName) {
       throw new Error('Invalid file configuration')

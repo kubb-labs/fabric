@@ -375,7 +375,7 @@ const backupPlugin = definePlugin<BackupOptions>({
       throw new Error('backupPath is required')
     }
 
-    fabric.context.on('files:writing:start', async ({ files }) => {
+    fabric.context.on('files:writing:start', async (files) => {
       const outputPath = files[0]?.path?.split('/')[0]
 
       if (outputPath) {

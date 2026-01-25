@@ -35,13 +35,12 @@ function MyGenerator() {
 
 Returns the `FileManager` instance with the following methods:
 
-| Method | Type | Description |
-|--------|------|-------------|
-| `add` | `(...files: File[]) => Promise<void>` | Add one or more files to the manager |
-| `has` | `(path: string) => boolean` | Check if a file exists at the given path |
-| `get` | `(path: string) => File \| undefined` | Get a file by path |
-| `files` | `File[]` | Array of all managed files |
-| `clear` | `() => void` | Remove all files from the manager |
+| Method | Type                                                               | Description |
+|--------|--------------------------------------------------------------------|-------------|
+| `add` | `(...files: Array<KubbFile.File>) => Array<KubbFile.ResolvedFile>` | Add one or more files to the manager |
+| `getByPath` | `(path: string) => KubbFile.ResolvedFile \| null`                                   | Get a file by path |
+| `files` | `Array<KubbFile.ResolvedFile>`                                                           | Array of all managed files |
+| `clear` | `() => void`                                                       | Remove all files from the manager |
 
 ## When to Use
 
@@ -61,7 +60,7 @@ import { useFileManager } from '@kubb/fabric-core'
 function MyGenerator() {
   const fileManager = useFileManager()
 
-  if (fileManager.has('./generated/user.ts')) {
+  if (fileManager.getByPath('./generated/user.ts')) {
     console.log('File exists')
   }
 

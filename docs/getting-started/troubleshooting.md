@@ -440,7 +440,7 @@ fabric.context.on('lifecycle:start', () => console.log('Started'))
 fabric.context.on('file:processing:update', ({ processed, total }) => {
   console.log(`Processing: ${processed}/${total}`)
 })
-fabric.context.on('files:writing:start', ({ files }) => {
+fabric.context.on('files:writing:start', (files) => {
   console.log('Files to write:', files.map(f => f.path))
 })
 fabric.context.on('lifecycle:end', () => console.log('Complete'))
@@ -451,7 +451,7 @@ fabric.context.on('lifecycle:end', () => console.log('Complete'))
 Check files before writing:
 
 ```ts [inspect-files.ts]
-fabric.context.on('files:writing:start', ({ files }) => {
+fabric.context.on('files:writing:start', (files) => {
   for (const file of files) {
     console.log(`\nFile: ${file.path}`)
     console.log('Sources:', file.sources?.length || 0)

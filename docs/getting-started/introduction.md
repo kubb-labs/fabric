@@ -84,6 +84,7 @@ const fabric = createFabric()
 fabric.use(fsPlugin)
 
 await fabric.addFile({
+  baseName: 'types.ts',
   path: './output/types.ts',
   sources: [
     { value: 'export type User = { name: string }', isExportable: true },

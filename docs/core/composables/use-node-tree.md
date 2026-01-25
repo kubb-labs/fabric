@@ -46,7 +46,7 @@ Use `useNodeTree` when you need to:
 ```ts twoslash
 import { useNodeTree, provide, NodeTreeContext } from '@kubb/fabric-core'
 
-function MyComponent({ children }) {
+function MyComponent({ children }: { children: any }) {
   const nodeTree = useNodeTree()
 
   if (nodeTree) {

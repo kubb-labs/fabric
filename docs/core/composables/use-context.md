@@ -17,7 +17,7 @@ import { AppContext } from '@kubb/fabric-core'
 function MyComponent() {
   const { meta } = useContext(AppContext)
 
-  return `Version: ${meta.version}`
+  return `Version: ${(meta as { version: string }).version}`
 }
 ```
 
@@ -46,7 +46,7 @@ Use `useContext` when you need to:
 ```ts twoslash
 import { useContext, createContext } from '@kubb/fabric-core'
 
-const ThemeContext = createContext<{ mode: 'light' | 'dark' }>()
+const ThemeContext = createContext<{ mode: 'light' | 'dark' }>({ mode: 'light' })
 
 function MyComponent() {
   const theme = useContext(ThemeContext, { mode: 'light' })

@@ -328,7 +328,7 @@ import { definePlugin } from '@kubb/fabric-core/plugins'
 const validationPlugin = definePlugin({
   name: 'validationPlugin',
   install(fabric) {
-    fabric.context.events.on('files:processing:start', ({ files }) => {
+    fabric.context.events.on('files:processing:start', (files) => {
       for (const file of files) {
         if (!file.baseName) {
           throw new Error(`File missing baseName: ${file.path}`)
