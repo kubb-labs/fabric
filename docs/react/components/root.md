@@ -19,11 +19,12 @@ This component is typically used internally by the Fabric renderer.
 ::: code-group
 
 ```tsx twoslash [run.tsx]
-import { createReactFabric, Root, App, TreeNode } from '@kubb/react-fabric'
+import { createReactFabric, Root, App, TreeNode, FileManager } from '@kubb/react-fabric'
 import type { ComponentNode } from '@kubb/react-fabric/types'
 
 const fabric = createReactFabric()
 const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
+const fileManager = new FileManager()
 
 export function Generator() {
   return (
