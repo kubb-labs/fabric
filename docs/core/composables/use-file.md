@@ -10,7 +10,7 @@ Composable for accessing the current File context.
 
 ## Usage
 
-```ts [use-file-example.ts]
+```ts twoslash
 import { useFile } from '@kubb/fabric-core'
 
 const file = useFile()
@@ -44,36 +44,32 @@ Use `useFile` when you need to:
 
 ### Access File Properties
 
-```tsx [access-props.tsx]
+```tsx twoslash
 import { useFile } from '@kubb/fabric-core'
 
 function FileInfo() {
   const file = useFile()
-  
+
   return `// File: ${file.baseName} at ${file.path}`
 }
 
-// Inside File component
-<File baseName="user.ts" path="./generated/user.ts">
-  <FileInfo />
-</File>
 ```
 
 ### Add Source Dynamically
 
-```tsx [add-source.tsx]
+```tsx twoslash
 import { useFile } from '@kubb/fabric-core'
 
 function DynamicSource({ types }: { types: string[] }) {
   const file = useFile()
-  
+
   types.forEach(type => {
     file.sources.push({
       value: `export type ${type} = {}`,
       isExportable: true,
     })
   })
-  
+
   return null
 }
 ```

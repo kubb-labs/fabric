@@ -13,7 +13,7 @@ The `graphPlugin` visualizes the dependency graph of all files managed by Fabric
 The graphPlugin is included in `@kubb/fabric-core`:
 
 ```ts [example.ts]
-import { graphPlugin } from '@kubb/core/plugins'
+import { graphPlugin } from '@kubb/fabric-core/plugins'
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ import { graphPlugin } from '@kubb/core/plugins'
 
 ```ts [example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { graphPlugin } from '@kubb/core/plugins'
+import { graphPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 

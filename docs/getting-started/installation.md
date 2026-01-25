@@ -85,7 +85,7 @@ Fabric is written in TypeScript and provides full type definitions. You should c
 
 Create a simple test file to verify Fabric is installed correctly:
 
-```ts [test-fabric.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 
 const fabric = createFabric()
@@ -107,22 +107,3 @@ node --loader tsx test-fabric.ts
 :::
 
 You should see "Fabric initialized successfully!" in the console.
-
-## Next Steps
-
-<div class="vp-doc">
-  <div class="vp-card-container">
-    <a href="/getting-started/quick-start" class="vp-card">
-      <h3>Quick Start</h3>
-      <p>Build your first code generator</p>
-    </a>
-    <a href="/getting-started/configure" class="vp-card">
-      <h3>configure</h3>
-      <p>Learn how to configure Fabric</p>
-    </a>
-    <a href="/core/create-fabric" class="vp-card">
-      <h3>API Reference</h3>
-      <p>Explore the Fabric API</p>
-    </a>
-  </div>
-</div>

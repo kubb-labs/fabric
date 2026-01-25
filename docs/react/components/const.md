@@ -12,27 +12,30 @@ React component for generating TypeScript constant declarations.
 > This is the **react-fabric** version using React.
 > For the FSX version, see [Const (Fabric Core)](/core/components/const).
 
-## Package
-
-```bash
-@kubb/react-fabric
-```
-
 ## Usage
 
-Uses React (not FSX):
+::: code-group
 
-```tsx [const.tsx]
-import { Const } from '@kubb/react-fabric'
+```tsx twoslash [run.tsx]
+import { createReactFabric, Const } from '@kubb/react-fabric'
+
+const fabric = createReactFabric()
 
 export function Generator() {
   return (
-    <Const name="API_URL" export type="string">
+     <Const name="API_URL" export type="string">
       'https://api.example.com'
     </Const>
   )
 }
+
+const output = await fabric.renderToString(<Generator/>)
 ```
+
+```ts [output]
+export const API_URL: string = 'https://api.example.com'
+```
+:::
 
 ## Props
 
@@ -89,29 +92,9 @@ Constant value.
 
 |           |            |
 |----------:|:-----------|
-|     Type: | `ReactNode` |
+|     Type: | `KubbNode` |
 | Required: | `false`    |
 
-## Examples
-
-### Basic Constant
-
-```tsx [basic.tsx]
-<Const name="API_URL" export type="string">
-  'https://api.example.com'
-</Const>
-```
-
-### Const Assertion
-
-```tsx [as-const.tsx]
-<Const name="config" export asConst>
-  {'{'}
-    apiUrl: 'https://api.example.com',
-    timeout: 5000
-  {'}'}
-</Const>
-```
 
 ## See Also
 

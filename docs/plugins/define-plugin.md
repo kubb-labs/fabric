@@ -8,19 +8,12 @@ outline: deep
 
 Factory function for creating custom Fabric plugins.
 
-## Installation
-
-The `definePlugin` factory is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { definePlugin } from '@kubb/core/plugins'
-```
 
 ## Usage
 
 ```ts [basic-usage.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
 const myPlugin = definePlugin({
   name: 'myPlugin',
@@ -199,7 +192,7 @@ const myPlugin = definePlugin<{}, MyPluginInject>({
 
 ```ts [event-listener.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
 const progressPlugin = definePlugin({
   name: 'progressPlugin',
@@ -222,7 +215,7 @@ fabric.use(progressPlugin)
 
 ```ts [with-options.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
 type LoggerOptions = {
   level?: 'info' | 'warn' | 'error'
@@ -255,7 +248,7 @@ fabric.use(loggerPlugin, { level: 'info', prefix: '[Gen]' })
 
 ```ts [with-inject.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
 type MetricsInject = {
   getMetrics: () => { filesProcessed: number; duration: number }
@@ -301,7 +294,7 @@ console.log(`Processed ${metrics.filesProcessed} files in ${metrics.duration}ms`
 
 ```ts [transformation.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
 type BannerOptions = {
   text: string
@@ -330,7 +323,7 @@ fabric.use(bannerPlugin, { text: '// Auto-generated - do not edit' })
 
 ```ts [validation.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { definePlugin } from '@kubb/core/plugins'
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
 const validationPlugin = definePlugin({
   name: 'validationPlugin',
@@ -402,9 +395,9 @@ Remove event listeners if needed:
 ```ts
 install(fabric) {
   const handler = () => console.log('Event')
-  
+
   fabric.context.events.on('lifecycle:start', handler)
-  
+
   // Clean up if needed
   fabric.context.events.on('lifecycle:end', () => {
     fabric.context.events.off('lifecycle:start', handler)

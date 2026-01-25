@@ -8,13 +8,6 @@ outline: deep
 
 The `fsxPlugin` enables rendering FabricElements to generate file output. This plugin provides the core rendering capabilities for transforming component trees into file content, making it essential for file-based code generation workflows.
 
-## Installation
-
-The fsxPlugin is included in `@kubb/fabric-core`:
-
-```ts [example.ts]
-import { fsxPlugin } from '@kubb/core/plugins'
-```
 
 ## Usage
 
@@ -22,7 +15,7 @@ import { fsxPlugin } from '@kubb/core/plugins'
 
 ```ts [example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/core/plugins'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { createComponent } from '@kubb/fabric-core'
 
 const fabric = createFabric()
@@ -41,8 +34,8 @@ console.log(output) // "Hello from Fabric!"
 
 ```ts [file-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsxPlugin, fsPlugin } from '@kubb/core/plugins'
-import { File } from '@kubb/core/components'
+import { fsxPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
+import { File } from '@kubb/fabric-core/components'
 
 const fabric = createFabric()
 
@@ -68,7 +61,7 @@ The `createComponent` helper allows you to build reusable components for code ge
 
 ```ts [component-example.ts]
 import { createComponent } from '@kubb/fabric-core'
-import { Const } from '@kubb/core/components'
+import { Const } from '@kubb/fabric-core/components'
 
 // Without children
 const MyConst = createComponent('MyConst', ({ name }: { name: string }) => {
@@ -81,7 +74,7 @@ const output = MyConst({ name: 'greeting' })()
 
 ```ts [component-with-children.ts]
 import { createComponent } from '@kubb/fabric-core'
-import { File } from '@kubb/core/components'
+import { File } from '@kubb/fabric-core/components'
 
 // With children
 const MyFile = createComponent('MyFile', ({ baseName, path }: { baseName: string; path: string }) => {
@@ -109,7 +102,7 @@ const output = MyFile({ baseName: 'test.ts', path: './test.ts' })()
 Provide a custom tree node to track the component hierarchy:
 
 ```ts [tree-example.ts]
-import { TreeNode } from '@kubb/core/utils'
+import { TreeNode } from '@kubb/fabric-core/utils'
 import type { ComponentNode } from '@kubb/fabric-core'
 
 const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
@@ -192,7 +185,7 @@ The fsxPlugin:
 The `Const` component generates constant declarations:
 
 ```ts [const-example.ts]
-import { Const } from '@kubb/core/components'
+import { Const } from '@kubb/fabric-core/components'
 import { createComponent } from '@kubb/fabric-core'
 
 // Basic const
@@ -236,7 +229,7 @@ const output = await fabric.render(MyConstComponent())
 The `Type` component generates TypeScript type declarations:
 
 ```ts [type-example.ts]
-import { Type } from '@kubb/core/components'
+import { Type } from '@kubb/fabric-core/components'
 import { createComponent } from '@kubb/fabric-core'
 
 // Basic type
@@ -276,7 +269,7 @@ const output = await fabric.render(MyTypeComponent())
 The `File` component manages file generation with imports, exports, and sources:
 
 ```ts [file-example.ts]
-import { File } from '@kubb/core/components'
+import { File } from '@kubb/fabric-core/components'
 import { createComponent } from '@kubb/fabric-core'
 
 // Basic file
@@ -347,7 +340,7 @@ Generate TypeScript code using component composition:
 
 ```ts [codegen.ts]
 import { createComponent } from '@kubb/fabric-core'
-import { Type, Const, File } from '@kubb/core/components'
+import { Type, Const, File } from '@kubb/fabric-core/components'
 
 const ModelGenerator = createComponent('ModelGenerator', ({ name, fields }: {
   name: string
@@ -390,7 +383,7 @@ Create reusable components for consistent code generation:
 
 ```ts [library.ts]
 import { createComponent } from '@kubb/fabric-core'
-import { Const } from '@kubb/core/components'
+import { Const } from '@kubb/fabric-core/components'
 
 // Reusable API endpoint const generator
 const ApiEndpoint = createComponent('ApiEndpoint', ({ name, path }: {
@@ -416,10 +409,10 @@ const output = await fabric.render(
 Track component hierarchy during rendering:
 
 ```ts [tree-tracking.ts]
-import { TreeNode } from '@kubb/core/utils'
+import { TreeNode } from '@kubb/fabric-core/utils'
 import type { ComponentNode } from '@kubb/fabric-core'
-import { App } from '@kubb/core/components'
-import { Const } from '@kubb/core/components'
+import { App } from '@kubb/fabric-core/components'
+import { Const } from '@kubb/fabric-core/components'
 
 const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
 

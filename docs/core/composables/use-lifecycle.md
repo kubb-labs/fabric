@@ -8,13 +8,6 @@ outline: deep
 
 Composable for controlling generation lifecycle.
 
-## Signature
-
-```ts
-function useLifecycle(): {
-  exit: (error?: Error) => void
-}
-```
 
 ## Returns
 
@@ -26,23 +19,21 @@ function useLifecycle(): {
 
 ### Basic Usage
 
-```tsx [exit.tsx]
+```tsx twoslash
 import { useLifecycle } from '@kubb/fabric-core'
 
 function MyComponent() {
   const { exit } = useLifecycle()
 
-  if (invalidCondition) {
-    exit()
-  }
+  exit()
 
-  return <>{/* Your component */}</>
+  return null
 }
 ```
 
 ### Exit with Error
 
-```tsx [exit-error.tsx]
+```tsx twoslash
 import { useLifecycle } from '@kubb/fabric-core'
 
 function MyComponent({ data }: { data?: unknown }) {
@@ -53,7 +44,7 @@ function MyComponent({ data }: { data?: unknown }) {
     return null
   }
 
-  return <>{/* Your component */}</>
+  return null
 }
 ```
 

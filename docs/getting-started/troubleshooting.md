@@ -63,7 +63,7 @@ Check your `package.json`:
 1. Check that `fsPlugin` is registered:
 
 ```ts [check-fs-plugin.ts]
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 fabric.use(fsPlugin)
 ```
@@ -98,13 +98,15 @@ await fabric.addFile({
   sources: [
     { value: 'export const x = 1', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 ```
 
 2. Verify a parser is registered:
 
 ```ts [register-parser.ts]
-import { typescriptParser } from '@kubb/core/parsers'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 fabric.use(typescriptParser)
 ```
@@ -158,11 +160,11 @@ await fabric.write({
 
 ```ts [use-correct-parser.ts]
 // For .ts files
-import { typescriptParser } from '@kubb/core/parsers'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 fabric.use(typescriptParser)
 
 // For .tsx files with JSX
-import { tsxParser } from '@kubb/core/parsers'
+import { tsxParser } from '@kubb/fabric-core/parsers'
 fabric.use(tsxParser)
 ```
 
@@ -227,7 +229,7 @@ fabric.use(loggerPlugin, {
 1. Register `barrelPlugin`:
 
 ```ts [register-barrel.ts]
-import { barrelPlugin } from '@kubb/core/plugins'
+import { barrelPlugin } from '@kubb/fabric-core/plugins'
 
 fabric.use(barrelPlugin, {
   root: './generated',
@@ -293,7 +295,7 @@ await fabric.write()
 **Solution**: Ensure `reactPlugin` is registered:
 
 ```ts [register-react.ts]
-import { reactPlugin } from '@kubb/react/plugins'
+import { reactPlugin } from '@kubb/react-fabric/plugins'
 
 fabric.use(reactPlugin)
 ```
@@ -339,12 +341,12 @@ console.log(fabric.files.length)
 **Solution**: Register a parser or use the default parser:
 
 ```ts [register-parser-for-ext.ts]
-import { defaultParser } from '@kubb/core/parsers'
+import { defaultParser } from '@kubb/fabric-core/parsers'
 
 fabric.use(defaultParser)
 
 // Or create a custom parser
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 
 const myParser = defineParser({
   name: 'my-parser',
@@ -454,7 +456,7 @@ fabric.context.on('files:writing:start', ({ files }) => {
     console.log(`\nFile: ${file.path}`)
     console.log('Sources:', file.sources?.length || 0)
     console.log('Imports:', file.imports?.length || 0)
-    
+
     // Print first source
     if (file.sources?.[0]) {
       console.log('Content preview:', file.sources[0].value.slice(0, 100))

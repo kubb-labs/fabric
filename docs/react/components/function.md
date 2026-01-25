@@ -12,18 +12,14 @@ React component for generating TypeScript function declarations.
 > This is the **react-fabric** version using React.
 > For the FSX version, see [Function (Fabric Core)](/core/components/function).
 
-## Package
-
-```bash
-@kubb/react-fabric
-```
-
 ## Usage
 
-Uses React (not FSX):
+::: code-group
 
-```tsx [function.tsx]
-import { Function } from '@kubb/react-fabric'
+```tsx twoslash [run.tsx]
+import { createReactFabric, Function } from '@kubb/react-fabric'
+
+const fabric = createReactFabric()
 
 export function Generator() {
   return (
@@ -39,7 +35,17 @@ export function Generator() {
     </Function>
   )
 }
+
+const output = await fabric.renderToString(<Generator/>)
 ```
+
+```ts [output]
+export async function getUser(id: number): User {
+  const response = await fetch(`/users/${id}`)
+  return response.json()
+}
+```
+:::
 
 ## Props
 
@@ -114,7 +120,7 @@ Function body.
 
 |           |            |
 |----------:|:-----------|
-|     Type: | `ReactNode` |
+|     Type: | `KubbNode` |
 | Required: | `false`    |
 
 ## Examples

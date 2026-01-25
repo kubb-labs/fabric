@@ -13,7 +13,7 @@ Built-in fallback parser for files without a registered parser.
 The `defaultParser` is included in `@kubb/fabric-core`:
 
 ```ts [import.ts]
-import { defaultParser } from '@kubb/core/parsers'
+import { defaultParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ The `defaultParser` is automatically used as a fallback when no extension mappin
 
 ```ts [basic-usage.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -60,7 +60,7 @@ When `fabric.write()` is called without the `extension` option:
 
 ```ts [no-extension.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -81,8 +81,8 @@ When a file extension has no registered parser:
 
 ```ts [unregistered.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -171,7 +171,7 @@ await fabric.addFile({
 
 ```ts [plain-text.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -198,7 +198,7 @@ await fabric.write()
 
 ```ts [config-file.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -223,7 +223,7 @@ await fabric.write()
 
 ```ts [license.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -245,7 +245,7 @@ await fabric.write()
 
 ```ts [multiple-files.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin, { clean: { path: './output' } })
@@ -278,8 +278,8 @@ You can explicitly register the `defaultParser` if needed:
 
 ```ts [explicit-registration.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defaultParser } from '@kubb/core/parsers'
-import { fsPlugin } from '@kubb/core/plugins'
+import { defaultParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsPlugin)
@@ -297,8 +297,8 @@ Create a custom default parser with `defineParser`:
 
 ```ts [custom-default.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/core/parsers'
-import { fsPlugin } from '@kubb/core/plugins'
+import { defineParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const customDefaultParser = defineParser({
   name: 'customDefaultParser',
@@ -345,7 +345,7 @@ await fabric.addFile({
 await fabric.write() // Uses defaultParser - no TypeScript formatting
 
 // ✅ Use typescriptParser
-import { typescriptParser } from '@kubb/core/parsers'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 fabric.use(typescriptParser)
 await fabric.write({ extension: { '.ts': '.ts' } }) // Proper formatting
 ```

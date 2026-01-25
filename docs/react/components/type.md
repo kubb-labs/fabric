@@ -12,18 +12,14 @@ React component for generating TypeScript type declarations.
 > This is the **react-fabric** version using React.
 > For the FSX version, see [Type (Fabric Core)](/core/components/type).
 
-## Package
-
-```bash
-@kubb/react-fabric
-```
-
 ## Usage
 
-Uses React (not FSX):
+::: code-group
 
-```tsx [type.tsx]
-import { Type } from '@kubb/react-fabric'
+```tsx twoslash [run.tsx]
+import { createReactFabric, Type } from '@kubb/react-fabric'
+
+const fabric = createReactFabric()
 
 export function Generator() {
   return (
@@ -35,7 +31,17 @@ export function Generator() {
     </Type>
   )
 }
+
+const output = await fabric.renderToString(<Generator/>)
 ```
+
+```ts [output]
+export type User = {
+  id: number
+  name: string
+}
+```
+:::
 
 ## Props
 
@@ -73,7 +79,7 @@ Type definition.
 
 |           |            |
 |----------:|:-----------|
-|     Type: | `ReactNode` |
+|     Type: | `KubbNode` |
 | Required: | `false`    |
 
 ## Examples

@@ -1,30 +1,25 @@
 ---
 layout: doc
-title: File Component
+title: File (Fabric Core)
 outline: deep
 ---
 
 # File <Badge type="info" text="fabric-core" />
 
-Component for generating files with sources, imports, and exports.
+Generates files with sources, imports, and exports.
 
 > [!NOTE]
-> This is the **fabric-core** version using FSX functional API.
-> For the React version, see [File (React)](/react/components/file).
-
-## Package
-
-```bash
-@kubb/fabric-core
-```
+> This is the **fabric-core** version using the functional API.
+> For the React version, see [File (React Fabric)](/react/components/file).
 
 ## Usage
 
-Uses functional API (not JSX):
+::: code-group
 
-```ts [file.ts]
-import { createFabric, File } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/fsx-plugin'
+```tsx twoslash [run.ts]
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { File } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -38,8 +33,13 @@ const component = File({
   ])
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type User = { id: number }
+```
+:::
 
 ## Props
 
@@ -100,7 +100,7 @@ Child components (File.Source, File.Import, File.Export).
 |     Type: | `FabricNode` |
 | Required: | `false`     |
 
-## File.Source
+## `File.Source`
 
 Adds source code to a file.
 
@@ -160,9 +160,10 @@ Source code content.
 
 ### Usage
 
-```ts [file-source.ts]
-import { createFabric, File } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/fsx-plugin'
+```tsx twoslash
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { File } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -180,7 +181,7 @@ const component = File({
 await fabric.render(component)
 ```
 
-## File.Import
+## `File.Import`
 
 Adds import statements to a file.
 
@@ -239,9 +240,10 @@ When root is set it will get the path with relative `getRelativePath(root, path)
 
 ### Usage
 
-```ts [file-import.ts]
-import { createFabric, File } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/fsx-plugin'
+```tsx twoslash
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { File } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -272,9 +274,9 @@ File.Import({ name: ['useState', 'useEffect'], path: 'react' })
 // -> import { useState, useEffect } from 'react'
 
 // Named imports with aliases
-File.Import({ 
-  name: [{ propertyName: 'default', name: 'React' }], 
-  path: 'react' 
+File.Import({
+  name: [{ propertyName: 'default', name: 'React' }],
+  path: 'react'
 })
 // -> import { default as React } from 'react'
 
@@ -283,7 +285,7 @@ File.Import({ name: 'React', path: 'react', isNameSpace: true })
 // -> import * as React from 'react'
 ```
 
-## File.Export
+## `File.Export`
 
 Adds export statements to a file.
 
@@ -331,9 +333,10 @@ Export as aliased namespace.
 
 ### Usage
 
-```ts [file-export.ts]
-import { createFabric, File } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/fsx-plugin'
+```tsx twoslash
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { File } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -376,9 +379,10 @@ File.Export({ path: './types', asAlias: true })
 
 ### Complete File
 
-```ts [complete-file.ts]
-import { createFabric, File } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/fsx-plugin'
+```tsx twoslash
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { File } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -388,14 +392,14 @@ const component = File({
   path: './generated/types/user.ts',
 }).children([
   File.Import({ name: 'BaseEntity', path: './base', isTypeOnly: true }),
-  
+
   File.Source({ name: 'User', isExportable: true }).children([
     `export type User = BaseEntity & {
       name: string
       email: string
     }`
   ]),
-  
+
   File.Source({ name: 'createUser', isExportable: true }).children([
     `export function createUser(data: User): User {
       return { ...data, id: Math.random() }
@@ -408,9 +412,10 @@ await fabric.render(component)
 
 ### Multiple Files
 
-```ts [multiple-files.ts]
-import { createFabric, File, Root } from '@kubb/fabric-core'
-import { fsxPlugin } from '@kubb/fsx-plugin'
+```tsx twoslash
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { File, Root } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -435,6 +440,6 @@ await fabric.render(component)
 
 ## See Also
 
-- [File (React)](/react/components/file) - React version
-- [useFile](/core/composables/use-file) - Access file context
-- [useFileManager](/core/composables/use-file-manager) - Manage files collection
+- [File (React Fabric)](/react/components/file) - React version
+- [Root](/core/components/root) - Root component
+- [Function](/core/components/function) - Function declarations

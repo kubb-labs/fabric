@@ -13,7 +13,7 @@ The `tsxParser` is a specialized parser for TypeScript JSX (TSX) files. It deleg
 The tsxParser is included in `@kubb/fabric-core`:
 
 ```ts [example.ts]
-import { tsxParser } from '@kubb/core/parsers'
+import { tsxParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
@@ -22,8 +22,8 @@ import { tsxParser } from '@kubb/core/parsers'
 
 ```ts [example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { tsxParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { tsxParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -106,8 +106,8 @@ Use extension mapping to convert TypeScript files to TSX during write:
 
 ```ts [example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { tsxParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { tsxParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -137,8 +137,8 @@ Generate React components with proper TSX syntax:
 
 ```ts [generate-component.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { tsxParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { tsxParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -153,7 +153,7 @@ await fabric.addFile({
   path: './components/UserCard.tsx',
   sources: [
     { value: 'interface Props { name: string }', isExportable: false },
-    { 
+    {
       value: 'export const UserCard = ({ name }: Props) => <div>{name}</div>',
       isExportable: true,
     },
@@ -195,7 +195,7 @@ await fabric.write()
 Handle both TypeScript and TSX files in the same project:
 
 ```ts [mixed-project.ts]
-import { typescriptParser, tsxParser } from '@kubb/core/parsers'
+import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 

@@ -8,19 +8,11 @@ outline: deep
 
 Generates `index.ts` barrel files per folder to re-export modules and simplify imports.
 
-## Installation
-
-The `barrelPlugin` is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { barrelPlugin } from '@kubb/core/plugins'
-```
-
 ## Usage
 
 ```ts [basic-usage.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { barrelPlugin } from '@kubb/core/plugins'
+import { barrelPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -62,7 +54,7 @@ Controls how exports are generated in barrel files.
 **Modes:**
 
 - `'all'` — Uses `export * from './module'` syntax
-- `'named'` — Uses `export { Name } from './module'` syntax  
+- `'named'` — Uses `export { Name } from './module'` syntax
 - `'propagate'` — Skips barrel file generation
 - `false` — Disables barrel generation
 
@@ -140,8 +132,8 @@ await fabric.writeEntry('./generated', 'named')
 
 ```ts [basic-barrel.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { barrelPlugin, fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -186,8 +178,8 @@ export { Post } from './post'
 
 ```ts [entry-barrel.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { barrelPlugin, fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -232,7 +224,7 @@ export * from './api'
 
 ```ts [all-exports.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { barrelPlugin, fsPlugin } from '@kubb/core/plugins'
+import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -265,7 +257,7 @@ export * from './types'
 
 ```ts [named-exports.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { barrelPlugin, fsPlugin } from '@kubb/core/plugins'
+import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -298,7 +290,7 @@ export { User, Post } from './types'
 
 ```ts [dry-run-barrel.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { barrelPlugin, fsPlugin } from '@kubb/core/plugins'
+import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 

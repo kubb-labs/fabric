@@ -298,11 +298,6 @@
           "link": "/guide/creating-parsers",
           "activeMatch": "^/guide/creating-parsers/?$"
         },
-        {
-          "text": "File Generation Patterns",
-          "link": "/guide/file-generation-patterns",
-          "activeMatch": "^/guide/file-generation-patterns/?$"
-        }
       ]
     }
   ],

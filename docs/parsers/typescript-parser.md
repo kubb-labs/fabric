@@ -13,14 +13,14 @@ Parses TypeScript files and formats imports, exports, and source code.
 The `typescriptParser` is included in `@kubb/fabric-core`:
 
 ```ts [import.ts]
-import { typescriptParser } from '@kubb/core/parsers'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
 
 ```ts [basic-usage.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { typescriptParser } from '@kubb/core/parsers'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -70,8 +70,8 @@ The `typescriptParser` is automatically selected for files with `.ts` extension 
 
 ```ts [parser-selection.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -152,9 +152,9 @@ await fabric.addFile({
   baseName: 'types.ts',
   path: './output/types.ts',
   sources: [
-    { 
+    {
       value: 'export type User = { id: number; name: string; email: string }',
-      isExportable: true 
+      isExportable: true
     },
     {
       value: 'export type Post = { id: number; title: string; userId: number }',
@@ -177,8 +177,8 @@ export type Post = { id: number; title: string; userId: number }
 
 ```ts [basic-ts.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -201,8 +201,8 @@ await fabric.write({ extension: { '.ts': '.ts' } })
 
 ```ts [with-imports.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -217,9 +217,9 @@ await fabric.addFile({
     { name: 'axios', path: 'axios' },
   ],
   sources: [
-    { 
+    {
       value: 'export const getUser = (id: number): Promise<User> => axios.get(`/users/${id}`)',
-      isExportable: true 
+      isExportable: true
     },
   ],
 })
@@ -231,8 +231,8 @@ await fabric.write({ extension: { '.ts': '.ts' } })
 
 ```ts [multiple-files.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 

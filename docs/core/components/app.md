@@ -12,17 +12,11 @@ Container component providing App context with metadata.
 > This is the **fabric-core** version using the functional API.
 > For the React version, see [App (React Fabric)](/react/components/app).
 
-## Package
-
-```bash
-@kubb/fabric-core
-```
-
 ## Usage
 
-Uses Fabric's functional API (not JSX):
+::: code-group
 
-```ts [basic-app.ts]
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { App, File } from '@kubb/fabric-core'
@@ -30,14 +24,20 @@ import { App, File } from '@kubb/fabric-core'
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = App().children([
-  File({ baseName: 'user.ts', path: './generated/user.ts' }).children([
-    'export type User = { id: number }'
-  ])
+const Component = App().children([
+  File({ baseName: 'user.ts', path: './generated/user.ts' })
+  .children(
+    File.Source().children(['export type User = { id: number }'])
+  )
 ])
 
-const output = await fabric.render(component)
+const output = await fabric.render(Component)
 ```
+
+```ts [output]
+export type User = { id: number };
+```
+:::
 
 ## Props
 
@@ -50,23 +50,6 @@ Metadata attached to the App context.
 |     Type: | `TMeta` |
 | Required: | `false` |
 |  Default: | `{}`    |
-
-## With Metadata
-
-```ts [with-meta.ts]
-import { App } from '@kubb/fabric-core'
-
-const component = App({ 
-  meta: { 
-    version: '1.0.0', 
-    author: 'Code Generator' 
-  } 
-}).children([
-  // Your components
-])
-
-const output = await fabric.render(component)
-```
 
 ## See Also
 

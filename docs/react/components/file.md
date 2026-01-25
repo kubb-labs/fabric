@@ -12,18 +12,14 @@ React component for generating files with sources, imports, and exports.
 > This is the **react-fabric** version using React.
 > For the FSX version, see [File (Fabric Core)](/core/components/file).
 
-## Package
-
-```bash
-@kubb/react-fabric
-```
-
 ## Usage
 
-Uses React (not FSX):
+::: code-group
 
-```tsx [file.tsx]
-import { File } from '@kubb/react-fabric'
+```tsx twoslash [run.tsx]
+import { createReactFabric, File } from '@kubb/react-fabric'
+
+const fabric = createReactFabric()
 
 export function Generator() {
   return (
@@ -34,7 +30,14 @@ export function Generator() {
     </File>
   )
 }
+
+const output = await fabric.renderToString(<Generator/>)
 ```
+
+```ts [output]
+export type User = { id: number }
+```
+:::
 
 ## Props
 
@@ -90,12 +93,12 @@ File.Source, File.Import, File.Export.
 
 |           |            |
 |----------:|:-----------|
-|     Type: | `ReactNode` |
+|     Type: | `KubbNode` |
 | Required: | `false`    |
 
 ## Sub-components
 
-### File.Source
+### `File.Source`
 
 Adds source code to the file.
 
@@ -150,7 +153,7 @@ Source code content.
 
 |           |             |
 |----------:|:------------|
-|     Type: | `ReactNode` |
+|     Type: | `KubbNode` |
 | Required: | `false`     |
 
 ```tsx [source.tsx]
@@ -159,7 +162,7 @@ Source code content.
 </File.Source>
 ```
 
-### File.Import
+### `File.Import`
 
 Adds import statements to the file.
 
@@ -232,9 +235,9 @@ When root is set it will get the path with relative `getRelativePath(root, path)
 // -> import { useState, useEffect } from 'react'
 
 // Named imports with aliases
-<File.Import 
-  name={[{ propertyName: 'default', name: 'React' }]} 
-  path="react" 
+<File.Import
+  name={[{ propertyName: 'default', name: 'React' }]}
+  path="react"
 />
 // -> import { default as React } from 'react'
 
@@ -243,7 +246,7 @@ When root is set it will get the path with relative `getRelativePath(root, path)
 // -> import * as React from 'react'
 ```
 
-### File.Export
+### `File.Export`
 
 Adds export statements to the file.
 
@@ -324,14 +327,14 @@ export function Generator() {
   return (
     <File baseName="user.ts" path="./generated/types/user.ts">
       <File.Import name="BaseEntity" path="./base" isTypeOnly />
-      
+
       <File.Source isExportable name="User">
         export type User = BaseEntity & {'{'}
           name: string
           email: string
         {'}'}
       </File.Source>
-      
+
       <File.Source isExportable name="createUser">
         export function createUser(data: User): User {'{'}
           return {'{'} ...data, id: Math.random() {'}'}
@@ -349,11 +352,11 @@ import { File, Root } from '@kubb/react-fabric'
 
 export function Generator() {
   const entities = ['User', 'Post', 'Comment']
-  
+
   return (
     <Root>
       {entities.map(entity => (
-        <File 
+        <File
           key={entity}
           baseName={`${entity.toLowerCase()}.ts`}
           path={`./generated/types/${entity.toLowerCase()}.ts`}

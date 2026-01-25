@@ -6,36 +6,15 @@ outline: deep
 
 # Root <Badge type="info" text="fabric-core" />
 
-Root component providing core Fabric runtime context.
+Provides core Fabric runtime context.
 
 > [!NOTE]
-> This is the **fabric-core** version using FSX and `createComponent`.
+> This is the **fabric-core** version using the functional API.
 > For the React version, see [Root (React Fabric)](/react/components/root).
 
-## Package
-
-```bash
-@kubb/fabric-core
-```
-
-## Usage
-
-This component is typically used internally by the Fabric renderer.
-
-```tsx [root.tsx]
-import { Root } from '@kubb/fabric-core'
-
-<Root
-  onExit={(error) => process.exit(error ? 1 : 0)}
-  onError={(error) => console.error(error)}
-  treeNode={treeNode}
-  fileManager={fileManager}
->
-  <App>
-    Your components here
-  </App>
-</Root>
-```
+> [!WARNING]
+> The Root component is typically used internally by the Fabric runtime.
+> You don't need to use it directly in most cases.
 
 ## Props
 
@@ -84,7 +63,18 @@ Child components.
 |     Type: | `FabricNode` |
 | Required: | `false`     |
 
+## Internal Usage
+
+The Root component is automatically used by the fsxPlugin runtime. You typically won't create it directly.
+
+```ts
+// The runtime creates Root internally
+await fabric.render(component)
+// Root is automatically wrapped around your component
+```
+
 ## See Also
 
 - [Root (React Fabric)](/react/components/root) - React version
 - [App](/core/components/app) - App container component
+- [createFabric](/core/create-fabric) - Fabric factory

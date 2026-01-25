@@ -10,12 +10,12 @@ Composable for accessing the App context with metadata and exit function.
 
 ## Usage
 
-```ts [use-app-example.ts]
+```ts twoslash
 import { useApp } from '@kubb/fabric-core'
 
 const app = useApp()
 console.log(app.meta)
-app.exit()
+app.exit() // exit the app
 ```
 
 ## Return Value
@@ -38,34 +38,30 @@ Use `useApp` when you need to:
 
 ### Access Metadata
 
-```tsx [access-metadata.tsx]
+```tsx twoslash
 import { useApp } from '@kubb/fabric-core'
 
 function MyComponent() {
   const { meta } = useApp<{ version: string }>()
-  
+
   return `// Version: ${meta.version}`
 }
 
-// In App
-<App meta={{ version: '1.0.0' }}>
-  <MyComponent />
-</App>
 ```
 
 ### Exit Early
 
-```tsx [exit-early.tsx]
+```ts twoslash
 import { useApp } from '@kubb/fabric-core'
 
 function ConditionalComponent({ shouldRender }: { shouldRender: boolean }) {
   const { exit } = useApp()
-  
+
   if (!shouldRender) {
     exit()
     return null
   }
-  
+
   return 'Content'
 }
 ```

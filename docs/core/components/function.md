@@ -12,17 +12,11 @@ Generates TypeScript function declarations.
 > This is the **fabric-core** version using the functional API.
 > For the React version, see [Function (React Fabric)](/react/components/function).
 
-## Package
-
-```bash
-@kubb/fabric-core
-```
-
 ## Usage
 
-Uses Fabric's functional API (not JSX):
+::: code-group
 
-```ts [basic-function.ts]
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { Function } from '@kubb/fabric-core'
@@ -38,6 +32,13 @@ const component = Function({
 
 const output = await fabric.render(component)
 ```
+
+```ts [output]
+function getUser(id: number): User {
+  return fetch(`/users/${id}`)
+}
+```
+:::
 
 ## Props
 
@@ -110,7 +111,7 @@ JSDoc comments.
 
 ### Async Function
 
-```ts [async.ts]
+```tsx twoslash
 const component = Function({
   name: 'fetchData',
   export: true,
@@ -125,7 +126,7 @@ const component = Function({
 
 ### With Generics
 
-```ts [generics.ts]
+```tsx twoslash
 const component = Function({
   name: 'identity',
   export: true,

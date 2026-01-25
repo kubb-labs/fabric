@@ -8,16 +8,6 @@ outline: deep
 
 React-style composable for accessing context values.
 
-## Signature
-
-```ts
-function useContext<T>(key: Context<T>): T
-function useContext<T, TValue = T>(
-  key: Context<T>,
-  defaultValue: TValue
-): NonNullable<T> | TValue
-```
-
 ## Parameters
 
 | Parameter | Type | Description |
@@ -29,20 +19,20 @@ function useContext<T, TValue = T>(
 
 ### Basic Usage
 
-```ts [basic.ts]
+```ts twoslash
 import { useContext } from '@kubb/fabric-core'
 import { AppContext } from '@kubb/fabric-core'
 
 function MyComponent() {
   const { meta } = useContext(AppContext)
 
-  return <>{/* Your component */}</>
+  return meta
 }
 ```
 
 ### With Default Value
 
-```ts [default.ts]
+```ts twoslash
 import { useContext, createContext } from '@kubb/fabric-core'
 
 const ThemeContext = createContext<{ mode: 'light' | 'dark' }>()
@@ -50,7 +40,7 @@ const ThemeContext = createContext<{ mode: 'light' | 'dark' }>()
 function MyComponent() {
   const theme = useContext(ThemeContext, { mode: 'light' })
 
-  return <>{/* Your component */}</>
+  return theme
 }
 ```
 

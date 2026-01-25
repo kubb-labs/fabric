@@ -12,18 +12,14 @@ React component providing App context with metadata.
 > This is the **react-fabric** version using React.
 > For the FSX version, see [App (Fabric Core)](/core/components/app).
 
-## Package
-
-```bash
-@kubb/react-fabric
-```
-
 ## Usage
 
-Uses React (not FSX):
+::: code-group
 
-```tsx [app.tsx]
-import { App, File } from '@kubb/react-fabric'
+```tsx twoslash [run.tsx]
+import { createReactFabric, App, File } from '@kubb/react-fabric'
+
+const fabric = createReactFabric()
 
 export function Generator() {
   return (
@@ -36,7 +32,14 @@ export function Generator() {
     </App>
   )
 }
+
+const output = await fabric.renderToString(<Generator/>)
 ```
+
+```ts [output]
+export type User = { id: number };
+```
+:::
 
 ## Props
 
@@ -56,36 +59,8 @@ Child React components.
 
 |           |            |
 |----------:|:-----------|
-|     Type: | `ReactNode` |
+|     Type: | `KubbNode` |
 | Required: | `false`    |
-
-## With Metadata
-
-```tsx [with-meta.tsx]
-import { App } from '@kubb/react-fabric'
-
-type AppMeta = {
-  version: string
-  author: string
-}
-
-export function Generator() {
-  return (
-    <App<AppMeta> meta={{ version: '1.0.0', author: 'Code Generator' }}>
-      {/* Your components */}
-    </App>
-  )
-}
-```
-
-## Differences from Fabric Core
-
-| Feature | Fabric Core | React Fabric |
-|---------|-------------|--------------|
-| Type system | `FabricNode` | `ReactNode` |
-| Implementation | `createComponent` | React component |
-| Runtime | FSX | React |
-| Hooks | Fabric composables | Can use React hooks |
 
 ## See Also
 

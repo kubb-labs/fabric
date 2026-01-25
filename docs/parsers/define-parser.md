@@ -13,14 +13,14 @@ Factory function for creating custom Fabric parsers.
 The `defineParser` factory is included in `@kubb/fabric-core`:
 
 ```ts [import.ts]
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
 
 ```ts [basic-usage.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 
 const jsonParser = defineParser({
   name: 'jsonParser',
@@ -161,10 +161,10 @@ const myParser = defineParser({
     // Access file properties
     const sources = file.sources.map(s => s.value).join('\n')
     const imports = file.imports?.map(i => `import ${i.name} from '${i.path}'`).join('\n')
-    
+
     // Use extname for path generation
     console.log(`Parsing for extension: ${extname}`)
-    
+
     return `${imports}\n\n${sources}`
   },
 })
@@ -202,8 +202,8 @@ const myParser = defineParser<MyParserOptions>({
 
 ```ts [json-parser.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/core/parsers'
-import { fsPlugin } from '@kubb/core/plugins'
+import { defineParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const jsonParser = defineParser({
   name: 'jsonParser',
@@ -233,8 +233,8 @@ await fabric.write({ extension: { '.json': '.json' } })
 
 ```ts [markdown-parser.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/core/parsers'
-import { fsPlugin } from '@kubb/core/plugins'
+import { defineParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 type MarkdownOptions = {
   addFrontmatter?: boolean
@@ -248,12 +248,12 @@ const markdownParser = defineParser<MarkdownOptions>({
   },
   parse(file, { extname }) {
     const content = file.sources.map(s => s.value).join('\n\n')
-    
+
     // Add frontmatter if configured
     if (file.meta?.frontmatter) {
       return `---\n${file.meta.frontmatter}\n---\n\n${content}`
     }
-    
+
     return content
   },
 })
@@ -281,8 +281,8 @@ await fabric.write({ extension: { '.md': '.md' } })
 
 ```ts [css-parser.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/core/parsers'
-import { fsPlugin } from '@kubb/core/plugins'
+import { defineParser } from '@kubb/fabric-core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 type CSSOptions = {
   minify?: boolean
@@ -293,12 +293,12 @@ const cssParser = defineParser<CSSOptions>({
   extNames: ['.css'],
   parse(file) {
     const styles = file.sources.map(s => s.value).join('\n')
-    
+
     // Simple minification (remove extra whitespace)
     if (file.meta?.minify) {
       return styles.replace(/\s+/g, ' ').trim()
     }
-    
+
     return styles
   },
 })
@@ -324,7 +324,7 @@ await fabric.write({ extension: { '.css': '.css' } })
 
 ```ts [with-imports.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 
 const vueParser = defineParser({
   name: 'vueParser',
@@ -359,7 +359,7 @@ ${sources}
 
 ```ts [default-parser.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 
 const customDefaultParser = defineParser({
   name: 'customDefaultParser',
@@ -390,8 +390,8 @@ Fabric selects parsers based on file extension during `fabric.write()`:
 
 ```ts [parser-selection.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -437,7 +437,7 @@ parse(file) {
   if (!file.sources || file.sources.length === 0) {
     return '' // Or throw an error
   }
-  
+
   return file.sources.map(s => s.value).join('\n')
 }
 ```

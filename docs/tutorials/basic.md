@@ -112,7 +112,7 @@ export function generateType(model: Model): string {
   const properties = model.properties
     .map(prop => `  ${prop.name}: ${prop.type}`)
     .join('\n')
-  
+
   return `export type ${model.name} = {\n${properties}\n}`
 }
 ```
@@ -127,7 +127,7 @@ import type { Endpoint } from '../schema'
 export function generateApiFunction(endpoint: Endpoint): string {
   const params = endpoint.path.includes(':id') ? 'id: number' : ''
   const body = endpoint.method === 'POST' ? ', data: any' : ''
-  
+
   return `export async function ${endpoint.name}(${params}${body}): Promise<${endpoint.returns}> {
   const response = await fetch('${endpoint.path.replace(':id', '${id}')}', {
     method: '${endpoint.method}',${body ? `\n    body: JSON.stringify(data),` : ''}
@@ -143,21 +143,21 @@ Build the main generator using Fabric:
 
 ```ts [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, loggerPlugin, barrelPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin, loggerPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { schema } from './schema'
 import { generateType } from './generators/types'
 import { generateApiFunction } from './generators/api'
 
 async function generate() {
   const fabric = createFabric()
-  
+
   // Configure plugins
   fabric.use(loggerPlugin, { progress: true })
   fabric.use(barrelPlugin, { root: './generated', mode: 'named' })
   fabric.use(fsPlugin, { clean: { path: './generated' } })
   fabric.use(typescriptParser)
-  
+
   // Generate type files
   for (const model of schema.models) {
     await fabric.addFile({
@@ -168,13 +168,13 @@ async function generate() {
       ],
     })
   }
-  
+
   // Generate API client file
   const apiSources = schema.endpoints.map(endpoint => ({
     value: generateApiFunction(endpoint),
     isExportable: true,
   }))
-  
+
   // Add imports for types
   const imports = schema.endpoints.map(endpoint => {
     const returnType = endpoint.returns.replace('[]', '')
@@ -184,20 +184,20 @@ async function generate() {
       isTypeOnly: true,
     }
   })
-  
+
   await fabric.addFile({
     baseName: 'api.ts',
     path: './generated/api/api.ts',
     imports,
     sources: apiSources,
   })
-  
+
   // Write all files
   await fabric.write({ extension: { '.ts': '.ts' } })
-  
+
   // Generate barrel files
   await fabric.writeEntry('./generated', 'named')
-  
+
   console.log('✓ Generation complete!')
 }
 
@@ -325,7 +325,7 @@ import { watch } from 'fs/promises'
 
 async function watchAndGenerate() {
   const watcher = watch('./schema.ts')
-  
+
   for await (const event of watcher) {
     console.log('Schema changed, regenerating...')
     await generate()
@@ -341,22 +341,3 @@ async function watchAndGenerate() {
 - Use `fabric.addFile()` to queue files
 - Call `fabric.write()` to write files to disk
 - Generate barrel files with `fabric.writeEntry()`
-
-## Next Steps
-
-<div class="vp-doc">
-  <div class="vp-card-container">
-    <a href="/guide/file-generation-patterns" class="vp-card">
-      <h3>File Generation Patterns</h3>
-      <p>Learn advanced patterns</p>
-    </a>
-    <a href="/guide/creating-plugins" class="vp-card">
-      <h3>Creating Plugins</h3>
-      <p>Build custom plugins</p>
-    </a>
-    <a href="/core/create-fabric" class="vp-card">
-      <h3>API Reference</h3>
-      <p>Explore the complete API</p>
-    </a>
-  </div>
-</div>

@@ -8,12 +8,6 @@ outline: deep
 
 Composable for accessing the FileManager.
 
-## Signature
-
-```ts
-function useFileManager(): FileManager
-```
-
 ## Returns
 
 Returns the `FileManager` instance with methods to manage files.
@@ -22,7 +16,7 @@ Returns the `FileManager` instance with methods to manage files.
 
 ### Adding Files
 
-```tsx [add-files.tsx]
+```tsx twoslash
 import { useFileManager } from '@kubb/fabric-core'
 
 function MyGenerator() {
@@ -45,7 +39,7 @@ function MyGenerator() {
 
 ### Checking File Existence
 
-```tsx [check-file.tsx]
+```tsx twoslash
 import { useFileManager } from '@kubb/fabric-core'
 
 function MyGenerator() {

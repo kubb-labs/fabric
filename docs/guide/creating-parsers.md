@@ -23,8 +23,8 @@ Fabric includes built-in parsers for TypeScript, TSX, and default fallback parsi
 
 Create parsers using the `defineParser` factory:
 
-```ts [parser-structure.ts]
-import { defineParser } from '@kubb/core/parsers'
+```ts
+import { defineParser } from '@kubb/fabric-core/parsers'
 
 const myParser = defineParser({
   name: 'myParser',
@@ -40,11 +40,6 @@ const myParser = defineParser({
 
 The `defineParser` factory creates parsers that can be registered with `fabric.use()` and selected during `fabric.write()`.
 
-### Signature
-
-```ts
-defineParser<TOptions>(config: ParserConfig): Parser
-```
 
 ### Configuration Fields
 
@@ -66,7 +61,7 @@ defineParser<TOptions>(config: ParserConfig): Parser
 Create a simple JSON parser:
 
 ```ts [json-parser.ts]
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const jsonParser = defineParser({
@@ -99,7 +94,7 @@ await fabric.write({ extension: { '.json': '' } })
 Create a parser that accepts configuration:
 
 ```ts [vue-parser.ts]
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 type VueParserOptions = {
@@ -113,10 +108,10 @@ const vueParser = defineParser<VueParserOptions>({
   async parse(file: KubbFile.File, { extname }) {
     const banner = file.options?.banner ?? ''
     const scriptSetup = file.options?.scriptSetup ?? false
-    
+
     const sources = file.sources.map(s => s.value).join('\n')
     const scriptTag = scriptSetup ? '<script setup>' : '<script>'
-    
+
     return `${banner}
 <template>
   <div></div>
@@ -154,7 +149,7 @@ await fabric.write({ extension: { '.vue': '' } })
 Set up event listeners during parser installation:
 
 ```ts [markdown-parser.ts]
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const markdownParser = defineParser({
@@ -171,7 +166,7 @@ const markdownParser = defineParser({
   parse(file: KubbFile.File) {
     const content = file.sources.map(s => s.value).join('\n\n')
     const title = file.meta?.title || file.baseName.replace('.md', '')
-    
+
     return `# ${title}\n\n${content}`
   },
 })
@@ -183,8 +178,8 @@ Use extension mapping to select parsers during `fabric.write()`:
 
 ```ts [extension-mapping.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser, tsxParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -221,7 +216,7 @@ await fabric.write({
 Create a fallback parser for unhandled extensions:
 
 ```ts [default-parser.ts]
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const customDefaultParser = defineParser({
@@ -253,7 +248,7 @@ await fabric.write()
 Create a YAML parser with validation:
 
 ```ts [yaml-parser.ts]
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 import YAML from 'yaml'
 
@@ -276,7 +271,7 @@ const yamlParser = defineParser<YamlParserOptions>({
   },
   parse(file: KubbFile.File, { extname }) {
     const indent = file.options?.indent ?? 2
-    
+
     // Combine sources into object
     const data = file.sources.reduce((acc, source) => {
       try {
@@ -286,7 +281,7 @@ const yamlParser = defineParser<YamlParserOptions>({
         return acc
       }
     }, {})
-    
+
     // Convert to YAML
     return YAML.stringify(data, { indent })
   },
@@ -317,7 +312,7 @@ await fabric.write({ extension: { '.yaml': '' } })
 Use file properties in your parser:
 
 ```ts [metadata-parser.ts]
-import { defineParser } from '@kubb/core/parsers'
+import { defineParser } from '@kubb/fabric-core/parsers'
 import type { KubbFile } from '@kubb/fabric-core'
 
 const metadataParser = defineParser({
@@ -325,7 +320,7 @@ const metadataParser = defineParser({
   extNames: ['.meta.ts'],
   parse(file: KubbFile.File) {
     const { baseName, path, sources, imports, exports, meta } = file
-    
+
     return `
 // File: ${baseName}
 // Path: ${path}
@@ -370,7 +365,7 @@ parse(file) {
   if (!file.sources.length) {
     return '// No content'
   }
-  
+
   try {
     return formatContent(file.sources)
   } catch (error) {

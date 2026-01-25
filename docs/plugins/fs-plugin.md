@@ -8,19 +8,11 @@ outline: deep
 
 Writes files to disk and provides file system operations for Fabric.
 
-## Installation
-
-The `fsPlugin` is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { fsPlugin } from '@kubb/core/plugins'
-```
-
 ## Usage
 
 ```ts [basic-usage.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -132,8 +124,8 @@ await fabric.write({
 
 ```ts [basic-writing.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -155,8 +147,8 @@ await fabric.write()
 
 ```ts [clean-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -181,7 +173,7 @@ await fabric.write()
 
 ```ts [dry-run-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -208,7 +200,7 @@ await fabric.write()
 
 ```ts [validation-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -218,7 +210,7 @@ fabric.use(fsPlugin, {
     if (!data || data.length === 0) {
       throw new Error(`Empty file: ${path}`)
     }
-    
+
     // Log file size
     const sizeKB = (data.length / 1024).toFixed(2)
     console.log(`Writing ${path} (${sizeKB} KB)`)
@@ -232,8 +224,8 @@ await fabric.write()
 
 ```ts [extension-mapping-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser, tsxParser } from '@kubb/core/parsers'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -259,7 +251,7 @@ await fabric.write({
 
 ```ts [env-config.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 

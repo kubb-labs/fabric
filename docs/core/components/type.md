@@ -12,17 +12,11 @@ Generates TypeScript type declarations.
 > This is the **fabric-core** version using the functional API.
 > For the React version, see [Type (React Fabric)](/react/components/type).
 
-## Package
-
-```bash
-@kubb/fabric-core
-```
-
 ## Usage
 
-Uses Fabric's functional API (not JSX):
+::: code-group
 
-```ts [basic-type.ts]
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { Type } from '@kubb/fabric-core'
@@ -37,6 +31,11 @@ const component = Type({
 
 const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type User = { id: number; name: string }
+```
+:::
 
 ## Props
 
@@ -72,7 +71,7 @@ JSDoc comments.
 
 ### Union Type
 
-```ts [union.ts]
+```tsx twoslash
 const component = Type({
   name: 'Status',
   export: true

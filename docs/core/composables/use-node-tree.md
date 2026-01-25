@@ -8,56 +8,50 @@ outline: deep
 
 Composable for accessing the component node tree.
 
-## Signature
-
-```ts
-function useNodeTree(): TreeNode<ComponentNode> | null
-```
-
 ## Returns
 
-Returns the current `TreeNode<ComponentNode>` or `null` if not within a component that provides NodeTreeContext.
+Returns the current `TreeNode<ComponentNode>` or `null` if not within a component that provides `NodeTreeContext`.
 
 ## Usage
 
 ### Basic Usage
 
-```ts [basic.ts]
+```ts twoslash
 import { useNodeTree } from '@kubb/fabric-core'
 
 function MyComponent() {
   const nodeTree = useNodeTree()
-  
+
   if (nodeTree) {
-    const childTree = nodeTree.addChild({ 
-      type: 'MyComponent', 
-      props: {} 
+    const childTree = nodeTree.addChild({
+      type: 'MyComponent',
+      props: {}
     })
   }
-  
+
   return null
 }
 ```
 
 ### Tracking Component Hierarchy
 
-```ts [tracking.ts]
+```ts twoslash
 import { useNodeTree, provide, NodeTreeContext } from '@kubb/fabric-core'
 
 function MyComponent({ children }) {
   const nodeTree = useNodeTree()
-  
+
   if (nodeTree) {
     // Add this component to the tree
-    const childTree = nodeTree.addChild({ 
-      type: 'MyComponent', 
-      props: { name: 'example' } 
+    const childTree = nodeTree.addChild({
+      type: 'MyComponent',
+      props: { name: 'example' }
     })
-    
+
     // Provide the child tree for nested components
     provide(NodeTreeContext, childTree)
   }
-  
+
   return children
 }
 ```

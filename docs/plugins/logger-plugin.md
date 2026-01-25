@@ -8,19 +8,11 @@ outline: deep
 
 Streams Fabric lifecycle activity with beautiful CLI output, progress bars, and websocket support for custom tooling.
 
-## Installation
-
-The `loggerPlugin` is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { loggerPlugin } from '@kubb/core/plugins'
-```
-
 ## Usage
 
 ```ts [basic-usage.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin } from '@kubb/core/plugins'
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -93,8 +85,8 @@ Displays a beautiful progress bar with colored output and symbols using `@clack/
 
 ```ts [progress-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin, fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { loggerPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -123,7 +115,7 @@ Broadcasts Fabric events to connected clients for building custom dashboards:
 
 ```ts [websocket-example.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin } from '@kubb/core/plugins'
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -156,8 +148,8 @@ Logs every key lifecycle event with colored output:
 
 ```ts [basic-logging.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin, fsPlugin } from '@kubb/core/plugins'
-import { typescriptParser } from '@kubb/core/parsers'
+import { loggerPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
@@ -187,7 +179,7 @@ await fabric.write()
 
 ```ts [ci-config.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin } from '@kubb/core/plugins'
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -203,7 +195,7 @@ fabric.use(loggerPlugin, {
 
 ```ts [custom-port.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin } from '@kubb/core/plugins'
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -222,7 +214,7 @@ console.log('Websocket server: ws://0.0.0.0:8080')
 
 ```ts [env-logging.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin } from '@kubb/core/plugins'
+import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -280,17 +272,17 @@ let filesProcessed = 0
 
 ws.onmessage = (event) => {
   const { type, payload } = JSON.parse(event.data)
-  
+
   if (type === 'lifecycle:start') {
     startTime = Date.now()
     console.log('Generation started...')
   }
-  
+
   if (type === 'file:processing:update') {
     filesProcessed = payload.processed
     console.log(`Progress: ${payload.percentage.toFixed(1)}%`)
   }
-  
+
   if (type === 'lifecycle:end') {
     const duration = Date.now() - startTime
     console.log(`Completed ${filesProcessed} files in ${duration}ms`)
