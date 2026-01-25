@@ -296,7 +296,7 @@ await fabric.addFile({
   baseName: 'config.yaml',
   path: './config/config.yaml',
   sources: [
-    { value: '{"app": "myapp", "version": "1.0.0"}', isExportable: false },
+    { value: '{"app": "myApp", "version": "1.0.0"}', isExportable: false },
   ],
   options: {
     indent: 4,

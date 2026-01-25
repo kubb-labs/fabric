@@ -169,7 +169,7 @@ await fabric.waitUntilExit()
 
 Generate code templates using React components:
 
-```tsx [codegen.tsx]
+```tsx [run.tsx]
 const TypeTemplate = ({ name, fields }: Props) => {
   return (
     <div>

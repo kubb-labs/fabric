@@ -338,7 +338,7 @@ console.log(files.length) // 3
 
 Generate TypeScript code using component composition:
 
-```ts [codegen.ts]
+```ts [run.ts]
 import { createComponent } from '@kubb/fabric-core'
 import { Type, Const, File } from '@kubb/fabric-core/components'
 

@@ -12,7 +12,7 @@ Build your first code generator with Fabric in minutes.
 
 Create a simple script that generates a TypeScript file:
 
-```ts toslash [generate.ts]
+```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
