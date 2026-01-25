@@ -12,7 +12,7 @@ Fabric emits events throughout its lifecycle that plugins and custom code can li
 
 Access the event emitter through `fabric.context.events` or `fabric.context.on()`:
 
-```ts [listen-events.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 
 const fabric = createFabric()
@@ -30,6 +30,24 @@ fabric.context.on('lifecycle:end', async () => {
 })
 ```
 
+## Quick Reference
+
+| Event | When | Payload | Common Use |
+|:------|:-----|:--------|:-----------|
+| `lifecycle:start` | Generation begins | None | Initialize resources, start timers |
+| `lifecycle:end` | Generation completes | None | Cleanup, final logging, stop timers |
+| `lifecycle:render` | Rendering starts | `{ fabric }` | React rendering setup |
+| `files:added` | Files added to cache | `{ files }` | Track added files |
+| `file:resolve:path` | Path resolution | `{ file }` | Modify file paths |
+| `file:resolve:name` | Name resolution | `{ file }` | Modify file names |
+| `files:writing:start` | Before writing files | `{ files }` | Validation, file transformation |
+| `files:writing:end` | After writing files | `{ files }` | Post-processing, notifications |
+| `files:processing:start` | Before processing | `{ files }` | Processing setup |
+| `file:processing:start` | File processing starts | `{ file, index, total }` | Per-file logging |
+| `file:processing:update` | Processing progress | `{ file, source, processed, percentage, total }` | Progress bars |
+| `file:processing:end` | File processing ends | `{ file, index, total }` | Per-file completion |
+| `files:processing:end` | All processing ends | `{ files }` | Processing summary |
+
 ## Event Categories
 
 Events are organized into categories based on their purpose.
@@ -38,7 +56,7 @@ Events are organized into categories based on their purpose.
 
 Track the overall execution lifecycle of Fabric.
 
-#### lifecycle:start
+#### `lifecycle:start`
 
 Emitted when Fabric begins execution.
 
@@ -48,7 +66,7 @@ fabric.context.on('lifecycle:start', async () => {
 })
 ```
 
-#### lifecycle:end
+#### `lifecycle:end`
 
 Emitted when Fabric completes execution.
 
@@ -58,7 +76,7 @@ fabric.context.on('lifecycle:end', async () => {
 })
 ```
 
-#### lifecycle:render
+#### `lifecycle:render`
 
 Emitted when rendering starts (requires `reactPlugin`).
 
@@ -78,7 +96,7 @@ fabric.context.on('lifecycle:render', async ({ fabric }) => {
 
 Track when files are added or modified.
 
-#### files:added
+#### `files:added`
 
 Emitted when files are added to the FileManager cache.
 
@@ -94,7 +112,7 @@ fabric.context.on('files:added', async ({ files }) => {
 |------:|:------------------|:--------------------|
 | files | `KubbFile.File[]` | Array of added files |
 
-#### file:resolve:path
+#### `file:resolve:path`
 
 Emitted during file path resolution. Listeners can modify the file's path.
 
@@ -111,7 +129,7 @@ fabric.context.on('file:resolve:path', async ({ file }) => {
 |-----:|:----------------|:-------------------------------|
 | file | `KubbFile.File` | File being processed           |
 
-#### file:resolve:name
+#### `file:resolve:name`
 
 Emitted during file name resolution. Listeners can modify the file's name.
 
@@ -132,7 +150,7 @@ fabric.context.on('file:resolve:name', async ({ file }) => {
 
 Track when files are written to disk.
 
-#### files:writing:start
+#### `files:writing:start`
 
 Emitted before writing files to disk.
 
@@ -148,7 +166,7 @@ fabric.context.on('files:writing:start', async ({ files }) => {
 |------:|:------------------|:------------------------|
 | files | `KubbFile.File[]` | Files to be written     |
 
-#### files:writing:end
+#### `files:writing:end`
 
 Emitted after files are written to disk.
 
@@ -168,7 +186,7 @@ fabric.context.on('files:writing:end', async ({ files }) => {
 
 Track individual file processing progress.
 
-#### files:processing:start
+#### `files:processing:start`
 
 Emitted before processing begins.
 
@@ -184,7 +202,7 @@ fabric.context.on('files:processing:start', async ({ files }) => {
 |------:|:------------------|:----------------------|
 | files | `KubbFile.File[]` | Files to be processed |
 
-#### file:processing:start
+#### `file:processing:start`
 
 Emitted when each file starts processing.
 
@@ -202,17 +220,17 @@ fabric.context.on('file:processing:start', async ({ file, index, total }) => {
 | index | `number`        | Zero-based index of file     |
 | total | `number`        | Total number of files        |
 
-#### file:processing:update
+#### `file:processing:update`
 
 Emitted with progress updates during file processing.
 
 ```ts [file-processing-update.ts]
-fabric.context.on('file:processing:update', async ({ 
-  file, 
-  source, 
-  processed, 
-  percentage, 
-  total 
+fabric.context.on('file:processing:update', async ({
+  file,
+  source,
+  processed,
+  percentage,
+  total
 }) => {
   console.log(`Progress: ${percentage.toFixed(1)}%`)
 })
@@ -228,7 +246,7 @@ fabric.context.on('file:processing:update', async ({
 | percentage | `number`        | Processing percentage (0-100)          |
 |      total | `number`        | Total number of files                  |
 
-#### file:processing:end
+#### `file:processing:end`
 
 Emitted when each file finishes processing.
 
@@ -246,7 +264,7 @@ fabric.context.on('file:processing:end', async ({ file, index, total }) => {
 | index | `number`        | Zero-based index of file |
 | total | `number`        | Total number of files    |
 
-#### files:processing:end
+#### `files:processing:end`
 
 Emitted when all processing completes.
 
@@ -351,59 +369,72 @@ fabric.context.on('lifecycle:end', async () => {
 })
 ```
 
-## Best Practices
+## Example
 
-### Use Async Handlers
+Here's a comprehensive example using multiple events:
 
-Always use `async` event handlers to properly handle promises:
+```ts twoslash
+import { createFabric } from '@kubb/fabric-core'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
-```ts [async-handlers.ts]
-// ✅ Correct
-fabric.context.on('lifecycle:start', async () => {
-  await someAsyncOperation()
-})
-
-// ❌ Incorrect - may cause unhandled promises
-fabric.context.on('lifecycle:start', () => {
-  someAsyncOperation() // Promise not awaited
-})
-```
-
-### Register Early
-
-Register event listeners before performing actions:
-
-```ts [register-early.ts]
 const fabric = createFabric()
 
-// Register listeners first
-fabric.context.on('lifecycle:start', async () => {
-  console.log('Started!')
+// Lifecycle tracking
+let stats = {
+  startTime: 0,
+  filesAdded: 0,
+  filesProcessed: 0,
+  filesWritten: 0,
+}
+
+fabric.context.on('lifecycle:start', () => {
+  stats.startTime = Date.now()
+  console.log('🚀 Generation started')
 })
 
-// Then perform actions
-fabric.use(fsPlugin)
-await fabric.write()
-```
-
-### Avoid Heavy Operations
-
-Keep event handlers lightweight to avoid slowing down generation:
-
-```ts [lightweight-handlers.ts]
-// ✅ Good - quick logging
-fabric.context.on('file:processing:update', async ({ percentage }) => {
-  console.log(`${percentage.toFixed(1)}%`)
+fabric.context.on('files:added', ({ files }) => {
+  stats.filesAdded += files.length
+  console.log(`📁 Added ${files.length} files (total: ${stats.filesAdded})`)
 })
 
-// ❌ Bad - heavy operation in handler
-fabric.context.on('file:processing:update', async ({ file }) => {
-  await expensiveAnalysis(file) // Slows down generation
+fabric.context.on('file:processing:update', ({ processed, total, percentage }) => {
+  const bar = '█'.repeat(Math.floor(percentage / 5)) + '░'.repeat(20 - Math.floor(percentage / 5))
+  process.stdout.write(`\r${bar} ${percentage.toFixed(1)}% (${processed}/${total})`)
 })
+
+fabric.context.on('files:writing:start', ({ files }) => {
+  stats.filesWritten = files.length
+  console.log(`\n📝 Writing ${files.length} files...`)
+})
+
+fabric.context.on('files:writing:end', ({ files }) => {
+  console.log(`✓ Wrote ${files.length} files`)
+})
+
+fabric.context.on('lifecycle:end', () => {
+  const elapsed = Date.now() - stats.startTime
+  console.log('\n✨ Generation complete!')
+  console.log(`   Time: ${elapsed}ms`)
+  console.log(`   Files: ${stats.filesWritten}`)
+})
+
+// Configure and run
+fabric.use(fsPlugin, { clean: { path: './generated' } })
+fabric.use(typescriptParser)
+
+await fabric.addFile({
+  baseName: 'user.ts',
+  path: './generated/user.ts',
+  sources: [{ value: 'export type User = {}', isExportable: true }],
+})
+
+await fabric.write({ extension: { '.ts': '.ts' } })
 ```
 
 ## See Also
 
-- [createFabric](/api/core/create-fabric) — Create a Fabric instance
-- [loggerPlugin](/api/plugins/logger-plugin) — Built-in event logging
+- [createFabric](/core/create-fabric) — Create a Fabric instance
+- [loggerPlugin](/plugins/logger-plugin) — Built-in event logging
+- [Event System](/guide/event-system) — Event system explained
 - [Creating Plugins](/guide/creating-plugins) — Build plugins with events

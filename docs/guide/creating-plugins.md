@@ -95,17 +95,17 @@ const loggerPlugin = definePlugin<LoggerOptions>({
   install(fabric, options) {
     const prefix = options?.prefix ?? '[LOG]'
     const verbose = options?.verbose ?? false
-    
+
     fabric.context.on('lifecycle:start', () => {
       console.log(`${prefix} Starting...`)
     })
-    
+
     if (verbose) {
       fabric.context.on('file:processing:update', ({ processed, total }) => {
         console.log(`${prefix} Progress: ${processed}/${total}`)
       })
     }
-    
+
     fabric.context.on('lifecycle:end', () => {
       console.log(`${prefix} Completed!`)
     })
@@ -144,7 +144,7 @@ const validatorPlugin = definePlugin<ValidatorOptions, InjectedMethods>({
       validate: async () => {
         const files = fabric.files
         const strict = options?.strict ?? false
-        
+
         for (const file of files) {
           if (!file.path) {
             if (strict) throw new Error(`File missing path: ${file.baseName}`)
@@ -152,7 +152,7 @@ const validatorPlugin = definePlugin<ValidatorOptions, InjectedMethods>({
             return false
           }
         }
-        
+
         return true
       },
     }
@@ -183,19 +183,19 @@ const metricsPlugin = definePlugin<MetricsOptions>({
   name: 'metricsPlugin',
   install(fabric, options) {
     const outputPath = options?.outputPath ?? './metrics.json'
-    
+
     let startTime: number
     let filesProcessed = 0
-    
+
     fabric.context.on('lifecycle:start', () => {
       startTime = Date.now()
       filesProcessed = 0
     })
-    
+
     fabric.context.on('file:processing:end', () => {
       filesProcessed++
     })
-    
+
     fabric.context.on('lifecycle:end', async () => {
       const duration = Date.now() - startTime
       const metrics = {
@@ -203,7 +203,7 @@ const metricsPlugin = definePlugin<MetricsOptions>({
         duration,
         timestamp: new Date().toISOString(),
       }
-      
+
       await writeFile(outputPath, JSON.stringify(metrics, null, 2))
       console.log(`Metrics saved to ${outputPath}`)
     })
@@ -233,12 +233,12 @@ const transformPlugin = definePlugin<TransformOptions>({
   install(fabric, options) {
     const addHeader = options?.addHeader ?? true
     const headerText = options?.headerText ?? '// Auto-generated - do not edit'
-    
+
     fabric.context.on('file:resolve:path', ({ file }) => {
       // Normalize paths
       file.path = file.path.replace(/\\/g, '/')
     })
-    
+
     fabric.context.on('file:processing:update', ({ file }) => {
       if (addHeader) {
         // Add header to first source
@@ -306,7 +306,7 @@ Release resources when done:
 ```ts
 install(fabric, options) {
   const server = startServer()
-  
+
   fabric.context.on('lifecycle:end', async () => {
     await server.close()
   })
@@ -320,7 +320,7 @@ Add JSDoc comments:
 ```ts
 /**
  * Adds timestamps to generated files
- * 
+ *
  * @example
  * ```ts
  * fabric.use(timestampPlugin, { format: 'iso' })
@@ -374,10 +374,10 @@ const backupPlugin = definePlugin<BackupOptions>({
     if (!options?.backupPath) {
       throw new Error('backupPath is required')
     }
-    
+
     fabric.context.on('files:writing:start', async ({ files }) => {
       const outputPath = files[0]?.path?.split('/')[0]
-      
+
       if (outputPath) {
         console.log(`Backing up ${outputPath} to ${options.backupPath}`)
         await cp(outputPath, options.backupPath, { recursive: true })
@@ -394,7 +394,7 @@ fabric.use(backupPlugin, {
 
 ## See Also
 
-- [definePlugin](/api/plugins/define-plugin) — Plugin factory API
-- [Events](/api/core/events) — Available lifecycle events
+- [definePlugin](/plugins/define-plugin) — Plugin factory API
+- [Events](/core/events) — Available lifecycle events
 - [Creating Parsers](/guide/creating-parsers) — Create custom parsers
-- [fsPlugin](/api/plugins/fs-plugin) — File system plugin example
+- [fsPlugin](/plugins/fs-plugin) — File system plugin example

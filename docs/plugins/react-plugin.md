@@ -6,24 +6,15 @@ outline: deep
 
 # reactPlugin
 
-The `reactPlugin` enables rendering React components to the terminal or to a string. This plugin is useful for building CLI UIs, generating templates, and creating interactive command-line applications.
-
-## Installation
-
-The reactPlugin is included in `@kubb/react-fabric`:
-
-```ts [example.ts]
-import { reactPlugin } from '@kubb/react-fabric/plugins'
-```
+The `reactPlugin` uses React and JSX syntax to create files.
 
 ## Usage
 
 ### Basic Example
 
-```ts [example.tsx]
+```tsx twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
-import React from 'react'
 
 const fabric = createFabric()
 
@@ -34,17 +25,15 @@ const App = () => {
 }
 
 await fabric.render(App)
-await fabric.waitUntilExit()
 ```
 
 ### Render to String
 
 Use `renderToString` to generate template output without writing to stdout:
 
-```ts [template.tsx]
+```tsx twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
-import React from 'react'
 
 const fabric = createFabric()
 
@@ -60,16 +49,9 @@ console.log(output) // "export const config = 'value'"
 
 ## Options
 
-| Option   | Type                      | Required | Default | Description                                                              |
-|----------|---------------------------|----------|---------|--------------------------------------------------------------------------|
-| `stdout` | `NodeJS.WriteStream`      | No       | -       | Output stream for rendered content. If set, output is written progressively. |
-| `stdin`  | `NodeJS.ReadStream`       | No       | -       | Input stream for interactive components.                                  |
-| `stderr` | `NodeJS.WriteStream`      | No       | -       | Error output stream.                                                      |
-| `debug`  | `boolean`                 | No       | `false` | Log render/unmount information to console for debugging.                  |
-
 ### `stdout`
 
-Specify a custom output stream for rendered content:
+Output stream for rendered content. If set, output is written progressively.
 
 ```ts [example.ts]
 import { createWriteStream } from 'fs'
@@ -79,13 +61,22 @@ fabric.use(reactPlugin, {
 })
 ```
 
-### `stdin` and `stderr`
+### `stdin`
 
 Configure input and error streams for interactive components:
 
 ```ts [example.ts]
 fabric.use(reactPlugin, {
   stdin: process.stdin,
+})
+```
+
+### `stderr`
+
+Configure input and error streams for interactive components:
+
+```ts [example.ts]
+fabric.use(reactPlugin, {
   stderr: process.stderr,
 })
 ```
@@ -108,12 +99,6 @@ The reactPlugin adds the following methods to the Fabric instance:
 
 Renders a React component tree to the terminal and emits the `lifecycle:start` event.
 
-**Signature:**
-
-```ts
-render(App: React.ElementType): Promise<void> | void
-```
-
 **Example:**
 
 ```tsx [app.tsx]
@@ -125,12 +110,6 @@ await fabric.render(App)
 ### `renderToString(App)`
 
 Renders a React component tree and returns the final output as a string without writing to stdout.
-
-**Signature:**
-
-```ts
-renderToString(App: React.ElementType): Promise<string> | string
-```
 
 **Example:**
 
@@ -145,11 +124,6 @@ console.log(output)
 
 Waits until the rendered app exits. Resolves when the component unmounts and emits the `lifecycle:end` event.
 
-**Signature:**
-
-```ts
-waitUntilExit(): Promise<void>
-```
 
 **Example:**
 
@@ -158,15 +132,6 @@ await fabric.render(App)
 await fabric.waitUntilExit() // Wait for app to finish
 console.log('App completed')
 ```
-
-## How It Works
-
-The reactPlugin:
-
-1. Registers React rendering capabilities with Fabric
-2. Listens to lifecycle events (`lifecycle:render`)
-3. Renders React components to terminal or string
-4. Manages component lifecycle (mount/unmount)
 
 ## Use Cases
 
@@ -185,14 +150,14 @@ fabric.use(reactPlugin)
 
 const Progress = () => {
   const [progress, setProgress] = useState(0)
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prev => Math.min(prev + 10, 100))
     }, 100)
     return () => clearInterval(interval)
   }, [])
-  
+
   return <div>Progress: {progress}%</div>
 }
 
@@ -204,7 +169,7 @@ await fabric.waitUntilExit()
 
 Generate code templates using React components:
 
-```tsx [codegen.tsx]
+```tsx [run.tsx]
 const TypeTemplate = ({ name, fields }: Props) => {
   return (
     <div>
@@ -222,25 +187,8 @@ const code = await fabric.renderToString(() => (
 ))
 ```
 
-### Interactive Prompts
-
-Create interactive CLI tools with user input:
-
-```tsx [interactive.tsx]
-fabric.use(reactPlugin, {
-  stdin: process.stdin,
-  stdout: process.stdout,
-})
-
-const Interactive = () => {
-  return <div>Select an option: [y/n]</div>
-}
-
-await fabric.render(Interactive)
-```
-
 ## See Also
 
-- [createFabric](/api/core/create-fabric/) - Fabric API reference
-- [Events](/api/core/events/) - Lifecycle events
+- [createFabric](/core/create-fabric/) - Fabric API reference
+- [Events](/core/events/) - Lifecycle events
 - [Creating Plugins](/guide/creating-plugins/) - Build custom plugins

@@ -23,7 +23,7 @@ Fabric includes built-in parsers for TypeScript, TSX, and default fallback parsi
 
 Create parsers using the `defineParser` factory:
 
-```ts [parser-structure.ts]
+```ts
 import { defineParser } from '@kubb/fabric-core/parsers'
 
 const myParser = defineParser({
@@ -40,11 +40,6 @@ const myParser = defineParser({
 
 The `defineParser` factory creates parsers that can be registered with `fabric.use()` and selected during `fabric.write()`.
 
-### Signature
-
-```ts
-defineParser<TOptions>(config: ParserConfig): Parser
-```
 
 ### Configuration Fields
 
@@ -113,10 +108,10 @@ const vueParser = defineParser<VueParserOptions>({
   async parse(file: KubbFile.File, { extname }) {
     const banner = file.options?.banner ?? ''
     const scriptSetup = file.options?.scriptSetup ?? false
-    
+
     const sources = file.sources.map(s => s.value).join('\n')
     const scriptTag = scriptSetup ? '<script setup>' : '<script>'
-    
+
     return `${banner}
 <template>
   <div></div>
@@ -171,7 +166,7 @@ const markdownParser = defineParser({
   parse(file: KubbFile.File) {
     const content = file.sources.map(s => s.value).join('\n\n')
     const title = file.meta?.title || file.baseName.replace('.md', '')
-    
+
     return `# ${title}\n\n${content}`
   },
 })
@@ -276,7 +271,7 @@ const yamlParser = defineParser<YamlParserOptions>({
   },
   parse(file: KubbFile.File, { extname }) {
     const indent = file.options?.indent ?? 2
-    
+
     // Combine sources into object
     const data = file.sources.reduce((acc, source) => {
       try {
@@ -286,7 +281,7 @@ const yamlParser = defineParser<YamlParserOptions>({
         return acc
       }
     }, {})
-    
+
     // Convert to YAML
     return YAML.stringify(data, { indent })
   },
@@ -301,7 +296,7 @@ await fabric.addFile({
   baseName: 'config.yaml',
   path: './config/config.yaml',
   sources: [
-    { value: '{"app": "myapp", "version": "1.0.0"}', isExportable: false },
+    { value: '{"app": "myApp", "version": "1.0.0"}', isExportable: false },
   ],
   options: {
     indent: 4,
@@ -325,7 +320,7 @@ const metadataParser = defineParser({
   extNames: ['.meta.ts'],
   parse(file: KubbFile.File) {
     const { baseName, path, sources, imports, exports, meta } = file
-    
+
     return `
 // File: ${baseName}
 // Path: ${path}
@@ -370,7 +365,7 @@ parse(file) {
   if (!file.sources.length) {
     return '// No content'
   }
-  
+
   try {
     return formatContent(file.sources)
   } catch (error) {
@@ -392,9 +387,9 @@ fabric.use(defaultParser)    // fallback
 
 ## See Also
 
-- [defineParser](/api/parsers/define-parser) — Parser factory API
-- [typescriptParser](/api/parsers/typescript-parser) — TypeScript parser reference
-- [tsxParser](/api/parsers/tsx-parser) — TSX parser reference
-- [defaultParser](/api/parsers/default-parser) — Fallback parser
+- [defineParser](/parsers/define-parser) — Parser factory API
+- [typescriptParser](/parsers/typescript-parser) — TypeScript parser reference
+- [tsxParser](/parsers/tsx-parser) — TSX parser reference
+- [defaultParser](/parsers/default-parser) — Fallback parser
 - [Creating Plugins](/guide/creating-plugins) — Build custom plugins
 - [File Generation Patterns](/guide/file-generation-patterns) — Best practices

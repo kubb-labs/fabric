@@ -8,13 +8,6 @@ outline: deep
 
 Factory function for creating custom Fabric plugins.
 
-## Installation
-
-The `definePlugin` factory is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { definePlugin } from '@kubb/fabric-core/plugins'
-```
 
 ## Usage
 
@@ -402,9 +395,9 @@ Remove event listeners if needed:
 ```ts
 install(fabric) {
   const handler = () => console.log('Event')
-  
+
   fabric.context.events.on('lifecycle:start', handler)
-  
+
   // Clean up if needed
   fabric.context.events.on('lifecycle:end', () => {
     fabric.context.events.off('lifecycle:start', handler)
@@ -415,6 +408,6 @@ install(fabric) {
 ## See Also
 
 - [Creating Plugins](/guide/creating-plugins) — Plugin development guide
-- [Events](/api/core/events) — Available lifecycle events
-- [fsPlugin](/api/plugins/fs-plugin) — Example plugin implementation
-- [loggerPlugin](/api/plugins/logger-plugin) — Example plugin with options
+- [Events](/core/events) — Available lifecycle events
+- [fsPlugin](/plugins/fs-plugin) — Example plugin implementation
+- [loggerPlugin](/plugins/logger-plugin) — Example plugin with options

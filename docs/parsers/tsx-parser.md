@@ -153,7 +153,7 @@ await fabric.addFile({
   path: './components/UserCard.tsx',
   sources: [
     { value: 'interface Props { name: string }', isExportable: false },
-    { 
+    {
       value: 'export const UserCard = ({ name }: Props) => <div>{name}</div>',
       isExportable: true,
     },
@@ -226,9 +226,9 @@ await fabric.write({
 
 ## See Also
 
-- [typescriptParser](/api/parsers/typescript-parser) — TypeScript parser
-- [defaultParser](/api/parsers/default-parser) — Fallback parser
-- [defineParser](/api/parsers/define-parser) — Create custom parsers
-- [fsPlugin](/api/plugins/fs-plugin) — File system operations
+- [typescriptParser](/parsers/typescript-parser) — TypeScript parser
+- [defaultParser](/parsers/default-parser) — Fallback parser
+- [defineParser](/parsers/define-parser) — Create custom parsers
+- [fsPlugin](/plugins/fs-plugin) — File system operations
 - [Creating Parsers](/guide/creating-parsers) — Build custom parsers
-- [reactPlugin](/api/plugins/react-plugin) — Render React components
+- [reactPlugin](/plugins/react-plugin) — Render React components

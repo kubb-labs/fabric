@@ -108,6 +108,6 @@ fabric.use(graphPlugin, {
 
 ## See Also
 
-- [fsPlugin](/api/plugins/fs-plugin/) - Write files to disk
-- [loggerPlugin](/api/plugins/logger-plugin/) - Monitor generation progress
-- [Events](/api/core/events/) - Lifecycle events
+- [fsPlugin](/plugins/fs-plugin/) - Write files to disk
+- [loggerPlugin](/plugins/logger-plugin/) - Monitor generation progress
+- [Events](/core/events/) - Lifecycle events

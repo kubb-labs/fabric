@@ -8,14 +8,6 @@ outline: deep
 
 Writes files to disk and provides file system operations for Fabric.
 
-## Installation
-
-The `fsPlugin` is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-```
-
 ## Usage
 
 ```ts [basic-usage.ts]
@@ -218,7 +210,7 @@ fabric.use(fsPlugin, {
     if (!data || data.length === 0) {
       throw new Error(`Empty file: ${path}`)
     }
-    
+
     // Log file size
     const sizeKB = (data.length / 1024).toFixed(2)
     console.log(`Writing ${path} (${sizeKB} KB)`)
@@ -319,6 +311,6 @@ fabric.use(fsPlugin, {
 
 ## See Also
 
-- [createFabric](/api/core/create-fabric) — Create a Fabric instance
-- [typescriptParser](/api/parsers/typescript-parser) — Parse TypeScript files
-- [Events](/api/core/events) — Lifecycle events
+- [createFabric](/core/create-fabric) — Create a Fabric instance
+- [typescriptParser](/parsers/typescript-parser) — Parse TypeScript files
+- [Events](/core/events) — Lifecycle events

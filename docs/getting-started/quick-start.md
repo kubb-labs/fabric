@@ -12,7 +12,7 @@ Build your first code generator with Fabric in minutes.
 
 Create a simple script that generates a TypeScript file:
 
-```ts [generate.ts]
+```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -39,6 +39,8 @@ await fabric.addFile({
       isExportable: true
     },
   ],
+  imports: [],
+  exports: [],
 })
 
 // Write all files to disk
@@ -90,6 +92,8 @@ await fabric.addFile({
     { value: 'export type User = { id: number; name: string }', isExportable: true },
     { value: 'export type Post = { id: number; title: string; userId: number }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.addFile({
@@ -99,6 +103,8 @@ await fabric.addFile({
     { value: 'export const API_URL = "https://api.example.com"', isExportable: true },
     { value: 'export const API_VERSION = "v1"', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -132,6 +138,8 @@ await fabric.addFile({
   sources: [
     { value: 'export const fetchUser = async (id: number) => {}', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -167,6 +175,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type User = { id: number; name: string }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.addFile({
@@ -175,6 +185,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type Post = { id: number; title: string }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -222,26 +234,9 @@ await fabric.addFile({
   sources: [
     { value: 'export const message = "Hello, Fabric!"', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
 ```
-
-## Next Steps
-
-<div class="vp-doc">
-  <div class="vp-card-container">
-    <a href="/getting-started/configure" class="vp-card">
-      <h3>Configure</h3>
-      <p>Learn about configuration options</p>
-    </a>
-    <a href="/guide/creating-plugins" class="vp-card">
-      <h3>Creating Plugins</h3>
-      <p>Build custom plugins</p>
-    </a>
-    <a href="/tutorials/basic" class="vp-card">
-      <h3>Tutorials</h3>
-      <p>Step-by-step guides</p>
-    </a>
-  </div>
-</div>

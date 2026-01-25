@@ -8,13 +8,6 @@ outline: deep
 
 The `fsxPlugin` enables rendering FabricElements to generate file output. This plugin provides the core rendering capabilities for transforming component trees into file content, making it essential for file-based code generation workflows.
 
-## Installation
-
-The fsxPlugin is included in `@kubb/fabric-core`:
-
-```ts [example.ts]
-import { fsxPlugin } from '@kubb/fabric-core/plugins'
-```
 
 ## Usage
 
@@ -345,7 +338,7 @@ console.log(files.length) // 3
 
 Generate TypeScript code using component composition:
 
-```ts [codegen.ts]
+```ts [run.ts]
 import { createComponent } from '@kubb/fabric-core'
 import { Type, Const, File } from '@kubb/fabric-core/components'
 
@@ -440,7 +433,7 @@ console.log(treeNode.children[0]?.children[0]?.data.type) // 'Const'
 
 ## See Also
 
-- [createFabric](/api/core/create-fabric/) - Fabric API reference
-- [fsPlugin](/api/plugins/fs-plugin/) - Write files to disk
+- [createFabric](/core/create-fabric/) - Fabric API reference
+- [fsPlugin](/plugins/fs-plugin/) - Write files to disk
 - [Creating Plugins](/guide/creating-plugins/) - Build custom plugins
 - [File Generation Patterns](/guide/file-generation-patterns/) - Best practices

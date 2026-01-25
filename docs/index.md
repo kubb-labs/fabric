@@ -33,7 +33,7 @@ features:
   - icon: 🧩
     title: Plugin System
     details: Extend functionality with built-in plugins for file system, logging, barrels, and more.
-    link: /api/plugins/fs-plugin/
+    link: /plugins/fs-plugin/
     linkText: Learn more
   - icon: ⚡
     title: Fast and Lightweight
@@ -41,17 +41,17 @@ features:
   - icon: 🔍
     title: Built-in Debugging
     details: Simplify development and inspect generation flows with comprehensive event system.
-    link: /api/core/events/
+    link: /core/events/
     linkText: Learn more
   - icon: 🎯
     title: TypeScript-First
     details: Out-of-the-box TypeScript support with type-safe parsers and generators.
-    link: /api/parsers/typescript-parser/
+    link: /parsers/typescript-parser/
     linkText: Learn more
   - icon: ⚙️
     title: Lifecycle Events
     details: Hook into 14 lifecycle events to customize and control the generation process.
-    link: /api/core/events/
+    link: /core/events/
     linkText: Learn more
   - icon: 🔌
     title: Extensible Architecture

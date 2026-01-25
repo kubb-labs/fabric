@@ -380,7 +380,7 @@ const yamlParser = defineParser({
 
 ## See Also
 
-- [defineParser](/api/parsers/define-parser) — Create custom parsers
-- [typescriptParser](/api/parsers/typescript-parser) — TypeScript parser
-- [tsxParser](/api/parsers/tsx-parser) — TSX parser
+- [defineParser](/parsers/define-parser) — Create custom parsers
+- [typescriptParser](/parsers/typescript-parser) — TypeScript parser
+- [tsxParser](/parsers/tsx-parser) — TSX parser
 - [Creating Parsers](/guide/creating-parsers) — Parser development guide

@@ -161,10 +161,10 @@ const myParser = defineParser({
     // Access file properties
     const sources = file.sources.map(s => s.value).join('\n')
     const imports = file.imports?.map(i => `import ${i.name} from '${i.path}'`).join('\n')
-    
+
     // Use extname for path generation
     console.log(`Parsing for extension: ${extname}`)
-    
+
     return `${imports}\n\n${sources}`
   },
 })
@@ -248,12 +248,12 @@ const markdownParser = defineParser<MarkdownOptions>({
   },
   parse(file, { extname }) {
     const content = file.sources.map(s => s.value).join('\n\n')
-    
+
     // Add frontmatter if configured
     if (file.meta?.frontmatter) {
       return `---\n${file.meta.frontmatter}\n---\n\n${content}`
     }
-    
+
     return content
   },
 })
@@ -293,12 +293,12 @@ const cssParser = defineParser<CSSOptions>({
   extNames: ['.css'],
   parse(file) {
     const styles = file.sources.map(s => s.value).join('\n')
-    
+
     // Simple minification (remove extra whitespace)
     if (file.meta?.minify) {
       return styles.replace(/\s+/g, ' ').trim()
     }
-    
+
     return styles
   },
 })
@@ -437,7 +437,7 @@ parse(file) {
   if (!file.sources || file.sources.length === 0) {
     return '' // Or throw an error
   }
-  
+
   return file.sources.map(s => s.value).join('\n')
 }
 ```
@@ -475,7 +475,7 @@ parse(file) {
 ## See Also
 
 - [Creating Parsers](/guide/creating-parsers) — Parser development guide
-- [typescriptParser](/api/parsers/typescript-parser) — Built-in TypeScript parser
-- [tsxParser](/api/parsers/tsx-parser) — Built-in TSX parser
-- [defaultParser](/api/parsers/default-parser) — Built-in fallback parser
-- [fsPlugin](/api/plugins/fs-plugin) — Write files to disk
+- [typescriptParser](/parsers/typescript-parser) — Built-in TypeScript parser
+- [tsxParser](/parsers/tsx-parser) — Built-in TSX parser
+- [defaultParser](/parsers/default-parser) — Built-in fallback parser
+- [fsPlugin](/plugins/fs-plugin) — Write files to disk

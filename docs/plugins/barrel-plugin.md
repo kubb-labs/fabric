@@ -8,14 +8,6 @@ outline: deep
 
 Generates `index.ts` barrel files per folder to re-export modules and simplify imports.
 
-## Installation
-
-The `barrelPlugin` is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { barrelPlugin } from '@kubb/fabric-core/plugins'
-```
-
 ## Usage
 
 ```ts [basic-usage.ts]
@@ -62,7 +54,7 @@ Controls how exports are generated in barrel files.
 **Modes:**
 
 - `'all'` — Uses `export * from './module'` syntax
-- `'named'` — Uses `export { Name } from './module'` syntax  
+- `'named'` — Uses `export { Name } from './module'` syntax
 - `'propagate'` — Skips barrel file generation
 - `false` — Disables barrel generation
 
@@ -367,6 +359,6 @@ fabric.use(fsPlugin, {
 
 ## See Also
 
-- [createFabric](/api/core/create-fabric) — Create a Fabric instance
-- [fsPlugin](/api/plugins/fs-plugin) — Write files to disk
+- [createFabric](/core/create-fabric) — Create a Fabric instance
+- [fsPlugin](/plugins/fs-plugin) — Write files to disk
 - [File Generation Patterns](/guide/file-generation-patterns) — Best practices

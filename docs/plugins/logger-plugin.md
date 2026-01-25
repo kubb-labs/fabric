@@ -8,14 +8,6 @@ outline: deep
 
 Streams Fabric lifecycle activity with beautiful CLI output, progress bars, and websocket support for custom tooling.
 
-## Installation
-
-The `loggerPlugin` is included in `@kubb/fabric-core`:
-
-```ts [import.ts]
-import { loggerPlugin } from '@kubb/fabric-core/plugins'
-```
-
 ## Usage
 
 ```ts [basic-usage.ts]
@@ -280,17 +272,17 @@ let filesProcessed = 0
 
 ws.onmessage = (event) => {
   const { type, payload } = JSON.parse(event.data)
-  
+
   if (type === 'lifecycle:start') {
     startTime = Date.now()
     console.log('Generation started...')
   }
-  
+
   if (type === 'file:processing:update') {
     filesProcessed = payload.processed
     console.log(`Progress: ${payload.percentage.toFixed(1)}%`)
   }
-  
+
   if (type === 'lifecycle:end') {
     const duration = Date.now() - startTime
     console.log(`Completed ${filesProcessed} files in ${duration}ms`)
@@ -355,6 +347,6 @@ fabric.use(loggerPlugin, {
 
 ## See Also
 
-- [Events](/api/core/events) — Lifecycle events reference
-- [createFabric](/api/core/create-fabric) — Create a Fabric instance
-- [fsPlugin](/api/plugins/fs-plugin) — Write files to disk
+- [Events](/core/events) — Lifecycle events reference
+- [createFabric](/core/create-fabric) — Create a Fabric instance
+- [fsPlugin](/plugins/fs-plugin) — Write files to disk

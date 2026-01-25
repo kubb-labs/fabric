@@ -152,9 +152,9 @@ await fabric.addFile({
   baseName: 'types.ts',
   path: './output/types.ts',
   sources: [
-    { 
+    {
       value: 'export type User = { id: number; name: string; email: string }',
-      isExportable: true 
+      isExportable: true
     },
     {
       value: 'export type Post = { id: number; title: string; userId: number }',
@@ -217,9 +217,9 @@ await fabric.addFile({
     { name: 'axios', path: 'axios' },
   ],
   sources: [
-    { 
+    {
       value: 'export const getUser = (id: number): Promise<User> => axios.get(`/users/${id}`)',
-      isExportable: true 
+      isExportable: true
     },
   ],
 })
@@ -269,11 +269,11 @@ The `typescriptParser` handles the following extensions:
 
 - `.ts`
 
-For TypeScript files with JSX, use the [`tsxParser`](/api/parsers/tsx-parser).
+For TypeScript files with JSX, use the [`tsxParser`](/parsers/tsx-parser).
 
 ## See Also
 
-- [tsxParser](/api/parsers/tsx-parser) — Parse TSX files with JSX
-- [defaultParser](/api/parsers/default-parser) — Fallback parser
-- [defineParser](/api/parsers/define-parser) — Create custom parsers
-- [fsPlugin](/api/plugins/fs-plugin) — Write files to disk
+- [tsxParser](/parsers/tsx-parser) — Parse TSX files with JSX
+- [defaultParser](/parsers/default-parser) — Fallback parser
+- [defineParser](/parsers/define-parser) — Create custom parsers
+- [fsPlugin](/plugins/fs-plugin) — Write files to disk
