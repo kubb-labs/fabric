@@ -29,8 +29,8 @@ const fileManager = new FileManager()
 export function Generator() {
   return (
     <Root
-      onExit={(error) => process.exit(error ? 1 : 0)}
-      onError={(error) => console.error(error)}
+      onExit={(error?: Error) => process.exit(error ? 1 : 0)}
+      onError={(error: Error) => console.error(error)}
       treeNode={treeNode}
       fileManager={fileManager}
     >
