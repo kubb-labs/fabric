@@ -62,3 +62,17 @@ Use the skills in `.skills/` for detailed guidance:
 - **[documentation](.skills/documentation/SKILL.md)** - Writing style and content patterns
 - **[pr](.skills/pr/SKILL.md)** - PR preparation and changesets
 - **[testing](.skills/testing/SKILL.md)** - Test suite and CI guidance
+
+<skills>
+
+## Skills
+
+You have new skills. If any skill might be relevant then you MUST read it.
+
+- [changelog](.skills/changelog/SKILL.md) - Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation.
+- [coding-style](.skills/coding-style/SKILL.md) - Coding style, testing, and PR guidelines for the Kubb ecosystem. Use when writing or reviewing code for the Kubb ecosystem.
+- [documentation](.skills/documentation/SKILL.md) - Use when writing blog posts or documentation markdown files - provides writing style guide (active voice, present tense) and content structure patterns. Overrides brevity rules for proper grammar.
+- [jsdoc](.skills/jsdoc/SKILL.md) - Guidelines for writing minimal, high-quality JSDoc comments in TypeScript.
+- [pr](.skills/pr/SKILL.md) - Rules and checklist for preparing PRs, creating changesets, and releasing packages in the monorepo.
+- [testing](.skills/testing/SKILL.md) - Testing, CI, and troubleshooting guidance for running the repository's test suite and interpreting CI failures.
+</skills>
