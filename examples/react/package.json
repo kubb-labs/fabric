@@ -22,6 +22,7 @@
     "example6": "bun ./example6/run.tsx",
     "example7": "bun ./example7/run.tsx",
     "example8": "bun ./example8/run.tsx",
+    "example9": "bun ./example9/run.tsx",
     "clean": "npx rimraf ./dist",
     "test": "vitest",
     "typecheck": "echo 'empty'"
@@ -31,7 +32,7 @@
   },
   "devDependencies": {
     "@types/react": "^19.2.9",
-    "react": "^19.2.3",
+    "react": "^19.2.4",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.18.3",

@@ -41,7 +41,9 @@ export class Runtime {
   }
 
   onExit(error?: Error): void {
-    this.unmount(error)
+    setTimeout(() => {
+      this.unmount(error)
+    }, 0)
   }
 
   async render(node: FabricElement): Promise<string> {

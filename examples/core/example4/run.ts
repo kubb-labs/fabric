@@ -12,9 +12,9 @@ async function timeout(ms: number): Promise<unknown> {
   })
 }
 
-export const fabric = createFabric()
-
 async function run() {
+  const fabric = createFabric()
+
   await fabric.addFile({
     baseName: 'testController.ts',
     path: './example4/gen/hooks/controller/testController.ts',

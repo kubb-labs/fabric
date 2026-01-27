@@ -3,15 +3,10 @@ import * as React from 'react'
 
 export type { Fabric } from '@kubb/fabric-core'
 // expose fabric core helpers
-export { createFabric, createFile, FileManager, FileProcessor, TreeNode } from '@kubb/fabric-core'
+export { createContext, createFabric, createFile, FileManager, FileProcessor, TreeNode, useContext } from '@kubb/fabric-core'
 
 // react helpers
 export const useState = React.useState
-export const createContext = React.createContext
-export const createElement = React.createElement
-export const Fragment = React.Fragment
-export const use = React.use
-export const useContext = React.useContext
 export const useEffect = React.useEffect
 export const useReducer = React.useReducer
 export const useRef = React.useRef

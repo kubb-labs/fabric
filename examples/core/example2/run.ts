@@ -2,9 +2,9 @@ import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
-export const fabric = createFabric()
-
 async function run() {
+  const fabric = createFabric()
+
   await fabric.addFile({
     baseName: 'test.ts',
     path: './example2/gen/test.ts',

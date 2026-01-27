@@ -404,33 +404,6 @@ const output = await fabric.render(
 // Output: export const USER_ENDPOINT = '/api/users' as const
 ```
 
-### Tree Tracking for Debugging
-
-Track component hierarchy during rendering:
-
-```ts [tree-tracking.ts]
-import { TreeNode } from '@kubb/fabric-core/utils'
-import type { ComponentNode } from '@kubb/fabric-core'
-import { App } from '@kubb/fabric-core/components'
-import { Const } from '@kubb/fabric-core/components'
-
-const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
-
-fabric.use(fsxPlugin, { treeNode })
-
-const component = App({
-  meta: { name: 'TestApp' },
-  children: Const({ name: 'myVar', children: '"hello"' }),
-})
-
-await fabric.render(component)
-
-// Inspect the tree structure
-console.log(treeNode.data.type) // 'Root'
-console.log(treeNode.children[0]?.data.type) // 'App'
-console.log(treeNode.children[0]?.children[0]?.data.type) // 'Const'
-```
-
 ## See Also
 
 - [createFabric](/core/create-fabric/) - Fabric API reference

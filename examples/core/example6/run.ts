@@ -1,9 +1,9 @@
 import { App, createFabric, File } from '@kubb/fabric-core'
 import { fsPlugin, fsxPlugin } from '@kubb/fabric-core/plugins'
 
-export const fabric = createFabric()
-
 async function run() {
+  const fabric = createFabric()
+
   fabric.use(fsPlugin, {
     clean: { path: './example6/gen' },
   })

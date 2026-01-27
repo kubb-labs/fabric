@@ -2,7 +2,7 @@ import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
-export const fabric = createFabric()
+const fabric = createFabric()
 
 fabric.addFile({
   baseName: 'test.ts',

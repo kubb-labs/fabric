@@ -493,26 +493,6 @@ console.log('Would write:', fabric.files.length, 'files')
 If you encounter issues not covered here:
 
 1. Check the [GitHub Issues](https://github.com/kubb-labs/fabric/issues)
-2. Review the [API Reference](/core/create-fabric)
-3. Look at [Recipes](/guide/recipes) for common patterns
-4. Check [Best Practices](/guide/best-practices)
-5. [Open a new issue](https://github.com/kubb-labs/fabric/issues/new)
-
-## Next Steps
-
-<div class="vp-doc">
-  <div class="vp-card-container">
-    <a href="/guide/" class="vp-card">
-      <h3>Guides</h3>
-      <p>In-depth guides for common tasks</p>
-    </a>
-    <a href="/core/create-fabric" class="vp-card">
-      <h3>API Reference</h3>
-      <p>Complete API documentation</p>
-    </a>
-    <a href="https://github.com/kubb-labs/fabric/issues" class="vp-card">
-      <h3>Report Issue</h3>
-      <p>Found a bug? Let us know</p>
-    </a>
-  </div>
-</div>
+2. Review the [Core Reference](/core)
+3. Review the [React Reference](/react)
+4. [Open a new issue](https://github.com/kubb-labs/fabric/issues/new)

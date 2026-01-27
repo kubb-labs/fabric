@@ -40,6 +40,7 @@ export interface FabricOptions {
 
 /**
  * Available modes for file processing.
+ * @default 'sequential'
  */
 export type FabricMode = 'sequential' | 'parallel'
 

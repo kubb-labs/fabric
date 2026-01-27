@@ -133,7 +133,9 @@ export class Runtime {
   }
 
   onExit(error?: Error): void {
-    this.unmount(error)
+    setTimeout(() => {
+      this.unmount(error)
+    }, 0)
   }
 
   async #getOutput(node: DOMElement): Promise<string> {

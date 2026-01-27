@@ -89,20 +89,6 @@ React Fabric provides JSX components for generating TypeScript code:
 - **[Type](/react/components/type)** - TypeScript type declarations
 - **[Root](/react/components/root)** - Root runtime provider
 
-### React Hooks
-
-Standard React hooks are re-exported for convenience:
-
-```tsx
-import {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useReducer
-} from '@kubb/react-fabric'
-```
-
 ### Rendering Methods
 
 React Fabric provides three rendering methods:
@@ -123,9 +109,6 @@ await fabric.waitUntilExit()
 ```tsx
 // Factory and components
 import { createReactFabric, File, Const, Type, Function } from '@kubb/react-fabric'
-
-// React hooks (re-exported from React)
-import { useState, useEffect, useContext } from '@kubb/react-fabric'
 
 // Plugins and parsers (inherited from fabric-core)
 import { fsPlugin, loggerPlugin } from '@kubb/react-fabric/plugins'
@@ -165,19 +148,24 @@ await fabric.waitUntilExit()
 ```tsx twoslash
 import { createReactFabric, File, Const, useState } from '@kubb/react-fabric'
 
-const fabric = createReactFabric()
+
 
 function DynamicGenerator() {
+  const { exit } = useLifecycle()
   const [count, setCount] = useState(0)
+
+  if (count === 3) {
+    exit()
+  }
+
+  useEffect(() => {
+    setCount(3) // Simulate dynamic change
+  }, [])
 
   return (
     <>
-      {Array.from({ length: 3 }).map((_, i) => (
-        <File
-          key={i}
-          baseName={`config-${i}.ts`}
-          path={`./generated/config-${i}.ts`}
-        >
+      {Array.from({ length: count }).map((_, i) => (
+        <File key={i} baseName={`config-${i}.ts`} path={path.resolve(__dirname, `gen/config-${i}.ts`)}>
           <File.Source isExportable>
             <Const name={`CONFIG_${i}`} export>
               {`'value-${i}'`}
@@ -188,6 +176,8 @@ function DynamicGenerator() {
     </>
   )
 }
+
+const fabric = createReactFabric()
 
 await fabric.render(<DynamicGenerator />)
 await fabric.waitUntilExit()
@@ -322,7 +312,7 @@ For JSX support, configure your `tsconfig.json`:
 
 ```tsx
 const fabric = createReactFabric({
-  mode: 'modern',           // React render mode
+  mode: 'sequential',       // Available modes for file processing, 'sequential' or 'parallel. 'sequential' by default.
   devtools: false,          // Open React DevTools
   debug: false,             // Debug logging
   stdout: process.stdout,   // Output stream

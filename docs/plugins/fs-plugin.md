@@ -247,27 +247,6 @@ await fabric.write({
 })
 ```
 
-### Environment-Based Configuration
-
-```ts [env-config.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-
-const isDev = process.env.NODE_ENV === 'development'
-
-fabric.use(fsPlugin, {
-  dryRun: isDev, // Dry run in development
-  clean: { path: './output' },
-  onBeforeWrite: (path) => {
-    if (isDev) {
-      console.log(`[DEV] Writing: ${path}`)
-    }
-  },
-})
-```
-
 ## Events
 
 The `fsPlugin` listens to the following events:

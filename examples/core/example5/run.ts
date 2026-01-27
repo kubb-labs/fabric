@@ -1,9 +1,9 @@
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin, graphPlugin } from '@kubb/fabric-core/plugins'
 
-export const fabric = createFabric()
-
 async function run() {
+  const fabric = createFabric()
+
   await fabric.addFile({
     baseName: 'testController.ts',
     path: './example5/gen/hooks/controller/testController.ts',
