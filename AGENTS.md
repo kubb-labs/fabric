@@ -53,16 +53,6 @@ pnpm changeset               # Create changelog entry
 pnpm run upgrade && pnpm i   # Upgrade dependencies
 ```
 
-## Skills
-
-Use the skills in `.skills/` for detailed guidance:
-
-- **[changelog](.skills/changelog/SKILL.md)** - Generate changelogs from commits
-- **[coding-style](.skills/coding-style/SKILL.md)** - Code style and testing guidelines
-- **[documentation](.skills/documentation/SKILL.md)** - Writing style and content patterns
-- **[pr](.skills/pr/SKILL.md)** - PR preparation and changesets
-- **[testing](.skills/testing/SKILL.md)** - Test suite and CI guidance
-
 <skills>
 
 ## Skills
