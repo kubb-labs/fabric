@@ -146,9 +146,7 @@ await fabric.waitUntilExit()
 ### With React State
 
 ```tsx twoslash
-import { createReactFabric, File, Const, useState } from '@kubb/react-fabric'
-
-
+import { createReactFabric, File, Const, useState, useEffect, useLifecycle } from '@kubb/react-fabric'
 
 function DynamicGenerator() {
   const { exit } = useLifecycle()
@@ -165,7 +163,7 @@ function DynamicGenerator() {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
-        <File key={i} baseName={`config-${i}.ts`} path={path.resolve(__dirname, `gen/config-${i}.ts`)}>
+        <File key={i} baseName={`config-${i}.ts`} path={`./gen/config-${i}.ts`}>
           <File.Source isExportable>
             <Const name={`CONFIG_${i}`} export>
               {`'value-${i}'`}
