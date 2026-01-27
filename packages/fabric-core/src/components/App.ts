@@ -53,4 +53,4 @@ export const App = createComponent('App', ({ children, ...props }: AppProps) => 
   return children
 })
 
-App.displayName = 'KubbApp'
+App.displayName = 'App'

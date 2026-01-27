@@ -1,5 +1,5 @@
 import * as React from 'react/jsx-runtime'
-import type { KubbElement, KubbNode } from './types.ts'
+import type { FabricReactElement, FabricReactNode } from './types.ts'
 
 export const Fragment = React.Fragment
 export const jsx = React.jsx
@@ -8,5 +8,5 @@ export const jsxs = React.jsxs
 
 export type * from './jsx-namespace.d.ts'
 
-export type JSXElement = KubbElement
-export type ReactNode = KubbNode
+export type JSXElement = FabricReactElement
+export type ReactNode = FabricReactNode

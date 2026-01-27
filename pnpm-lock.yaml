@@ -13,8 +13,8 @@ catalogs:
       specifier: ^20.19.30
       version: 20.19.30
     '@types/react':
-      specifier: ^19.2.9
-      version: 19.2.9
+      specifier: ^19.2.10
+      version: 19.2.10
     '@types/react-reconciler':
       specifier: 0.32.0
       version: 0.32.0
@@ -125,8 +125,8 @@ importers:
         version: link:../../packages/react-fabric
     devDependencies:
       '@types/react':
-        specifier: ^19.2.9
-        version: 19.2.9
+        specifier: ^19.2.10
+        version: 19.2.10
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -203,10 +203,10 @@ importers:
     devDependencies:
       '@types/react':
         specifier: 'catalog:'
-        version: 19.2.9
+        version: 19.2.10
       '@types/react-reconciler':
         specifier: 'catalog:'
-        version: 0.32.0(@types/react@19.2.9)
+        version: 0.32.0(@types/react@19.2.10)
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
@@ -1141,8 +1141,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react@19.2.9':
-    resolution: {integrity: sha512-Lpo8kgb/igvMIPeNV2rsYKTgaORYdO1XGVZ4Qz3akwOj0ySGYMPlQWa8BaLn0G63D1aSaAQ5ldR06wCpChQCjA==}
+  '@types/react@19.2.10':
+    resolution: {integrity: sha512-WPigyYuGhgZ/cTPRXB2EwUw+XvsRA3GqHlsP4qteqrnnjDrApbS7MxcGr/hke5iUoeB7E/gQtrs9I37zAJ0Vjw==}
 
   '@types/serve-handler@6.1.4':
     resolution: {integrity: sha512-aXy58tNie0NkuSCY291xUxl0X+kGYy986l4kqW6Gi4kEXgr6Tx0fpSH7YwUSa5usPpG3s9DBeIR6hHcDtL2IvQ==}
@@ -3357,11 +3357,11 @@ snapshots:
     dependencies:
       undici-types: 7.14.0
 
-  '@types/react-reconciler@0.32.0(@types/react@19.2.9)':
+  '@types/react-reconciler@0.32.0(@types/react@19.2.10)':
     dependencies:
-      '@types/react': 19.2.9
+      '@types/react': 19.2.10
 
-  '@types/react@19.2.9':
+  '@types/react@19.2.10':
     dependencies:
       csstype: 3.2.3
 

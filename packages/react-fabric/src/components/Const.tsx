@@ -1,5 +1,5 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
-import type { JSDoc, Key, KubbElement, KubbNode } from '../types.ts'
+import type { FabricReactElement, FabricReactNode, JSDoc, Key } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 export type ConstProps = {
@@ -27,13 +27,13 @@ export type ConstProps = {
   /**
    * Children nodes.
    */
-  children?: KubbNode
+  children?: FabricReactNode
 }
 
 /**
  * Generates a TypeScript constant declaration.
  */
-export function Const({ children, ...props }: ConstProps): KubbElement {
+export function Const({ children, ...props }: ConstProps): FabricReactElement {
   const { name, export: canExport, type, JSDoc, asConst } = props
 
   const nodeTree = useNodeTree()
@@ -66,4 +66,4 @@ export function Const({ children, ...props }: ConstProps): KubbElement {
   )
 }
 
-Const.displayName = 'KubbConst'
+Const.displayName = 'Const'

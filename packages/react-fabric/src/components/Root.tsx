@@ -1,20 +1,20 @@
 import { type FileManager, NodeTreeContext, provide, RootContext, type TreeNode } from '@kubb/fabric-core'
 import { Component } from 'react'
 
-import type { ComponentNode, KubbElement, KubbNode } from '../types.ts'
+import type { ComponentNode, FabricReactElement, FabricReactNode } from '../types.ts'
 
 type ErrorBoundaryProps = {
   onError: (error: Error) => void
-  children?: KubbNode
+  children?: FabricReactNode
 }
 
 class ErrorBoundary extends Component<{
   onError: ErrorBoundaryProps['onError']
-  children?: KubbNode
+  children?: FabricReactNode
 }> {
   state = { hasError: false }
 
-  static displayName = 'KubbErrorBoundary'
+  static displayName = 'ErrorBoundary'
   static getDerivedStateFromError(_error: Error) {
     return { hasError: true }
   }
@@ -53,13 +53,13 @@ export type RootProps = {
   /**
    * Children nodes.
    */
-  children?: KubbNode
+  children?: FabricReactNode
 }
 
 /**
  * This component provides the root behavior for the Fabric runtime.
  */
-export function Root({ onError, onExit, treeNode, fileManager, children }: RootProps): KubbElement {
+export function Root({ onError, onExit, treeNode, fileManager, children }: RootProps): FabricReactElement {
   provide(RootContext, { exit: onExit, treeNode, fileManager })
   provide(NodeTreeContext, treeNode)
 
@@ -74,4 +74,4 @@ export function Root({ onError, onExit, treeNode, fileManager, children }: RootP
   )
 }
 
-Root.displayName = 'KubbRoot'
+Root.displayName = 'Root'

@@ -2,10 +2,10 @@ import { FileManager, RootContext, TreeNode, unprovide, useContext } from '@kubb
 import type { ComponentNode, RootContextProps } from '@kubb/fabric-core/types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createReactFabric } from '../createReactFabric.ts'
-import type { KubbNode } from '../types'
+import type { FabricReactNode } from '../types'
 import { Root } from './Root.tsx'
 
-function Thrower(): KubbNode {
+function Thrower(): FabricReactNode {
   throw new Error('boom')
 }
 

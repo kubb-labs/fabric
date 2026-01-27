@@ -1,5 +1,5 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
-import type { JSDoc, Key, KubbElement, KubbNode } from '../types.ts'
+import type { FabricReactElement, FabricReactNode, JSDoc, Key } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 type Props = {
@@ -40,13 +40,13 @@ type Props = {
   /**
    * Children nodes.
    */
-  children?: KubbNode
+  children?: FabricReactNode
 }
 
 /**
  * Generates a TypeScript function declaration.
  */
-export function Function({ children, ...props }: Props): KubbElement {
+export function Function({ children, ...props }: Props): FabricReactElement {
   const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -97,7 +97,7 @@ export function Function({ children, ...props }: Props): KubbElement {
   )
 }
 
-Function.displayName = 'KubbFunction'
+Function.displayName = 'Function'
 
 type ArrowFunctionProps = Props & {
   /**
@@ -173,5 +173,5 @@ function ArrowFunction({ children, ...props }: ArrowFunctionProps) {
   )
 }
 
-ArrowFunction.displayName = 'KubbArrowFunction'
+ArrowFunction.displayName = 'ArrowFunction'
 Function.Arrow = ArrowFunction

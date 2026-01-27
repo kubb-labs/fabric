@@ -69,4 +69,4 @@ export const Type = createComponent('Type', ({ children, ...props }: TypeProps) 
   return result
 })
 
-Type.displayName = 'KubbType'
+Type.displayName = 'Type'

@@ -136,7 +136,7 @@ export const Function = createComponent('Function', ({ children, ...props }: Fun
   return [parts.join(''), '}']
 }) as ComponentBuilder<FunctionProps> & { Arrow: typeof ArrowFunction }
 
-Function.displayName = 'KubbFunction'
+Function.displayName = 'Function'
 
 type ArrowFunctionProps = FunctionProps & {
   /**
@@ -212,5 +212,5 @@ const ArrowFunction = createComponent('ArrowFunction', ({ children, ...props }: 
   return [parts.join(''), ' => {}']
 })
 
-ArrowFunction.displayName = 'KubbArrowFunction'
+ArrowFunction.displayName = 'ArrowFunction'
 Function.Arrow = ArrowFunction

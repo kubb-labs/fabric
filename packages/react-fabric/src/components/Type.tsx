@@ -1,5 +1,5 @@
 import { NodeTreeContext, provide, useNodeTree } from '@kubb/fabric-core'
-import type { JSDoc, Key, KubbElement, KubbNode } from '../types.ts'
+import type { FabricReactElement, FabricReactNode, JSDoc, Key } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
 
 export type TypeProps = {
@@ -19,13 +19,13 @@ export type TypeProps = {
   /**
    * Children nodes.
    */
-  children?: KubbNode
+  children?: FabricReactNode
 }
 
 /**
  * Generates a TypeScript type declaration.
  */
-export function Type({ children, ...props }: TypeProps): KubbElement {
+export function Type({ children, ...props }: TypeProps): FabricReactElement {
   const { name, export: canExport, JSDoc } = props
 
   const nodeTree = useNodeTree()
@@ -54,4 +54,4 @@ export function Type({ children, ...props }: TypeProps): KubbElement {
   )
 }
 
-Type.displayName = 'KubbType'
+Type.displayName = 'Type'

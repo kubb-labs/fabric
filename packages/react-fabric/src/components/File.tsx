@@ -1,6 +1,6 @@
 import { FileContext, NodeTreeContext, provide, useFile, useFileManager, useNodeTree } from '@kubb/fabric-core'
 import type { KubbFile } from '@kubb/fabric-core/types'
-import type { Key, KubbElement, KubbNode } from '../types.ts'
+import type { FabricReactElement, FabricReactNode, Key } from '../types.ts'
 
 type BasePropsWithBaseName = {
   /**
@@ -30,13 +30,13 @@ type Props<TMeta> = BaseProps & {
   meta?: TMeta
   banner?: string
   footer?: string
-  children?: KubbNode
+  children?: FabricReactNode
 }
 
 /**
  * Adds files to the FileManager
  */
-export function File<TMeta extends object = object>({ children, ...props }: Props<TMeta>): KubbElement {
+export function File<TMeta extends object = object>({ children, ...props }: Props<TMeta>): FabricReactElement {
   const { baseName, path, meta = {}, footer, banner } = props
 
   const fileManager = useFileManager()
@@ -69,11 +69,11 @@ export function File<TMeta extends object = object>({ children, ...props }: Prop
   return <kubb-file {...props}>{children}</kubb-file>
 }
 
-File.displayName = 'KubbFile'
+File.displayName = 'File'
 
 type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
   key?: Key
-  children?: KubbNode
+  children?: FabricReactNode
 }
 
 /**
@@ -82,7 +82,7 @@ type FileSourceProps = Omit<KubbFile.Source, 'value'> & {
  * Marks a block of source text to be associated with the current file when
  * rendering with the FileCollector. Children are treated as the source string.
  */
-function FileSource({ children, ...props }: FileSourceProps): KubbElement {
+function FileSource({ children, ...props }: FileSourceProps): FabricReactElement {
   const { name, isExportable, isIndexable, isTypeOnly } = props
 
   const nodeTree = useNodeTree()
@@ -100,7 +100,7 @@ function FileSource({ children, ...props }: FileSourceProps): KubbElement {
   )
 }
 
-FileSource.displayName = 'KubbFileSource'
+FileSource.displayName = 'FileSource'
 
 export type FileExportProps = KubbFile.Export & { key?: Key }
 
@@ -110,7 +110,7 @@ export type FileExportProps = KubbFile.Export & { key?: Key }
  * Declares an export entry for the current file. This will be collected by
  * the FileCollector for later emission.
  */
-function FileExport(props: FileExportProps): KubbElement {
+function FileExport(props: FileExportProps): FabricReactElement {
   const { name, path, isTypeOnly, asAlias } = props
 
   const nodeTree = useNodeTree()
@@ -134,7 +134,7 @@ function FileExport(props: FileExportProps): KubbElement {
   return <kubb-export name={name} path={path} isTypeOnly={isTypeOnly} asAlias={asAlias} />
 }
 
-FileExport.displayName = 'KubbFileExport'
+FileExport.displayName = 'FileExport'
 
 export type FileImportProps = KubbFile.Import & { key?: Key }
 
@@ -143,7 +143,7 @@ export type FileImportProps = KubbFile.Import & { key?: Key }
  *
  * Declares an import entry for the current file.
  */
-function FileImport(props: FileImportProps): KubbElement {
+function FileImport(props: FileImportProps): FabricReactElement {
   const { name, root, path, isTypeOnly, isNameSpace } = props
 
   const nodeTree = useNodeTree()
@@ -168,7 +168,7 @@ function FileImport(props: FileImportProps): KubbElement {
   return <kubb-import name={name} root={root} path={path} isNameSpace={isNameSpace} isTypeOnly={isTypeOnly} />
 }
 
-FileImport.displayName = 'KubbFileImport'
+FileImport.displayName = 'FileImport'
 
 File.Export = FileExport
 File.Import = FileImport

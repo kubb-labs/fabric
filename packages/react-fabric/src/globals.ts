@@ -1,20 +1,29 @@
 import type React from 'react'
-import type { KubbElement, KubbExportProps, KubbFileProps, KubbImportProps, KubbNode, KubbSourceProps, KubbTextProps, LineBreakProps } from './types.ts'
+import type {
+  FabricExportProps,
+  FabricFileProps,
+  FabricImportProps,
+  FabricReactElement,
+  FabricReactNode,
+  FabricSourceProps,
+  FabricTextProps,
+  LineBreakProps,
+} from './types.ts'
 
 declare global {
   namespace JSX {
-    type Element = KubbElement
+    type Element = FabricReactElement
 
     interface ElementClass extends React.ComponentClass<any> {
-      render(): KubbNode
+      render(): FabricReactNode
     }
 
     interface IntrinsicElements {
-      'kubb-text': KubbTextProps
-      'kubb-file': KubbFileProps
-      'kubb-source': KubbSourceProps
-      'kubb-import': KubbImportProps
-      'kubb-export': KubbExportProps
+      'kubb-text': FabricTextProps
+      'kubb-file': FabricFileProps
+      'kubb-source': FabricSourceProps
+      'kubb-import': FabricImportProps
+      'kubb-export': FabricExportProps
       br: LineBreakProps
       indent: {}
       dedent: {}

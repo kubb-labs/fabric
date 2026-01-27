@@ -38,14 +38,14 @@ export function openDevtools() {
     {
       // ComponentFilterDisplayName
       type: 2,
-      value: 'KubbRoot',
+      value: 'Root',
       isEnabled: true,
       isValid: true,
     },
     {
       // ComponentFilterDisplayName
       type: 2,
-      value: 'KubbErrorBoundary',
+      value: 'ErrorBoundary',
       isEnabled: true,
       isValid: true,
     },

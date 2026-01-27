@@ -1,13 +1,13 @@
 import type React from 'react'
 
-import type { KubbNode, KubbElement, KubbExportProps, KubbFileProps, KubbImportProps, KubbSourceProps, KubbTextProps, LineBreakProps } from './types'
+import type { FabricReactNode, FabricReactElement, FabricExportProps, FabricFileProps, FabricImportProps, FabricSourceProps, FabricTextProps, LineBreakProps } from './types'
 
 export namespace JSX {
   type ElementType = React.JSX.ElementType
-  type Element = KubbElement
+  type Element = FabricReactElement
 
   interface ElementClass extends React.JSX.ElementClass {
-    render(): KubbNode
+    render(): FabricReactNode
   }
   interface ElementAttributesProperty {
     props: {}
@@ -18,11 +18,11 @@ export namespace JSX {
   }
 
   interface IntrinsicElements extends React.JSX.IntrinsicElements {
-    'kubb-text': KubbTextProps
-    'kubb-file': KubbFileProps
-    'kubb-source': KubbSourceProps
-    'kubb-import': KubbImportProps
-    'kubb-export': KubbExportProps
+    'kubb-text': FabricTextProps
+    'kubb-file': FabricFileProps
+    'kubb-source': FabricSourceProps
+    'kubb-import': FabricImportProps
+    'kubb-export': FabricExportProps
     br: LineBreakProps
     indent: {}
     dedent: {}

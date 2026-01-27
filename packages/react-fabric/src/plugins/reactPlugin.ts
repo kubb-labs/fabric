@@ -1,7 +1,7 @@
 import type { TreeNode } from '@kubb/fabric-core'
 import { definePlugin } from '@kubb/fabric-core/plugins'
 import { Runtime } from '../Runtime.tsx'
-import type { ComponentNode, KubbElement } from '../types.ts'
+import type { ComponentNode, FabricReactElement } from '../types.ts'
 
 export type Options = {
   stdout?: NodeJS.WriteStream
@@ -15,16 +15,16 @@ export type Options = {
 }
 
 type ExtendOptions = {
-  render(App: KubbElement): Promise<void>
-  renderToString(App: KubbElement): Promise<string>
+  render(App: FabricReactElement): Promise<void>
+  renderToString(App: FabricReactElement): Promise<string>
   waitUntilExit(): Promise<void>
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(App: KubbElement): Promise<void>
-      renderToString(App: KubbElement): Promise<string>
+      render(App: FabricReactElement): Promise<void>
+      renderToString(App: FabricReactElement): Promise<string>
       waitUntilExit(): Promise<void>
     }
   }

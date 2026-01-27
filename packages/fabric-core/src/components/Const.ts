@@ -88,4 +88,4 @@ export const Const = createComponent('Const', ({ children, ...props }: ConstProp
   return result
 })
 
-Const.displayName = 'KubbConst'
+Const.displayName = 'Const'

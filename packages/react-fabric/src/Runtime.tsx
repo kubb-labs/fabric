@@ -6,7 +6,7 @@ import { Root } from './components/Root.tsx'
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './Renderer.ts'
 import { Renderer } from './Renderer.ts'
-import type { ComponentNode, DOMElement, KubbElement } from './types.ts'
+import type { ComponentNode, DOMElement, FabricReactElement } from './types.ts'
 import { processFiles } from './utils/processFiles.ts'
 import { squashTextNodes } from './utils/squashTextNodes.ts'
 
@@ -158,7 +158,7 @@ export class Runtime {
     return [...values].join('\n\n')
   }
 
-  async render(node: KubbElement): Promise<void> {
+  async render(node: FabricReactElement): Promise<void> {
     const treeNode = this.#options.treeNode || new TreeNode<ComponentNode>({ type: 'Root', props: {} })
     const props = {
       fileManager: this.fileManager,
@@ -182,7 +182,7 @@ export class Runtime {
     }
   }
 
-  async renderToString(node: KubbElement): Promise<string> {
+  async renderToString(node: FabricReactElement): Promise<string> {
     const treeNode = this.#options.treeNode || new TreeNode<ComponentNode>({ type: 'Root', props: {} })
     const props = {
       fileManager: this.fileManager,

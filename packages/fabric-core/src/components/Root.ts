@@ -73,4 +73,4 @@ export const Root = createComponent('Root', ({ onError, onExit, treeNode, fileMa
   }
 })
 
-Root.displayName = 'KubbRoot'
+Root.displayName = 'Root'
