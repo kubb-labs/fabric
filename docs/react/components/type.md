@@ -4,7 +4,7 @@ title: Type (React Fabric)
 outline: deep
 ---
 
-# Type <Badge type="tip" text="react-fabric" />
+# `Type` <Badge type="tip" text="react-fabric" />
 
 React component for generating TypeScript type declarations.
 
@@ -81,24 +81,6 @@ Type definition.
 |----------:|:-----------|
 |     Type: | `KubbNode` |
 | Required: | `false`    |
-
-## Examples
-
-### Basic Type
-
-```tsx [basic.tsx]
-<Type name="User" export>
-  {'{'} id: number; name: string {'}'}
-</Type>
-```
-
-### Union Type
-
-```tsx [union.tsx]
-<Type name="Status" export>
-  'pending' | 'success' | 'error'
-</Type>
-```
 
 ## See Also
 

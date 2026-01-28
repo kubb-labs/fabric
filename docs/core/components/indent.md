@@ -17,9 +17,8 @@ Increases indentation level in the output.
 ::: code-group
 
 ```tsx twoslash [run.ts]
-import { createFabric } from '@kubb/fabric-core'
+import { createFabric, App, Indent, Dedent, Br } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -55,30 +54,31 @@ This component accepts no props.
 ::: code-group
 
 ```tsx twoslash [run.ts]
-import { createFabric } from '@kubb/fabric-core'
+import { createFabric, createComponent, Indent, Dedent, Br } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = [
-  'if (condition) {',
-  Br(),
-  Indent(),
-  'if (nested) {',
-  Br(),
-  Indent(),
-  'doSomething()',
-  Br(),
-  Dedent(),
-  '}',
-  Br(),
-  Dedent(),
-  '}'
-]
+const component =  createComponent('component', ()=>{
+  return [
+    'if (condition) {',
+    Br(),
+    Indent(),
+    'if (nested) {',
+    Br(),
+    Indent(),
+    'doSomething()',
+    Br(),
+    Dedent(),
+    '}',
+    Br(),
+    Dedent(),
+    '}'
+  ]
+})
 
-const output = await fabric.render(component)
+const output = await fabric.render(component())
 ```
 
 ```ts [output]
@@ -95,9 +95,8 @@ if (condition) {
 ::: code-group
 
 ```tsx twoslash [run.ts]
-import { createFabric } from '@kubb/fabric-core'
+import { createFabric, App, Indent, Dedent, Br } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)

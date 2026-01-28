@@ -53,13 +53,13 @@ export function Const({ children, ...props }: ConstProps): FabricReactElement {
         </>
       )}
       {canExport && <>export </>}
-      const {name}{' '}
-      {type && (
+      const {name}
+      {type ? (
         <>
           {':'}
           {type}{' '}
         </>
-      )}
+      ): ' '}
       = {children}
       {asConst && <> as const</>}
     </>

@@ -4,7 +4,7 @@ title: File (React Fabric)
 outline: deep
 ---
 
-# File <Badge type="tip" text="react-fabric" />
+# `File` <Badge type="tip" text="react-fabric" />
 
 React component for generating files with sources, imports, and exports.
 
@@ -320,23 +320,25 @@ Export as aliased namespace.
 
 ### Complete File
 
-```tsx [complete-file.tsx]
+::: code-group
+
+```tsx twoslash [run.ts]
 import { File } from '@kubb/react-fabric'
 
-export function Generator() {
+function Generator() {
   return (
     <File baseName="user.ts" path="./generated/types/user.ts">
       <File.Import name="BaseEntity" path="./base" isTypeOnly />
 
       <File.Source isExportable name="User">
         export type User = BaseEntity & {'{'}
-          name: string
+          name: string;
           email: string
         {'}'}
       </File.Source>
 
       <File.Source isExportable name="createUser">
-        export function createUser(data: User): User {'{'}
+        export function createUser(data: User): User {'{'} {'\n'}
           return {'{'} ...data, id: Math.random() {'}'}
         {'}'}
       </File.Source>
@@ -345,31 +347,17 @@ export function Generator() {
 }
 ```
 
-### Multiple Files
+```ts [generated/types/user.ts]
+import type { BaseEntity } from './base'
 
-```tsx [multiple-files.tsx]
-import { File, Root } from '@kubb/react-fabric'
-
-export function Generator() {
-  const entities = ['User', 'Post', 'Comment']
-
-  return (
-    <Root>
-      {entities.map(entity => (
-        <File
-          key={entity}
-          baseName={`${entity.toLowerCase()}.ts`}
-          path={`./generated/types/${entity.toLowerCase()}.ts`}
-        >
-          <File.Source isExportable>
-            export type {entity} = {'{'} id: number {'}'}
-          </File.Source>
-        </File>
-      ))}
-    </Root>
-  )
+export type User = BaseEntity & { name: string; email: string }
+export function createUser(data: User): User {
+  return { ...data, id: Math.random() }
 }
+
 ```
+:::
+
 
 ## See Also
 

@@ -4,7 +4,7 @@ title: createReactFabric
 outline: deep
 ---
 
-# createReactFabric
+# `createReactFabric`
 
 Creates a Fabric instance pre-configured with React support for component-based file generation.
 
@@ -33,8 +33,7 @@ function Generator() {
   )
 }
 
-await fabric.render(<Generator />)
-await fabric.waitUntilExit()
+const output = await fabric.renderToString(<Generator />)
 ```
 
 ```ts [output]
@@ -183,7 +182,9 @@ await fabric.waitUntilExit()
 
 Generate files with React components:
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createReactFabric, File, Type } from '@kubb/react-fabric'
 import { fsPlugin } from '@kubb/react-fabric/plugins'
 
@@ -203,7 +204,7 @@ function Generator() {
           </Type>
         </File.Source>
       </File>
-
+      <br/>
       <File baseName="post.ts" path="./generated/types/post.ts">
         <File.Source isExportable>
           <Type name="Post" export>
@@ -215,15 +216,22 @@ function Generator() {
   )
 }
 
-await fabric.render(<Generator />)
-await fabric.waitUntilExit()
+const output = await fabric.renderToString(<Generator />)
 ```
+
+```ts [output]
+export type User = { id: number; name: string }
+export type Post = { id: number; title: string; userId: number }
+```
+:::
 
 ### With DevTools
 
 Enable React DevTools for debugging:
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createReactFabric, Const } from '@kubb/react-fabric'
 
 const fabric = createReactFabric({
@@ -238,18 +246,22 @@ function MyComponent() {
 // DevTools will open automatically
 await fabric.render(<MyComponent />)
 ```
+:::
 
 ### Custom Streams
 
 Redirect output to custom streams:
 
-```tsx
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createReactFabric, Const } from '@kubb/react-fabric'
-import { createWriteStream } from 'fs'
+import { createWriteStream } from 'node:fs'
 
 const fabric = createReactFabric({
   stdout: createWriteStream('./output.log'),
-  stderr: process.stderr
+  stderr: process.stderr,
+  debug: true
 })
 
 function MyComponent() {
@@ -257,7 +269,15 @@ function MyComponent() {
 }
 
 await fabric.render(<MyComponent />)
+
 ```
+
+```ts [output.log]
+Rendering:
+
+export const API_URL:string = 'https://api.example.com'
+```
+:::
 
 ## See Also
 

@@ -4,7 +4,7 @@ title: Root (React Fabric)
 outline: deep
 ---
 
-# Root <Badge type="tip" text="react-fabric" />
+# `Root` <Badge type="tip" text="react-fabric" />
 
 React component providing core Fabric runtime context.
 
@@ -12,9 +12,12 @@ React component providing core Fabric runtime context.
 > This is the **react-fabric** version using React.
 > For the FSX version, see [Root (Fabric Core)](/core/components/root).
 
-## Usage
+> [!WARNING]
+> The Root component is typically used internally by the Fabric runtime.
+> You don't need to use it directly in most cases.
 
-This component is typically used internally by the Fabric renderer.
+
+## Usage
 
 ::: code-group
 

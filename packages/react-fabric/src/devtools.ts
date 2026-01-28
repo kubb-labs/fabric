@@ -113,7 +113,7 @@ export function openDevtools() {
     // This ensures DevTools can properly discover the custom renderer
     Renderer.injectIntoDevTools({
       bundleType: 1,
-      version: '19.1.0',
+      version: '19.2.3',
       rendererPackageName: 'kubb',
       // findFiberByHostInstance is required for DevTools to map elements to fibers
       findFiberByHostInstance: () => null,

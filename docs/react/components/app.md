@@ -4,7 +4,7 @@ title: App (React Fabric)
 outline: deep
 ---
 
-# App <Badge type="tip" text="react-fabric" />
+# `App` <Badge type="tip" text="react-fabric" />
 
 React component providing App context with metadata.
 

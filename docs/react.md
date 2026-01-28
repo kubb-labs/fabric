@@ -58,7 +58,12 @@ function Generator() {
 }
 
 const output = await fabric.renderToString(<Generator />)
-// export const API_URL: string = 'https://api.example.com'
+console.log(output)
+```
+
+This will log:
+```
+export const API_URL: string = 'https://api.example.com'
 ```
 
 ## Core Concepts
@@ -139,8 +144,8 @@ function UserTypes() {
   )
 }
 
-await fabric.render(<UserTypes />)
-await fabric.waitUntilExit()
+const output = await fabric.renderToString(<UserTypes />)
+
 ```
 
 ### With React State
@@ -178,62 +183,7 @@ function DynamicGenerator() {
 const fabric = createReactFabric()
 
 await fabric.render(<DynamicGenerator />)
-await fabric.waitUntilExit()
-```
 
-### Multiple Files with Props
-
-```tsx twoslash
-import { createReactFabric, File, Type } from '@kubb/react-fabric'
-import { fsPlugin } from '@kubb/react-fabric/plugins'
-
-const fabric = createReactFabric()
-
-fabric.use(fsPlugin, {
-  clean: { path: './generated' }
-})
-
-interface EntityProps {
-  name: string
-  fields: Record<string, string>
-}
-
-function Entity({ name, fields }: EntityProps) {
-  const fieldTypes = Object.entries(fields)
-    .map(([key, type]) => `${key}: ${type}`)
-    .join('; ')
-
-  return (
-    <File
-      baseName={`${name.toLowerCase()}.ts`}
-      path={`./generated/types/${name.toLowerCase()}.ts`}
-    >
-      <File.Source isExportable>
-        <Type name={name} export>
-          {`{ ${fieldTypes} }`}
-        </Type>
-      </File.Source>
-    </File>
-  )
-}
-
-function Generator() {
-  const entities = [
-    { name: 'User', fields: { id: 'number', name: 'string' } },
-    { name: 'Post', fields: { id: 'number', title: 'string', userId: 'number' } },
-    { name: 'Comment', fields: { id: 'number', text: 'string', postId: 'number' } }
-  ]
-
-  return (
-    <>
-      {entities.map(entity => (
-        <Entity key={entity.name} {...entity} />
-      ))}
-    </>
-  )
-}
-
-await fabric.render(<Generator />)
 await fabric.waitUntilExit()
 ```
 
@@ -263,7 +213,10 @@ await fabric.waitUntilExit()
 
 Use `renderToString` for template generation:
 
-```tsx twoslash
+
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createReactFabric, Function } from '@kubb/react-fabric'
 
 const fabric = createReactFabric()
@@ -286,10 +239,14 @@ const code = await fabric.renderToString(
 )
 
 console.log(code)
-// export function formatDate(): string {
-//   return 'formatDate implementation'
-// }
 ```
+
+```ts [output]
+export function formatDate(): string {
+  return 'formatDate implementation'
+}
+```
+:::
 
 ## Configuration
 

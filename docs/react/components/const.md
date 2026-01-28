@@ -4,7 +4,7 @@ title: Const (React Fabric)
 outline: deep
 ---
 
-# Const <Badge type="tip" text="react-fabric" />
+# `Const` <Badge type="tip" text="react-fabric" />
 
 React component for generating TypeScript constant declarations.
 

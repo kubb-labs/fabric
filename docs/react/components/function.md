@@ -4,7 +4,7 @@ title: Function (React Fabric)
 outline: deep
 ---
 
-# Function <Badge type="tip" text="react-fabric" />
+# `Function` <Badge type="tip" text="react-fabric" />
 
 React component for generating TypeScript function declarations.
 
@@ -122,30 +122,6 @@ Function body.
 |----------:|:-----------|
 |     Type: | `KubbNode` |
 | Required: | `false`    |
-
-## Examples
-
-### Basic Function
-
-```tsx [basic.tsx]
-<Function name="getUser" params="id: number" returnType="User">
-  return fetch(`/users/${'${id}'}`)
-</Function>
-```
-
-### With Generics
-
-```tsx [generics.tsx]
-<Function
-  name="getData"
-  export
-  async
-  generics="TData"
-  returnType="number"
->
-  return 2
-</Function>
-```
 
 ## See Also
 
