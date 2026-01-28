@@ -35,7 +35,7 @@ const userType = Type({
   '{ id: number; name: string; email: string }'
 ])
 
-const output = await fabric.render(component)
+const output = await fabric.render(userType)
 ```
 
 ```ts [output]
