@@ -1,1 +1,1 @@
-const myVar :string = "hello"
+const myVar:string = "hello"

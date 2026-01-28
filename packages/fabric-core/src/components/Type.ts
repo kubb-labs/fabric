@@ -3,9 +3,9 @@ import { provide } from '../context.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
+import { renderIntrinsic } from '../intrinsic.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
-import {renderIntrinsic} from "../intrinsic.ts";
 
 export type TypeProps = {
   /**

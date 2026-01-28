@@ -59,7 +59,9 @@ export function Const({ children, ...props }: ConstProps): FabricReactElement {
           {':'}
           {type}{' '}
         </>
-      ): ' '}
+      ) : (
+        ' '
+      )}
       = {children}
       {asConst && <> as const</>}
     </>
