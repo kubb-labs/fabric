@@ -214,6 +214,8 @@ await fabric.addFile({
   baseName: 'component.tsx',
   path: './output/component.tsx',
   sources: [/* ... */],
+  imports: [],
+  exports: [],
 })
 
 // Map .tsx to .tsx (use tsxParser)

@@ -73,20 +73,15 @@ const output = MyConst({ name: 'greeting' })()
 ```
 
 ```ts twoslash [component-with-children.ts]
-import { createComponent, File } from '@kubb/fabric-core'
+import { createComponent, Const } from '@kubb/fabric-core'
 
-// With children
-const MyFile = createComponent('MyFile', ({ baseName, path }: { baseName: string; path: string }) => {
-  return File({
-    baseName,
-    path,
-    children: File.Source({
-      children: 'const test = 1;',
-    }),
-  })
+// Without children
+const MyConst = createComponent('MyConst', ({ name }: { name: string }) => {
+  return Const({ name }).children('"hello"')
 })
 
-const output = MyFile({ baseName: 'test.ts', path: './test.ts' })()
+const output = MyConst({ name: 'greeting' })()
+// Output: const greeting = "hello"
 ```
 
 ## Options
