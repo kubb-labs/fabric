@@ -36,6 +36,9 @@ import { defineParser } from '@kubb/fabric-core/parsers'
 const jsonParser = defineParser({
   name: 'jsonParser',
   extNames: ['.json'],
+  install(){
+
+  },
   parse(file) {
     const data = file.sources.map(s => s.value).join('\n')
     return JSON.stringify(JSON.parse(data), null, 2)
@@ -63,17 +66,6 @@ Unique identifier for your parser.
 |     Type: | `string` |
 | Required: | `true`   |
 
-**Example:**
-
-```ts
-const myParser = defineParser({
-  name: 'myParser', // Used for debugging and identification
-  extNames: ['.ext'],
-  parse(file) {
-    return '...'
-  },
-})
-```
 
 ### extNames
 
@@ -171,7 +163,9 @@ const myParser = defineParser<MyParserOptions>({
 
 ### JSON Parser
 
-```ts twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -179,6 +173,9 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
 const jsonParser = defineParser({
   name: 'jsonParser',
   extNames: ['.json'],
+  install(){
+
+  },
   parse(file) {
     const data = file.sources.map(s => s.value).join('\n')
     return JSON.stringify(JSON.parse(data), null, 2)
@@ -200,11 +197,24 @@ await fabric.addFile({
 })
 
 await fabric.write({ extension: { '.json': '.json' } })
+
 ```
+
+```json [output/config.json]
+{
+  "name": "app",
+  "version": "1.0.0"
+}
+
+```
+
+:::
 
 ### Markdown Parser
 
-```ts twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -252,9 +262,25 @@ await fabric.addFile({
 await fabric.write({ extension: { '.md': '.md' } })
 ```
 
+```md [output/README.md]
+---
+title: My Project
+date: 2024-01-01
+---
+
+# My Project
+
+A description of the project.
+
+```
+
+:::
+
 ### CSS Parser
 
-```ts twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -266,10 +292,12 @@ type CSSOptions = {
 const cssParser = defineParser<CSSOptions>({
   name: 'cssParser',
   extNames: ['.css'],
+  install(){
+
+  },
   parse(file) {
     const styles = file.sources.map(s => s.value).join('\n')
 
-    // Simple minification (remove extra whitespace)
     if (file.meta?.minify) {
       return styles.replace(/\s+/g, ' ').trim()
     }
@@ -296,6 +324,14 @@ await fabric.addFile({
 
 await fabric.write({ extension: { '.css': '.css' } })
 ```
+
+```css [output/style.css]
+.button { padding: 10px; }
+.card { margin: 20px; }
+
+```
+
+:::
 
 ## Best Practices
 
