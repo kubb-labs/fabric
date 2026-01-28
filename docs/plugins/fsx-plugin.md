@@ -35,9 +35,8 @@ console.log(output) // "Hello from Fabric!"
 This will already create the files behind the scenes fo you.
 
 ```ts twoslash [file-example.ts]
-import { createFabric } from '@kubb/fabric-core'
+import { createFabric, File } from '@kubb/fabric-core'
 import { fsxPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
-import { File } from '@kubb/fabric-core/components'
 
 const fabric = createFabric()
 
@@ -62,8 +61,7 @@ await fabric.write()
 The `createComponent` helper allows you to build reusable components for code generation:
 
 ```ts twoslash [component-example.ts]
-import { createComponent } from '@kubb/fabric-core'
-import { Const } from '@kubb/fabric-core/components'
+import { createComponent, Const } from '@kubb/fabric-core'
 
 // Without children
 const MyConst = createComponent('MyConst', ({ name }: { name: string }) => {
@@ -75,8 +73,7 @@ const output = MyConst({ name: 'greeting' })()
 ```
 
 ```ts twoslash [component-with-children.ts]
-import { createComponent } from '@kubb/fabric-core'
-import { File } from '@kubb/fabric-core/components'
+import { createComponent, File } from '@kubb/fabric-core'
 
 // With children
 const MyFile = createComponent('MyFile', ({ baseName, path }: { baseName: string; path: string }) => {
@@ -187,8 +184,7 @@ The fsxPlugin:
 The `Const` component generates constant declarations:
 
 ```ts [const-example.ts]
-import { Const } from '@kubb/fabric-core/components'
-import { createComponent } from '@kubb/fabric-core'
+import { createComponent, Const } from '@kubb/fabric-core'
 
 // Basic const
 const output1 = Const({ name: 'myVar', children: '"hello"' })()
@@ -231,8 +227,7 @@ const output = await fabric.render(MyConstComponent())
 The `Type` component generates TypeScript type declarations:
 
 ```ts [type-example.ts]
-import { Type } from '@kubb/fabric-core/components'
-import { createComponent } from '@kubb/fabric-core'
+import { createComponent, Type } from '@kubb/fabric-core'
 
 // Basic type
 const output1 = Type({ name: 'MyType', children: '{ a: string }' })()
@@ -271,8 +266,7 @@ const output = await fabric.render(MyTypeComponent())
 The `File` component manages file generation with imports, exports, and sources:
 
 ```ts [file-example.ts]
-import { File } from '@kubb/fabric-core/components'
-import { createComponent } from '@kubb/fabric-core'
+import { createComponent, File } from '@kubb/fabric-core'
 
 // Basic file
 await fabric.render(
@@ -340,9 +334,8 @@ console.log(files.length) // 3
 
 Generate TypeScript code using component composition:
 
-```ts [run.ts]
-import { createComponent } from '@kubb/fabric-core'
-import { Type, Const, File } from '@kubb/fabric-core/components'
+```ts
+import { Type, Const, File, createComponent } from '@kubb/fabric-core'
 
 const ModelGenerator = createComponent('ModelGenerator', ({ name, fields }: {
   name: string
@@ -383,9 +376,8 @@ const output = await fabric.render(
 
 Create reusable components for consistent code generation:
 
-```ts [library.ts]
-import { createComponent } from '@kubb/fabric-core'
-import { Const } from '@kubb/fabric-core/components'
+```ts
+import { Const, createComponent } from '@kubb/fabric-core'
 
 // Reusable API endpoint const generator
 const ApiEndpoint = createComponent('ApiEndpoint', ({ name, path }: {
