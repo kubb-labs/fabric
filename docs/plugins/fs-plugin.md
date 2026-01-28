@@ -138,6 +138,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type User = { id: number; name: string }', isExportable: true },
   ],
+  imports: [],
+  exports: []
 })
 
 await fabric.write()
@@ -164,6 +166,8 @@ await fabric.addFile({
   sources: [
     { value: 'export const API_URL = "https://api.example.com"', isExportable: true },
   ],
+  imports: [],
+  exports: []
 })
 
 await fabric.write()
