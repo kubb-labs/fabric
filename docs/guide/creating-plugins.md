@@ -35,7 +35,7 @@ import { definePlugin } from '@kubb/fabric-core/plugins'
 
 const myPlugin = definePlugin({
   name: 'myPlugin',
-  install(fabric, options) {
+  install(fabric) {
     // Plugin logic here
   },
 })
@@ -123,7 +123,7 @@ const myPlugin = definePlugin<MyPluginOptions>({
 Type definition for methods/properties injected into Fabric.
 
 ```ts twoslash
-import { definePlugin } from "@kubb/fabric-core"
+import { definePlugin } from '@kubb/fabric-core/plugins'
 
 declare global {
   namespace Kubb {
