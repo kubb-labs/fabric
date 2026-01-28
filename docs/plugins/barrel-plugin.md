@@ -147,6 +147,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type User = { id: number; name: string }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.addFile({
@@ -155,6 +157,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type Post = { id: number; title: string }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -190,6 +194,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type User = { id: number }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.addFile({
@@ -198,6 +204,8 @@ await fabric.addFile({
   sources: [
     { value: 'export const fetchUser = async () => {}', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -284,6 +292,8 @@ await fabric.addFile({
     { value: 'export type User = { id: number }', isExportable: true },
     { value: 'export type Post = { id: number }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -341,9 +351,12 @@ Ensure sources are marked as exportable:
 ```ts
 await fabric.addFile({
   path: './generated/file.ts',
+  baseName: 'files.ts',
   sources: [
     { value: 'export const x = 1', isExportable: true }, // Must be true
   ],
+  imports: [],
+  exports: [],
 })
 ```
 

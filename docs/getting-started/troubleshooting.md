@@ -257,9 +257,12 @@ await fabric.writeEntry({ root: './generated', mode: 'named' })
 ```ts [exportable-sources.ts]
 await fabric.addFile({
   path: './generated/file.ts',
+  baseName: 'file.ts',
   sources: [
     { value: 'export const x = 1', isExportable: true }, // Must be true
   ],
+  imports: [],
+  exports: [],
 })
 ```
 
@@ -377,6 +380,8 @@ await fabric.addFile({
   baseName: 'user.ts',
   path: './generated/types', // Missing file name
   sources: [],
+  imports: [],
+  exports: [],
 })
 
 // ✅ Correct - path includes baseName
@@ -384,6 +389,8 @@ await fabric.addFile({
   baseName: 'user.ts',
   path: './generated/types/user.ts', // Includes file name
   sources: [],
+  imports: [],
+  exports: [],
 })
 ```
 
@@ -427,6 +434,8 @@ await fabric.addFile({
   path: './generated/types/user.ts',
   baseName: 'user.ts',
   sources: [],
+  imports: [],
+  exports: [],
 })
 
 // ✅ Good - Use path.join()
@@ -434,6 +443,8 @@ await fabric.addFile({
   path: join('generated', 'types', 'user.ts'),
   baseName: 'user.ts',
   sources: [],
+  imports: [],
+  exports: [],
 })
 ```
 

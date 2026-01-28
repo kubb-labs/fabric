@@ -62,6 +62,8 @@ await fabric.addFile({
   sources: [
     { value: 'export const x = 1', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()

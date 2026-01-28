@@ -42,6 +42,8 @@ await fabric.addFile({
       isExportable: true,
     },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -118,6 +120,8 @@ await fabric.addFile({
       isExportable: true,
     },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()

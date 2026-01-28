@@ -84,6 +84,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type User = { id: number }', isExportable: true },
   ],
+  imports: [],
+  exports: []
 })
 
 // typescriptParser is used for .ts files
@@ -109,6 +111,7 @@ await fabric.addFile({
   sources: [
     { value: 'export const fetchUser = async (id: number): Promise<User> => {}', isExportable: true },
   ],
+  exports: []
 })
 ```
 
@@ -133,6 +136,7 @@ await fabric.addFile({
     { name: 'User', path: './types', isTypeOnly: true },
     { name: 'fetchUser', path: './api' },
   ],
+  imports: []
 })
 ```
 
@@ -161,6 +165,8 @@ await fabric.addFile({
       isExportable: true
     },
   ],
+  imports: [],
+  exports: [],
 })
 ```
 
@@ -192,6 +198,8 @@ await fabric.addFile({
     { value: 'export type User = { id: number; name: string }', isExportable: true },
     { value: 'export const defaultUser: User = { id: 0, name: "Guest" }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write({ extension: { '.ts': '.ts' } })
@@ -216,6 +224,7 @@ await fabric.addFile({
     { name: 'User', path: './types', isTypeOnly: true },
     { name: 'axios', path: 'axios' },
   ],
+  exports: [],
   sources: [
     {
       value: 'export const getUser = (id: number): Promise<User> => axios.get(`/users/${id}`)',
@@ -246,6 +255,8 @@ await fabric.addFile({
   sources: [
     { value: 'export type User = { id: number; name: string }', isExportable: true },
   ],
+  imports: [],
+  exports: [],
 })
 
 // API file with imports
@@ -258,6 +269,7 @@ await fabric.addFile({
   sources: [
     { value: 'export const fetchUser = async (): Promise<User> => {}', isExportable: true },
   ],
+  exports: [],
 })
 
 await fabric.write({ extension: { '.ts': '.ts' } })

@@ -34,6 +34,8 @@ await fabric.addFile({
     { value: 'Line 1', isExportable: false },
     { value: 'Line 2', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 // No extension mapping - defaultParser is used automatically
@@ -69,6 +71,8 @@ await fabric.addFile({
   baseName: 'file.txt',
   path: './output/file.txt',
   sources: [{ value: 'content', isExportable: false }],
+  imports: [],
+  exports: [],
 })
 
 // defaultParser is used
@@ -92,6 +96,8 @@ await fabric.addFile({
   baseName: 'config.yaml',
   path: './output/config.yaml',
   sources: [{ value: 'key: value', isExportable: false }],
+  imports: [],
+  exports: [],
 })
 
 // No parser for .yaml - defaultParser is used
@@ -115,6 +121,8 @@ await fabric.addFile({
     { value: 'Second line', isExportable: false },
     { value: 'Third line', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -139,6 +147,7 @@ await fabric.addFile({
   sources: [
     { value: 'Content only', isExportable: false },
   ],
+  exports: [],
 })
 
 await fabric.write()
@@ -162,6 +171,8 @@ await fabric.addFile({
     // Metadata is available to the parser
     customField: 'value',
   },
+  imports: [],
+  exports: [],
 })
 ```
 
@@ -184,6 +195,8 @@ await fabric.addFile({
     { value: '', isExportable: false },
     { value: 'Description of the project.', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -210,6 +223,8 @@ await fabric.addFile({
     { value: 'API_KEY=abc123', isExportable: false },
     { value: 'DATABASE_URL=postgres://localhost', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -236,6 +251,8 @@ await fabric.addFile({
     { value: '', isExportable: false },
     { value: 'Copyright (c) 2024', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -257,6 +274,8 @@ await fabric.addFile({
   sources: [
     { value: 'v1.0.0 - Initial release', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.addFile({
@@ -266,6 +285,8 @@ await fabric.addFile({
     { value: '- Add tests', isExportable: false },
     { value: '- Update docs', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 // All files use defaultParser
@@ -300,6 +321,8 @@ await fabric.addFile({
   baseName: 'file.txt',
   path: './output/file.txt',
   sources: [{ value: 'content', isExportable: false }],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()
@@ -322,6 +345,8 @@ await fabric.addFile({
   baseName: 'types.ts',
   path: './output/types.ts',
   sources: [{ value: 'export type User = {}', isExportable: true }],
+  imports: [],
+  exports: [],
 })
 await fabric.write() // Uses defaultParser - no TypeScript formatting
 

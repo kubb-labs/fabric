@@ -28,7 +28,9 @@ import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
  * await fabric.addFile({
  *   baseName: 'user.ts',
  *   path: './generated/user.ts',
- *   sources: [{ value: 'export type User = {}', isExportable: true }]
+ *   sources: [{ value: 'export type User = {}', isExportable: true }],
+*    imports: [],
+ *   exports: [],
  * })
  *
  * await fabric.write({ extension: { '.ts': '.ts' } })

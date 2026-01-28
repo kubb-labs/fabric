@@ -36,6 +36,8 @@ await fabric.addFile({
   baseName: 'user.ts',
   path: './src/user.ts',
   sources: [{ value: 'export interface User {}', isExportable: true }],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write()

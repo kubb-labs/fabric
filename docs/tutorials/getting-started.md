@@ -35,6 +35,8 @@ await fabric.addFile({
   baseName: 'greeting.js',
   path: './output/greeting.js',
   sources: [{ value: greetingFunction }],
+  imports: [],
+  exports: [],
 })
 
 // Write the file to disk

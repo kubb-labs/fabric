@@ -23,13 +23,13 @@ Fabric includes built-in parsers for TypeScript, TSX, and default fallback parsi
 
 The `defineParser` factory is included in `@kubb/fabric-core`:
 
-```ts [import.ts]
+```ts
 import { defineParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
 
-```ts
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 
@@ -65,7 +65,7 @@ Unique identifier for your parser.
 
 **Example:**
 
-```ts [name.ts]
+```ts
 const myParser = defineParser({
   name: 'myParser', // Used for debugging and identification
   extNames: ['.ext'],
@@ -89,7 +89,7 @@ File extensions this parser handles. Use `undefined` for the default parser fall
 
 **Example:**
 
-```ts [extNames.ts]
+```ts
 // Specific extensions
 const tsParser = defineParser({
   name: 'tsParser',
@@ -123,28 +123,6 @@ Optional setup function called when the parser is registered via `fabric.use()`.
 - `fabric` — The Fabric instance
 - `options` — Parser options passed to `fabric.use()`
 
-**Example:**
-
-```ts [install.ts]
-const myParser = defineParser({
-  name: 'myParser',
-  extNames: ['.ext'],
-  install(fabric, options) {
-    // Subscribe to events
-    fabric.context.events.on('lifecycle:start', () => {
-      console.log('Parser registered')
-    })
-
-    // Access options
-    if (options?.verbose) {
-      console.log('Verbose mode enabled')
-    }
-  },
-  parse(file) {
-    return '...'
-  },
-})
-```
 
 ### parse
 
@@ -162,32 +140,14 @@ Transform the file object into the final string output. This is called during `f
 
 **Returns:** The final file content as a string
 
-**Example:**
-
-```ts [parse.ts]
-const myParser = defineParser({
-  name: 'myParser',
-  extNames: ['.ext'],
-  parse(file, { extname }) {
-    // Access file properties
-    const sources = file.sources.map(s => s.value).join('\n')
-    const imports = file.imports?.map(i => `import ${i.name} from '${i.path}'`).join('\n')
-
-    // Use extname for path generation
-    console.log(`Parsing for extension: ${extname}`)
-
-    return `${imports}\n\n${sources}`
-  },
-})
-```
 
 ## Type Parameters
 
-### TOptions
+### `TOptions`
 
 Type definition for parser options.
 
-```ts [type-options.ts]
+```ts
 type MyParserOptions = {
   indent?: number
   semicolons?: boolean
@@ -211,7 +171,7 @@ const myParser = defineParser<MyParserOptions>({
 
 ### JSON Parser
 
-```ts [json-parser.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -235,6 +195,8 @@ await fabric.addFile({
   sources: [
     { value: '{"name":"app","version":"1.0.0"}', isExportable: false },
   ],
+  imports: [],
+  exports: [],
 })
 
 await fabric.write({ extension: { '.json': '.json' } })
@@ -242,7 +204,7 @@ await fabric.write({ extension: { '.json': '.json' } })
 
 ### Markdown Parser
 
-```ts [markdown-parser.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -283,6 +245,8 @@ await fabric.addFile({
   meta: {
     frontmatter: 'title: My Project\ndate: 2024-01-01',
   },
+  imports: [],
+  exports: [],
 })
 
 await fabric.write({ extension: { '.md': '.md' } })
@@ -290,7 +254,7 @@ await fabric.write({ extension: { '.md': '.md' } })
 
 ### CSS Parser
 
-```ts [css-parser.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -326,101 +290,11 @@ await fabric.addFile({
     { value: '.card { margin: 20px; }', isExportable: false },
   ],
   meta: { minify: false },
+  imports: [],
+  exports: [],
 })
 
 await fabric.write({ extension: { '.css': '.css' } })
-```
-
-### Parser with Import Handling
-
-```ts [with-imports.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/fabric-core/parsers'
-
-const vueParser = defineParser({
-  name: 'vueParser',
-  extNames: ['.vue'],
-  parse(file, { extname }) {
-    // Format imports
-    const imports = file.imports
-      ?.map(imp => {
-        const type = imp.isTypeOnly ? 'type ' : ''
-        return `import ${type}{ ${imp.name} } from '${imp.path}${extname}'`
-      })
-      .join('\n') ?? ''
-
-    // Format sources
-    const sources = file.sources.map(s => s.value).join('\n')
-
-    return `<script setup lang="ts">
-${imports}
-
-${sources}
-</script>
-
-<template>
-  <!-- Component template -->
-</template>
-`
-  },
-})
-```
-
-### Default Fallback Parser
-
-```ts [default-parser.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { defineParser } from '@kubb/fabric-core/parsers'
-
-const customDefaultParser = defineParser({
-  name: 'customDefaultParser',
-  extNames: undefined, // Handles any extension
-  parse(file) {
-    // Simple text concatenation for unknown file types
-    return file.sources.map(s => s.value).join('\n')
-  },
-})
-
-const fabric = createFabric()
-fabric.use(customDefaultParser)
-
-// This file will use customDefaultParser (no specific parser for .txt)
-await fabric.addFile({
-  baseName: 'notes.txt',
-  path: './output/notes.txt',
-  sources: [
-    { value: 'Line 1', isExportable: false },
-    { value: 'Line 2', isExportable: false },
-  ],
-})
-```
-
-## Parser Selection
-
-Fabric selects parsers based on file extension during `fabric.write()`:
-
-```ts [parser-selection.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
-
-const fabric = createFabric()
-
-fabric.use(fsPlugin)
-fabric.use(typescriptParser) // Handles .ts files
-
-await fabric.addFile({
-  baseName: 'types.ts',
-  path: './output/types.ts',
-  sources: [/* ... */],
-})
-
-// Extension mapping triggers parser selection
-await fabric.write({
-  extension: {
-    '.ts': '.ts', // typescriptParser is used
-  },
-})
 ```
 
 ## Best Practices
