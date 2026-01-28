@@ -5,6 +5,7 @@ import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import {renderIntrinsic} from "../intrinsic.ts";
 
 export type TypeProps = {
   /**
@@ -53,6 +54,8 @@ export const Type = createComponent('Type', ({ children, ...props }: TypeProps) 
     throw new Error('Name should start with a capital letter (see TypeScript types)')
   }
 
+  const value = renderIntrinsic(children)
+
   let result = ''
 
   if (JSDoc?.comments) {
@@ -64,7 +67,7 @@ export const Type = createComponent('Type', ({ children, ...props }: TypeProps) 
     result += 'export '
   }
 
-  result += `type ${name} = ${children || ''}`
+  result += `type ${name} = ${value || ''}`
 
   return result
 })

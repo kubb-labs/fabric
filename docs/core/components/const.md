@@ -4,7 +4,7 @@ title: Const (Fabric Core)
 outline: deep
 ---
 
-# Const <Badge type="info" text="fabric-core" />
+# `Const` <Badge type="info" text="fabric-core" />
 
 Generates TypeScript constant declarations.
 

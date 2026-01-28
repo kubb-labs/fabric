@@ -6,11 +6,11 @@ outline: deep
 
 # Fabric Core
 
-`@kubb/fabric-core` provides the foundational runtime and components for file generation using a custom FSX (Fabric JSX) renderer.
+`@kubb/fabric-core` provides the foundational runtime and components for file generation using a custom runtime.
 
 ## Overview
 
-Fabric Core is a lightweight, dependency-free file generation framework that uses a custom JSX runtime. It provides the core functionality for creating, managing, and writing files using functional components without React.
+Fabric Core is a lightweight, dependency-free file generation framework that uses a custom runtime. It provides the core functionality for creating, managing, and writing files using functional components.
 
 **Key Features:**
 - Custom FSX renderer (no React dependency)
@@ -59,7 +59,12 @@ const component = Const({
 }).children(["'https://api.example.com'"])
 
 const output = await fabric.render(component)
-// export const API_URL: string = 'https://api.example.com'
+console.log(output)
+```
+
+This will log:
+```
+export const API_URL: string = 'https://api.example.com'
 ```
 
 ## Core Concepts
@@ -81,7 +86,7 @@ const fabric = createFabric()
 Fabric Core provides functional components for generating TypeScript code:
 
 - **[App](/core/components/app)** - Application container for file generation
-- **[Root](/core/components/root)** - Root runtime context provider
+- **[Root](/core/components/root)** - Root runtime context provider (no need to use directly)
 - **[File](/core/components/file)** - File generation with imports/exports
 - **[Function](/core/components/function)** - TypeScript function declarations
 - **[Const](/core/components/const)** - TypeScript constant declarations
@@ -94,7 +99,7 @@ Hooks for accessing Fabric's internal context and state:
 - **[useApp](/core/composables/use-app)** - Access application context
 - **[useContext](/core/composables/use-context)** - Access Fabric context
 - **[useFile](/core/composables/use-file)** - Access current file context
-- **[useFileManager](/core/composables/use-file-manager)** - Manage file collection
+- **[useFileManager](/core/composables/use-file-manager)** - Manage files
 - **[useLifecycle](/core/composables/use-lifecycle)** - Lifecycle event hooks
 - **[useNodeTree](/core/composables/use-node-tree)** - Access component tree
 
@@ -176,34 +181,19 @@ const component = File({
   ])
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
+console.log(output)
+
 ```
 
-### Plugin Integration
-
-```ts twoslash
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, loggerPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-
-fabric.use(loggerPlugin, { progress: true })
-fabric.use(fsPlugin, {
-  clean: { path: './generated' },
-  dryRun: false
-})
-fabric.use(barrelPlugin, {
-  root: './generated',
-  mode: 'named'
-})
-
-// Add files...
-await fabric.write()
+This will log:
+```
+export type User = { id: number; name: string }
 ```
 
 ## Architecture
 
-Fabric Core uses a custom JSX renderer that:
+Fabric Core uses a custom runtime that:
 - Transforms functional components into file structures
 - Manages component lifecycle and rendering
 - Provides context through composables
@@ -217,12 +207,10 @@ Fabric Core uses a custom JSX renderer that:
 - Working in non-React environments
 - Minimal dependencies are important
 - Direct control over rendering is needed
-- Building CLI tools or Node.js scripts
 
 **Consider React Fabric when:**
 - Familiar with React patterns
 - Want JSX syntax with React components
-- Building interactive CLI applications
 
 ## See Also
 

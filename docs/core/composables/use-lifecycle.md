@@ -4,7 +4,7 @@ title: useLifecycle
 outline: deep
 ---
 
-# useLifecycle
+# `useLifecycle`
 
 Composable for controlling the rendering lifecycle and exit behavior.
 

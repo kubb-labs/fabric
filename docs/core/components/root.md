@@ -4,7 +4,7 @@ title: Root (Fabric Core)
 outline: deep
 ---
 
-# Root <Badge type="info" text="fabric-core" />
+# `Root` <Badge type="info" text="fabric-core" />
 
 Provides core Fabric runtime context.
 

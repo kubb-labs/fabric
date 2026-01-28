@@ -167,7 +167,7 @@ The logger displays a progress bar with percentage completion in the console dur
 
 Use the barrel plugin to automatically create index files:
 
-```ts towslash [generate.ts]
+```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'

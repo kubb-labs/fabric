@@ -4,7 +4,7 @@ title: Br (Fabric Core)
 outline: deep
 ---
 
-# Br <Badge type="info" text="fabric-core" />
+# `Br` <Badge type="info" text="fabric-core" />
 
 Generates a line break in the output.
 
@@ -30,7 +30,7 @@ const output = await fabric.render(component)
 ```
 
 ```ts [output]
-
+\n
 ```
 :::
 
@@ -56,7 +56,10 @@ const component = [
 
 ### In Code Generation
 
-```tsx twoslash
+
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { Function, Br } from '@kubb/fabric-core'
@@ -74,12 +77,16 @@ const component = Function({
 ])
 
 const output = await fabric.render(component)
-// export function example() {
-//   const result = calculate()
-//   
-//   return result
-// }
 ```
+
+```ts [output]
+export function example() {
+  const result = calculate()
+  return result
+}
+```
+
+:::
 
 ## See Also
 

@@ -60,7 +60,7 @@ Track the overall execution lifecycle of Fabric.
 
 Emitted when Fabric begins execution.
 
-```ts [lifecycle-start.ts]
+```ts
 fabric.context.on('lifecycle:start', async () => {
   console.log('Starting Fabric...')
 })
@@ -70,7 +70,7 @@ fabric.context.on('lifecycle:start', async () => {
 
 Emitted when Fabric completes execution.
 
-```ts [lifecycle-end.ts]
+```ts
 fabric.context.on('lifecycle:end', async () => {
   console.log('Fabric completed!')
 })
@@ -78,9 +78,9 @@ fabric.context.on('lifecycle:end', async () => {
 
 #### `lifecycle:render`
 
-Emitted when rendering starts (requires `reactPlugin`).
+Emitted when rendering starts (requires `reactPlugin` or `fsxPlugin`).
 
-```ts [lifecycle-render.ts]
+```ts
 fabric.context.on('lifecycle:render', async ({ fabric }) => {
   console.log('Rendering started')
 })
@@ -100,7 +100,7 @@ Track when files are added or modified.
 
 Emitted when files are added to the FileManager cache.
 
-```ts [files-added.ts]
+```ts
 fabric.context.on('files:added', async (files) => {
   console.log(`Added ${files.length} files`)
 })
@@ -116,7 +116,7 @@ fabric.context.on('files:added', async (files) => {
 
 Emitted during file path resolution. Listeners can modify the file's path.
 
-```ts [file-resolve-path.ts]
+```ts
 fabric.context.on('file:resolve:path', async ({ file }) => {
   console.log(`Resolving path for: ${file.baseName}`)
   // Optionally modify file.path here
@@ -133,7 +133,7 @@ fabric.context.on('file:resolve:path', async ({ file }) => {
 
 Emitted during file name resolution. Listeners can modify the file's name.
 
-```ts [file-resolve-name.ts]
+```ts
 fabric.context.on('file:resolve:name', async ({ file }) => {
   console.log(`Resolving name for: ${file.path}`)
   // Optionally modify file.baseName here
@@ -154,7 +154,7 @@ Track when files are written to disk.
 
 Emitted before writing files to disk.
 
-```ts [files-writing-start.ts]
+```ts
 fabric.context.on('files:writing:start', async (files) => {
   console.log(`Preparing to write ${files.length} files`)
 })
@@ -170,7 +170,7 @@ fabric.context.on('files:writing:start', async (files) => {
 
 Emitted after files are written to disk.
 
-```ts [files-writing-end.ts]
+```ts
 fabric.context.on('files:writing:end', async (files) => {
   console.log(`Finished writing ${files.length} files`)
 })
@@ -190,7 +190,7 @@ Track individual file processing progress.
 
 Emitted before processing begins.
 
-```ts [files-processing-start.ts]
+```ts
 fabric.context.on('files:processing:start', async (files) => {
   console.log(`Processing ${files.length} files...`)
 })
@@ -206,7 +206,7 @@ fabric.context.on('files:processing:start', async (files) => {
 
 Emitted when each file starts processing.
 
-```ts [file-processing-start.ts]
+```ts
 fabric.context.on('file:processing:start', async ({ file, index, total }) => {
   console.log(`Processing file ${index + 1}/${total}: ${file.baseName}`)
 })
@@ -224,7 +224,7 @@ fabric.context.on('file:processing:start', async ({ file, index, total }) => {
 
 Emitted with progress updates during file processing.
 
-```ts [file-processing-update.ts]
+```ts
 fabric.context.on('file:processing:update', async ({
   file,
   source,
@@ -250,7 +250,7 @@ fabric.context.on('file:processing:update', async ({
 
 Emitted when each file finishes processing.
 
-```ts [file-processing-end.ts]
+```ts
 fabric.context.on('file:processing:end', async ({ file, index, total }) => {
   console.log(`Completed ${index + 1}/${total}: ${file.baseName}`)
 })
@@ -268,7 +268,7 @@ fabric.context.on('file:processing:end', async ({ file, index, total }) => {
 
 Emitted when all processing completes.
 
-```ts [files-processing-end.ts]
+```ts
 fabric.context.on('files:processing:end', async (files) => {
   console.log(`All ${files.length} files processed`)
 })
@@ -320,26 +320,6 @@ fabric.context.on('file:resolve:name', async ({ file }) => {
   const ext = path.extname(file.baseName)
   const name = path.basename(file.baseName, ext)
   file.baseName = `${name}.generated${ext}`
-})
-```
-
-### Error Handling
-
-Handle errors during file operations:
-
-```ts [error-handling.ts]
-fabric.context.on('files:writing:start', async (files) => {
-  try {
-    // Pre-write validation
-    for (const file of files) {
-      if (!file.path) {
-        throw new Error(`File missing path: ${file.baseName}`)
-      }
-    }
-  } catch (error) {
-    console.error('Validation error:', error)
-    throw error
-  }
 })
 ```
 
@@ -432,6 +412,18 @@ await fabric.addFile({
 })
 
 await fabric.write({ extension: { '.ts': '.ts' } })
+```
+
+This will log:
+```
+📁 Added 1 files (total: 1)
+
+📝 Writing 1 files...
+████████████████████ 100.0% (1/1)✓ Wrote 1 files
+
+✨ Generation complete!
+   Time: 1769597985039ms
+   Files: 1
 ```
 
 ## See Also

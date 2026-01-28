@@ -4,9 +4,13 @@ title: useContext
 outline: deep
 ---
 
-# useContext
+# `useContext`
 
 Composable for accessing context values in Fabric components.
+
+> [!NOTE]
+> Behind the scenes `useContext will be used inside of the `@kubb/react-fabric` package.
+
 
 ## Usage
 

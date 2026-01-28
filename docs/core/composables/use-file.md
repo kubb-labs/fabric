@@ -4,7 +4,7 @@ title: useFile
 outline: deep
 ---
 
-# useFile
+# `useFile`
 
 Composable for accessing the current File context and its properties.
 

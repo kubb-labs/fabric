@@ -4,7 +4,7 @@ title: useFileManager
 outline: deep
 ---
 
-# useFileManager
+# `useFileManager`
 
 Composable for accessing the FileManager to manage file operations.
 

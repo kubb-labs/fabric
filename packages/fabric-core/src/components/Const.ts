@@ -5,6 +5,7 @@ import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 import type { JSDoc } from '../types.ts'
 import { createJSDoc } from '../utils/createJSDoc.ts'
+import {renderIntrinsic} from "../intrinsic.ts";
 
 export type ConstProps = {
   /**
@@ -62,6 +63,8 @@ export const Const = createComponent('Const', ({ children, ...props }: ConstProp
     provide(NodeTreeContext, childTree)
   }
 
+  const value = renderIntrinsic(children)
+
   let result = ''
 
   if (JSDoc?.comments) {
@@ -79,7 +82,7 @@ export const Const = createComponent('Const', ({ children, ...props }: ConstProp
     result += `: ${type}`
   }
 
-  result += ` = ${children ? children : ''}`
+  result += ` = ${children ? value : ''}`
 
   if (asConst) {
     result += ' as const'

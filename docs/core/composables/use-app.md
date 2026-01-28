@@ -4,7 +4,7 @@ title: useApp
 outline: deep
 ---
 
-# useApp
+# `useApp`
 
 Composable for accessing the App context with metadata and lifecycle control.
 

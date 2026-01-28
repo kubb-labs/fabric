@@ -4,7 +4,7 @@ title: createFabric
 outline: deep
 ---
 
-# createFabric
+# `createFabric`
 
 Creates a new Fabric instance for file generation.
 
@@ -25,14 +25,17 @@ Optional configuration for the Fabric instance.
 |     Type: | `FabricOptions`  |
 | Required: | `false`          |
 
-Currently, `createFabric()` accepts no options. This parameter is reserved for future use.
+> [!NOTE]
+> Currently, `createFabric()` accepts no options. This parameter is reserved for future use.
+
 
 ### `fabric.use()`
 
 Registers plugins and parsers with the Fabric instance.
 
-- `plugin` — A plugin or parser created with `definePlugin` or `defineParser`
-- `options` — Plugin-specific configuration options
+- `plugin` — A plugin created with `definePlugin`
+- `parser` — A parser created with `defineParser`
+- `options` — Optional configuration for the plugin or parser
 
 **Example:**
 
@@ -48,7 +51,7 @@ fabric.use(fsPlugin, { clean: { path: './output' } })
 fabric.use(typescriptParser)
 ```
 
-### `fabric.addFile()`
+### `fabric.addFile(...files)`
 
 Adds one or more files to the generation queue.
 
@@ -86,7 +89,6 @@ Getter that returns all files in the generation queue.
 
 Internal context holding events, options, FileManager, and installed plugins/parsers.
 
-
 **Properties:**
 
 - `events` — Event emitter for lifecycle events
@@ -95,17 +97,6 @@ Internal context holding events, options, FileManager, and installed plugins/par
 - `plugins` — Registered plugins
 - `parsers` — Registered parsers
 
-**Example:**
-
-```ts [context-usage.ts]
-// Listen to events
-fabric.context.on('lifecycle:start', () => {
-  console.log('Started!')
-})
-
-// Access file manager
-const files = fabric.context.fileManager.files
-```
 
 ## Plugin-Injected Methods
 

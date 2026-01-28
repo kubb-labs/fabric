@@ -4,7 +4,7 @@ title: Function (Fabric Core)
 outline: deep
 ---
 
-# Function <Badge type="info" text="fabric-core" />
+# `Function` <Badge type="info" text="fabric-core" />
 
 Generates TypeScript function declarations.
 
@@ -24,10 +24,10 @@ import { Function } from '@kubb/fabric-core'
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = Function({ 
-  name: 'getUser', 
-  params: 'id: number', 
-  returnType: 'User' 
+const component = Function({
+  name: 'getUser',
+  params: 'id: number',
+  returnType: 'User'
 }).children(['return fetch(`/users/${id}`)'])
 
 const output = await fabric.render(component)
@@ -111,8 +111,15 @@ JSDoc comments.
 
 ### Async Function
 
-```tsx twoslash
-import { Function } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { Function, Br } from '@kubb/fabric-core'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
 
 const component = Function({
   name: 'fetchData',
@@ -122,14 +129,32 @@ const component = Function({
   returnType: 'Data'
 }).children([
   'const response = await fetch(url)',
+  Br(),
   'return response.json()'
 ])
+
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export async function fetchData(url: string): Promise<Data> {
+  const response = await fetch(url)
+  return response.json()
+}
+```
+:::
 
 ### With Generics
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { Function } from '@kubb/fabric-core'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
 
 const component = Function({
   name: 'identity',
@@ -138,7 +163,16 @@ const component = Function({
   params: 'value: T',
   returnType: 'T'
 }).children(['return value'])
+
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export function identity<T>(value: T): T {
+  return value
+}
+```
+:::
 
 ## See Also
 

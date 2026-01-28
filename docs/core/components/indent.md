@@ -4,7 +4,7 @@ title: Indent (Fabric Core)
 outline: deep
 ---
 
-# Indent <Badge type="info" text="fabric-core" />
+# `Indent` <Badge type="info" text="fabric-core" />
 
 Increases indentation level in the output.
 
@@ -52,8 +52,15 @@ This component accepts no props.
 
 ### Control Nested Indentation
 
-```tsx twoslash
-import { Indent, Dedent, Br } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
 
 const component = [
   'if (condition) {',
@@ -70,11 +77,24 @@ const component = [
   Dedent(),
   '}'
 ]
+
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+if (condition) {
+  if (nested) {
+    doSomething()
+  }
+}
+```
+:::
 
 ### With Function Component
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
@@ -100,6 +120,15 @@ const component = App().children([
 
 const output = await fabric.render(component)
 ```
+
+```ts [output]
+class Example {
+  constructor() {
+    this.value = 0
+  }
+}
+```
+:::
 
 ## See Also
 

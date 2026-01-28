@@ -4,7 +4,7 @@ title: Dedent (Fabric Core)
 outline: deep
 ---
 
-# Dedent <Badge type="info" text="fabric-core" />
+# `Dedent` <Badge type="info" text="fabric-core" />
 
 Decreases indentation level in the output.
 
@@ -50,33 +50,11 @@ This component accepts no props.
 
 ## Examples
 
-### Balance Indentation
-
-```tsx twoslash
-import { Indent, Dedent, Br } from '@kubb/fabric-core'
-
-const component = [
-  'function outer() {',
-  Br(),
-  Indent(),
-  'function inner() {',
-  Br(),
-  Indent(),
-  'return value',
-  Br(),
-  Dedent(),
-  '}',
-  Br(),
-  'return inner()',
-  Br(),
-  Dedent(),
-  '}'
-]
-```
-
 ### Multi-Level Nesting
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
@@ -108,6 +86,17 @@ const component = App().children([
 
 const output = await fabric.render(component)
 ```
+
+```ts [output]
+switch (value) {
+  case 1:
+    doSomething()
+    break
+  default:
+    doDefault()
+}
+```
+:::
 
 ## See Also
 

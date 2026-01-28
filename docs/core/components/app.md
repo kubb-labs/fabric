@@ -4,7 +4,7 @@ title: App (Fabric Core)
 outline: deep
 ---
 
-# App <Badge type="info" text="fabric-core" />
+# `App` <Badge type="info" text="fabric-core" />
 
 Container component providing App context with metadata.
 

@@ -4,7 +4,7 @@ title: useNodeTree
 outline: deep
 ---
 
-# useNodeTree
+# `useNodeTree`
 
 Composable for accessing the component node tree structure.
 

@@ -4,7 +4,7 @@ title: File (Fabric Core)
 outline: deep
 ---
 
-# File <Badge type="info" text="fabric-core" />
+# `File` <Badge type="info" text="fabric-core" />
 
 Generates files with sources, imports, and exports.
 
@@ -93,7 +93,7 @@ Optional footer text added at the bottom of the file.
 
 ### children
 
-Child components (File.Source, File.Import, File.Export).
+Child components (`File.Source`, `File.Import`, `File.Export`).
 
 |           |             |
 |----------:|:------------|
@@ -164,7 +164,9 @@ Source code content.
 
 #### Example
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { File } from '@kubb/fabric-core'
@@ -182,7 +184,11 @@ const component = File({
   }).children(['export type User = { id: number }'])
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
+```
+
+```ts [output]
+export type User = { id: number }
 ```
 
 ### `File.Import`
@@ -244,7 +250,9 @@ When root is set it will get the path with relative `getRelativePath(root, path)
 
 #### Example
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { File } from '@kubb/fabric-core'
@@ -263,8 +271,14 @@ const component = File({
   })
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type User = { id: number }
+```
+
+:::
 
 #### Import Name Formats
 
@@ -337,7 +351,9 @@ Export as aliased namespace.
 
 #### Example
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { File } from '@kubb/fabric-core'
@@ -356,8 +372,14 @@ const component = File({
   })
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type User = { id: number }
+```
+
+:::
 
 #### Export Formats
 
@@ -383,10 +405,12 @@ File.Export({ path: './types', asAlias: true })
 
 ### Complete File
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { File } from '@kubb/fabric-core'
+import { File, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -396,14 +420,14 @@ const component = File({
   path: './generated/types/user.ts',
 }).children([
   File.Import({ name: 'BaseEntity', path: './base', isTypeOnly: true }),
-
+  Br(),
   File.Source({ name: 'User', isExportable: true }).children([
     `export type User = BaseEntity & {
       name: string
       email: string
     }`
   ]),
-
+  Br(),
   File.Source({ name: 'createUser', isExportable: true }).children([
     `export function createUser(data: User): User {
       return { ...data, id: Math.random() }
@@ -411,15 +435,30 @@ const component = File({
   ])
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+import type BaseEntity from "./base";
+
+export type User = BaseEntity & {
+  name: string
+  email: string
+}
+export function createUser(data: User): User {
+  return { ...data, id: Math.random() }
+}
+```
+:::
 
 ### Multiple Files
 
-```tsx twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { File, App } from '@kubb/fabric-core'
+import { File, App, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -433,14 +472,22 @@ const component = App().children(
       path: `./generated/types/${entity.toLowerCase()}.ts`,
     }).children([
       File.Source({ isExportable: true }).children([
-        `export type ${entity} = { id: number }`
+        `export type ${entity} = { id: number }`,
+        Br()
       ])
     ])
   )
 )
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type User = { id: number }
+export type Post = { id: number }
+export type Comment = { id: number }
+```
+:::
 
 ## See Also
 

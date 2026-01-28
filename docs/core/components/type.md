@@ -4,7 +4,7 @@ title: Type (Fabric Core)
 outline: deep
 ---
 
-# Type <Badge type="info" text="fabric-core" />
+# `Type` <Badge type="info" text="fabric-core" />
 
 Generates TypeScript type declarations.
 
@@ -24,9 +24,9 @@ import { Type } from '@kubb/fabric-core'
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = Type({ 
-  name: 'User', 
-  export: true 
+const component = Type({
+  name: 'User',
+  export: true
 }).children(['{ id: number; name: string }'])
 
 const output = await fabric.render(component)
@@ -71,14 +71,28 @@ JSDoc comments.
 
 ### Union Type
 
-```tsx twoslash
-import { Type } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
+import { createFabric } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+import { App, Type } from '@kubb/fabric-core'
+
+const fabric = createFabric()
+fabric.use(fsxPlugin)
 
 const component = Type({
   name: 'Status',
   export: true
 }).children(["'pending' | 'success' | 'error'"])
+
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type Status = 'pending' | 'success' | 'error'
+```
+:::
 
 ## See Also
 
