@@ -4,7 +4,7 @@ title: graphPlugin
 outline: deep
 ---
 
-# graphPlugin
+# `graphPlugin`
 
 The `graphPlugin` visualizes the dependency graph of all files managed by Fabric. This plugin generates an interactive graph showing file relationships and optionally opens it in a browser.
 
@@ -20,9 +20,9 @@ import { graphPlugin } from '@kubb/fabric-core/plugins'
 
 ### Basic Example
 
-```ts [example.ts]
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
-import { graphPlugin } from '@kubb/fabric-core/plugins'
+import { graphPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
@@ -30,6 +30,7 @@ fabric.use(graphPlugin, {
   root: './src',
   open: true,
 })
+fabric.use(fsPlugin)
 
 await fabric.addFile({
   baseName: 'user.ts',

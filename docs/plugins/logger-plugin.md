@@ -4,7 +4,7 @@ title: loggerPlugin
 outline: deep
 ---
 
-# loggerPlugin
+# `loggerPlugin`
 
 Streams Fabric lifecycle activity with beautiful CLI output, progress bars, and websocket support for custom tooling.
 
@@ -134,7 +134,7 @@ fabric.use(loggerPlugin, {
 
 ### Basic Logging
 
-```ts [basic-logging.ts]
+```ts twoslash [basic-logging.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { loggerPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -165,7 +165,7 @@ await fabric.write()
 
 ### Disable Progress in CI
 
-```ts [ci-config.ts]
+```ts twoslash [ci-config.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { loggerPlugin } from '@kubb/fabric-core/plugins'
 

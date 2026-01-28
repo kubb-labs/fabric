@@ -4,13 +4,13 @@ title: fsPlugin
 outline: deep
 ---
 
-# fsPlugin
+# `fsPlugin`
 
 Writes files to disk and provides file system operations for Fabric.
 
 ## Usage
 
-```ts [basic-usage.ts]
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -88,7 +88,7 @@ fabric.use(fsPlugin, {
 
 The `fsPlugin` adds the `write()` method to the Fabric instance.
 
-### fabric.write()
+### `fabric.write()`
 
 Writes all queued files to disk.
 
@@ -122,7 +122,7 @@ await fabric.write({
 
 ### Basic File Writing
 
-```ts [basic-writing.ts]
+```ts twoslash [basic-writing.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -145,7 +145,7 @@ await fabric.write()
 
 ### Clean Before Writing
 
-```ts [clean-example.ts]
+```ts twoslash [clean-example.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -171,7 +171,7 @@ await fabric.write()
 
 ### Dry Run for Testing
 
-```ts [dry-run-example.ts]
+```ts twoslash [dry-run-example.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -196,33 +196,10 @@ await fabric.write()
 // No files written to disk
 ```
 
-### Pre-Write Validation
-
-```ts [validation-example.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-
-fabric.use(fsPlugin, {
-  onBeforeWrite: async (path, data) => {
-    // Validate file content
-    if (!data || data.length === 0) {
-      throw new Error(`Empty file: ${path}`)
-    }
-
-    // Log file size
-    const sizeKB = (data.length / 1024).toFixed(2)
-    console.log(`Writing ${path} (${sizeKB} KB)`)
-  },
-})
-
-await fabric.write()
-```
 
 ### Extension Mapping
 
-```ts [extension-mapping-example.ts]
+```ts twoslash [extension-mapping-example.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'

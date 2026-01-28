@@ -249,7 +249,7 @@ fabric.use(barrelPlugin, {
 
 ```ts [write-entry.ts]
 await fabric.write()
-await fabric.writeEntry('./generated', 'named')
+await fabric.writeEntry({ root: './generated', mode: 'named' })
 ```
 
 3. Ensure files are exportable:

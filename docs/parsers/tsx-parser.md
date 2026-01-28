@@ -4,7 +4,7 @@ title: tsxParser
 outline: deep
 ---
 
-# tsxParser
+# `tsxParser`
 
 The `tsxParser` is a specialized parser for TypeScript JSX (TSX) files. It delegates to the `typescriptParser` with TSX printing settings enabled, allowing you to generate `.tsx` files with proper JSX syntax handling.
 

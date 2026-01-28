@@ -4,7 +4,7 @@ title: fsxPlugin
 outline: deep
 ---
 
-# fsxPlugin
+# `fsxPlugin`
 
 The `fsxPlugin` enables rendering FabricElements to generate file output. This plugin provides the core rendering capabilities for transforming component trees into file content, making it essential for file-based code generation workflows.
 
@@ -13,7 +13,7 @@ The `fsxPlugin` enables rendering FabricElements to generate file output. This p
 
 ### Basic Example
 
-```ts [example.ts]
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { createComponent } from '@kubb/fabric-core'
@@ -32,7 +32,9 @@ console.log(output) // "Hello from Fabric!"
 
 ### With File Generation
 
-```ts [file-example.ts]
+This will already create the files behind the scenes fo you.
+
+```ts twoslash [file-example.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 import { File } from '@kubb/fabric-core/components'
@@ -55,11 +57,11 @@ const output = await fabric.render(
 await fabric.write()
 ```
 
-### Using createComponent Helper
+### Using `createComponent`
 
 The `createComponent` helper allows you to build reusable components for code generation:
 
-```ts [component-example.ts]
+```ts twoslash [component-example.ts]
 import { createComponent } from '@kubb/fabric-core'
 import { Const } from '@kubb/fabric-core/components'
 
@@ -72,7 +74,7 @@ const output = MyConst({ name: 'greeting' })()
 // Output: const greeting = "hello"
 ```
 
-```ts [component-with-children.ts]
+```ts twoslash [component-with-children.ts]
 import { createComponent } from '@kubb/fabric-core'
 import { File } from '@kubb/fabric-core/components'
 

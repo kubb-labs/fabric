@@ -4,7 +4,7 @@ title: reactPlugin
 outline: deep
 ---
 
-# reactPlugin
+# `reactPlugin`
 
 The `reactPlugin` uses React and JSX syntax to create files.
 

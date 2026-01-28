@@ -4,7 +4,7 @@ title: defaultParser
 outline: deep
 ---
 
-# defaultParser
+# `defaultParser`
 
 Built-in fallback parser for files without a registered parser.
 
@@ -20,7 +20,7 @@ import { defaultParser } from '@kubb/fabric-core/parsers'
 
 The `defaultParser` is automatically used as a fallback when no extension mapping is provided to `fabric.write()`, or when a file extension has no registered parser.
 
-```ts [basic-usage.ts]
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -79,7 +79,7 @@ await fabric.write()
 
 When a file extension has no registered parser:
 
-```ts [unregistered.ts]
+```ts twoslash [unregistered.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'

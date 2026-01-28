@@ -4,7 +4,7 @@ title: typescriptParser
 outline: deep
 ---
 
-# typescriptParser
+# `typescriptParser`
 
 Parses TypeScript files and formats imports, exports, and source code.
 

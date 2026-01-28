@@ -208,7 +208,7 @@ await fabric.addFile({
 await fabric.write()
 
 // Generate entry barrel file
-await fabric.writeEntry('./generated', 'named')
+await fabric.writeEntry({ root: './generated', mode: 'named' })
 ```
 
 This creates:

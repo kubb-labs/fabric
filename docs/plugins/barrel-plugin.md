@@ -4,13 +4,13 @@ title: barrelPlugin
 outline: deep
 ---
 
-# barrelPlugin
+# `barrelPlugin`
 
 Generates `index.ts` barrel files per folder to re-export modules and simplify imports.
 
 ## Usage
 
-```ts [basic-usage.ts]
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { barrelPlugin } from '@kubb/fabric-core/plugins'
 
@@ -101,16 +101,9 @@ fabric.use(barrelPlugin, {
 
 The `barrelPlugin` adds the `writeEntry()` method to the Fabric instance.
 
-### fabric.writeEntry()
+### `fabric.writeEntry()`
 
 Generates a single entry barrel file at the specified root.
-
-```ts
-fabric.writeEntry(
-  root: string,
-  mode: 'all' | 'named' | 'propagate' | false
-): Promise<void>
-```
 
 **Parameters:**
 
@@ -122,15 +115,15 @@ fabric.writeEntry(
 **Example:**
 
 ```ts [write-entry.ts]
+await fabric.writeEntry({ root: './generated', mode: 'named' })
 await fabric.write()
-await fabric.writeEntry('./generated', 'named')
 ```
 
 ## Examples
 
 ### Basic Barrel Generation
 
-```ts [basic-barrel.ts]
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -176,7 +169,7 @@ export { Post } from './post'
 
 ### Entry Barrel File
 
-```ts [entry-barrel.ts]
+```ts twoslash [entry-barrel.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -209,8 +202,7 @@ await fabric.addFile({
 
 await fabric.write()
 
-// Generate entry barrel
-await fabric.writeEntry('./generated', 'named')
+
 ```
 
 This creates:
@@ -222,40 +214,57 @@ export * from './api'
 
 ### All Exports Mode
 
-```ts [all-exports.ts]
+```ts twoslash [all-exports.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
+import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 const fabric = createFabric()
 
-fabric.use(barrelPlugin, {
-  root: './generated',
-  mode: 'all', // Use export * syntax
-})
 
 fabric.use(fsPlugin)
+fabric.use(barrelPlugin, {
+  root: './generated',
+  mode: 'named',
+})
+fabric.use(typescriptParser)
 
 await fabric.addFile({
-  baseName: 'types.ts',
-  path: './generated/models/types.ts',
+  baseName: 'user.ts',
+  path: './generated/types/user.ts',
   sources: [
-    { value: 'export type User = { id: number }', isExportable: true },
-    { value: 'export type Post = { id: number }', isExportable: true },
+    { value: 'export type User = { id: number }', isExportable: true, isIndexable: true, },
   ],
+  imports: [],
+  exports: []
 })
 
+await fabric.addFile({
+  baseName: 'api.ts',
+  path: './generated/api/client.ts',
+  sources: [
+    { value: 'export const fetchUser = async () => {}', isExportable: true, isIndexable: true, },
+  ],
+  imports: [],
+  exports: []
+})
+
+// Generate entry barrel
+await fabric.writeEntry({ root: './generated', mode: 'all' })
 await fabric.write()
+
 ```
 
 This creates:
 
 ```ts [generated/models/index.ts]
-export * from './types'
+export * from "./api/client";
+export * from "./types/user";
 ```
 
 ### Named Exports Mode
 
-```ts [named-exports.ts]
+```ts twoslash [named-exports.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -288,7 +297,7 @@ export { User, Post } from './types'
 
 ### Dry Run
 
-```ts [dry-run-barrel.ts]
+```ts twoslash [dry-run-barrel.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { barrelPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -342,9 +351,13 @@ await fabric.addFile({
 
 Always call `writeEntry()` to create a root-level barrel:
 
+> [!IMPORTANT]
+> `writeEntry` should be called **before** `fabric.write()`.
+
+
 ```ts
+await fabric.writeEntry({ root: './generated', mode: 'named' })
 await fabric.write()
-await fabric.writeEntry('./generated', 'named')
 ```
 
 ### Clean Before Generation
@@ -356,6 +369,7 @@ fabric.use(fsPlugin, {
   clean: { path: './generated' },
 })
 ```
+
 
 ## See Also
 
