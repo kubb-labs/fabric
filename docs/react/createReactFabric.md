@@ -254,7 +254,7 @@ Redirect output to custom streams:
 
 ::: code-group
 
-```tsx twoslash [run.ts]
+```tsx [run.ts]
 import { createReactFabric, Const } from '@kubb/react-fabric'
 import { createWriteStream } from 'node:fs'
 
