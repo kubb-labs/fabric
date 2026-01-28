@@ -10,7 +10,7 @@ The `reactPlugin` uses React and JSX syntax to create files.
 
 ## Usage
 
-### Basic Example
+Create a component that returns `hello from React!` and render it using the `reactPlugin`.
 
 ```tsx
 import { createFabric } from '@kubb/fabric-core'
@@ -27,31 +27,16 @@ const App = () => {
 await fabric.render(App)
 ```
 
-### Render to String
-
-Use `renderToString` to generate template output without writing to stdout:
-
-```tsx
-import { createFabric } from '@kubb/fabric-core'
-import { reactPlugin } from '@kubb/react-fabric/plugins'
-
-const fabric = createFabric()
-
-fabric.use(reactPlugin)
-
-const Template = ({ name }: { name: string }) => {
-  return <div>export const {name} = 'value'</div>
-}
-
-const output = await fabric.renderToString(() => <Template name="config" />)
-console.log(output) // "export const config = 'value'"
-```
-
 ## Options
 
 ### `stdout`
 
 Output stream for rendered content. If set, output is written progressively.
+
+|           |                                 |
+|----------:|:--------------------------------|
+|     Type: | ` NodeJS.WriteStream`                              |
+| Required: | `false`                         |
 
 ```ts [example.ts]
 import { createWriteStream } from 'fs'
@@ -65,6 +50,11 @@ fabric.use(reactPlugin, {
 
 Configure input and error streams for interactive components:
 
+|           |                                 |
+|----------:|:--------------------------------|
+|     Type: | ` NodeJS.WriteStream`                              |
+| Required: | `false`                         |
+
 ```ts [example.ts]
 fabric.use(reactPlugin, {
   stdin: process.stdin,
@@ -75,6 +65,11 @@ fabric.use(reactPlugin, {
 
 Configure input and error streams for interactive components:
 
+|           |                                 |
+|----------:|:--------------------------------|
+|     Type: | ` NodeJS.WriteStream`                              |
+| Required: | `false`                         |
+
 ```ts [example.ts]
 fabric.use(reactPlugin, {
   stderr: process.stderr,
@@ -84,6 +79,14 @@ fabric.use(reactPlugin, {
 ### `debug`
 
 Enable debug mode to log render lifecycle information:
+
+
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
 
 ```ts [example.ts]
 fabric.use(reactPlugin, {
@@ -113,7 +116,7 @@ Renders a React component tree and returns the final output as a string without 
 
 **Example:**
 
-```tsx [template.tsx]
+```tsx
 const Template = () => <div>Generated code</div>
 
 const output = await fabric.renderToString(Template)
@@ -137,16 +140,15 @@ console.log('App completed')
 
 ### CLI Progress UI
 
-Build interactive command-line interfaces with React components:
+Build interactive command-line interfaces that shows a progressbar with React components:
 
-```tsx [progress.tsx]
-import { createFabric } from '@kubb/fabric-core'
+```tsx twoslash
+import { createFabric, useEffect, useState } from '@kubb/react-fabric'
 import { reactPlugin } from '@kubb/react-fabric/plugins'
-import React, { useState, useEffect } from 'react'
 
 const fabric = createFabric()
 
-fabric.use(reactPlugin)
+fabric.use(reactPlugin, { stdout: process.stdout }) // show the output in the terminal
 
 const Progress = () => {
   const [progress, setProgress] = useState(0)
@@ -158,10 +160,10 @@ const Progress = () => {
     return () => clearInterval(interval)
   }, [])
 
-  return <div>Progress: {progress}%</div>
+  return <>Progress: {progress}%</>
 }
 
-await fabric.render(Progress)
+await fabric.render(<Progress />)
 await fabric.waitUntilExit()
 ```
 
@@ -169,22 +171,29 @@ await fabric.waitUntilExit()
 
 Generate code templates using React components:
 
-```tsx [run.tsx]
-const TypeTemplate = ({ name, fields }: Props) => {
+```tsx twoslash
+import { createFabric} from '@kubb/react-fabric'
+import { reactPlugin } from '@kubb/react-fabric/plugins'
+
+const fabric = createFabric()
+
+fabric.use(reactPlugin, { stdout: process.stdout }) // show the output in the terminal
+
+const TypeTemplate = ({ name, fields }: {  name: string; fields: string[] }) => {
   return (
-    <div>
+    <>
       export interface {name} {'{'}
       {fields.map(f => (
-        <div key={f}>  {f}: string;</div>
+        <>  {f}: string;</>
       ))}
       {'}'}
-    </div>
+    </>
   )
 }
 
-const code = await fabric.renderToString(() => (
-  <TypeTemplate name="User" fields={['id', 'name', 'email']} />
-))
+await fabric.render(<TypeTemplate name="User" fields={['id', 'name', 'email']} />)
+await fabric.waitUntilExit()
+
 ```
 
 ## See Also

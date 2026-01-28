@@ -19,10 +19,11 @@ Components provide a declarative way to generate code with better TypeScript sup
 
 Create a TypeScript type using the `Type` component:
 
-```ts twoslash
-import { createFabric } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { Type } from '@kubb/fabric-core'
+import { Type, createFabric } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -34,23 +35,26 @@ const userType = Type({
   '{ id: number; name: string; email: string }'
 ])
 
-await fabric.render(userType)
+const output = await fabric.render(component)
 ```
 
-**Output:**
-
-```ts
+```ts [output]
 export type User = { id: number; name: string; email: string }
+
 ```
+
+:::
+
 
 ## Step 2: Create a File
 
 Use the `File` component to organize code:
 
-```ts twoslash
-import { createFabric } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { File, Type } from '@kubb/fabric-core'
+import { File, Type, createFabric } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
@@ -66,13 +70,21 @@ const component = File({
   ])
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type User = { id: number; name: string; email: string }
+```
+
+:::
 
 ## Step 3: Add Imports and Functions
 
-```ts twoslash
-import { File, Function, createFabric } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
+import { File, Br, Function, createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
@@ -97,31 +109,34 @@ const component = File({
       returnType: 'Promise<User>',
     }).children([
       'const response = await fetch(`/api/users/${id}`)',
+      Br(),
       'return response.json()',
     ])
   ])
 ])
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
 
-**Output:**
-
-```ts
+```ts [output]
 import type { User } from './user'
 
 export async function fetchUser(id: number): Promise<User> {
-  const response = await fetch(`/api/users/${id}`)
-  return response.json()
+const response = await fetch(`/api/users/${id}`)
+return response.json()
 }
 ```
+
+:::
 
 ## Step 4: Generate Multiple Files
 
 Use the `App` component for multiple files:
 
-```ts twoslash
-import { App, File, Type, createFabric } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
+import { App, File, Br, Type, createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
@@ -137,14 +152,23 @@ const component = App().children(
       path: `./generated/${name.toLowerCase()}.ts`,
     }).children([
       File.Source({ isExportable: true }).children([
-        Type({ name, export: true }).children(['{ id: number }'])
+        Type({ name, export: true }).children(['{ id: number }']),
+        Br()
       ])
     ])
   )
 )
 
-await fabric.render(component)
+const output = await fabric.render(component)
 ```
+
+```ts [output]
+export type User = { id: number }
+export type Post = { id: number }
+export type Comment = { id: number }
+```
+
+:::
 
 ## Available Components
 
@@ -158,16 +182,6 @@ await fabric.render(component)
 | `Br` | Line break |
 | `Indent` / `Dedent` | Control indentation |
 
-## Component Hierarchy
-
-```
-App
-  └─ File
-      ├─ File.Import
-      ├─ File.Source
-      │   └─ Type, Function, Const
-      └─ File.Export
-```
 
 ## Next Steps
 

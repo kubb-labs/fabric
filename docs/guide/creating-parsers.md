@@ -21,13 +21,15 @@ Fabric includes built-in parsers for TypeScript, TSX, and default fallback parsi
 
 ## Installation
 
-The `defineParser` factory is included in `@kubb/fabric-core`:
+The `defineParser` factory is included in `@kubb/fabric-core/parsers`:
 
 ```ts
 import { defineParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
+
+Create plugins using the `defineParser` factory:
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -197,7 +199,6 @@ await fabric.addFile({
 })
 
 await fabric.write({ extension: { '.json': '.json' } })
-
 ```
 
 ```json [output/config.json]
@@ -205,7 +206,6 @@ await fabric.write({ extension: { '.json': '.json' } })
   "name": "app",
   "version": "1.0.0"
 }
-
 ```
 
 :::

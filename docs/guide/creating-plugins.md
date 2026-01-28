@@ -17,11 +17,20 @@ Plugins extend Fabric with reusable functionality. They can:
 - Add new methods to the Fabric instance
 - Integrate with external tools
 
-## Plugin Structure
+## Installation
+
+The `definePlugin` factory is included in `@kubb/fabric-core/plugins`:
+
+```ts
+import { definePlugin } from '@kubb/fabric-core/plugins'
+```
+
+## Usage
 
 Create plugins using the `definePlugin` factory:
 
 ```ts twoslash
+import { createFabric } from '@kubb/fabric-core'
 import { definePlugin } from '@kubb/fabric-core/plugins'
 
 const myPlugin = definePlugin({
@@ -30,21 +39,20 @@ const myPlugin = definePlugin({
     // Plugin logic here
   },
 })
+
+const fabric = createFabric()
+fabric.use(myPlugin)
 ```
 
-## definePlugin API
-
-The `definePlugin` factory creates plugins that can be registered with `fabric.use()`.
-
-### Signature
+## Signature
 
 ```ts
 definePlugin<TOptions, TInject>(config: PluginConfig): Plugin
 ```
 
-### Configuration
+## Configuration
 
-#### name
+### name
 
 Unique identifier for your plugin.
 
@@ -54,7 +62,7 @@ Unique identifier for your plugin.
 | Required: | `true`   |
 
 
-#### install
+### install
 
 Called when the plugin is registered via `fabric.use()`. Use this to subscribe to events and perform setup.
 
@@ -69,7 +77,7 @@ Called when the plugin is registered via `fabric.use()`. Use this to subscribe t
 - `options` — Plugin options passed to `fabric.use()`
 
 
-#### inject
+### inject
 
 Optionally return methods or properties to merge into the Fabric instance. Must be synchronous.
 
@@ -88,9 +96,9 @@ Optionally return methods or properties to merge into the Fabric instance. Must 
 
 **Returns:** Object with methods/properties to add to `fabric`
 
-### Type Parameters
+## Type Parameters
 
-#### `TOptions`
+### `TOptions`
 
 Type definition for plugin options.
 
@@ -110,11 +118,13 @@ const myPlugin = definePlugin<MyPluginOptions>({
 })
 ```
 
-#### `TInject`
+### `TInject`
 
 Type definition for methods/properties injected into Fabric.
 
-```ts
+```ts twoslash
+import { definePlugin } from "@kubb/fabric-core"
+
 declare global {
   namespace Kubb {
     interface Fabric {
@@ -145,25 +155,28 @@ const myPlugin = definePlugin<{}, MyPluginInject>({
     }
   },
 })
+
 ```
 
-## Basic Plugin
+## Examples
+
+### Basic Plugin
 
 Create a simple logging plugin:
 
-```ts [hello-plugin.ts]
+```tsx twoslash
+import { createFabric } from '@kubb/fabric-core'
 import { definePlugin } from '@kubb/fabric-core/plugins'
 
 const helloPlugin = definePlugin({
   name: 'helloPlugin',
   install(fabric, options) {
-    fabric.context.on('lifecycle:start', () => {
+    fabric.on('lifecycle:start', () => {
       console.log('Hello from plugin!')
     })
   },
 })
 
-// Usage
 const fabric = createFabric()
 fabric.use(helloPlugin)
 ```
@@ -172,7 +185,8 @@ fabric.use(helloPlugin)
 
 Create a plugin that accepts configuration:
 
-```ts [logger-plugin.ts]
+```ts twoslash
+import { createFabric } from '@kubb/fabric-core'
 import { definePlugin } from '@kubb/fabric-core/plugins'
 
 type LoggerOptions = {
@@ -186,23 +200,23 @@ const loggerPlugin = definePlugin<LoggerOptions>({
     const prefix = options?.prefix ?? '[LOG]'
     const verbose = options?.verbose ?? false
 
-    fabric.context.on('lifecycle:start', () => {
+    fabric.on('lifecycle:start', () => {
       console.log(`${prefix} Starting...`)
     })
 
     if (verbose) {
-      fabric.context.on('file:processing:update', ({ processed, total }) => {
+      fabric.on('file:processing:update', ({ processed, total }) => {
         console.log(`${prefix} Progress: ${processed}/${total}`)
       })
     }
 
-    fabric.context.on('lifecycle:end', () => {
+    fabric.on('lifecycle:end', () => {
       console.log(`${prefix} Completed!`)
     })
   },
 })
 
-// Usage
+const fabric = createFabric()
 fabric.use(loggerPlugin, {
   prefix: '[GEN]',
   verbose: true,
@@ -213,7 +227,8 @@ fabric.use(loggerPlugin, {
 
 Plugins can add methods to the Fabric instance using the `inject` function:
 
-```ts [inject-methods.ts]
+```ts twoslash
+import { createFabric } from '@kubb/fabric-core'
 import { definePlugin } from '@kubb/fabric-core/plugins'
 
 type ValidatorOptions = {
@@ -265,22 +280,25 @@ await fabric.addFile(/* ... */)
 const isValid = await fabric.validate()
 ```
 
-
 ## Plugin Best Practices
 
-### Use Descriptive Names
+### Name Your Plugins
 
-Name your plugin clearly:
+Use descriptive names that indicate the file type:
 
 ```ts
-// ✅ Good
-const timestampPlugin = definePlugin({ name: 'timestampPlugin', ... })
+definePlugin({
+  name: 'jsonParser', // Clear and descriptive
+  install(){
 
-// ❌ Bad
-const plugin1 = definePlugin({ name: 'p1', ... })
+  },
+  inject(fabric, options) {
+    return '...'
+  },
+})
 ```
 
-### Provide Type Safety
+### Use TypeScript
 
 Use TypeScript generics for options and injected methods:
 
@@ -289,23 +307,6 @@ type Options = { verbose: boolean }
 type Methods = { log: (msg: string) => void }
 
 const plugin = definePlugin<Options, Methods>({ ... })
-```
-
-### Handle Errors Gracefully
-
-Don't crash the entire generation:
-
-```ts
-install(fabric, options) {
-  fabric.context.on('file:processing:update', ({ file }) => {
-    try {
-      // Your logic
-    } catch (error) {
-      console.error(`Plugin error for ${file.path}:`, error)
-      // Don't rethrow unless critical
-    }
-  })
-}
 ```
 
 ### Clean Up Resources

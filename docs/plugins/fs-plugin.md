@@ -39,7 +39,7 @@ Controls whether files are actually written to disk. When `true`, files are proc
 
 **Example:**
 
-```ts [dry-run.ts]
+```ts
 fabric.use(fsPlugin, {
   dryRun: true, // Files processed but not written
 })
@@ -56,7 +56,7 @@ Callback function called right before each file is written. Use this to log, val
 
 **Example:**
 
-```ts [on-before-write.ts]
+```ts
 fabric.use(fsPlugin, {
   onBeforeWrite: (path, data) => {
     console.log(`Writing: ${path} (${data?.length || 0} bytes)`)
@@ -78,7 +78,7 @@ Removes the specified directory before writing files. Use this to ensure a clean
 
 **Example:**
 
-```ts [clean.ts]
+```ts
 fabric.use(fsPlugin, {
   clean: { path: './generated' }, // Removes ./generated before writing
 })
@@ -109,7 +109,7 @@ Maps input file extensions to output extensions. When set, the matching parser (
 
 **Example:**
 
-```ts [write-with-extension.ts]
+```ts
 await fabric.write({
   extension: {
     '.ts': '.ts',
@@ -122,7 +122,7 @@ await fabric.write({
 
 ### Basic File Writing
 
-```ts twoslash [basic-writing.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -147,7 +147,7 @@ await fabric.write()
 
 ### Clean Before Writing
 
-```ts twoslash [clean-example.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -175,7 +175,7 @@ await fabric.write()
 
 ### Dry Run for Testing
 
-```ts twoslash [dry-run-example.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -205,7 +205,7 @@ await fabric.write()
 
 ### Extension Mapping
 
-```ts twoslash [extension-mapping-example.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'

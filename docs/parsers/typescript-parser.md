@@ -68,7 +68,7 @@ await fabric.write({
 
 The `typescriptParser` is automatically selected for files with `.ts` extension when using `fabric.write()` with extension mapping.
 
-```ts
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'

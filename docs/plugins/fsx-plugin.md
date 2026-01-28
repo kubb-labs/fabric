@@ -10,10 +10,11 @@ The `fsxPlugin` enables rendering FabricElements to generate file output. This p
 
 
 ## Usage
+Create a component that returns `hello from Fabric!` and render it using the `fsxPlugin`.
 
-### Basic Example
+::: code-group
 
-```ts twoslash
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { createComponent } from '@kubb/fabric-core'
@@ -27,121 +28,49 @@ const App = createComponent('App', () => {
 })
 
 const output = await fabric.render(App())
-console.log(output) // "Hello from Fabric!"
 ```
 
-### With File Generation
-
-This will already create the files behind the scenes fo you.
-
-```ts twoslash [file-example.ts]
-import { createFabric, File } from '@kubb/fabric-core'
-import { fsxPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-
-fabric.use(fsxPlugin)
-fabric.use(fsPlugin)
-
-const output = await fabric.render(
-  File({
-    baseName: 'user.ts',
-    path: './user.ts',
-    children: File.Source({
-      children: 'export type User = { id: number; name: string }',
-    }),
-  })
-)
-
-await fabric.write()
+```ts [output]
+"Hello from Fabric!"
 ```
-
-### Using `createComponent`
-
-The `createComponent` helper allows you to build reusable components for code generation:
-
-```ts twoslash [component-example.ts]
-import { createComponent, Const } from '@kubb/fabric-core'
-
-// Without children
-const MyConst = createComponent('MyConst', ({ name }: { name: string }) => {
-  return Const({ name, children: '"hello"' })
-})
-
-const output = MyConst({ name: 'greeting' })()
-// Output: const greeting = "hello"
-```
-
-```ts twoslash [component-with-children.ts]
-import { createComponent, Const } from '@kubb/fabric-core'
-
-// Without children
-const MyConst = createComponent('MyConst', ({ name }: { name: string }) => {
-  return Const({ name }).children('"hello"')
-})
-
-const output = MyConst({ name: 'greeting' })()
-// Output: const greeting = "hello"
-```
+:::
 
 ## Options
-
-| Option      | Type                              | Required | Default | Description                                                                |
-|-------------|-----------------------------------|----------|---------|----------------------------------------------------------------------------|
-| `treeNode`  | `TreeNode<ComponentNode>`         | No       | -       | Custom tree node for tracking component hierarchy during rendering.       |
-| `debug`     | `boolean`                         | No       | `false` | Set to `true` to log render results to the console for debugging.         |
 
 ### `treeNode`
 
 Provide a custom tree node to track the component hierarchy:
 
-```ts [tree-example.ts]
-import { TreeNode } from '@kubb/fabric-core/utils'
-import type { ComponentNode } from '@kubb/fabric-core'
-
-const treeNode = new TreeNode<ComponentNode>({ type: 'Root', props: {} })
-
-fabric.use(fsxPlugin, { treeNode })
-
-// After rendering, inspect the tree
-console.log(treeNode.children)
-```
+|           |                                 |
+|----------:|:--------------------------------|
+|     Type: | `TreeNode<ComponentNode>`       |
+| Required: | `false`                         |
+|  Default: | `new TreeNode<ComponentNode>()` |
 
 ### `debug`
 
 Enable debug mode to see render output in the console:
 
-```ts [debug-example.ts]
-fabric.use(fsxPlugin, {
-  debug: true, // Logs render results line-by-line
-})
-```
+|           |           |
+|----------:|:----------|
+|     Type: | `boolean` |
+| Required: | `false`   |
+|  Default: | `false`   |
+
 
 ## Injected Methods
 
-The fsxPlugin adds the following methods to the Fabric instance:
+The `fsxPlugin` adds the following methods to the Fabric instance:
 
 ### `render(App)`
 
-Renders a FabricElement component tree and returns the output as a string. This method also emits the `lifecycle:start` event.
+Renders a FabricElement component tree and returns the output as a string.
+This method also emits the `lifecycle:start` event.
 
 **Signature:**
 
 ```ts
 render(App: FabricElement<any>): Promise<string>
-```
-
-**Example:**
-
-```ts [render-example.ts]
-import { createComponent } from '@kubb/fabric-core'
-
-const App = createComponent('App', () => {
-  return 'const value = "hello"'
-})
-
-const output = await fabric.render(App())
-console.log(output) // "const value = "hello""
 ```
 
 ### `waitUntilExit()`
@@ -154,174 +83,37 @@ Waits until the rendering process exits. This method is useful for ensuring that
 waitUntilExit(): Promise<void>
 ```
 
-**Example:**
+## `createComponent`
 
-```ts [wait-example.ts]
-await fabric.render(App())
-await fabric.waitUntilExit()
-console.log('Rendering completed')
-```
+The `createComponent` helper allows you to build reusable components for code generation:
 
-## How It Works
+::: code-group
 
-The fsxPlugin:
-
-1. Registers rendering capabilities with Fabric
-2. Creates a Runtime instance to handle component rendering
-3. Emits `lifecycle:start` event when rendering begins
-4. Transforms FabricElements into string output
-5. Manages the rendering lifecycle with exit handling
-
-## Examples with Built-in Components
-
-### Using Const Component
-
-The `Const` component generates constant declarations:
-
-```ts [const-example.ts]
+```tsx twoslash [component-example.ts]
 import { createComponent, Const } from '@kubb/fabric-core'
 
-// Basic const
-const output1 = Const({ name: 'myVar', children: '"hello"' })()
-// Output: const myVar = "hello"
-
-// Exported const
-const output2 = Const({ name: 'myVar', export: true, children: '"hello"' })()
-// Output: export const myVar = "hello"
-
-// Const with type
-const output3 = Const({ name: 'myVar', type: 'string', children: '"hello"' })()
-// Output: const myVar: string = "hello"
-
-// Const with as const
-const output4 = Const({ name: 'myVar', asConst: true, children: '"hello"' })()
-// Output: const myVar = "hello" as const
-
-// Const with JSDoc
-const output5 = Const({
-  name: 'myVar',
-  JSDoc: { comments: ['This is a variable'] },
-  children: '"hello"',
-})()
-// Output:
-// /**
-//  * This is a variable
-//  */
-// const myVar = "hello"
-
-// Using createComponent with Const
-const MyConstComponent = createComponent('MyConst', () => {
-  return Const({ name: 'greeting', export: true, children: '"Hello, World!"' })
+const MyConst = createComponent('MyConst', ({ name }: { name: string }) => {
+  return Const({ name, children: '"hello"' })
 })
 
-const output = await fabric.render(MyConstComponent())
+const output = MyConst({ name: 'greeting' })()
 ```
 
-### Using Type Component
+```ts twoslash [component-with-children.ts]
+import { createComponent, Const } from '@kubb/fabric-core'
 
-The `Type` component generates TypeScript type declarations:
-
-```ts [type-example.ts]
-import { createComponent, Type } from '@kubb/fabric-core'
-
-// Basic type
-const output1 = Type({ name: 'MyType', children: '{ a: string }' })()
-// Output: type MyType = { a: string }
-
-// Exported type
-const output2 = Type({ name: 'MyType', export: true, children: '{ a: string }' })()
-// Output: export type MyType = { a: string }
-
-// Type with JSDoc
-const output3 = Type({
-  name: 'MyType',
-  JSDoc: { comments: ['User type definition'] },
-  children: '{ id: number; name: string }',
-})()
-// Output:
-// /**
-//  * User type definition
-//  */
-// type MyType = { id: number; name: string }
-
-// Using createComponent with Type
-const MyTypeComponent = createComponent('MyType', () => {
-  return Type({
-    name: 'UserType',
-    export: true,
-    children: '{ id: number; name: string; email: string }',
-  })
+const MyConst = createComponent('MyConst', ({ name }: { name: string }) => {
+  return Const({ name }).children('"hello"')
 })
 
-const output = await fabric.render(MyTypeComponent())
+const output = MyConst({ name: 'greeting' })()
 ```
 
-### Using File Component
 
-The `File` component manages file generation with imports, exports, and sources:
-
-```ts [file-example.ts]
-import { createComponent, File } from '@kubb/fabric-core'
-
-// Basic file
-await fabric.render(
-  File({
-    baseName: 'user.ts',
-    path: './user.ts',
-    children: File.Source({
-      children: 'export type User = { id: number }',
-    }),
-  })
-)
-
-// File with imports
-await fabric.render(
-  File({
-    baseName: 'api.ts',
-    path: './api.ts',
-    children: [
-      File.Import({ name: 'User', path: './user.ts' }),
-      File.Source({ children: 'export const getUser = (): User => ({ id: 1 })' }),
-    ],
-  })
-)
-
-// File with exports
-await fabric.render(
-  File({
-    baseName: 'index.ts',
-    path: './index.ts',
-    children: File.Export({ name: 'User', path: './user.ts' }),
-  })
-)
-
-// Multiple files using createComponent
-const FileGenerator = createComponent('FileGenerator', () => {
-  return [
-    File({
-      baseName: 'file1.ts',
-      path: './file1.ts',
-      children: File.Source({ children: 'const test = 1;' }),
-    }),
-    File({
-      baseName: 'file2.ts',
-      path: './file2.ts',
-      children: File.Source({ children: 'const test = 2;' }),
-    }),
-    File({
-      baseName: 'file3.ts',
-      path: './file3.ts',
-      children: File.Source({ children: 'const test = 3;' }),
-    }),
-  ]
-})
-
-await fabric.render(FileGenerator())
-
-// Access generated files
-const files = fabric.files
-console.log(files.length) // 3
+```ts [output]
+const greeting = "hello"
 ```
+:::
 
 ## Examples
 
@@ -329,8 +121,11 @@ console.log(files.length) // 3
 
 Generate TypeScript code using component composition:
 
-```ts
-import { Type, Const, File, createComponent } from '@kubb/fabric-core'
+::: code-group
+
+```tsx twoslash [run.ts]
+import { createFabric, Type, Const, File, createComponent, Br } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const ModelGenerator = createComponent('ModelGenerator', ({ name, fields }: {
   name: string
@@ -345,15 +140,21 @@ const ModelGenerator = createComponent('ModelGenerator', ({ name, fields }: {
         export: true,
         children: `{ ${fields.map(f => `${f.name}: ${f.type}`).join('; ')} }`,
       }),
+      Br(),
       Const({
         name: `default${name}`,
         export: true,
         type: name,
         children: `{ ${fields.map(f => `${f.name}: undefined`).join(', ')} }`,
       }),
+      Br()
     ],
   })
 })
+
+const fabric = createFabric()
+
+fabric.use(fsxPlugin)
 
 const output = await fabric.render(
   ModelGenerator({
@@ -367,14 +168,23 @@ const output = await fabric.render(
 )
 ```
 
+```ts [output]
+export type User = { id: number; name: string; email: string }
+export const defaultUser: User = { id: undefined, name: undefined, email: undefined }
+```
+
+:::
+
 ### Building Component Libraries
 
 Create reusable components for consistent code generation:
 
-```ts
-import { Const, createComponent } from '@kubb/fabric-core'
+::: code-group
 
-// Reusable API endpoint const generator
+```tsx twoslash [run.ts]
+import { createFabric, Type, Const, File, createComponent, Br } from '@kubb/fabric-core'
+import { fsxPlugin } from '@kubb/fabric-core/plugins'
+
 const ApiEndpoint = createComponent('ApiEndpoint', ({ name, path }: {
   name: string
   path: string
@@ -386,12 +196,18 @@ const ApiEndpoint = createComponent('ApiEndpoint', ({ name, path }: {
     children: `'${path}'`,
   })
 })
+const fabric = createFabric()
 
-const output = await fabric.render(
-  ApiEndpoint({ name: 'user', path: '/api/users' })
-)
-// Output: export const USER_ENDPOINT = '/api/users' as const
+fabric.use(fsxPlugin)
+
+const output = await fabric.render(ApiEndpoint({ name: 'user', path: '/api/users' }))
 ```
+
+```ts [output]
+export const USER_ENDPOINT = '/api/users' as const
+```
+
+:::
 
 ## See Also
 

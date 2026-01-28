@@ -10,7 +10,7 @@ Streams Fabric lifecycle activity with beautiful CLI output, progress bars, and 
 
 ## Usage
 
-```ts
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
@@ -39,7 +39,7 @@ Enables or disables the integrated CLI progress bar powered by `@clack/prompts`.
 
 **Example:**
 
-```ts [progress.ts]
+```ts
 fabric.use(loggerPlugin, {
   progress: true, // Show progress bar
 })
@@ -57,7 +57,7 @@ Toggles or configures the websocket server that broadcasts Fabric events for das
 
 **Example:**
 
-```ts [websocket.ts]
+```ts
 // Enable with default settings
 fabric.use(loggerPlugin, {
   websocket: true,
@@ -79,64 +79,14 @@ fabric.use(loggerPlugin, {
 
 ## Features
 
-### CLI Progress Bar
-
-Displays a beautiful progress bar with colored output and symbols using `@clack/prompts`:
-
-```ts [progress-example.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
-import { typescriptParser } from '@kubb/fabric-core/parsers'
-
-const fabric = createFabric()
-
-fabric.use(loggerPlugin, {
-  progress: true,
-})
-
-fabric.use(fsPlugin)
-fabric.use(typescriptParser)
-
-await fabric.addFile({
-  baseName: 'types.ts',
-  path: './output/types.ts',
-  sources: [
-    { value: 'export type User = { id: number }', isExportable: true },
-  ],
-  imports: [],
-  exports: [],
-})
-
-await fabric.write()
-// Displays progress bar during generation
-```
-
-### Websocket Broadcasting
-
-Broadcasts Fabric events to connected clients for building custom dashboards:
-
-```ts [websocket-example.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { loggerPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-
-fabric.use(loggerPlugin, {
-  progress: true,
-  websocket: {
-    port: 3000,
-  },
-})
-
-// Websocket server starts on port 3000
-// Clients can connect to ws://localhost:3000
-```
+- CLI Progress Bar: Displays a beautiful progress bar with colored output and symbols using `@clack/prompts`:
+- Websocket Broadcasting: Broadcasts Fabric events to connected clients for building custom dashboards
 
 ## Examples
 
 ### Basic Logging
 
-```ts twoslash [basic-logging.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { loggerPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -169,7 +119,7 @@ await fabric.write()
 
 ### Disable Progress in CI
 
-```ts twoslash [ci-config.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
