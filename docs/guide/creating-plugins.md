@@ -170,7 +170,7 @@ import { definePlugin } from '@kubb/fabric-core/plugins'
 
 const helloPlugin = definePlugin({
   name: 'helloPlugin',
-  install(fabric, options) {
+  install(fabric) {
     fabric.on('lifecycle:start', () => {
       console.log('Hello from plugin!')
     })

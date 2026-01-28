@@ -155,7 +155,7 @@ const Progress = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(prev => Math.min(prev + 10, 100))
+      setProgress((prev: number) => Math.min(prev + 10, 100))
     }, 100)
     return () => clearInterval(interval)
   }, [])
