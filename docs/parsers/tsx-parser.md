@@ -12,7 +12,7 @@ The `tsxParser` is a specialized parser for TypeScript JSX (TSX) files. It deleg
 
 The tsxParser is included in `@kubb/fabric-core`:
 
-```ts [example.ts]
+```ts
 import { tsxParser } from '@kubb/fabric-core/parsers'
 ```
 
@@ -20,7 +20,7 @@ import { tsxParser } from '@kubb/fabric-core/parsers'
 
 ### Basic Example
 
-```ts [example.ts]
+```ts
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { tsxParser } from '@kubb/fabric-core/parsers'
@@ -64,17 +64,6 @@ export const App = () => <div>Hello</div>
 
 The file object containing sources, metadata, and import/export information.
 
-```ts [example.ts]
-const file: KubbFile.File = {
-  baseName: 'Button.tsx',
-  path: './components/Button.tsx',
-  sources: [
-    { value: 'export const Button = () => <button>Click</button>', isExportable: true },
-  ],
-}
-
-await tsxParser.parse(file)
-```
 
 ### `extname`
 
@@ -100,42 +89,13 @@ The tsxParser:
 > [!NOTE]
 > The tsxParser is a wrapper around `typescriptParser` configured for JSX. For non-JSX TypeScript files, use `typescriptParser` instead.
 
-## Extension Mapping
-
-Use extension mapping to convert TypeScript files to TSX during write:
-
-```ts [example.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-import { tsxParser } from '@kubb/fabric-core/parsers'
-
-const fabric = createFabric()
-
-fabric.use(fsPlugin)
-fabric.use(tsxParser)
-
-await fabric.addFile({
-  baseName: 'App.tsx',
-  path: './src/App.tsx',
-  sources: [
-    { value: 'import React from "react"', isExportable: false },
-    { value: 'export const App = () => <div>App</div>', isExportable: true },
-  ],
-})
-
-// Write with extension mapping
-await fabric.write({
-  extension: { '.tsx': '.tsx' },
-})
-```
-
-## Use Cases
+## Examples
 
 ### React Component Generation
 
 Generate React components with proper TSX syntax:
 
-```ts [generate-component.ts]
+```ts twoslash [generate-component.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { tsxParser } from '@kubb/fabric-core/parsers'
@@ -161,67 +121,6 @@ await fabric.addFile({
 })
 
 await fabric.write()
-```
-
-### JSX Template Generation
-
-Create JSX templates programmatically:
-
-```ts [template-gen.ts]
-const fabric = createFabric()
-
-fabric.use(fsPlugin)
-fabric.use(tsxParser)
-
-const generateTemplate = (name: string) => {
-  return `export const ${name} = () => (
-  <div className="${name.toLowerCase()}">
-    <h1>${name}</h1>
-  </div>
-)`
-}
-
-await fabric.addFile({
-  baseName: 'Header.tsx',
-  path: './templates/Header.tsx',
-  sources: [{ value: generateTemplate('Header'), isExportable: true }],
-})
-
-await fabric.write()
-```
-
-### Mixed TS/TSX Projects
-
-Handle both TypeScript and TSX files in the same project:
-
-```ts [mixed-project.ts]
-import { typescriptParser, tsxParser } from '@kubb/fabric-core/parsers'
-
-const fabric = createFabric()
-
-fabric.use(fsPlugin)
-fabric.use(typescriptParser) // For .ts files
-fabric.use(tsxParser)        // For .tsx files
-
-// Add both TS and TSX files
-await fabric.addFile({
-  baseName: 'utils.ts',
-  path: './src/utils.ts',
-  sources: [{ value: 'export const add = (a: number, b: number) => a + b', isExportable: true }],
-})
-
-await fabric.addFile({
-  baseName: 'App.tsx',
-  path: './src/App.tsx',
-  sources: [{ value: 'export const App = () => <div>App</div>', isExportable: true }],
-})
-
-await fabric.write({
-  extension: {
-    '.ts': '.ts',
-    '.tsx': '.tsx',
-  },
-})
 ```
 
 ## See Also

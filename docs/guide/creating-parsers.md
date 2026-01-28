@@ -29,7 +29,7 @@ import { defineParser } from '@kubb/fabric-core/parsers'
 
 ## Usage
 
-```ts [basic-usage.ts]
+```ts
 import { createFabric } from '@kubb/fabric-core'
 import { defineParser } from '@kubb/fabric-core/parsers'
 

@@ -133,7 +133,7 @@ await fabric.waitUntilExit() // Wait for app to finish
 console.log('App completed')
 ```
 
-## Use Cases
+## Examples
 
 ### CLI Progress UI
 

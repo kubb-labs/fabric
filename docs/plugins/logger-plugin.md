@@ -10,7 +10,7 @@ Streams Fabric lifecycle activity with beautiful CLI output, progress bars, and 
 
 ## Usage
 
-```ts [basic-usage.ts]
+```ts
 import { createFabric } from '@kubb/fabric-core'
 import { loggerPlugin } from '@kubb/fabric-core/plugins'
 

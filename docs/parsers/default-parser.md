@@ -20,7 +20,7 @@ import { defaultParser } from '@kubb/fabric-core/parsers'
 
 The `defaultParser` is automatically used as a fallback when no extension mapping is provided to `fabric.write()`, or when a file extension has no registered parser.
 
-```ts twoslash [run.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -271,25 +271,6 @@ await fabric.addFile({
 // All files use defaultParser
 await fabric.write()
 ```
-
-## Registering Explicitly
-
-You can explicitly register the `defaultParser` if needed:
-
-```ts [explicit-registration.ts]
-import { createFabric } from '@kubb/fabric-core'
-import { defaultParser } from '@kubb/fabric-core/parsers'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-fabric.use(fsPlugin)
-fabric.use(defaultParser) // Explicitly registered
-
-await fabric.write()
-```
-
-> [!NOTE]
-> Explicit registration is usually unnecessary since `defaultParser` is automatically used as a fallback.
 
 ## Custom Default Parser
 

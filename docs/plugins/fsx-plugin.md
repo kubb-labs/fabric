@@ -13,7 +13,7 @@ The `fsxPlugin` enables rendering FabricElements to generate file output. This p
 
 ### Basic Example
 
-```ts twoslash [run.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { createComponent } from '@kubb/fabric-core'
@@ -334,7 +334,7 @@ const files = fabric.files
 console.log(files.length) // 3
 ```
 
-## Use Cases
+## Examples
 
 ### Code Generation from Templates
 

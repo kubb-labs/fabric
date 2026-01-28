@@ -18,7 +18,7 @@ import { typescriptParser } from '@kubb/fabric-core/parsers'
 
 ## Usage
 
-```ts [basic-usage.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 
@@ -55,7 +55,7 @@ Extension to use when emitting import/export paths.
 
 **Example:**
 
-```ts [extname.ts]
+```ts
 // Parser rewrites imports to include .ts extension
 await fabric.write({
   extension: { '.ts': '.ts' },
@@ -68,7 +68,7 @@ await fabric.write({
 
 The `typescriptParser` is automatically selected for files with `.ts` extension when using `fabric.write()` with extension mapping.
 
-```ts [parser-selection.ts]
+```ts
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -175,7 +175,7 @@ export type Post = { id: number; title: string; userId: number }
 
 ### Basic TypeScript File
 
-```ts [basic-ts.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -199,7 +199,7 @@ await fabric.write({ extension: { '.ts': '.ts' } })
 
 ### With Imports
 
-```ts [with-imports.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -229,7 +229,7 @@ await fabric.write({ extension: { '.ts': '.ts' } })
 
 ### Multiple Files
 
-```ts [multiple-files.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'

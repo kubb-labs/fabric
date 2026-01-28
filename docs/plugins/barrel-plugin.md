@@ -10,7 +10,7 @@ Generates `index.ts` barrel files per folder to re-export modules and simplify i
 
 ## Usage
 
-```ts twoslash [run.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { barrelPlugin } from '@kubb/fabric-core/plugins'
 

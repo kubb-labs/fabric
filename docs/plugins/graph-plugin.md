@@ -20,7 +20,7 @@ import { graphPlugin } from '@kubb/fabric-core/plugins'
 
 ### Basic Example
 
-```ts twoslash [run.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { graphPlugin, fsPlugin } from '@kubb/fabric-core/plugins'
 
@@ -83,7 +83,7 @@ The graphPlugin:
 > [!TIP]
 > Use the graphPlugin during development to understand file dependencies and optimize your code generation structure.
 
-## Use Cases
+## Examples
 
 ### Debugging File Dependencies
 

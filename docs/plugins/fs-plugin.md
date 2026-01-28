@@ -10,7 +10,7 @@ Writes files to disk and provides file system operations for Fabric.
 
 ## Usage
 
-```ts twoslash [run.ts]
+```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 
