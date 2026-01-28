@@ -73,14 +73,14 @@ export function greet(name) {
 
 ## Understanding the Code
 
-**createFabric()** - Creates a new generator instance
+`createFabric()` - Creates a new generator instance
 
-**addFile()** - Queues a file for generation:
+`addFile()` - Queues a file for generation:
 - `baseName` - File name
 - `path` - Where to save it
 - `sources` - What code to generate
 
-**write()** - Writes all queued files to disk
+`write()` - Writes all queued files to disk
 
 ## Next Steps
 
