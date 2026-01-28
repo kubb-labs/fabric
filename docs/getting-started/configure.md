@@ -11,7 +11,9 @@ Learn how to configure Fabric for your project.
 ## Basic Configuration
 
 Fabric is configured through code using the `createFabric()` function and plugin options.
-There is no separate configuration file required.
+
+> [!NOTE]
+> There is no separate configuration file required.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -49,6 +51,8 @@ fabric.use(fsPlugin, {
 })
 ```
 
+See more in the [Fs Plugin](/plugins/fs-plugin).
+
 ### Logger Plugin
 
 Configures progress tracking and websocket server:
@@ -68,6 +72,8 @@ fabric.use(loggerPlugin, {
 })
 ```
 
+See more in the [Logger Plugin](/plugins/logger-plugin).
+
 ### Barrel Plugin
 
 Controls barrel file generation:
@@ -84,6 +90,8 @@ fabric.use(barrelPlugin, {
   dryRun: false,
 })
 ```
+
+See more in the [Barrel Plugin](/plugins/barrel-plugin).
 
 ## Parser Configuration
 
@@ -102,6 +110,8 @@ const fabric = createFabric()
 fabric.use(typescriptParser)
 ```
 
+See more in the [TypeScript Parser](/parsers/typescript-parser).
+
 ### TSX Parser
 
 Handles `.tsx` files with JSX support:
@@ -114,6 +124,8 @@ const fabric = createFabric()
 
 fabric.use(tsxParser)
 ```
+
+See more in the [TSX Parser](/parsers/tsx-parser).
 
 ## Extension Mapping
 
@@ -134,8 +146,8 @@ await fabric.write({
   }
 })
 ```
-
-When extension mapping is provided, Fabric selects the parser whose `extNames` match the file's extension.
+> [!NOTE]
+> When extension mapping is provided, Fabric selects the parser whose `extNames` match the file's extension.
 
 ## Event Listeners
 
@@ -160,43 +172,6 @@ fabric.context.on('files:writing:start', async (files) => {
 fabric.context.on('lifecycle:end', async () => {
   console.log('Generation complete!')
 })
-```
-
-## Output Directory Structure
-
-Organize generated files using path configuration:
-
-```ts twoslash
-import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-
-// Clean before generation
-fabric.use(fsPlugin, {
-  clean: { path: './generated' },
-})
-
-async function create(){
-  // Organize by feature
-  await fabric.addFile({
-    path: './generated/types/user.ts',
-    baseName: 'user.ts',
-    sources: [/* ... */],
-    imports: [],
-    exports: [],
-  })
-
-  await fabric.addFile({
-    path: './generated/api/user-api.ts',
-    baseName: 'user-api.ts',
-    sources: [/* ... */],
-    imports: [],
-    exports: [],
-  })
-}
-
-create()
 ```
 
 ## Best Practices

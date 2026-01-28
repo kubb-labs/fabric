@@ -8,7 +8,7 @@ outline: deep
 
 Install Fabric in your project using your preferred package manager.
 
-## Package Managers
+## Core installation
 
 ::: code-group
 
@@ -30,7 +30,7 @@ yarn add -D @kubb/fabric-core
 
 :::
 
-## React Integration
+## React installation
 
 If you want to use React components for code generation, install the React integration package:
 
@@ -106,4 +106,4 @@ node --loader tsx test-fabric.ts
 
 :::
 
-You should see "Fabric initialized successfully!" in the console.
+You should see `"Fabric initialized successfully!"` in the console.

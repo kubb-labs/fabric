@@ -71,7 +71,7 @@ export type User = { id: number; name: string }
 
 Generate multiple related files:
 
-```ts [generate-multiple.ts]
+```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -110,11 +110,27 @@ await fabric.addFile({
 await fabric.write()
 ```
 
+This creates `generated/types.ts` and `generated/constants.ts`:
+
+::: code-group
+
+```ts [generated/constants.ts]
+export const API_URL = "https://api.example.com"
+export const API_VERSION = "v1"
+```
+
+```ts [generated/types.ts]
+export type User = { id: number; name: string }
+export type Post = { id: number; title: string; userId: number }
+```
+
+:::
+
 ## Using the Logger Plugin
 
 Add progress tracking and visual feedback:
 
-```ts [generate-with-logger.ts]
+```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin, loggerPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -145,13 +161,13 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-The logger displays a progress bar and beautiful CLI output during generation.
+The logger displays a progress bar with percentage completion in the console during generation.
 
 ## Generating Barrel Files
 
 Use the barrel plugin to automatically create index files:
 
-```ts [generate-barrels.ts]
+```ts towslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin, barrelPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -205,7 +221,7 @@ This creates:
 
 React to lifecycle events:
 
-```ts [generate-with-events.ts]
+```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -213,8 +229,8 @@ import { typescriptParser } from '@kubb/fabric-core/parsers'
 const fabric = createFabric()
 
 // Listen to events
-fabric.context.on('lifecycle:start', () => {
-  console.log('Generation started...')
+fabric.context.on('files:writing:start', () => {
+  console.log('Writing files ...')
 })
 
 fabric.context.on('file:processing:update', ({ processed, total, percentage }) => {
@@ -239,4 +255,11 @@ await fabric.addFile({
 })
 
 await fabric.write()
+```
+
+This will log:
+```
+Writing files ...
+Progress: 100.0% (1/1)
+Generation completed!
 ```

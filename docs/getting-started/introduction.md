@@ -22,9 +22,7 @@ Fabric provides two packages with similar component names but different implemen
 Uses **FSX** (Fabric's custom JSX renderer) and `createComponent`.
 
 **Characteristics:**
-- Custom JSX runtime (not React)
-- Uses `createComponent` from fabric-core
-- Works with `FabricNode` types
+- Uses `createComponent` to define FSX components
 - Lighter weight, no React dependency
 - Direct control over rendering
 
@@ -39,7 +37,7 @@ export const MyComponent = createComponent('MyComponent', ({ children }) => {
 })
 ```
 
-See more in the [Core documentation](/core).
+See more in the [Core documentation](/guide/creating-plugins).
 
 ### React Fabric (@kubb/react-fabric)
 
@@ -109,6 +107,8 @@ fabric.use(loggerPlugin, {
 })
 ```
 
+See more in the [Creating plugins](/guide/creating-plugins).
+
 ### Parser System
 
 Parsers control how files are converted to strings. Use built-in parsers for TypeScript, TSX, or create custom parsers for any file format.
@@ -121,10 +121,12 @@ const fabric = createFabric()
 fabric.use(typescriptParser)
 ```
 
+See more in the [Creating parsers](/guide/creating-parsers).
+
 ## Key Features
 
 - **Node.js 20+** - Modern JavaScript runtime support
-- **Cross-Runtime Support1** - Fabric works seamlessly with Node.js and Bun, allowing you to choose the runtime that best fits your project.
+- **Cross-Runtime Support1** - Fabric works seamlessly with `Node.js` and `Bun`, allowing you to choose the runtime that best fits your project.
 - **Plugin system** - Extend with custom functionality or use community plugins
 - **Event-Driven Architecture** - Listen to lifecycle events to monitor progress, transform files, or perform custom operations at specific points in the generation process.
 - **Debug mode** - Use the `loggerPlugin` to visualize generation progress with beautiful CLI output, progress bars, and websocket support for building custom dashboards.
