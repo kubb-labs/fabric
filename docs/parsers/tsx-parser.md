@@ -34,7 +34,9 @@ Register the TSX parser to format `.tsx` files with JSX.
 
 **Example:** Generate a React component file.
 
-```ts
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { tsxParser } from '@kubb/fabric-core/parsers'
@@ -63,11 +65,11 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-**Output:** Creates a file `generated/Component.tsx` with JSX syntax.
-
-```tsx [generated/Component.tsx]
+```ts [output]
 export const App = () => <div>Hello</div>
 ```
+
+:::
 
 ## Parser Options
 

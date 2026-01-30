@@ -54,7 +54,9 @@ yarn add -D @kubb/fabric-core
 
 Generate a TypeScript constant using Fabric Core's functional components.
 
-```ts twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { Const } from '@kubb/fabric-core'
@@ -72,10 +74,10 @@ const output = await fabric.render(component)
 console.log(output)
 ```
 
-**Output:**
-```typescript
+```ts [output]
 export const API_URL: string = 'https://api.example.com'
 ```
+:::
 
 ## Core API Concepts
 
@@ -178,7 +180,9 @@ await fabric.write()
 
 Use Fabric's functional components to generate TypeScript types declaratively.
 
-```ts twoslash
+::: code-group
+
+```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 import { File, Type } from '@kubb/fabric-core'
@@ -198,14 +202,13 @@ const component = File({
 ])
 
 const output = await fabric.render(component)
-console.log(output)
 
 ```
 
-**Output:**
-```typescript
+```ts [output]
 export type User = { id: number; name: string }
 ```
+:::
 
 ## How Fabric Core Works
 

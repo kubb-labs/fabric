@@ -423,7 +423,9 @@ Comprehensive example using multiple events for progress tracking and logging.
 
 **Example:**
 
-```ts twoslash
+::: code-group
+
+```ts twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsPlugin } from '@kubb/fabric-core/plugins'
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -484,8 +486,7 @@ await fabric.addFile({
 await fabric.write({ extension: { '.ts': '.ts' } })
 ```
 
-**Output:**
-```
+```bash [output]
 📁 Added 1 files (total: 1)
 
 📝 Writing 1 files...
@@ -496,6 +497,8 @@ await fabric.write({ extension: { '.ts': '.ts' } })
    Time: 150ms
    Files: 1
 ```
+
+:::
 
 ## Next Steps
 
