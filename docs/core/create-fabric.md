@@ -1,13 +1,13 @@
 ---
 layout: doc
-title: createFabric API - Initialize Fabric Code Generator
-description: Create a Fabric instance with createFabric(). Register plugins, add files, and manage code generation lifecycle.
+title: createFabric - Initialize Fabric Code Generator JSX
+description: Create a Fabric instance to generate code files. Register plugins, add files, and manage the code generation lifecycle.
 outline: deep
 ---
 
 # createFabric API Reference
 
-Creates a new Fabric instance for programmatic file generation. The Fabric instance provides methods for plugin registration, file management, and lifecycle control.
+Creates a new Fabric instance for programmatic file generation. Use this function to initialize your code generator, register plugins, and manage the generation lifecycle. The Fabric instance is the core entry point for all file operations.
 
 ## Usage
 
@@ -115,12 +115,29 @@ Plugins can inject additional methods into the Fabric instance. These methods ar
 See the documentation for each plugin to learn about any additional methods they provide.
 
 
+## FAQ
+
+### When should I use createFabric() vs definePlugin()?
+
+Use `createFabric()` to initialize your code generator and manage the file generation lifecycle. Use `definePlugin()` when building reusable plugins that extend Fabric's capabilities. The Fabric instance orchestrates plugins, while plugins add specific functionality.
+
+### How do I register multiple plugins?
+
+Call `fabric.use()` for each plugin you want to register. Plugins are applied in the order they are registered. You can chain multiple `use()` calls or register them sequentially.
+
+### Can I add files before registering plugins?
+
+Yes, but it's recommended to register plugins first. Some plugins may need to be active before files are added to handle pre-processing or validation correctly.
+
+### What's the difference between addFile() and the file manager?
+
+`addFile()` is the public API for adding files to the generation queue. The file manager (`fabric.context.fileManager`) is an internal component that caches and manages files. Always use `addFile()` in your application code.
+
 ## See Also
 
-- [fsPlugin](/plugins/fs-plugin) — Write files to disk
+- [fsPlugin](/plugins/fs-plugin) — Write generated files to disk
 - [fsxPlugin](/plugins/fsx-plugin) — Render FSX components to files
 - [reactPlugin](/plugins/react-plugin) — Render React components to files
-- [loggerPlugin](/plugins/logger-plugin) — Progress tracking
-- [graphPlugin](/plugins/graph-plugin) — Visualizes the dependency graph
-- [barrelPlugin](/plugins/barrel-plugin) — Generate barrel files
+- [loggerPlugin](/plugins/logger-plugin) — Progress tracking and logging
 - [Events](/core/events) — Lifecycle events reference
+- [definePlugin](/core/define-plugin) — Create custom plugins
