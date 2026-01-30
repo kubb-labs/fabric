@@ -121,7 +121,7 @@ import { fsPlugin, fsxPlugin, loggerPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 
-fabric.use(loggerPlugin, { logLevel: 'info' })
+fabric.use(loggerPlugin)
 fabric.use(fsxPlugin)
 fabric.use(fsPlugin, {
   dryRun: false,
