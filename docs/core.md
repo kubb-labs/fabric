@@ -1,7 +1,7 @@
 ---
 layout: doc
 title: Fabric Core API - TypeScript Code Generator Engine
-description: @kubb\/fabric-core provides components, composables, and plugins for programmatic file generation with TypeScript. No React required.
+description: Fabric Core provides components, composables, and plugins for programmatic file generation with TypeScript. No React required.
 outline: deep
 ---
 
