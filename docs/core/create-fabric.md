@@ -89,7 +89,7 @@ import { createFabric } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 
-await fabric.addFile({
+fabric.addFile({
   baseName: 'user.ts',
   path: './generated/user.ts',
   sources: [
@@ -98,6 +98,7 @@ await fabric.addFile({
   imports: [],
   exports: []
 })
+```
 
 **Example:** Add multiple files at once.
 
@@ -106,8 +107,6 @@ await fabric.addFile(
   { baseName: 'user.ts', path: './generated/user.ts', sources: [/* ... */], imports: [], exports: [] },
   { baseName: 'post.ts', path: './generated/post.ts', sources: [/* ... */], imports: [], exports: [] }
 )
-```
-
 ```
 
 **Learn more:** [File Structure](/core/components/file)
