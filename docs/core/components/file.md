@@ -49,6 +49,8 @@ const output = await fabric.render(component)
 export type User = { id: number }
 ```
 
+:::
+
 ## Component Props
 
 ### baseName
@@ -198,6 +200,8 @@ const output = await fabric.render(component)
 ```ts [output]
 export type User = { id: number }
 ```
+
+:::
 
 ### File.Import`
 
@@ -457,6 +461,7 @@ export function createUser(data: User): User {
   return { ...data, id: Math.random() }
 }
 ```
+
 :::
 
 ### Multiple Files
@@ -495,6 +500,7 @@ export type User = { id: number }
 export type Post = { id: number }
 export type Comment = { id: number }
 ```
+
 :::
 
 ## See Also

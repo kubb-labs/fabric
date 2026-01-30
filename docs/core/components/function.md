@@ -47,6 +47,7 @@ function getUser(id: number): User {
   return fetch(`/users/${id}`)
 }
 ```
+
 :::
 
 ## Component Props

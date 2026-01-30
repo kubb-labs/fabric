@@ -45,6 +45,7 @@ const output = await fabric.render(component)
 ```ts [output]
 export const API_URL: string = 'https://api.example.com'
 ```
+
 :::
 
 ## Component Props
