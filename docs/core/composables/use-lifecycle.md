@@ -1,14 +1,23 @@
 ---
 layout: doc
-title: useLifecycle
+title: useLifecycle Hook - Control Fabric Rendering Lifecycle
+description: Control rendering lifecycle and exit behavior in Fabric components with the useLifecycle hook.
 outline: deep
 ---
 
-# `useLifecycle`
+# useLifecycle Hook
 
-Composable for controlling the rendering lifecycle and exit behavior.
+The useLifecycle composable provides lifecycle control including the ability to exit rendering early or with errors.
+
+**Use useLifecycle when:** You need to stop rendering early based on conditions or exit with errors.
+
+**Perfect for:** Validation failures, conditional generation, error handling.
 
 ## Usage
+
+Exit the rendering process programmatically from within components.
+
+**Example:** Exit rendering early.
 
 ```tsx twoslash
 import { useLifecycle } from '@kubb/fabric-core'

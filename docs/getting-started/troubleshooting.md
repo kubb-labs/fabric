@@ -1,20 +1,28 @@
 ---
 layout: doc
-title: Troubleshooting
+contitle: Troubleshooting Fabric - Fix Common Code Generation Issues
+description: Debug Fabric errors, file generation issues, parser problems, and plugin configuration. Solutions for empty files, module errors, and more.
 outline: deep
 ---
 
-# Troubleshooting
+# Troubleshooting Guide
 
-Common issues and solutions when working with Fabric.
+Fix common Fabric issues including installation errors, file generation problems, parser configuration, and plugin issues.
+
+**Quick links:**
+- [Installation Issues](#installation-issues)
+- [File Generation Issues](#file-generation-issues)
+- [Parser Issues](#parser-issues)
+- [Plugin Issues](#plugin-issues)
+- [Performance Issues](#performance-issues)
 
 ## Installation Issues
 
-### Module Not Found
+### Module Not Found Error
 
-**Problem**: `Cannot find module '@kubb/fabric-core'`
+**Problem:** `Cannot find module '@kubb/fabric-core'`
 
-**Solution**: Ensure Fabric is installed and your project uses ESM:
+**Solution:** Ensure Fabric is installed and your project uses ESM (ECMAScript Modules).
 
 ::: code-group
 
@@ -36,7 +44,7 @@ yarn add -D @kubb/fabric-core
 
 :::
 
-Check your `package.json`:
+**Verify package.json has ESM enabled:**
 
 ```json [package.json]
 {
@@ -44,11 +52,11 @@ Check your `package.json`:
 }
 ```
 
-### TypeScript Errors
+### TypeScript Module Resolution Errors
 
-**Problem**: TypeScript cannot find types or shows module resolution errors
+**Problem:** TypeScript cannot find types or shows module resolution errors
 
-**Solution**: Configure TypeScript for ESM:
+**Solution:** Configure TypeScript for ESM and proper module resolution.
 
 ```json [tsconfig.json]
 {
@@ -62,13 +70,18 @@ Check your `package.json`:
 
 ## File Generation Issues
 
-### Files Not Being Written
+### Files Not Written to Disk
 
-**Problem**: Files are not created in the output directory
+**Problem:** Files are not created in the output directory
 
-**Solutions**:
+**Common causes:**
+- `fsPlugin` not registered
+- `dryRun` mode enabled
+- Forgot to call `fabric.write()`
 
-1. Check that `fsPlugin` is registered:
+**Solutions:**
+
+**1. Check that `fsPlugin` is registered:**
 
 ```ts [check-fs-plugin.ts]
 import { fsPlugin } from '@kubb/fabric-core/plugins'
@@ -76,7 +89,7 @@ import { fsPlugin } from '@kubb/fabric-core/plugins'
 fabric.use(fsPlugin)
 ```
 
-2. Ensure `dryRun` is not enabled:
+**2. Ensure `dryRun` is not enabled:**
 
 ```ts [disable-dry-run.ts]
 fabric.use(fsPlugin, {
@@ -84,20 +97,25 @@ fabric.use(fsPlugin, {
 })
 ```
 
-3. Verify you call `fabric.write()`:
+**3. Verify you call `fabric.write()`:**
 
 ```ts [call-write.ts]
 await fabric.addFile(/* ... */)
 await fabric.write() // Don't forget this!
 ```
 
-### Empty Files Generated
+### Generated Files Are Empty
 
-**Problem**: Files are created but contain no content
+**Problem:** Files are created but contain no content
 
-**Solutions**:
+**Common causes:**
+- No sources provided
+- Parser not registered
+- Parser doesn't match file extension
 
-1. Check that sources are provided:
+**Solutions:**
+
+**1. Check that sources are provided:**
 
 ```ts [add-sources.ts]
 await fabric.addFile({
@@ -111,7 +129,7 @@ await fabric.addFile({
 })
 ```
 
-2. Verify a parser is registered:
+**2. Verify a parser is registered:**
 
 ```ts [register-parser.ts]
 import { typescriptParser } from '@kubb/fabric-core/parsers'
@@ -119,11 +137,11 @@ import { typescriptParser } from '@kubb/fabric-core/parsers'
 fabric.use(typescriptParser)
 ```
 
-### Wrong File Extension
+### Incorrect File Extension Generated
 
-**Problem**: Files are generated with incorrect extensions
+**Problem:** Files are generated with wrong extensions (e.g., `.txt` instead of `.ts`)
 
-**Solution**: Use extension mapping with `fabric.write()`:
+**Solution:** Use extension mapping with `fabric.write()` to control output extensions.
 
 ```ts [extension-mapping.ts]
 await fabric.write({
@@ -136,20 +154,24 @@ await fabric.write({
 
 ## Parser Issues
 
-### Parser Not Applied
+### Wrong Parser Applied to Files
 
-**Problem**: The wrong parser is being used for files
+**Problem:** The wrong parser is being used for files (e.g., plain text parser for `.ts` files)
 
-**Solutions**:
+**Common causes:**
+- Parser registered after `fabric.write()`
+- Extension mapping doesn't match parser `extNames`
 
-1. Register the parser before calling `fabric.write()`:
+**Solutions:**
+
+**1. Register the parser before calling `fabric.write()`:**
 
 ```ts [register-before-write.ts]
 fabric.use(typescriptParser)
 await fabric.write()
 ```
 
-2. Ensure extension mapping matches parser `extNames`:
+**2. Ensure extension mapping matches parser `extNames`:**
 
 ```ts [match-ext-names.ts]
 // typescriptParser handles ['.ts']
@@ -160,11 +182,11 @@ await fabric.write({
 })
 ```
 
-### Import/Export Issues
+### Imports or Exports Not Formatted Correctly
 
-**Problem**: Imports or exports are not formatted correctly
+**Problem:** Import/export statements are malformed or missing
 
-**Solution**: Use the correct parser for your file type:
+**Solution:** Use the correct parser for your file type.
 
 ```ts [use-correct-parser.ts]
 // For .ts files
@@ -178,13 +200,17 @@ fabric.use(tsxParser)
 
 ## Plugin Issues
 
-### Events Not Firing
+### Event Listeners Not Triggered
 
-**Problem**: Event listeners are not being called
+**Problem:** Event listeners are not being called during generation
 
-**Solutions**:
+**Common causes:**
+- Listeners registered after actions triggered
+- Non-async event handlers blocking execution
 
-1. Register listeners before triggering actions:
+**Solutions:**
+
+**1. Register listeners before triggering actions:**
 
 ```ts [register-early.ts]
 const fabric = createFabric()
@@ -199,7 +225,7 @@ fabric.use(fsPlugin)
 await fabric.write()
 ```
 
-2. Use `async` event handlers:
+**2. Use `async` event handlers:**
 
 ```ts [async-handlers.ts]
 fabric.context.on('lifecycle:start', async () => {
@@ -207,20 +233,24 @@ fabric.context.on('lifecycle:start', async () => {
 })
 ```
 
-### Logger Not Showing Progress
+### Logger Progress Bar Not Displayed
 
-**Problem**: Progress bar is not displayed
+**Problem:** Progress bar is not shown in the console
 
-**Solutions**:
+**Common causes:**
+- `loggerPlugin` registered after other plugins
+- `progress` option not enabled
 
-1. Ensure `loggerPlugin` is registered first:
+**Solutions:**
+
+**1. Ensure `loggerPlugin` is registered first:**
 
 ```ts [logger-first.ts]
 fabric.use(loggerPlugin, { progress: true })
 fabric.use(fsPlugin)
 ```
 
-2. Check that `progress` option is enabled:
+**2. Check that `progress` option is enabled:**
 
 ```ts [enable-progress.ts]
 fabric.use(loggerPlugin, {
@@ -228,13 +258,18 @@ fabric.use(loggerPlugin, {
 })
 ```
 
-### Barrel Files Not Generated
+### Barrel Files (index.ts) Not Created
 
-**Problem**: Index files are not created
+**Problem:** Index files are not generated automatically
 
-**Solutions**:
+**Common causes:**
+- `barrelPlugin` not registered
+- Forgot to call `writeEntry()`
+- Sources not marked as exportable
 
-1. Register `barrelPlugin`:
+**Solutions:**
+
+**1. Register `barrelPlugin`:**
 
 ```ts [register-barrel.ts]
 import { barrelPlugin } from '@kubb/fabric-core/plugins'
@@ -245,14 +280,14 @@ fabric.use(barrelPlugin, {
 })
 ```
 
-2. Call `writeEntry` for entry barrel:
+**2. Call `writeEntry` for entry barrel:**
 
 ```ts [write-entry.ts]
 await fabric.write()
 await fabric.writeEntry({ root: './generated', mode: 'named' })
 ```
 
-3. Ensure files are exportable:
+**3. Ensure files are exportable:**
 
 ```ts [exportable-sources.ts]
 await fabric.addFile({
@@ -268,13 +303,17 @@ await fabric.addFile({
 
 ## Performance Issues
 
-### Slow Generation
+### Slow File Generation Performance
 
-**Problem**: File generation takes too long
+**Problem:** File generation takes too long for large projects
 
-**Solutions**:
+**Common causes:**
+- WebSocket server overhead
+- Processing too many files at once
 
-1. Disable websocket if not needed:
+**Solutions:**
+
+**1. Disable websocket if not needed:**
 
 ```ts [disable-websocket.ts]
 fabric.use(loggerPlugin, {
@@ -283,7 +322,7 @@ fabric.use(loggerPlugin, {
 })
 ```
 
-2. Process files in batches:
+**2. Process files in batches:**
 
 ```ts [batch-processing.ts]
 const files = [...] // Large array of files
@@ -299,11 +338,11 @@ await fabric.write()
 
 ## React Integration Issues
 
-### React Components Not Rendering
+### React Components Don't Produce Output
 
-**Problem**: React components don't produce output
+**Problem:** React components don't render or produce empty files
 
-**Solution**: Ensure `reactPlugin` is registered:
+**Solution:** Ensure `reactPlugin` is registered when using `@kubb/react-fabric`.
 
 ```ts [register-react.ts]
 import { reactPlugin } from '@kubb/react-fabric/plugins'
@@ -311,11 +350,11 @@ import { reactPlugin } from '@kubb/react-fabric/plugins'
 fabric.use(reactPlugin)
 ```
 
-### JSX Not Working
+### JSX Syntax Errors in TypeScript
 
-**Problem**: TypeScript errors with JSX syntax
+**Problem:** TypeScript shows errors with JSX syntax
 
-**Solution**: Configure TypeScript for JSX:
+**Solution:** Configure TypeScript for JSX with React JSX runtime.
 
 ```json [tsconfig.json]
 {
@@ -503,7 +542,61 @@ console.log('Would write:', fabric.files.length, 'files')
 
 If you encounter issues not covered here:
 
-1. Check the [GitHub Issues](https://github.com/kubb-labs/fabric/issues)
-2. Review the [Core Reference](/core)
-3. Review the [React Reference](/react)
-4. [Open a new issue](https://github.com/kubb-labs/fabric/issues/new)
+- **Check existing issues:** [GitHub Issues](https://github.com/kubb-labs/fabric/issues)
+- **Read the docs:** [Core Reference](/core) | [React Reference](/react)
+- **Report a bug:** [Open a new issue](https://github.com/kubb-labs/fabric/issues/new)
+
+## FAQ
+
+### Why are my files empty even though I added sources?
+
+Check that you've registered a parser (`typescriptParser`, `tsxParser`, etc.) before calling `fabric.write()`. Without a parser, Fabric cannot convert file objects to strings.
+
+### How do I know which parser is being used?
+
+Listen to the `file:processing:update` event to debug which files are being processed:
+```ts
+fabric.context.on('file:processing:update', ({ processed, total }) => {
+  console.log(`File ${processed}/${total}`)
+})
+```
+
+### Can I test generation without writing files?
+
+Yes, enable dry run mode:
+```ts
+fabric.use(fsPlugin, { dryRun: true })
+await fabric.write()
+console.log('Would generate:', fabric.files.length, 'files')
+```
+
+### Why doesn't the logger show a progress bar?
+
+Ensure `loggerPlugin` is registered **first** and `progress: true` is set:
+```ts
+fabric.use(loggerPlugin, { progress: true })  // First!
+fabric.use(fsPlugin)
+```
+
+### How do I fix "Path must include baseName" error?
+
+Ensure the `path` property ends with the `baseName`:
+```ts
+// ✅ Correct
+{ baseName: 'user.ts', path: './generated/user.ts' }
+
+// ❌ Wrong
+{ baseName: 'user.ts', path: './generated' }
+```
+
+## Next Steps
+
+- [Quick Start](/getting-started/quick-start) - Build your first generator
+- [Configuration](/getting-started/configure) - Configure plugins properly
+- [Core API](/core) - Explore Fabric components
+
+## Related Resources
+
+- [Events Reference](/core/events) - All lifecycle events
+- [Plugin Reference](/plugins) - All available plugins
+- [Parser Reference](/parsers) - All available parsers

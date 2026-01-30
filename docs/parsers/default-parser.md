@@ -1,24 +1,38 @@
 ---
 layout: doc
-title: defaultParser
+title: Default Parser - Fallback Plain Text Parser
+description: Use the defaultParser as a fallback for plain text files or formats without specialized parsers in Fabric code generation.
 outline: deep
 ---
 
-# `defaultParser`
+# Default Parser
 
-Built-in fallback parser for files without a registered parser.
+The defaultParser is a built-in fallback parser for plain text files or any format without a specialized parser.
+
+**Use defaultParser when:** Generating plain text, JSON, YAML, Markdown, or any non-TypeScript files.
+
+**Perfect for:** Config files, documentation, JSON generation, plain text output.
+
+**Key features:**
+- Simple text concatenation
+- No import/export formatting
+- Universal fallback
+- Works with any file type
 
 ## Installation
 
-The `defaultParser` is included in `@kubb/fabric-core`:
+The defaultParser is included in `@kubb/fabric-core`.
 
-```ts [import.ts]
+**Import:**
+```ts
 import { defaultParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
 
-The `defaultParser` is automatically used as a fallback when no extension mapping is provided to `fabric.write()`, or when a file extension has no registered parser.
+The defaultParser is automatically used as a fallback, but you can also register it explicitly.
+
+**Example:** Generate plain text files.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'

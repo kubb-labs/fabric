@@ -1,17 +1,33 @@
 ---
 layout: doc
-title: Introduction
+title: Fabric - JSX Code Generator for TypeScript & Files
+description: Generate TypeScript types, API clients, and files using JSX. Language-agnostic code generation toolkit with plugin architecture.
 outline: deep
 ---
 
-# Introduction
+# Fabric - JSX Code Generator for TypeScript & Files
 
-Kubb Fabric is a language-agnostic toolkit for generating code and files using JSX or TypeScript. It provides a lightweight, declarative layer for file generation while orchestrating the overall process of creating and managing files.
+Fabric is a language-agnostic toolkit for generating code and files using JSX or TypeScript. Build type-safe code generators for API clients, TypeScript types, configuration files, or documentation with a declarative, plugin-based architecture.
+
+**Use Fabric when you need to:**
+- Generate TypeScript types or API clients from schemas
+- Scaffold boilerplate code for projects or components
+- Orchestrate multi-file generation with dependencies
+- Use React/JSX templates for complex code generation
+
+**Perfect for:** Developers building code generators, CLI tools, SDK generators, or automation scripts.
 
 ## What is Fabric?
 
-Fabric is a file generation framework that combines the flexibility of JavaScript/TypeScript with the power of a plugin-based architecture.
-You can generate any type of file—TypeScript types, API clients, configuration files, or documentation—using either imperative code or declarative JSX components.
+Fabric combines JavaScript/TypeScript flexibility with a plugin-based architecture for programmatic file generation.
+
+Generate any file type:
+- TypeScript types and interfaces
+- API clients and SDKs
+- Configuration files (JSON, YAML, ENV)
+- Documentation (Markdown, MDX)
+
+**Two approaches:** Use imperative TypeScript code or declarative JSX components.
 
 ## Fabric Core vs React Fabric
 
@@ -37,13 +53,13 @@ export const MyComponent = createComponent('MyComponent', ({ children }) => {
 })
 ```
 
-See more in the [Core documentation](/guide/creating-plugins).
+**Learn more:** [Core documentation](/guide/creating-plugins) | [Create custom components](/core/create-fabric)
 
 ### React Fabric (@kubb/react-fabric)
 
 Uses **React** with standard JSX and Fabric specific components.
 
-See more in the [Fabric documentation](/react).
+**Learn more:** [React Fabric documentation](/react) | [React components](/react/createReactFabric)
 
 ### When to Use Which?
 
@@ -68,11 +84,13 @@ import { App, File, Function } from '@kubb/fabric-core'
 import { App, File, Function } from '@kubb/react-fabric'
 ```
 
-## Why Fabric?
+## Why Use Fabric?
 
 ### Declarative File Generation
 
-Create files using familiar JSX syntax or simple JavaScript objects. Fabric handles the complexity of file management, path resolution, and content generation.
+Write code generators using familiar JSX syntax or JavaScript objects. Fabric handles file management, path resolution, and content generation automatically.
+
+**Example:** Generate a TypeScript types file programmatically.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -94,7 +112,12 @@ await fabric.addFile({
 
 ### Plugin Architecture
 
-Extend Fabric with plugins that add new capabilities. Plugins can listen to lifecycle events, transform files, or add new methods to the Fabric API.
+Extend Fabric with plugins for custom functionality:
+- Listen to lifecycle events (file:processing, lifecycle:start)
+- Transform files during generation
+- Add new methods to the Fabric API
+
+**Example:** Enable progress tracking with the logger plugin.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -107,11 +130,18 @@ fabric.use(loggerPlugin, {
 })
 ```
 
-See more in the [Creating plugins](/guide/creating-plugins).
+**Learn more:** [Creating plugins](/guide/creating-plugins) | [Available plugins](/plugins)
 
 ### Parser System
 
-Parsers control how files are converted to strings. Use built-in parsers for TypeScript, TSX, or create custom parsers for any file format.
+Parsers convert file objects to strings during generation. Control output format for any file type.
+
+**Built-in parsers:**
+- TypeScript (`.ts` files)
+- TSX (`.tsx` files with JSX)
+- Default (plain text)
+
+**Example:** Register the TypeScript parser for `.ts` file generation.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -121,7 +151,7 @@ const fabric = createFabric()
 fabric.use(typescriptParser)
 ```
 
-See more in the [Creating parsers](/guide/creating-parsers).
+**Learn more:** [Creating parsers](/guide/creating-parsers) | [Parser API](/parsers)
 
 ## Key Features
 
@@ -136,9 +166,42 @@ See more in the [Creating parsers](/guide/creating-parsers).
 
 ## When to Use Fabric
 
-Fabric excels at:
+Fabric excels at these code generation scenarios:
 
-- **Code generation** — Generate TypeScript types, API clients, or SDK code from schemas
-- **Boilerplate creation** — Scaffold project files, components, or modules
-- **File orchestration** — Manage multiple files with dependencies and barrel exports
-- **Template-based generation** — Use React components or JSX for complex templating
+- **Code generation** — Generate TypeScript types, API clients, or SDK code from OpenAPI/GraphQL schemas
+- **Boilerplate creation** — Scaffold project files, React components, or module structures
+- **File orchestration** — Manage multiple files with dependencies and barrel exports (index.ts)
+- **Template-based generation** — Use React components or JSX for complex code templating
+
+## Common Use Cases
+
+- Building CLI code generators
+- Generating TypeScript types from JSON schemas
+- Creating API client libraries from OpenAPI specs
+- Automating React component scaffolding
+- Building custom bundler plugins
+
+## Next Steps
+
+- [Installation](/getting-started/installation) - Install Fabric in your project
+- [Quick Start](/getting-started/quick-start) - Build your first code generator
+- [Configuration](/getting-started/configure) - Configure plugins and parsers
+- [Core API](/core) - Explore Fabric core components
+
+## FAQ
+
+### What's the difference between Fabric Core and React Fabric?
+
+Fabric Core uses a custom FSX renderer with `createComponent`, while React Fabric uses standard React JSX. Use Core for minimal dependencies, React for familiar React patterns.
+
+### Can Fabric generate non-TypeScript files?
+
+Yes. Fabric is language-agnostic. Create custom parsers for any file format (JSON, YAML, Python, Go, etc.).
+
+### Does Fabric require React?
+
+No. Only `@kubb/react-fabric` requires React. The core package (`@kubb/fabric-core`) has no React dependency.
+
+### How does Fabric compare to Plop or Hygen?
+
+Fabric provides programmatic control via TypeScript/JSX rather than template files. Better for complex logic, type safety, and IDE autocomplete.

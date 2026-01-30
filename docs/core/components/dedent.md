@@ -1,16 +1,20 @@
 ---
 layout: doc
-title: Dedent (Fabric Core)
+title: Dedent Component - Decrease Code Indentation
+description: Use the Dedent component to decrease indentation levels in generated TypeScript code with Fabric Core.
 outline: deep
 ---
 
-# `Dedent` <Badge type="info" text="fabric-core" />
+# Dedent <Badge type="info" text="fabric-core" />
 
-Decreases indentation level in the output.
+The Dedent component decreases the indentation level in generated code. Use with Indent to control code block formatting.
+
+**Use Dedent when:** You need to decrease indentation after code blocks, closing braces, or nested structures.
+
+**Perfect for:** Closing function bodies, exiting nested blocks, maintaining proper code formatting.
 
 > [!NOTE]
-> This is the **fabric-core** version using the functional API.
-> In React Fabric, use the `<dedent />` JSX element instead.
+> This is the **Fabric Core** version. In React Fabric, use the `<dedent />` JSX element instead.
 
 ## Usage
 

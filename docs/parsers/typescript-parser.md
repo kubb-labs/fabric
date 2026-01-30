@@ -1,22 +1,38 @@
 ---
 layout: doc
-title: typescriptParser
+title: TypeScript Parser - Format .ts Files in Fabric
+description: Use the typescriptParser to format TypeScript files with import/export handling and extension mapping in Fabric code generation.
 outline: deep
 ---
 
-# `typescriptParser`
+# TypeScript Parser
 
-Parses TypeScript files and formats imports, exports, and source code.
+The typescriptParser formats TypeScript (`.ts`) files, organizing imports, exports, and source code with consistent formatting.
+
+**Use typescriptParser when:** Generating TypeScript type definitions, interfaces, constants, or functions.
+
+**Perfect for:** Type generators, API client generation, SDK TypeScript files, config generators.
+
+**Key features:**
+- Formats TypeScript code
+- Organizes imports and exports
+- Extension mapping support
+- Automatic parser selection
 
 ## Installation
 
-The `typescriptParser` is included in `@kubb/fabric-core`:
+The typescriptParser is included in `@kubb/fabric-core`.
 
-```ts [import.ts]
+**Import:**
+```ts
 import { typescriptParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
+
+Register the TypeScript parser to format `.ts` files.
+
+**Example:** Parse TypeScript files with the parser.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -27,9 +43,9 @@ const fabric = createFabric()
 fabric.use(typescriptParser)
 ```
 
-## Options
+## Parser Options
 
-The parser accepts options during file parsing, not during registration.
+Options are passed during file parsing via `fabric.write()`, not during parser registration.
 
 ### file
 

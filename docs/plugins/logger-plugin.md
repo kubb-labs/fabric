@@ -1,14 +1,29 @@
 ---
 layout: doc
-title: loggerPlugin
+title: logger Plugin - Progress Tracking & Event Logging
+description: Use the loggerPlugin for CLI progress bars, event logging, and WebSocket server for Fabric generation dashboards.
 outline: deep
 ---
 
-# `loggerPlugin`
+# logger Plugin - Progress & Event Logging
 
-Streams Fabric lifecycle activity with beautiful CLI output, progress bars, and websocket support for custom tooling.
+The loggerPlugin provides beautiful CLI progress bars, event logging, and a WebSocket server for building custom dashboards and tooling.
+
+**Use loggerPlugin when:** You need visual progress feedback or want to stream events to external tools.
+
+**Perfect for:** CLI tools, developer experience, debugging, custom dashboards, build monitoring.
+
+**Key features:**
+- Beautiful CLI progress bars (@clack/prompts)
+- Real-time percentage and file count
+- WebSocket server for custom tooling
+- Event streaming for dashboards
 
 ## Usage
+
+Register the logger plugin for progress tracking.
+
+**Example:** Enable progress bar and WebSocket server.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -22,7 +37,7 @@ fabric.use(loggerPlugin, {
 })
 ```
 
-## Options
+## Plugin Options
 
 ### progress
 

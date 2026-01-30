@@ -1,14 +1,23 @@
 ---
 layout: doc
-title: useFile
+title: useFile Hook - Access Current File Context in Fabric
+description: Access the current File object and its properties (path, sources, imports) with the useFile composable hook.
 outline: deep
 ---
 
-# `useFile`
+# useFile Hook
 
-Composable for accessing the current File context and its properties.
+The useFile composable accesses the current File context including path, baseName, sources, imports, exports, and metadata.
+
+**Use useFile when:** You need to read or modify the current file's properties from within a component.
+
+**Perfect for:** Adding sources dynamically, reading file metadata, conditional file generation.
 
 ## Usage
+
+Access the current file's properties from within a component.
+
+**Example:** Read file path and baseName.
 
 ```ts twoslash
 import { useFile } from '@kubb/fabric-core'

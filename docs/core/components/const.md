@@ -1,18 +1,27 @@
 ---
 layout: doc
-title: Const (Fabric Core)
+title: Const Component - Generate TypeScript Constants
+description: Use the Const component to generate TypeScript constant declarations with type annotations in Fabric Core.
 outline: deep
 ---
 
-# `Const` <Badge type="info" text="fabric-core" />
+# Const <Badge type="info" text="fabric-core" />
 
-Generates TypeScript constant declarations.
+The Const component generates TypeScript constant declarations with optional type annotations and export modifiers.
+
+**Use Const when:** You need to generate TypeScript const declarations programmatically.
+
+**Perfect for:** API URLs, configuration constants, enum alternatives, SDK constants.
 
 > [!NOTE]
-> This is the **fabric-core** version using the functional API.
+> This is the **Fabric Core** version using the functional API.
 > For the React version, see [Const (React Fabric)](/react/components/const).
 
 ## Usage
+
+Generate TypeScript constant declarations with the Const component.
+
+**Example:** Create an exported API URL constant with type annotation.
 
 ::: code-group
 
@@ -33,12 +42,13 @@ const component = Const({
 const output = await fabric.render(component)
 ```
 
+**Output:**
 ```ts [output]
 export const API_URL: string = 'https://api.example.com'
 ```
 :::
 
-## Props
+## Component Props
 
 ### name
 

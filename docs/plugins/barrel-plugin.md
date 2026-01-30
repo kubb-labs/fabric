@@ -1,14 +1,29 @@
 ---
 layout: doc
-title: barrelPlugin
+title: barrel Plugin - Generate Index Files for Clean Imports
+description: Use the barrelPlugin to auto-generate index.ts barrel files that re-export modules for cleaner imports in TypeScript.
 outline: deep
 ---
 
-# `barrelPlugin`
+# barrel Plugin - Generate Index Files
 
-Generates `index.ts` barrel files per folder to re-export modules and simplify imports.
+The barrelPlugin automatically generates `index.ts` barrel files per folder to re-export modules, simplifying import statements.
+
+**Use barrelPlugin when:** You want clean, consolidated imports from generated code directories.
+
+**Perfect for:** Multi-file generators, SDK generation, component libraries, clean import paths.
+
+**Key features:**
+- Auto-generate index.ts files
+- Named or wildcard exports
+- Nested directory support
+- Tree-shaking friendly
 
 ## Usage
+
+Register the barrel plugin to auto-generate index files.
+
+**Example:** Generate named export barrel files.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -22,7 +37,7 @@ fabric.use(barrelPlugin, {
 })
 ```
 
-## Options
+## Plugin Options
 
 ### root
 

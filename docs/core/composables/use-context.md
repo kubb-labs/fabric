@@ -1,18 +1,27 @@
 ---
 layout: doc
-title: useContext
+title: useContext Hook - Access Context Values in Fabric
+description: Access custom context values in Fabric components with the useContext composable hook.
 outline: deep
 ---
 
-# `useContext`
+# useContext Hook
 
-Composable for accessing context values in Fabric components.
+The useContext composable accesses context values from context providers in Fabric components.
+
+**Use useContext when:** You need to access shared state, configuration, or values from parent components.
+
+**Perfect for:** Custom context access, shared configuration, implementing context patterns.
 
 > [!NOTE]
-> Behind the scenes `useContext will be used inside of the `@kubb/react-fabric` package.
+> This hook is used internally by `@kubb/react-fabric` for React context integration.
 
 
 ## Usage
+
+Access values from a specific context key.
+
+**Example:** Access App context values.
 
 ```ts twoslash
 import { useContext } from '@kubb/fabric-core'

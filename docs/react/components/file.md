@@ -1,10 +1,12 @@
 ---
 layout: doc
-title: File (React Fabric)
+title: File Component - Generate Files with React JSX
+description: Use the File React component to generate TypeScript files with imports, exports, and sources using JSX syntax in Fabric.
+
 outline: deep
 ---
 
-# `File` <Badge type="tip" text="react-fabric" />
+# File <Badge type="tip" text="react-fabric" />
 
 React component for generating files with sources, imports, and exports.
 

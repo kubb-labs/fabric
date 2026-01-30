@@ -1,26 +1,34 @@
 ---
 layout: doc
-title: Fabric Core
+title: Fabric Core API - TypeScript Code Generator Engine
+description: @kubb/fabric-core provides components, composables, and plugins for programmatic file generation with TypeScript. No React required.
 outline: deep
 ---
 
-# Fabric Core
+# Fabric Core API Reference
 
-`@kubb/fabric-core` provides the foundational runtime and components for file generation using a custom runtime.
+`@kubb/fabric-core` provides the foundational runtime, components, and plugins for generating TypeScript files programmatically without React.
 
-## Overview
+**What is Fabric Core:**
+- Lightweight file generation framework with custom FSX renderer
+- No React dependency required
+- Plugin-based architecture for extensibility
+- Event-driven lifecycle for custom hooks
 
-Fabric Core is a lightweight, dependency-free file generation framework that uses a custom runtime. It provides the core functionality for creating, managing, and writing files using functional components.
+**Use Fabric Core when:** Building code generators, CLI tools, or SDKs without React. Need minimal dependencies and direct rendering control.
 
-**Key Features:**
-- Custom FSX renderer (no React dependency)
-- Functional API with `createComponent`
-- Plugin-based architecture
-- TypeScript-first design
-- Event-driven lifecycle
-- File management system
+## Key Features
+
+- **Custom FSX renderer** - No React dependency, lightweight
+- **Functional API** - Use `createComponent` for custom components
+- **Plugin architecture** - Extend functionality with fs, logger, barrel plugins
+- **TypeScript-first** - Full type safety and IntelliSense
+- **Event-driven** - Hook into lifecycle events for custom logic
+- **File management** - Deduplication, merging, and cache management
 
 ## Installation
+
+Install `@kubb/fabric-core` as a dev dependency:
 
 ::: code-group
 
@@ -42,7 +50,9 @@ yarn add -D @kubb/fabric-core
 
 :::
 
-## Quick Start
+## Quick Start Example
+
+Generate a TypeScript constant using Fabric Core's functional components.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -62,16 +72,16 @@ const output = await fabric.render(component)
 console.log(output)
 ```
 
-This will log:
-```
+**Output:**
+```typescript
 export const API_URL: string = 'https://api.example.com'
 ```
 
-## Core Concepts
+## Core API Concepts
 
-### createFabric
+### createFabric Factory
 
-The main factory function for creating a Fabric instance. It provides methods for plugin registration, file management, and rendering.
+The `createFabric()` function creates a Fabric instance with methods for plugin registration, file management, and rendering.
 
 ```ts
 import { createFabric } from '@kubb/fabric-core'
@@ -79,11 +89,11 @@ import { createFabric } from '@kubb/fabric-core'
 const fabric = createFabric()
 ```
 
-**Learn more:** [createFabric](/core/create-fabric)
+**Learn more:** [createFabric API](/core/create-fabric)
 
-### Components
+### Core Components
 
-Fabric Core provides functional components for generating TypeScript code:
+Functional components for generating TypeScript code elements. Use these to build type definitions, constants, functions, and files.
 
 - **[App](/core/components/app)** - Application container for file generation
 - **[Root](/core/components/root)** - Root runtime context provider (no need to use directly)
@@ -92,9 +102,9 @@ Fabric Core provides functional components for generating TypeScript code:
 - **[Const](/core/components/const)** - TypeScript constant declarations
 - **[Type](/core/components/type)** - TypeScript type declarations
 
-### Composables
+### Composables (Hooks)
 
-Hooks for accessing Fabric's internal context and state:
+Access Fabric's internal context and state via composable hooks. Use these in custom components or plugins.
 
 - **[useApp](/core/composables/use-app)** - Access application context
 - **[useContext](/core/composables/use-context)** - Access Fabric context
@@ -103,9 +113,9 @@ Hooks for accessing Fabric's internal context and state:
 - **[useLifecycle](/core/composables/use-lifecycle)** - Lifecycle event hooks
 - **[useNodeTree](/core/composables/use-node-tree)** - Access component tree
 
-### Events
+### Event System
 
-Fabric Core provides a comprehensive event system for lifecycle management:
+Listen to lifecycle events to track progress, transform files, or perform custom operations.
 
 ```ts
 fabric.context.on('lifecycle:start', () => {
@@ -113,9 +123,11 @@ fabric.context.on('lifecycle:start', () => {
 })
 ```
 
-**Learn more:** [Events](/core/events)
+**Learn more:** [Events API](/core/events)
 
 ## Import Paths
+
+Fabric Core organizes exports into subpaths for tree-shaking and cleaner imports.
 
 ```ts
 // Core components and utilities
@@ -131,9 +143,11 @@ import { typescriptParser, defaultParser } from '@kubb/fabric-core/parsers'
 import type { Fabric, FabricNode, FabricContext } from '@kubb/fabric-core/types'
 ```
 
-## Examples
+## Usage Examples
 
-### Basic File Generation
+### Example 1: Basic File Generation
+
+Generate a TypeScript file with type definitions using the imperative API.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -160,7 +174,9 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-### Using FSX Components
+### Example 2: Using FSX Components
+
+Use Fabric's functional components to generate TypeScript types declaratively.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -186,33 +202,69 @@ console.log(output)
 
 ```
 
-This will log:
-```
+**Output:**
+```typescript
 export type User = { id: number; name: string }
 ```
 
-## Architecture
+## How Fabric Core Works
 
-Fabric Core uses a custom runtime that:
-- Transforms functional components into file structures
-- Manages component lifecycle and rendering
-- Provides context through composables
-- Emits events for plugin integration
-- Handles file deduplication and merging
+Fabric Core uses a custom runtime engine that:
 
-## When to Use
+1. **Transforms components** - Converts functional components into file structures
+2. **Manages lifecycle** - Handles component lifecycle and rendering
+3. **Provides context** - Makes state available through composables
+4. **Emits events** - Triggers lifecycle events for plugin integration
+5. **Handles files** - Deduplicates, merges, and caches files
 
-**Use Fabric Core when:**
-- Building custom code generators
-- Working in non-React environments
-- Minimal dependencies are important
-- Direct control over rendering is needed
+## When to Use Fabric Core vs React Fabric
+
+**✅ Use Fabric Core when:**
+- Building custom code generators or CLI tools
+- Working in non-React environments (Node.js, Bun)
+- Minimal dependencies are critical
+- You need direct control over the rendering process
 
 **Consider React Fabric when:**
-- Familiar with React patterns
-- Want JSX syntax with React components
+- You're already familiar with React patterns
+- You want to use standard JSX syntax with React components
+- You're building React-based tooling
 
-## See Also
+**Learn more:** [React Fabric](/react)
+
+## Next Steps
+
+- [createFabric API](/core/create-fabric) - Factory function reference
+- [File Component](/core/components/file) - Component documentation
+- [Events Reference](/core/events) - Lifecycle events
+- [Quick Start](/getting-started/quick-start) - Build your first generator
+
+## FAQ
+
+### What's the difference between Fabric Core and React Fabric?
+
+Fabric Core uses a custom FSX renderer with `createComponent`, while React Fabric uses standard React. Core has no React dependency.
+
+### Can I use JSX with Fabric Core?
+
+Yes, but it's custom JSX (FSX), not React JSX. Use `createComponent` instead of `React.createElement`.
+
+### Does Fabric Core work with Bun?
+
+Yes, Fabric Core works with both Node.js 20+ and Bun 1.0+.
+
+### How do I add custom components?
+
+Use `createComponent` from `@kubb/fabric-core`:
+```ts
+import { createComponent } from '@kubb/fabric-core'
+
+export const MyComponent = createComponent('MyComponent', ({ children }) => {
+  return children
+})
+```
+
+## Related Resources
 
 - [createFabric](/core/create-fabric) - Factory function reference
 - [Components](/core/components/file) - Component documentation

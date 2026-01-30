@@ -1,14 +1,29 @@
 ---
 layout: doc
-title: fsPlugin
+title: fs Plugin - Write Generated Files to Disk
+description: Use the fsPlugin to write generated code files to disk with dry run mode, cleanup, and pre-write hooks in Fabric.
 outline: deep
 ---
 
-# `fsPlugin`
+# fs Plugin - File System Operations
 
-Writes files to disk and provides file system operations for Fabric.
+The fsPlugin writes generated files to disk with support for dry run mode, directory cleanup, and pre-write callbacks.
+
+**Use fsPlugin when:** You need to write generated code files to the filesystem.
+
+**Perfect for:** All code generators, writing TypeScript files, API client generation, file output.
+
+**Key features:**
+- Write files to disk
+- Dry run mode for testing
+- Clean output directories
+- Pre-write hooks for validation
 
 ## Usage
+
+Register the fs plugin to enable file writing.
+
+**Example:** Write files with directory cleanup.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -22,7 +37,7 @@ fabric.use(fsPlugin, {
 })
 ```
 
-## Options
+## Plugin Options
 
 ### dryRun
 

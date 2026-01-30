@@ -1,21 +1,45 @@
 ---
 layout: doc
-title: Creating Plugins
+title: Creating Fabric Plugins - Extend Code Generators
+description: Build custom Fabric plugins to add lifecycle hooks, file transformations, and new capabilities to code generators.
 outline: deep
 ---
 
 # Creating Plugins
 
-Learn how to create custom plugins to extend Fabric's functionality.
+Build custom plugins to extend Fabric's code generation capabilities with lifecycle hooks, file transformations, and custom methods. Plugins are the primary extension mechanism for Fabric.
 
 ## What are Plugins?
 
-Plugins extend Fabric with reusable functionality. They can:
+Plugins extend Fabric by listening to lifecycle events, transforming files, and adding new methods. They're composable, reusable pieces of functionality that integrate seamlessly with Fabric's event-driven architecture.
 
-- Listen to lifecycle events
-- Transform files during processing
-- Add new methods to the Fabric instance
-- Integrate with external tools
+**Plugins can:**
+- Listen to file and lifecycle events
+- Transform file content during processing
+- Add custom methods to the Fabric instance
+- Integrate with external tools (formatters, linters, etc.)
+
+## Why Create Custom Plugins?
+
+- **Extend functionality** - Add features not available in built-in plugins
+- **Integrate tools** - Connect Prettier, ESLint, or other formatters
+- **Custom transformations** - Apply domain-specific file processing
+- **Reusable logic** - Share plugin across projects and teams
+
+## How to Create a Plugin
+
+Use the `definePlugin` factory from `@kubb/fabric-core/plugins`:
+
+```ts
+import { definePlugin } from '@kubb/fabric-core/plugins'
+
+const myPlugin = definePlugin({
+  name: 'myPlugin',
+  install(fabric, options) {
+    // Subscribe to events, transform files
+  }
+})
+```
 
 ## Installation
 
@@ -335,10 +359,33 @@ install(fabric, options) {
 }
 ```
 
+## FAQ
 
-## See Also
+### What's the difference between install and inject?
 
-- [Events](/core/events) — Available lifecycle events
-- [Creating Parsers](/guide/creating-parsers) — Create custom parsers
-- [fsPlugin](/plugins/fs-plugin) — File system plugin example
-- [loggerPlugin](/plugins/logger-plugin) — Example plugin with options
+`install` is called when the plugin is registered - use it for event subscriptions and setup. `inject` returns methods added to the Fabric instance - use it for public plugin APIs.
+
+### Can inject be async?
+
+No. The `inject` function must be synchronous. For async operations, use `install` or create async methods that are returned from `inject`.
+
+### How do I access files in my plugin?
+
+Use `fabric.files` to access all files, or subscribe to file events like `file:created` and `file:changed` to react to file operations.
+
+### Can plugins depend on other plugins?
+
+Yes, but manage order carefully. Register dependencies before dependent plugins. Use lifecycle events to coordinate between plugins.
+
+## See also
+
+- [Events API](/core/events) — All available lifecycle and file events
+- [Creating Parsers](/guide/creating-parsers) — Build custom file parsers
+- [File System Plugin](/plugins/fs-plugin) — Example of a full-featured plugin
+- [Logger Plugin](/plugins/logger-plugin) — Simple plugin with options
+
+## Next Steps
+
+- [Explore built-in plugins](/plugins/fs-plugin) - See real-world plugin examples
+- [Learn about Events](/core/events) - Understand the event system
+- [Build a parser](/guide/creating-parsers) - Create custom file type handlers

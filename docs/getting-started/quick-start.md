@@ -1,16 +1,21 @@
 ---
 layout: doc
-title: Quick Start
+title: Quick Start - Fabric JSX Code Generator Tutorial
+description: Build your first TypeScript code generator with Fabric in 5 minutes. Step-by-step tutorial for file generation with JSX.
 outline: deep
 ---
 
-# Quick Start
+# Quick Start Guide: Build Your First Code Generator
 
-Build your first code generator with Fabric in minutes.
+Learn how to generate TypeScript files with Fabric in under 5 minutes. This tutorial covers basic file generation, multiple files, progress tracking, barrel files, and lifecycle events.
 
-## Basic File Generation
+**What you'll build:** A code generator that creates TypeScript type definitions and constants.
 
-Create a simple script that generates a TypeScript file:
+**Prerequisites:** Node.js 20+ or Bun 1.0+, basic TypeScript knowledge.
+
+## Step 1: Basic File Generation
+
+Create a simple code generator script that outputs a TypeScript type definition file.
 
 ```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
@@ -47,7 +52,7 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-Run the script:
+**Run the generator:**
 
 ::: code-group
 
@@ -61,15 +66,15 @@ node --loader tsx generate.ts
 
 :::
 
-This creates `generated/user.ts`:
+**Output:** Creates `generated/user.ts` with the User type definition.
 
 ```ts [generated/user.ts]
 export type User = { id: number; name: string }
 ```
 
-## Adding Multiple Files
+## Step 2: Generate Multiple Files
 
-Generate multiple related files:
+Create a generator that produces multiple related TypeScript files (types and constants).
 
 ```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
@@ -110,7 +115,7 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-This creates `generated/types.ts` and `generated/constants.ts`:
+**Output:** Two files are generated with proper formatting.
 
 ::: code-group
 
@@ -126,9 +131,9 @@ export type Post = { id: number; title: string; userId: number }
 
 :::
 
-## Using the Logger Plugin
+## Step 3: Add Progress Tracking
 
-Add progress tracking and visual feedback:
+Enable visual feedback during generation with the logger plugin. See real-time progress in your terminal.
 
 ```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
@@ -161,11 +166,11 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-The logger displays a progress bar with percentage completion in the console during generation.
+**Output:** A progress bar displays in the console showing generation status (e.g., "50% - 1/2 files").
 
-## Generating Barrel Files
+## Step 4: Generate Barrel Files (Index Exports)
 
-Use the barrel plugin to automatically create index files:
+Automatically create `index.ts` files that re-export all generated modules for cleaner imports.
 
 ```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
@@ -211,15 +216,21 @@ await fabric.write()
 await fabric.writeEntry({ root: './generated', mode: 'named' })
 ```
 
-This creates:
-- `generated/models/user.ts`
-- `generated/models/post.ts`
-- `generated/models/index.ts` (barrel file)
-- `generated/index.ts` (entry barrel)
+**Output:** Four files are created:
+- `generated/models/user.ts` - User type definition
+- `generated/models/post.ts` - Post type definition
+- `generated/models/index.ts` - Barrel file re-exporting User and Post
+- `generated/index.ts` - Entry barrel re-exporting from models
 
-## Listening to Events
+**Usage:** Import from barrel files for cleaner code.
+```ts
+// Instead of: import { User } from './generated/models/user'
+import { User, Post } from './generated/models'
+```
 
-React to lifecycle events:
+## Step 5: Listen to Lifecycle Events
+
+Hook into Fabric's event system to monitor generation progress, log activity, or trigger custom actions.
 
 ```ts twoslash [generate.ts]
 import { createFabric } from '@kubb/fabric-core'
@@ -257,9 +268,57 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-This will log:
+**Console output:**
 ```
 Writing files ...
 Progress: 100.0% (1/1)
 Generation completed!
 ```
+
+## Next Steps
+
+Now that you've built a basic code generator, explore advanced features:
+
+- [Configuration Guide](/getting-started/configure) - Configure plugins and parsers
+- [Creating Plugins](/guide/creating-plugins) - Build custom Fabric plugins
+- [Core Components](/core/components/file) - Use File, Function, and Type components
+- [Parsers](/parsers) - Customize output formatting
+- [Troubleshooting](/getting-started/troubleshooting) - Fix common issues
+
+## FAQ
+
+### How do I generate files without writing to disk?
+
+Enable dry run mode in the fs plugin:
+```ts
+fabric.use(fsPlugin, { dryRun: true })
+```
+
+### Can I customize the output format?
+
+Yes. Use custom parsers or the built-in TypeScript/TSX parsers. See [Creating Parsers](/guide/creating-parsers).
+
+### How do I add imports to generated files?
+
+Add import objects to the `imports` array when calling `addFile()`:
+```ts
+await fabric.addFile({
+  baseName: 'api.ts',
+  path: './generated/api.ts',
+  imports: [
+    { name: ['User'], path: './types', isTypeOnly: true }
+  ],
+  sources: [/* ... */],
+  exports: []
+})
+```
+
+### Where can I see all available plugins?
+
+See the [Plugins documentation](/plugins) for a complete list of built-in plugins.
+
+## Related Resources
+
+- [Installation](/getting-started/installation) - Install Fabric packages
+- [Introduction](/getting-started/introduction) - Learn about Fabric architecture
+- [React Fabric](/react) - Use React components for code generation

@@ -1,12 +1,13 @@
 ---
 layout: doc
-title: Function (React Fabric)
+title: Function Component React - Generate TypeScript Functions
+description: Generate TypeScript function declarations using React JSX. Component-based function generation for Fabric code generators.
 outline: deep
 ---
 
-# `Function` <Badge type="tip" text="react-fabric" />
+# Function <Badge type="tip" text="react-fabric" />
 
-React component for generating TypeScript function declarations.
+Generate TypeScript function declarations using React JSX syntax. Use this component when building code generators with React-based Fabric runtime for declarative function generation.
 
 > [!NOTE]
 > This is the **react-fabric** version using React.
@@ -46,6 +47,24 @@ export async function getUser(id: number): User {
 }
 ```
 :::
+
+## What is the Function Component?
+
+The `Function` component generates TypeScript function declarations using React JSX. It provides a declarative way to create functions in your code generators with full support for async, generics, parameters, and return types.
+
+## Why Use Function in React?
+
+- **Declarative syntax** - Define functions using clean JSX props
+- **Full TypeScript support** - Generics, params, and return types
+- **Async functions** - Built-in async/await support
+- **Component-based** - Nest within other React Fabric components
+
+## Common Use Cases
+
+- Generate API client functions with proper types
+- Create utility functions programmatically
+- Build async data fetching functions
+- Generate type-safe handler functions
 
 ## Props
 
@@ -123,8 +142,27 @@ Function body.
 |     Type: | `KubbNode` |
 | Required: | `false`    |
 
-## See Also
+## FAQ
 
-- [Function (Fabric Core)](/core/components/function) - FSX version
-- [Const](/react/components/const) - Constant declarations
-- [Type](/react/components/type) - Type declarations
+### How do I add multiple parameters?
+
+Pass a comma-separated string to the `params` prop: `params="id: number, options: RequestOptions"`.
+
+### Can I use generics?
+
+Yes. Pass a single generic as a string (`generics="T"`) or multiple as an array (`generics={['T', 'U']}`).
+
+### What's the difference between async and Promise return type?
+
+Use `async={true}` to generate `async function`. The return type is automatically wrapped in `Promise<>` if you specify a `returnType`.
+
+## Related Components
+
+- [Function (Fabric Core)](/core/components/function) - FSX version for non-React workflows
+- [Const Component](/react/components/const) - Generate constant declarations
+- [Type Component](/react/components/type) - Generate type declarations
+
+## Next Steps
+
+- [Learn React Fabric basics](/react) - Understand the React runtime
+- [Quick Start Guide](/getting-started/quick-start) - Build your first generator

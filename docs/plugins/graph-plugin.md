@@ -1,24 +1,38 @@
 ---
 layout: doc
-title: graphPlugin
+title: graph Plugin - Visualize File Dependency Graph
+description: Use the graphPlugin to visualize file dependencies and relationships in your Fabric code generation with interactive graphs.
 outline: deep
 ---
 
-# `graphPlugin`
+# graph Plugin - Dependency Visualization
 
-The `graphPlugin` visualizes the dependency graph of all files managed by Fabric. This plugin generates an interactive graph showing file relationships and optionally opens it in a browser.
+The graphPlugin visualizes the dependency graph of all files managed by Fabric, showing file relationships in an interactive browser-based graph.
+
+**Use graphPlugin when:** You need to visualize file dependencies, debug generation issues, or understand file relationships.
+
+**Perfect for:** Debugging complex generators, documentation, understanding file structures, dependency analysis.
+
+**Key features:**
+- Interactive dependency graph
+- Browser-based visualization
+- File relationship mapping
+- Auto-open in browser
 
 ## Installation
 
-The graphPlugin is included in `@kubb/fabric-core`:
+The graphPlugin is included in `@kubb/fabric-core`.
 
-```ts [example.ts]
+**Import:**
+```ts
 import { graphPlugin } from '@kubb/fabric-core/plugins'
 ```
 
 ## Usage
 
-### Basic Example
+Generate and visualize file dependency graphs.
+
+**Example:** Create a graph and open it in the browser.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -43,9 +57,9 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-This generates a visual graph of all files under `./src` and opens it in your default browser.
+**Output:** Generates a visual graph of all files under `./src` and opens it in your default browser.
 
-## Options
+## Plugin Options
 
 | Option | Type      | Required | Default | Description                                        |
 |--------|-----------|----------|---------|---------------------------------------------------|

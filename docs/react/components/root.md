@@ -1,12 +1,13 @@
 ---
 layout: doc
-title: Root (React Fabric)
+title: Root Component React - Fabric Runtime Context Provider
+description: Root React component provides Fabric runtime context. Internal component for React-based code generators.
 outline: deep
 ---
 
-# `Root` <Badge type="tip" text="react-fabric" />
+# Root <Badge type="tip" text="react-fabric" />
 
-React component providing core Fabric runtime context.
+Internal React component providing core Fabric runtime context. This component is typically used by the Fabric runtime and doesn't need to be used directly in most code generators.
 
 > [!NOTE]
 > This is the **react-fabric** version using React.
@@ -45,6 +46,21 @@ export function Generator() {
 }
 ```
 :::
+
+## What is the Root Component?
+
+The `Root` component establishes the core runtime context for React Fabric. It manages the component tree, file system operations, error handling, and lifecycle events. Most developers won't use this directly - it's automatically configured by `createReactFabric()`.
+
+## Why Root Exists
+
+- **Runtime context** - Provides essential services to child components
+- **Error boundaries** - Centralized error handling for generators
+- **File management** - Coordinates file operations across components
+- **Tree structure** - Maintains component hierarchy for rendering
+
+## When to Use Root Directly
+
+Only use `Root` directly if you're building custom Fabric runtimes or need low-level control over the rendering pipeline. For standard code generation, use `createReactFabric()` instead.
 
 ## Props
 
@@ -93,8 +109,27 @@ Child React components.
 |     Type: | `KubbNode` |
 | Required: | `false`    |
 
-## See Also
+## FAQ
 
-- [Root (Fabric Core)](/core/components/root) - FSX version
-- [App](/react/components/app) - App container component
-- [createReactFabric](/react/createReactFabric) - React Fabric factory
+### Do I need to use Root in my generators?
+
+No. The `createReactFabric()` function automatically creates and configures `Root` for you. You only need direct access for advanced customization.
+
+### How does Root differ from App?
+
+`Root` is the runtime context provider (internal infrastructure). `App` is the entry point for your generator components (your code). Always wrap your components in `App`, not `Root`.
+
+### Can I have multiple Root components?
+
+No. Each Fabric instance has one `Root` component that manages the entire component tree and file system.
+
+## Related Components
+
+- [Root (Fabric Core)](/core/components/root) - FSX version for non-React workflows
+- [App Component](/react/components/app) - Application container for generators
+- [createReactFabric()](/react/createReactFabric) - React Fabric factory function
+
+## Next Steps
+
+- [Learn React Fabric basics](/react) - Understand the React runtime
+- [createReactFabric API](/react/createReactFabric) - See how Root is configured automatically

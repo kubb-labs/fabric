@@ -1,24 +1,32 @@
 ---
 layout: doc
-title: React Fabric
+title: React Fabric - JSX Code Generator with React Components
+description: Build type-safe code generators using React JSX. React Fabric adds familiar React patterns to Fabric's code generation toolkit.
 outline: deep
 ---
 
 # React Fabric
 
-`@kubb/react-fabric` provides React-based components and runtime for file generation using familiar JSX syntax and React patterns.
+Build code generators using React components and JSX. React Fabric combines React's declarative component model with Fabric's code generation capabilities for intuitive, type-safe file generation.
 
-## Overview
+## What is React Fabric?
 
-React Fabric is a React integration for Fabric that enables component-based file generation using standard React and JSX. It leverages React's component model and reconciliation to generate code and files.
+React Fabric brings React's component-based development to code generation. Write JSX to generate TypeScript files, using familiar React patterns like hooks, components, and props. It's built on top of Fabric Core and adds React-specific rendering capabilities.
 
-**Key Features:**
-- Standard React and JSX
-- Familiar React patterns (hooks, components)
-- React DevTools support
-- Interactive CLI rendering
-- Built on top of Fabric Core
-- TypeScript-first design
+## Why Use React Fabric?
+
+**If you already know React**, React Fabric is the fastest way to build code generators:
+
+- **Familiar syntax** - Use JSX and React patterns you already know
+- **Type-safe** - Full TypeScript IntelliSense for all components
+- **Composable** - Build complex generators from small components
+- **Debuggable** - React DevTools support for debugging generators
+
+**When to choose React Fabric over Fabric Core:**
+- You prefer React's component model
+- You want to reuse React skills for code generation
+- You need complex conditional rendering
+- You want DevTools support
 
 ## Installation
 
@@ -300,10 +308,37 @@ The React reconciler transforms JSX components into Fabric's internal file struc
 - Functional API is preferred
 - Minimal bundle size is critical
 
-## See Also
+## FAQ
 
-- [createReactFabric](/react/createReactFabric) - Factory function reference
-- [Components](/react/components/file) - React component documentation
-- [Fabric Core](/core) - Underlying core package
-- [reactPlugin](/plugins/react-plugin) - React plugin details
-- [Plugins](/plugins/fs-plugin) - Available plugins
+### What's the difference between React Fabric and Fabric Core?
+
+React Fabric uses React components and JSX syntax. Fabric Core uses FSX (a lighter JSX-like syntax without React). Choose React if you know React; choose Core for minimal dependencies.
+
+### Can I use React hooks in my generators?
+
+Yes. React Fabric supports `useState`, `useEffect`, and custom hooks. It also provides Fabric-specific hooks like `useFile()`, `useApp()`, and `useLifecycle()`.
+
+### Does this require React DOM?
+
+No. React Fabric uses a custom React reconciler - no browser or DOM required. It runs entirely in Node.js.
+
+### Can I debug with React DevTools?
+
+Yes. Set `devtools: true` when creating the Fabric instance to connect React DevTools for component tree inspection.
+
+### How do I generate multiple files?
+
+Use multiple `<File>` components in your generator. Each File component creates a separate output file.
+
+## See also
+
+- [createReactFabric()](/react/createReactFabric) - Factory function API reference
+- [React Components](/react/components/file) - Full component API docs
+- [Fabric Core](/core) - Learn about the underlying core package
+- [React Plugin](/plugins/react-plugin) - React plugin implementation details
+
+## Next Steps
+
+- [Quick Start Guide](/getting-started/quick-start) - Build your first generator
+- [Component Reference](/react/components/file) - Explore available components
+- [Creating Plugins](/guide/creating-plugins) - Extend React Fabric with plugins

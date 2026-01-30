@@ -1,12 +1,13 @@
 ---
 layout: doc
-title: Const (React Fabric)
+title: Const Component React - Generate TypeScript Constants
+description: Generate TypeScript const declarations using React JSX. Component-based constant generation for Fabric code generators.
 outline: deep
 ---
 
-# `Const` <Badge type="tip" text="react-fabric" />
+# Const <Badge type="tip" text="react-fabric" />
 
-React component for generating TypeScript constant declarations.
+Generate TypeScript constant declarations using React JSX syntax. Use this component when building code generators with React-based Fabric runtime for typed constant values.
 
 > [!NOTE]
 > This is the **react-fabric** version using React.
@@ -36,6 +37,24 @@ const output = await fabric.renderToString(<Generator/>)
 export const API_URL: string = 'https://api.example.com'
 ```
 :::
+
+## What is the Const Component?
+
+The `Const` component generates TypeScript constant declarations using React JSX. It provides a declarative way to create typed constants in your code generators with full control over export, typing, and const assertions.
+
+## Why Use Const in React?
+
+- **Type-safe values** - Add TypeScript type annotations to constants
+- **Component-based** - Use familiar React patterns for const generation
+- **Const assertions** - Support for `as const` with the `asConst` prop
+- **Flexible exports** - Control exported vs internal constants
+
+## Common Use Cases
+
+- Generate configuration constants (API URLs, feature flags)
+- Create lookup tables and mappings
+- Build enum-like constant objects with `as const`
+- Generate shared constant values across files
 
 ## Props
 
@@ -96,8 +115,27 @@ Constant value.
 | Required: | `false`    |
 
 
-## See Also
+## FAQ
 
-- [Const (Fabric Core)](/core/components/const) - FSX version
-- [Function](/react/components/function) - Function declarations
-- [Type](/react/components/type) - Type declarations
+### What's the difference between type and asConst?
+
+The `type` prop adds an explicit type annotation (`: string`). The `asConst` prop adds a const assertion (`as const`), which makes TypeScript infer the most specific type. Use `asConst` for literal types and readonly objects.
+
+### Can I export constants conditionally?
+
+Yes. Set the `export` prop to `true` for exported constants or `false` (default) for internal constants.
+
+### How do I generate object constants?
+
+Pass a string with object literal syntax as children. Combine with `asConst={true}` for readonly objects with literal types.
+
+## Related Components
+
+- [Const (Fabric Core)](/core/components/const) - FSX version for non-React workflows
+- [Function Component](/react/components/function) - Generate function declarations
+- [Type Component](/react/components/type) - Generate type declarations
+
+## Next Steps
+
+- [Learn React Fabric basics](/react) - Understand the React runtime
+- [Quick Start Guide](/getting-started/quick-start) - Build your first generator

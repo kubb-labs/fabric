@@ -1,16 +1,29 @@
 ---
 layout: doc
-title: reactPlugin
+title: react Plugin - Render React Components in Fabric
+description: Use the reactPlugin to render React JSX components for file generation with Fabric. Stream output and handle errors.
 outline: deep
 ---
 
-# `reactPlugin`
+# react Plugin - React Component Rendering
 
-The `reactPlugin` uses React and JSX syntax to create files.
+The reactPlugin enables using React and standard JSX syntax to create files in Fabric. Brings React component model to code generation.
+
+**Use reactPlugin when:** You want to use React components and JSX for code generation templates.
+
+**Perfect for:** React developers, JSX-based templates, familiar React patterns.
+
+**Key features:**
+- Render React components to strings
+- Standard JSX syntax support
+- Stream output progressively
+- Error handling with stderr
 
 ## Usage
 
-Create a component that returns `hello from React!` and render it using the `reactPlugin`.
+Create and render React components with the react plugin.
+
+**Example:** Create a React component and render it.
 
 ```tsx
 import { createFabric } from '@kubb/fabric-core'
@@ -27,7 +40,7 @@ const App = () => {
 await fabric.render(App)
 ```
 
-## Options
+## Plugin Options
 
 ### `stdout`
 

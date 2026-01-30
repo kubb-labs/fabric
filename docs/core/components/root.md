@@ -1,20 +1,22 @@
 ---
 layout: doc
-title: Root (Fabric Core)
+title: Root Component - Fabric Runtime Context Provider
+description: The Root component provides core Fabric runtime context. Typically used internally by the Fabric runtime.
 outline: deep
 ---
 
-# `Root` <Badge type="info" text="fabric-core" />
+# Root <Badge type="info" text="fabric-core" />
 
-Provides core Fabric runtime context.
+The Root component provides core Fabric runtime context including error handling, tree structure, and file management.
+
+**Use Root when:** Building custom runtime implementations or advanced Fabric integrations. Most users don't need to use Root directly.
 
 > [!NOTE]
-> This is the **fabric-core** version using the functional API.
+> This is the **Fabric Core** version.
 > For the React version, see [Root (React Fabric)](/react/components/root).
 
 > [!WARNING]
-> The Root component is typically used internally by the Fabric runtime.
-> You don't need to use it directly in most cases.
+> The Root component is typically used **internally** by the Fabric runtime. You don't need to use it directly in most cases.
 
 ## Props
 

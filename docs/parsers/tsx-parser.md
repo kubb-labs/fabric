@@ -1,24 +1,38 @@
 ---
 layout: doc
-title: tsxParser
+title: TSX Parser - Format .tsx Files with JSX Support
+description: Use the tsxParser to format TypeScript JSX files for React components and JSX templates in Fabric code generation.
 outline: deep
 ---
 
-# `tsxParser`
+# TSX Parser
 
-The `tsxParser` is a specialized parser for TypeScript JSX (TSX) files. It delegates to the `typescriptParser` with TSX printing settings enabled, allowing you to generate `.tsx` files with proper JSX syntax handling.
+The tsxParser formats TypeScript JSX (`.tsx`) files with proper JSX syntax handling. It extends the TypeScript parser with JSX support.
+
+**Use tsxParser when:** Generating React components, JSX templates, or TypeScript files with JSX syntax.
+
+**Perfect for:** React component generators, JSX-based templates, UI library generation.
+
+**Key features:**
+- JSX syntax support
+- TypeScript + JSX formatting
+- Import/export handling
+- Extension mapping for `.tsx`
 
 ## Installation
 
-The tsxParser is included in `@kubb/fabric-core`:
+The tsxParser is included in `@kubb/fabric-core`.
 
+**Import:**
 ```ts
 import { tsxParser } from '@kubb/fabric-core/parsers'
 ```
 
 ## Usage
 
-### Basic Example
+Register the TSX parser to format `.tsx` files with JSX.
+
+**Example:** Generate a React component file.
 
 ```ts
 import { createFabric } from '@kubb/fabric-core'
@@ -49,13 +63,13 @@ await fabric.addFile({
 await fabric.write()
 ```
 
-This creates a file `generated/Component.tsx` with:
+**Output:** Creates a file `generated/Component.tsx` with JSX syntax.
 
 ```tsx [generated/Component.tsx]
 export const App = () => <div>Hello</div>
 ```
 
-## Options
+## Parser Options
 
 | Option    | Type            | Required | Default | Description                                                 |
 |-----------|-----------------|----------|---------|-------------------------------------------------------------|

@@ -1,14 +1,23 @@
 ---
 layout: doc
-title: useNodeTree
+title: useNodeTree Hook - Access Component Tree Structure
+description: Access the component node tree structure for debugging and tracking component hierarchy in Fabric.
 outline: deep
 ---
 
-# `useNodeTree`
+# useNodeTree Hook
 
-Composable for accessing the component node tree structure.
+The useNodeTree composable accesses the component node tree structure for tracking component hierarchy and debugging.
+
+**Use useNodeTree when:** Building debugging tools, tracking component hierarchy, or implementing custom devtools.
+
+**Perfect for:** Debugging utilities, component tracking, metadata storage, custom tooling.
 
 ## Usage
+
+Access the component tree node structure.
+
+**Example:** Access and manipulate the node tree.
 
 ```ts twoslash
 import { useNodeTree } from '@kubb/fabric-core'

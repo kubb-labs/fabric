@@ -1,10 +1,12 @@
 ---
 layout: doc
-title: App (React Fabric)
+title: App Component - React Container for Fabric
+description: Use the App React component as a container for file generation with metadata using JSX syntax in Fabric.
+
 outline: deep
 ---
 
-# `App` <Badge type="tip" text="react-fabric" />
+# App <Badge type="tip" text="react-fabric" />
 
 React component providing App context with metadata.
 

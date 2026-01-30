@@ -1,14 +1,23 @@
 ---
 layout: doc
-title: useFileManager
+title: useFileManager Hook - Manage Files in Fabric Queue
+description: Access the FileManager to add, retrieve, and manage files in the generation queue with the useFileManager hook.
 outline: deep
 ---
 
-# `useFileManager`
+# useFileManager Hook
 
-Composable for accessing the FileManager to manage file operations.
+The useFileManager composable accesses the FileManager for adding, retrieving, and managing files in the generation queue.
+
+**Use useFileManager when:** You need to add files programmatically, check if files exist, or access the file queue.
+
+**Perfect for:** Dynamic file generation, file deduplication, queue inspection.
 
 ## Usage
+
+Add and manage files programmatically using the FileManager.
+
+**Example:** Add a file to the generation queue from a component.
 
 ```tsx twoslash
 import { useFileManager } from '@kubb/fabric-core'

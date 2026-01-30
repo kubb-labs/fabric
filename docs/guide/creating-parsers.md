@@ -1,23 +1,47 @@
 ---
 layout: doc
-title: Creating Parsers
+title: Creating Fabric Parsers - Custom File Type Handlers
+description: Build custom parsers to handle different file types and transform generated code. Add support for JSON, YAML, or custom formats.
 outline: deep
 ---
 
 # Creating Parsers
 
-Learn how to create custom parsers to handle different file types and transform code.
+Build custom parsers to handle different file types and transform Fabric's generated output. Parsers convert file objects into final formatted strings for specific file extensions.
 
 ## What are Parsers?
 
-Parsers convert Fabric file objects into final string output for specific file types. They handle:
+Parsers convert Fabric file objects into final formatted strings for specific file types. They handle file-specific formatting, imports/exports generation, and syntax transformations before writing to disk.
 
-- Formatting source code
-- Generating imports and exports
+**Parsers handle:**
+- Formatting source code (TypeScript, JSON, YAML, etc.)
+- Generating import and export statements
 - Managing file extensions
 - Applying syntax-specific transformations
 
-Fabric includes built-in parsers for TypeScript, TSX, and default fallback parsing.
+## Why Create Custom Parsers?
+
+- **New file types** - Add support for JSON, YAML, GraphQL, or custom formats
+- **Custom formatting** - Apply project-specific code style rules
+- **Tool integration** - Connect Prettier, ESLint, or other formatters
+- **Syntax transformation** - Apply custom code transformations
+
+## How to Create a Parser
+
+Use the `defineParser` factory from `@kubb/fabric-core/parsers`:
+
+```ts
+import { defineParser } from '@kubb/fabric-core/parsers'
+
+const myParser = defineParser({
+  name: 'myParser',
+  extNames: ['.ext'],  // File extensions to handle
+  parse(file) {
+    // Transform file object to string
+    return file.sources.map(s => s.value).join('\n')
+  }
+})
+```
 
 ## Installation
 
@@ -393,10 +417,33 @@ parse(file) {
 }
 ```
 
-## See Also
+## FAQ
 
-- [typescriptParser](/parsers/typescript-parser) — Built-in TypeScript parser
-- [tsxParser](/parsers/tsx-parser) — Built-in TSX parser
-- [defaultParser](/parsers/default-parser) — Built-in fallback parser
-- [fsPlugin](/plugins/fs-plugin) — Write files to disk
-- [Creating Plugins](/guide/creating-plugins) — Build custom plugins
+### How do parsers differ from plugins?
+
+Parsers transform file objects into final strings for specific extensions. Plugins handle lifecycle events, file operations, and add methods to Fabric. Use parsers for file formatting, plugins for everything else.
+
+### Can I have multiple parsers for the same extension?
+
+No. Only one parser per extension. The last registered parser for an extension wins. Use conditional logic inside a single parser if you need multiple formatting strategies.
+
+### What's the default parser?
+
+Set `extNames: undefined` to create a fallback parser that handles any extension without a registered parser. Fabric includes a `defaultParser` that does this.
+
+### When is the parse function called?
+
+During `fabric.write()` when files are being written to disk. Parsers receive the complete file object and return the final string content.
+
+## See also
+
+- [TypeScript Parser](/parsers/typescript-parser) — Built-in TypeScript parser example
+- [TSX Parser](/parsers/tsx-parser) — Built-in TSX/React parser example
+- [Default Parser](/parsers/default-parser) — Built-in fallback parser
+- [Creating Plugins](/guide/creating-plugins) — Build custom plugins for Fabric
+
+## Next Steps
+
+- [Explore built-in parsers](/parsers/typescript-parser) - See real-world parser examples
+- [Build a plugin](/guide/creating-plugins) - Add lifecycle event handling
+- [File System Plugin](/plugins/fs-plugin) - Understand file writing

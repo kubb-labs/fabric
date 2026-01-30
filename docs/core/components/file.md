@@ -1,18 +1,27 @@
 ---
 layout: doc
-title: File (Fabric Core)
+title: File Component - Generate TypeScript Files with Fabric
+description: Use the File component to generate TypeScript files with imports, exports, and sources. Fabric Core functional API reference.
 outline: deep
 ---
 
-# `File` <Badge type="info" text="fabric-core" />
+# File <Badge type="info" text="fabric-core" />
 
-Generates files with sources, imports, and exports.
+The File component generates TypeScript files with full control over sources, imports, and exports during code generation.
+
+**Use File when:** You need to create `.ts` files programmatically with proper import/export statements and source code.
+
+**Perfect for:** Type definition generators, API client generators, SDK scaffolding tools.
 
 > [!NOTE]
-> This is the **fabric-core** version using the functional API.
+> This is the **Fabric Core** version using the functional API.
 > For the React version, see [File (React Fabric)](/react/components/file).
 
 ## Usage
+
+Create a file with exportable sources using the File component.
+
+**Example:** Generate a simple TypeScript type file.
 
 ::: code-group
 
@@ -36,12 +45,12 @@ const component = File({
 const output = await fabric.render(component)
 ```
 
+**Output:**
 ```ts [output]
 export type User = { id: number }
 ```
-:::
 
-## Props
+## Component Props
 
 ### baseName
 
@@ -104,7 +113,7 @@ Child components (`File.Source`, `File.Import`, `File.Export`).
 
 File has three sub-components for managing imports, exports, and source code.
 
-### `File.Source`
+### File.Source
 
 Adds source code to a file.
 
@@ -191,7 +200,7 @@ const output = await fabric.render(component)
 export type User = { id: number }
 ```
 
-### `File.Import`
+### File.Import`
 
 Adds import statements to a file.
 
@@ -303,7 +312,7 @@ File.Import({ name: 'React', path: 'react', isNameSpace: true })
 // -> import * as React from 'react'
 ```
 
-### `File.Export`
+### File.Export
 
 Adds export statements to a file.
 

@@ -1,18 +1,27 @@
 ---
 layout: doc
-title: Function (Fabric Core)
+title: Function Component - Generate TypeScript Functions
+description: Use the Function component to generate TypeScript function declarations with parameters and return types in Fabric Core.
 outline: deep
 ---
 
-# `Function` <Badge type="info" text="fabric-core" />
+# Function <Badge type="info" text="fabric-core" />
 
-Generates TypeScript function declarations.
+The Function component generates TypeScript function declarations including regular, async, and exported functions with parameters and return types.
+
+**Use Function when:** You need to generate TypeScript function declarations programmatically.
+
+**Perfect for:** API client methods, utility functions, SDK functions, helper generators.
 
 > [!NOTE]
-> This is the **fabric-core** version using the functional API.
+> This is the **Fabric Core** version using the functional API.
 > For the React version, see [Function (React Fabric)](/react/components/function).
 
 ## Usage
+
+Generate TypeScript function declarations with the Function component.
+
+**Example:** Create a function with parameters and return type.
 
 ::: code-group
 
@@ -33,6 +42,7 @@ const component = Function({
 const output = await fabric.render(component)
 ```
 
+**Output:**
 ```ts [output]
 function getUser(id: number): User {
   return fetch(`/users/${id}`)
@@ -40,7 +50,7 @@ function getUser(id: number): User {
 ```
 :::
 
-## Props
+## Component Props
 
 ### name
 

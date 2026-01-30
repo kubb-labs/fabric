@@ -1,16 +1,30 @@
 ---
 layout: doc
-title: fsxPlugin
+title: fsx Plugin - Render FSX Components to Files
+description: Use the fsxPlugin to render Fabric FSX components into file content with component tree tracking and debug mode.
 outline: deep
 ---
 
-# `fsxPlugin`
+# fsx Plugin - FSX Component Rendering
 
-The `fsxPlugin` enables rendering FabricElements to generate file output. This plugin provides the core rendering capabilities for transforming component trees into file content, making it essential for file-based code generation workflows.
+The fsxPlugin enables rendering FabricElements (FSX components) to generate file output. Essential for transforming component trees into file content.
+
+**Use fsxPlugin when:** You need to render Fabric Core's custom FSX components to strings.
+
+**Perfect for:** Fabric Core workflows, custom component rendering, non-React code generation.
+
+**Key features:**
+- Render FSX components to strings
+- Component tree tracking
+- Debug mode for development
+- Lifecycle event integration
 
 
 ## Usage
-Create a component that returns `hello from Fabric!` and render it using the `fsxPlugin`.
+
+Create and render FSX components with the fsx plugin.
+
+**Example:** Create a simple component and render it.
 
 ::: code-group
 
@@ -30,12 +44,13 @@ const App = createComponent('App', () => {
 const output = await fabric.render(App())
 ```
 
+**Output:**
 ```ts [output]
 "Hello from Fabric!"
 ```
 :::
 
-## Options
+## Plugin Options
 
 ### `treeNode`
 

@@ -1,16 +1,20 @@
 ---
 layout: doc
-title: Br (Fabric Core)
+title: Br Component - Line Break in Generated Code
+description: Use the Br component to add line breaks in generated TypeScript code output with Fabric Core.
 outline: deep
 ---
 
-# `Br` <Badge type="info" text="fabric-core" />
+# Br <Badge type="info" text="fabric-core" />
 
-Generates a line break in the output.
+The Br component generates a line break (`\n`) in the output code. Use it to control spacing between code elements.
+
+**Use Br when:** You need explicit line breaks between generated code statements.
+
+**Perfect for:** Spacing between functions, separating code blocks, formatting generated code.
 
 > [!NOTE]
-> This is the **fabric-core** version using the functional API.
-> In React Fabric, use the `<br />` JSX element instead.
+> This is the **Fabric Core** version. In React Fabric, use the `<br />` JSX element instead.
 
 ## Usage
 

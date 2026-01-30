@@ -1,14 +1,23 @@
 ---
 layout: doc
-title: useApp
+title: useApp Hook - Access Fabric App Context & Metadata
+description: Access App context metadata and lifecycle control in Fabric components with the useApp composable hook.
 outline: deep
 ---
 
-# `useApp`
+# useApp Hook
 
-Composable for accessing the App context with metadata and lifecycle control.
+The useApp composable accesses the App context containing metadata and lifecycle control within Fabric components.
+
+**Use useApp when:** You need to access metadata from the App component or exit the rendering process.
+
+**Perfect for:** Shared configuration, version info, global state, early exit conditions.
 
 ## Usage
+
+Access App metadata and lifecycle control from within components.
+
+**Example:** Access metadata from App context.
 
 ```ts twoslash
 import { useApp } from '@kubb/fabric-core'

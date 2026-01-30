@@ -1,16 +1,20 @@
 ---
 layout: doc
-title: Indent (Fabric Core)
+title: Indent Component - Increase Code Indentation
+description: Use the Indent component to increase indentation levels in generated TypeScript code with Fabric Core.
 outline: deep
 ---
 
-# `Indent` <Badge type="info" text="fabric-core" />
+# Indent <Badge type="info" text="fabric-core" />
 
-Increases indentation level in the output.
+The Indent component increases the indentation level for child content in generated code. Use with Dedent to control code block formatting.
+
+**Use Indent when:** You need to increase indentation inside functions, if statements, or code blocks.
+
+**Perfect for:** Formatting function bodies, nested code blocks, conditional statements.
 
 > [!NOTE]
-> This is the **fabric-core** version using the functional API.
-> In React Fabric, use the `<indent />` JSX element instead.
+> This is the **Fabric Core** version. In React Fabric, use the `<indent />` JSX element instead.
 
 ## Usage
 
