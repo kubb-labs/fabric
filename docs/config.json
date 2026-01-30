@@ -210,6 +210,7 @@
         {
           "text": "Plugins",
           "collapsed": false,
+          "link": "/plugins",
           "items": [
             {
               "text": "Fsx Plugin",
@@ -246,6 +247,7 @@
         {
           "text": "Parsers",
           "collapsed": false,
+          "link": "/parsers",
           "items": [
             {
               "text": "TypeScript Parser",
