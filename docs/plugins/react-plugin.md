@@ -5,7 +5,7 @@ description: Use the reactPlugin to render React JSX components for file generat
 outline: deep
 ---
 
-# React Plugin - React Component Rendering
+# React Component Rendering Plugin
 
 The reactPlugin enables using React and standard JSX syntax to create files in Fabric. Brings React component model to code generation.
 

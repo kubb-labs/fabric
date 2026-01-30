@@ -42,7 +42,6 @@ const component = Function({
 const output = await fabric.render(component)
 ```
 
-**Output:**
 ```ts [output]
 function getUser(id: number): User {
   return fetch(`/users/${id}`)

@@ -5,7 +5,7 @@ description: Use the graphPlugin to visualize file dependencies and relationship
 outline: deep
 ---
 
-# graph Plugin - Dependency Visualization
+# Dependency Visualization Plugin
 
 The graphPlugin visualizes the dependency graph of all files managed by Fabric, showing file relationships in an interactive browser-based graph.
 

@@ -5,7 +5,7 @@ description: Use the barrelPlugin to auto-generate index.ts barrel files that re
 outline: deep
 ---
 
-# barrel Plugin - Generate Index Files
+# Generate Barrel/Index Files Plugin
 
 The barrelPlugin automatically generates `index.ts` barrel files per folder to re-export modules, simplifying import statements.
 

@@ -43,7 +43,6 @@ const Component = App().children([
 const output = await fabric.render(Component)
 ```
 
-**Output:**
 ```ts [output]
 export type User = { id: number };
 ```

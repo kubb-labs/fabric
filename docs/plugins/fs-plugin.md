@@ -5,7 +5,7 @@ description: Use the fsPlugin to write generated code files to disk with dry run
 outline: deep
 ---
 
-# fs Plugin - File System Operations
+# File System Plugin
 
 The fsPlugin writes generated files to disk with support for dry run mode, directory cleanup, and pre-write callbacks.
 

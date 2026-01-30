@@ -44,7 +44,7 @@ Uses **FSX** (Fabric's custom JSX renderer) and `createComponent`.
 
 **Example:**
 
-```tsx [fabric-core.tsx]
+```tsx
 import { createComponent } from '@kubb/fabric-core'
 
 // Custom component using createComponent

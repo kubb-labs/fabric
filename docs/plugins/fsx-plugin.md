@@ -5,7 +5,7 @@ description: Use the fsxPlugin to render Fabric FSX components into file content
 outline: deep
 ---
 
-# fsx Plugin - FSX Component Rendering
+# FSX Component Rendering Plugin
 
 The fsxPlugin enables rendering FabricElements (FSX components) to generate file output. Essential for transforming component trees into file content.
 
@@ -44,7 +44,6 @@ const App = createComponent('App', () => {
 const output = await fabric.render(App())
 ```
 
-**Output:**
 ```ts [output]
 "Hello from Fabric!"
 ```

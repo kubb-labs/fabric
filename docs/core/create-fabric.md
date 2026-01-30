@@ -5,7 +5,7 @@ description: Create a Fabric instance to generate code files. Register plugins, 
 outline: deep
 ---
 
-# createFabric API Reference
+# `createFabric` API Reference
 
 Creates a new Fabric instance for programmatic file generation. Use this function to initialize your code generator, register plugins, and manage the generation lifecycle. The Fabric instance is the core entry point for all file operations.
 

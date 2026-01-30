@@ -41,7 +41,6 @@ const component = Type({
 const output = await fabric.render(component)
 ```
 
-**Output:**
 ```ts [output]
 export type User = { id: number; name: string }
 ```

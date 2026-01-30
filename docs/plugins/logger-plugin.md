@@ -5,7 +5,7 @@ description: Use the loggerPlugin for CLI progress bars, event logging, and WebS
 outline: deep
 ---
 
-# logger Plugin - Progress & Event Logging
+# Progress & Event Logging Plugin
 
 The loggerPlugin provides beautiful CLI progress bars, event logging, and a WebSocket server for building custom dashboards and tooling.
 
