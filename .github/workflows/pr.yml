@@ -156,7 +156,7 @@ jobs:
         run: pnpx pkg-pr-new publish --pnpm --owner=stijnvanhulle --repo=https://github.com/kubb-labs/fabric.git './packages/*' --template './examples/*'
 
   spellcheck:
-    name: Linting
+    name: Spell Check
     timeout-minutes: 15
     runs-on: ubuntu-latest
     if: github.actor != 'github-actions[bot]'
