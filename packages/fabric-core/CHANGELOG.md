@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.12.9
+
+### Patch Changes
+
+- [`995bdd1`](https://github.com/kubb-labs/fabric/commit/995bdd144b3b22f698470d194d85c6ad9e645544) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Correct use of root
+
 ## 0.12.8
 
 ### Patch Changes
