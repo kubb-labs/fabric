@@ -138,7 +138,7 @@ describe('TypeScript parser', () => {
       sources: [{ value: 'export const x = 1' }, { value: 'export const y = 2' }],
       imports: [
         { name: 'foo', path: './utils.ts' },
-        { name: ['bar'], path: '/project/src/bar.js', root: '/project/src' },
+        { name: ['bar'], path: './project/src/bar.js', root: './project/src' },
       ],
       exports: [{ path: './hello.js' }, { name: ['alpha', 'beta'], path: './names.ts', asAlias: true }],
       meta: {},
@@ -148,7 +148,7 @@ describe('TypeScript parser', () => {
     expect(output).toMatchInlineSnapshot(`
       "// banner
       import foo from "./utils.ts";
-      import { bar } from "./bar.ts";
+      import { bar } from "../bar.ts";
       export * from "./hello.ts";
       export { alpha, beta } from "./names.ts";
 

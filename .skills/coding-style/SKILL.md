@@ -102,9 +102,9 @@ Follow the PR checklist and run the commands above in the same order: **format â
 Follow these steps when creating a PR:
 
 1. Make sure that the following commands pass locally:
-  - `pnpm format && pnpm lint`
-  - `pnpm typecheck`
-  - `pnpm test`
+- `pnpm format && pnpm lint`
+- `pnpm typecheck`
+- `pnpm test`
 2. Create a git commit with **Title format**: `[<plugin-name>] <Title>`
 3. Push your branch and open a PR against `main`
 4. Fill out the PR template completely
