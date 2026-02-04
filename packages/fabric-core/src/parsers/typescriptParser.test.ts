@@ -148,7 +148,7 @@ describe('TypeScript parser', () => {
     expect(output).toMatchInlineSnapshot(`
       "// banner
       import foo from "./utils.ts";
-      import { bar } from "../bar.ts";
+      import { bar } from "./bar.ts";
       export * from "./hello.ts";
       export { alpha, beta } from "./names.ts";
 
