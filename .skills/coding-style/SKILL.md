@@ -77,9 +77,6 @@ Follow the PR checklist and run the commands above in the same order: **format â
 - **Files**: `.ts` for libraries, `.tsx` for React components, `.vue` for Vue components
 - **DTS output**: Managed by `tsdown`
 - **Importing**: Always use proper import statements at the module level instead of inline type imports
-  - **Zod library**: Use default import syntax: `import z from 'zod'` with `File.Import`'s `isNameSpace={false}` (default)
-  - **Zod types**: Use namespace import syntax for type-only imports: `import type * as z from 'zod'` with `File.Import`'s `isNameSpace={true}` and `isTypeOnly={true}`
-  - **CJS modules**: Use default import syntax when needed: `import module from 'module'` with `File.Import`'s `isNameSpace={false}` (default)
 - **Exporting**: use `"exports"` map and `typesVersions` as needed. Keep public API stable
 - **Root level types**: Define types at the root level of the file, not inside functions
 - **Function syntax in Objects**: Use function syntax (not arrow functions) in object methods to enable use of `this` keyword
@@ -105,9 +102,9 @@ Follow the PR checklist and run the commands above in the same order: **format â
 Follow these steps when creating a PR:
 
 1. Make sure that the following commands pass locally:
-  - `pnpm format && pnpm lint`
-  - `pnpm typecheck`
-  - `pnpm test`
+- `pnpm format && pnpm lint`
+- `pnpm typecheck`
+- `pnpm test`
 2. Create a git commit with **Title format**: `[<plugin-name>] <Title>`
 3. Push your branch and open a PR against `main`
 4. Fill out the PR template completely
