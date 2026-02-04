@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.12.8
+
+### Patch Changes
+
+- [#169](https://github.com/kubb-labs/fabric/pull/169) [`1082830`](https://github.com/kubb-labs/fabric/commit/108283098361b05c73d7b1343a8c2057a8d79ff6) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Correct use of typescriptparser for imports
+
 ## 0.12.7
 
 ### Patch Changes
