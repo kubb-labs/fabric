@@ -170,7 +170,6 @@ export const typescriptParser = defineParser({
           name: item.name,
           path: options.extname && hasExtname ? `${trimExtName(importPath)}${options.extname}` : item.root ? trimExtName(importPath) : importPath,
           isTypeOnly: item.isTypeOnly,
-          root: item.root,
           isNameSpace: item.isNameSpace,
         }),
       )
