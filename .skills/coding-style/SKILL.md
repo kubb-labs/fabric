@@ -77,6 +77,7 @@ Follow the PR checklist and run the commands above in the same order: **format â
 - **Files**: `.ts` for libraries, `.tsx` for React components, `.vue` for Vue components
 - **DTS output**: Managed by `tsdown`
 - **Importing**: Always use proper import statements at the module level instead of inline type imports
+  - **Zod library**: Use namespace import syntax: `import * as z from 'zod'` (NOT `import z from 'zod'`)
 - **Exporting**: use `"exports"` map and `typesVersions` as needed. Keep public API stable
 - **Root level types**: Define types at the root level of the file, not inside functions
 - **Function syntax in Objects**: Use function syntax (not arrow functions) in object methods to enable use of `this` keyword
