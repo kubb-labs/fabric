@@ -228,9 +228,12 @@ When root is set it will get the path with relative `getRelativePath(root, path)
 **Import Name Formats:**
 
 ```tsx
-// Default import (for CJS modules)
+// Default import (for CJS modules and regular imports like zod)
 <File.Import name="React" path="react" />
 // -> import React from 'react'
+
+<File.Import name="z" path="zod" />
+// -> import z from 'zod'
 
 // Named imports (for named exports)
 <File.Import name={['useState', 'useEffect']} path="react" />
@@ -243,9 +246,9 @@ When root is set it will get the path with relative `getRelativePath(root, path)
 />
 // -> import { default as React } from 'react'
 
-// Namespace import (recommended for ESM modules like zod)
-<File.Import name="z" path="zod" isNameSpace />
-// -> import * as z from 'zod'
+// Namespace import for type-only imports (e.g., zod types)
+<File.Import name="z" path="zod" isNameSpace isTypeOnly />
+// -> import type * as z from 'zod'
 ```
 
 ### `File.Export`
