@@ -3,7 +3,17 @@
   "version": "0.0.3",
   "private": true,
   "type": "module",
-  "description": "Core example",
+  "description": "Example implementations demonstrating fabric-core usage for TypeScript code generation and AST manipulation",
+  "keywords": [
+    "example",
+    "typescript",
+    "ast",
+    "codegen",
+    "parser",
+    "demo",
+    "fabric",
+    "kubb"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kubb-labs/fabric.git",

@@ -3,7 +3,17 @@
   "version": "0.0.3",
   "private": true,
   "type": "module",
-  "description": "React example",
+  "description": "Example implementations demonstrating react-fabric usage for JSX-based code generation with TypeScript",
+  "keywords": [
+    "example",
+    "react",
+    "jsx",
+    "codegen",
+    "typescript",
+    "demo",
+    "fabric",
+    "kubb"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/kubb-labs/fabric.git",
@@ -31,7 +41,7 @@
     "@kubb/react-fabric": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^19.2.10",
+    "@types/react": "^19.2.11",
     "react": "^19.2.4",
     "typescript": "^5.9.3"
   },

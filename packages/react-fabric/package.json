@@ -1,15 +1,20 @@
 {
   "name": "@kubb/react-fabric",
   "version": "0.12.7",
-  "description": "React integration for Kubb, providing JSX runtime support and React component generation capabilities for code generation plugins.",
+  "description": "React integration for Kubb's fabric - JSX runtime and component-based code generation with React reconciler for building type-safe generators",
   "keywords": [
     "react",
     "jsx",
+    "jsx-runtime",
+    "react-reconciler",
     "component-generation",
-    "typescript",
-    "code-generator",
     "codegen",
+    "code-generator",
+    "typescript",
+    "file-generation",
+    "plugin-system",
     "plugins",
+    "fabric",
     "kubb"
   ],
   "repository": {
