@@ -75,7 +75,10 @@ export const Renderer = Reconciler({
         continue
       }
 
-      setAttribute(node, key, value as DOMNodeAttribute)
+      // Skip undefined values to match React's behavior
+      if (value !== undefined) {
+        setAttribute(node, key, value as DOMNodeAttribute)
+      }
     }
 
     return node
@@ -125,7 +128,10 @@ export const Renderer = Reconciler({
 
     if (props) {
       for (const [key, value] of Object.entries(props)) {
-        setAttribute(node, key, value as DOMNodeAttribute)
+        // Skip undefined values to match React's behavior
+        if (value !== undefined) {
+          setAttribute(node, key, value as DOMNodeAttribute)
+        }
       }
     }
   },
