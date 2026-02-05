@@ -1,6 +1,6 @@
 {
   "name": "@kubb/react-fabric",
-  "version": "0.12.9",
+  "version": "0.12.10",
   "description": "React integration for Kubb's fabric - JSX runtime and component-based code generation with React reconciler for building type-safe generators",
   "keywords": [
     "react",
