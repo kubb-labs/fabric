@@ -31,32 +31,32 @@
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./globals": {
-      "require": "./dist/globals.cjs",
-      "import": "./dist/globals.js"
+      "import": "./dist/globals.js",
+      "require": "./dist/globals.cjs"
     },
     "./jsx-dev-runtime": {
-      "require": "./dist/jsx-dev-runtime.cjs",
-      "import": "./dist/jsx-dev-runtime.js"
+      "import": "./dist/jsx-dev-runtime.js",
+      "require": "./dist/jsx-dev-runtime.cjs"
     },
     "./jsx-runtime": {
-      "require": "./dist/jsx-runtime.cjs",
-      "import": "./dist/jsx-runtime.js"
+      "import": "./dist/jsx-runtime.js",
+      "require": "./dist/jsx-runtime.cjs"
     },
     "./parsers": {
-      "require": "./dist/parsers.cjs",
-      "import": "./dist/parsers.js"
+      "import": "./dist/parsers.js",
+      "require": "./dist/parsers.cjs"
     },
     "./plugins": {
-      "require": "./dist/plugins.cjs",
-      "import": "./dist/plugins.js"
+      "import": "./dist/plugins.js",
+      "require": "./dist/plugins.cjs"
     },
     "./types": {
-      "require": "./dist/types.cjs",
-      "import": "./dist/types.js"
+      "import": "./dist/types.js",
+      "require": "./dist/types.cjs"
     },
     "./package.json": "./package.json"
   },
