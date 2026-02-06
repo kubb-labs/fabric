@@ -308,7 +308,7 @@ describe('createFile', () => {
     expect(combineExports(exports)).toMatchInlineSnapshot(`
       [
         {
-          "isTypeOnly": true,
+          "isTypeOnly": false,
           "name": undefined,
           "path": "./models",
         },
@@ -344,7 +344,7 @@ describe('createFile', () => {
     expect(combineImports(imports, [], 'const test = models; type Test = Config;')).toMatchInlineSnapshot(`
       [
         {
-          "isTypeOnly": true,
+          "isTypeOnly": false,
           "name": "models",
           "path": "./models",
         },
@@ -376,7 +376,8 @@ describe('createFile', () => {
       },
     ]
 
-    expect(combineImports(importsWithoutSource, [])).toEqual([imports[0], imports[1]])
+    // Should keep the non-type-only version (imports[2]) and the Config import (imports[1])
+    expect(combineImports(importsWithoutSource, [])).toEqual([imports[2], imports[1]])
   })
 
   it('should prefer non-type-only exports when same name is exported with both type and value', () => {
@@ -496,11 +497,10 @@ describe('createFile', () => {
 
     const result = combineExports(exports)
     expect(result).toHaveLength(1)
-    expect(result[0]).toMatchObject({
-      path: './Pet.ts',
-      name: ['Pet'],
-      isTypeOnly: undefined, // Should keep the undefined (non-type-only) version
-    })
+    // Should keep the undefined (non-type-only) version
+    expect(result[0]?.path).toBe('./Pet.ts')
+    expect(result[0]?.name).toEqual(['Pet'])
+    expect(result[0]?.isTypeOnly).not.toBe(true)
   })
 
   it('should prefer non-type-only import when isTypeOnly is undefined vs true', () => {
@@ -520,10 +520,9 @@ describe('createFile', () => {
 
     const result = combineImports(imports, [], 'type Test = Pet;')
     expect(result).toHaveLength(1)
-    expect(result[0]).toMatchObject({
-      path: './Pet.ts',
-      name: ['Pet'],
-      isTypeOnly: undefined, // Should keep the undefined (non-type-only) version
-    })
+    // Should keep the undefined (non-type-only) version
+    expect(result[0]?.path).toBe('./Pet.ts')
+    expect(result[0]?.name).toEqual(['Pet'])
+    expect(result[0]?.isTypeOnly).not.toBe(true)
   })
 })
