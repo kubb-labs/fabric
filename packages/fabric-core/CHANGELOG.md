@@ -1,5 +1,13 @@
 # @kubb/fabric-core
 
+## 0.12.11
+
+### Patch Changes
+
+- [#174](https://github.com/kubb-labs/fabric/pull/174) [`4ed1c27`](https://github.com/kubb-labs/fabric/commit/4ed1c27993652e66219d5dc1b9fa24abd1f8d215) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Fix export/import deduplication to preserve both type-only and non-type-only variants
+
+  When exports/imports exist with the same path+name but different `isTypeOnly` values, they are now correctly preserved instead of being deduplicated. This is important because `export { Type }` (exports both type and value) and `export type { Type }` (exports only type) serve different purposes and should both be kept.
+
 ## 0.12.10
 
 ### Patch Changes
