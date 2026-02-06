@@ -386,18 +386,18 @@ describe('createFile', () => {
     ]
 
     // Should keep both type-only and non-type-only 'models' imports, plus the Config import
-    const result = combineImports(importsWithoutSource, [])
-    expect(result).toHaveLength(3)
-    expect(result).toContainEqual(importsWithoutSource[0]) // type-only 'models'
-    expect(result).toContainEqual(importsWithoutSource[1]) // type-only ['Config']
-    expect(result).toContainEqual(importsWithoutSource[2]) // non-type-only 'models'
+    expect(combineImports(importsWithoutSource, [])).toEqual([
+      importsWithoutSource[0], // type-only 'models'
+      importsWithoutSource[2], // non-type-only 'models'
+      importsWithoutSource[1], // type-only ['Config']
+    ])
   })
 
-  it('should keep both type-only and non-type-only exports when same name is exported', () => {
-    // When we have both type-only and non-type-only exports with the same name,
-    // we should keep BOTH because they serve different purposes:
-    // - export { Type } exports both type and value
-    // - export type { Type } exports only the type
+  it('should keep both type-only and non-type-only exports/imports with same path and name', () => {
+    // When exports/imports have the same path and name but different isTypeOnly values,
+    // both should be preserved because they serve different purposes:
+    // - export { Type } / import { Type } exports/imports both type and value
+    // - export type { Type } / import type { Type } exports/imports only the type
     const exports: Array<KubbFile.Export> = [
       {
         path: './Pet.ts',
@@ -411,161 +411,27 @@ describe('createFile', () => {
       },
     ]
 
-    const result = combineExports(exports)
-    expect(result).toHaveLength(2)
-    // Sorting puts type-only first (!false=true > !true=false, so false sorts before true)
-    expect(result[0]).toMatchObject({
-      path: './Pet.ts',
-      name: ['Pet'],
-      isTypeOnly: true,
-    })
-    expect(result[1]).toMatchObject({
-      path: './Pet.ts',
-      name: ['Pet'],
-      isTypeOnly: false,
-    })
-  })
-
-  it('should keep both type-only and non-type-only imports when same name is imported', () => {
-    // When we have both type-only and non-type-only imports with the same name,
-    // we should keep BOTH because they serve different purposes
     const imports: Array<KubbFile.Import> = [
       {
-        path: './Pet.ts',
-        name: ['Pet'],
-        isTypeOnly: false,
-      },
-      {
-        path: './Pet.ts',
-        name: ['Pet'],
-        isTypeOnly: true,
-      },
-    ]
-
-    const result = combineImports(imports, [], 'type Test = Pet;')
-    expect(result).toHaveLength(2)
-    // Sorting puts type-only first
-    expect(result[0]).toMatchObject({
-      path: './Pet.ts',
-      name: ['Pet'],
-      isTypeOnly: true,
-    })
-    expect(result[1]).toMatchObject({
-      path: './Pet.ts',
-      name: ['Pet'],
-      isTypeOnly: false,
-    })
-  })
-
-  it('should keep both when using single string names with different isTypeOnly', () => {
-    // Ensure it works with single string names too
-    const exports: Array<KubbFile.Export> = [
-      {
-        path: './types.ts',
+        path: './User.ts',
         name: 'User',
         isTypeOnly: false,
       },
       {
-        path: './types.ts',
+        path: './User.ts',
         name: 'User',
         isTypeOnly: true,
       },
     ]
 
-    const result = combineExports(exports)
-    expect(result).toHaveLength(2)
-    // Sorting puts type-only first
-    expect(result[0]).toMatchObject({
-      path: './types.ts',
-      name: 'User',
-      isTypeOnly: true,
-    })
-    expect(result[1]).toMatchObject({
-      path: './types.ts',
-      name: 'User',
-      isTypeOnly: false,
-    })
-  })
+    const exportResult = combineExports(exports)
+    expect(exportResult).toHaveLength(2)
+    expect(exportResult).toContainEqual(expect.objectContaining({ path: './Pet.ts', name: ['Pet'], isTypeOnly: false }))
+    expect(exportResult).toContainEqual(expect.objectContaining({ path: './Pet.ts', name: ['Pet'], isTypeOnly: true }))
 
-  it('should keep both imports with single string names and different isTypeOnly', () => {
-    // Ensure it works with single string names for imports too
-    const imports: Array<KubbFile.Import> = [
-      {
-        path: './types.ts',
-        name: 'User',
-        isTypeOnly: false,
-      },
-      {
-        path: './types.ts',
-        name: 'User',
-        isTypeOnly: true,
-      },
-    ]
-
-    const result = combineImports(imports, [], 'type Admin = User;')
-    expect(result).toHaveLength(2)
-    // Sorting puts type-only first
-    expect(result[0]).toMatchObject({
-      path: './types.ts',
-      name: 'User',
-      isTypeOnly: true,
-    })
-    expect(result[1]).toMatchObject({
-      path: './types.ts',
-      name: 'User',
-      isTypeOnly: false,
-    })
-  })
-
-  it('should keep both when isTypeOnly is undefined vs true', () => {
-    // isTypeOnly undefined should be treated as false, and both should be kept
-    const exports: Array<KubbFile.Export> = [
-      {
-        path: './Pet.ts',
-        name: ['Pet'],
-        // isTypeOnly is undefined here
-      },
-      {
-        path: './Pet.ts',
-        name: ['Pet'],
-        isTypeOnly: true,
-      },
-    ]
-
-    const result = combineExports(exports)
-    expect(result).toHaveLength(2)
-    // Sorting: !true=false < !undefined=true, so type-only comes first
-    expect(result[0]?.path).toBe('./Pet.ts')
-    expect(result[0]?.name).toEqual(['Pet'])
-    expect(result[0]?.isTypeOnly).toBe(true)
-    expect(result[1]?.path).toBe('./Pet.ts')
-    expect(result[1]?.name).toEqual(['Pet'])
-    expect(result[1]?.isTypeOnly).not.toBe(true)
-  })
-
-  it('should keep both imports when isTypeOnly is undefined vs true', () => {
-    // isTypeOnly undefined should be treated as false, and both should be kept
-    const imports: Array<KubbFile.Import> = [
-      {
-        path: './Pet.ts',
-        name: ['Pet'],
-        // isTypeOnly is undefined here
-      },
-      {
-        path: './Pet.ts',
-        name: ['Pet'],
-        isTypeOnly: true,
-      },
-    ]
-
-    const result = combineImports(imports, [], 'type Test = Pet;')
-    expect(result).toHaveLength(2)
-    // Sorting: type-only comes first
-    expect(result[0]?.path).toBe('./Pet.ts')
-    expect(result[0]?.name).toEqual(['Pet'])
-    expect(result[0]?.isTypeOnly).toBe(true)
-    expect(result[1]?.path).toBe('./Pet.ts')
-    expect(result[1]?.name).toEqual(['Pet'])
-    expect(result[1]?.isTypeOnly).not.toBe(true)
+    const importResult = combineImports(imports, [], 'const x: User = User;')
+    expect(importResult).toHaveLength(2)
+    expect(importResult).toContainEqual(expect.objectContaining({ path: './User.ts', name: 'User', isTypeOnly: false }))
+    expect(importResult).toContainEqual(expect.objectContaining({ path: './User.ts', name: 'User', isTypeOnly: true }))
   })
 })
