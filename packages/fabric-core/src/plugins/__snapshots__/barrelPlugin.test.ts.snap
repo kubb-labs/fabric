@@ -3,6 +3,13 @@
 exports[`barrelPlugin > should produce named exports and mark barrel sources indexable/exportable when mode is 'named' 1`] = `
 [
   {
+    "isTypeOnly": true,
+    "name": [
+      "E",
+    ],
+    "path": "./sub/d.ts",
+  },
+  {
     "isTypeOnly": undefined,
     "name": [
       "A",
@@ -30,13 +37,6 @@ exports[`barrelPlugin > should produce named exports and mark barrel sources ind
       "b",
     ],
     "path": "./sub/sub2/b.ts",
-  },
-  {
-    "isTypeOnly": true,
-    "name": [
-      "E",
-    ],
-    "path": "./sub/d.ts",
   },
 ]
 `;

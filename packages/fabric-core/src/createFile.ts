@@ -20,7 +20,7 @@ export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.
 export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.Export> {
   const sorted = orderBy(exports, [
     (v) => !!Array.isArray(v.name),
-    (v) => !!v.isTypeOnly, // Changed: now false/undefined comes before true
+    (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
     (v) => (Array.isArray(v.name) ? orderBy(v.name) : v.name),
@@ -31,8 +31,6 @@ export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.
   const pathMap = new Map<string, KubbFile.Export>()
   // Map to track unique items by path+name+isTypeOnly+asAlias
   const uniqueMap = new Map<string, KubbFile.Export>()
-  // Map to track items by path+name where isTypeOnly=false (for non-type-only check)
-  const pathNameNonTypeMap = new Map<string, KubbFile.Export>()
 
   for (const curr of sorted) {
     const name = curr.name
@@ -42,15 +40,6 @@ export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.
     // Create unique key for path+name+isTypeOnly
     const nameKey = Array.isArray(name) ? JSON.stringify(name) : name || ''
     const pathNameTypeKey = `${pathKey}:${nameKey}:${curr.isTypeOnly}`
-    // Check if there's already an item with the same path+name but with isTypeOnly=false
-    const pathNameKey = `${pathKey}:${nameKey}`
-    const prevByPathAndNonType = pathNameNonTypeMap.get(pathNameKey)
-
-    if (prevByPathAndNonType) {
-      // we already have an export that has the same path and name but is non-type-only (export { ... })
-      // Skip the current one since the non-type-only version is more permissive
-      continue
-    }
 
     // Create unique key for path+name+isTypeOnly+asAlias
     const uniqueKey = `${pathNameTypeKey}:${curr.asAlias || ''}`
@@ -69,10 +58,6 @@ export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.
       prev.push(newItem)
       pathMap.set(pathKey, newItem)
       uniqueMap.set(uniqueKey, newItem)
-      // Track items with isTypeOnly=false (or undefined) for the non-type-only check
-      if (!newItem.isTypeOnly) {
-        pathNameNonTypeMap.set(pathNameKey, newItem)
-      }
       continue
     }
 
@@ -84,10 +69,6 @@ export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.
 
     prev.push(curr)
     uniqueMap.set(uniqueKey, curr)
-    // Track items with isTypeOnly=false (or undefined) for the non-type-only check
-    if (!curr.isTypeOnly) {
-      pathNameNonTypeMap.set(pathNameKey, curr)
-    }
   }
 
   return prev
@@ -132,7 +113,7 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
 
   const sorted = orderBy(imports, [
     (v) => !!Array.isArray(v.name),
-    (v) => !!v.isTypeOnly, // Changed: now false/undefined comes before true
+    (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
     (v) => (Array.isArray(v.name) ? orderBy(v.name) : v.name),
@@ -143,8 +124,6 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
   const pathTypeMap = new Map<string, KubbFile.Import>()
   // Map to track unique items by path+name+isTypeOnly
   const uniqueMap = new Map<string, KubbFile.Import>()
-  // Map to track items by path+name where isTypeOnly=false (for non-type-only check)
-  const pathNameNonTypeMap = new Map<string, KubbFile.Import>()
 
   for (const curr of sorted) {
     let name = Array.isArray(curr.name) ? [...new Set(curr.name)] : curr.name
@@ -166,15 +145,6 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
     const nameKey = Array.isArray(name) ? JSON.stringify(name) : name || ''
     const pathNameTypeKey = `${curr.path}:${nameKey}:${curr.isTypeOnly}`
     const uniquePrev = uniqueMap.get(pathNameTypeKey)
-    // Check if there's already an item with the same path+name but with isTypeOnly=false
-    const pathNameKey = `${curr.path}:${nameKey}`
-    const prevByPathNameAndNonType = pathNameNonTypeMap.get(pathNameKey)
-
-    if (prevByPathNameAndNonType) {
-      // we already have an import that has the same path and name but is non-type-only (import { ... })
-      // Skip the current one since the non-type-only version is more permissive
-      continue
-    }
 
     // already unique enough or name is empty
     if (uniquePrev || (Array.isArray(name) && !name.length)) {
@@ -190,10 +160,6 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
       prev.push(newItem)
       pathTypeMap.set(pathTypeKey, newItem)
       uniqueMap.set(pathNameTypeKey, newItem)
-      // Track items with isTypeOnly=false (or undefined) for the non-type-only check
-      if (!newItem.isTypeOnly) {
-        pathNameNonTypeMap.set(pathNameKey, newItem)
-      }
       continue
     }
 
@@ -210,10 +176,6 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
 
     prev.push(curr)
     uniqueMap.set(pathNameTypeKey, curr)
-    // Track items with isTypeOnly=false (or undefined) for the non-type-only check
-    if (!curr.isTypeOnly) {
-      pathNameNonTypeMap.set(pathNameKey, curr)
-    }
   }
 
   return prev
