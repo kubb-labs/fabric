@@ -378,4 +378,152 @@ describe('createFile', () => {
 
     expect(combineImports(importsWithoutSource, [])).toEqual([imports[0], imports[1]])
   })
+
+  it('should prefer non-type-only exports when same name is exported with both type and value', () => {
+    // When we have both type-only and non-type-only exports,
+    // we should keep the non-type-only one because it's more permissive
+    // (it exports both type and value, whereas type-only exports just the type)
+    const exports: Array<KubbFile.Export> = [
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        isTypeOnly: false,
+      },
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineExports(exports)
+    expect(result).toHaveLength(1)
+    // Should keep the non-type-only version
+    expect(result[0]).toMatchObject({
+      path: './Pet.ts',
+      name: ['Pet'],
+      isTypeOnly: false,
+    })
+  })
+
+  it('should prefer non-type-only imports when same name is imported with both type and value', () => {
+    // When we have both type-only and non-type-only imports,
+    // we should keep the non-type-only one because it's more permissive
+    const imports: Array<KubbFile.Import> = [
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        isTypeOnly: false,
+      },
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineImports(imports, [], 'type Test = Pet;')
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      path: './Pet.ts',
+      name: ['Pet'],
+      isTypeOnly: false,
+    })
+  })
+
+  it('should handle mixed single and array name exports with type-only deduplication', () => {
+    // Should keep non-type-only version
+    const exports: Array<KubbFile.Export> = [
+      {
+        path: './types.ts',
+        name: 'User',
+        isTypeOnly: false,
+      },
+      {
+        path: './types.ts',
+        name: 'User',
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineExports(exports)
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      path: './types.ts',
+      name: 'User',
+      isTypeOnly: false,
+    })
+  })
+
+  it('should handle mixed single and array name imports with type-only deduplication', () => {
+    // Should keep non-type-only version
+    const imports: Array<KubbFile.Import> = [
+      {
+        path: './types.ts',
+        name: 'User',
+        isTypeOnly: false,
+      },
+      {
+        path: './types.ts',
+        name: 'User',
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineImports(imports, [], 'type Admin = User;')
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      path: './types.ts',
+      name: 'User',
+      isTypeOnly: false,
+    })
+  })
+
+  it('should prefer non-type-only export when isTypeOnly is undefined vs true', () => {
+    // isTypeOnly undefined should be treated as false
+    const exports: Array<KubbFile.Export> = [
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        // isTypeOnly is undefined here, which should be treated as false
+      },
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineExports(exports)
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      path: './Pet.ts',
+      name: ['Pet'],
+      isTypeOnly: undefined, // Should keep the undefined (non-type-only) version
+    })
+  })
+
+  it('should prefer non-type-only import when isTypeOnly is undefined vs true', () => {
+    // isTypeOnly undefined should be treated as false
+    const imports: Array<KubbFile.Import> = [
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        // isTypeOnly is undefined here, which should be treated as false
+      },
+      {
+        path: './Pet.ts',
+        name: ['Pet'],
+        isTypeOnly: true,
+      },
+    ]
+
+    const result = combineImports(imports, [], 'type Test = Pet;')
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      path: './Pet.ts',
+      name: ['Pet'],
+      isTypeOnly: undefined, // Should keep the undefined (non-type-only) version
+    })
+  })
 })
