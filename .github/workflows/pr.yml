@@ -133,7 +133,7 @@ jobs:
     name: Prerelease
     timeout-minutes: 15
     runs-on: ubuntu-latest
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]' && github.event.pull_request.head.repo.full_name == github.repository
     needs: build
     steps:
       - name: Check out code
@@ -189,7 +189,7 @@ jobs:
     name: Dependency Diff
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    if: github.actor != 'github-actions[bot]' && github.repository_owner == 'kubb-labs'
+    if: github.actor != 'github-actions[bot]' && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Check out code
         uses: actions/checkout@v6
@@ -209,7 +209,7 @@ jobs:
     name: Update generated examples
     timeout-minutes: 20
     runs-on: ubuntu-latest
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]' && github.event.pull_request.head.repo.full_name == github.repository
     needs: build
     permissions:
       contents: write
@@ -247,7 +247,6 @@ jobs:
           fi
 
       - name: Create Pull Request with generated files
-        if: steps.check_changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           base: ${{ github.head_ref || github.ref_name }}
