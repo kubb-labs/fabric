@@ -1,3 +1,4 @@
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { describe, expect, it, vi } from 'vitest'
@@ -85,7 +86,7 @@ describe('write', () => {
 
   it('should call onBeforeWrite callback', async () => {
     const onBeforeWriteMock = vi.fn()
-    const testFilePath = path.resolve(mocksPath, './onBeforeWrite-test.js')
+    const testFilePath = path.join(tmpdir(), 'onBeforeWrite-test.js')
 
     const ctxStub = {
       on: vi.fn((event, handler) => {
