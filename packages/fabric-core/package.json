@@ -97,7 +97,6 @@
     "@clack/prompts": "^1.0.1",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.3.0",
-    "picocolors": "^1.1.1",
     "remeda": "catalog:",
     "serve-handler": "^6.1.6",
     "signal-exit": "^4.1.0",

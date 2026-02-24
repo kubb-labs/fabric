@@ -2,7 +2,7 @@ import http from 'node:http'
 import type { AddressInfo } from 'node:net'
 import { relative } from 'node:path'
 import * as clack from '@clack/prompts'
-import pc from 'picocolors'
+import { styleText } from 'node:util'
 import { WebSocket, WebSocketServer } from 'ws'
 import type { FabricEvents } from '../Fabric.ts'
 import type * as KubbFile from '../KubbFile.ts'
@@ -107,13 +107,13 @@ export const loggerPlugin = definePlugin<Options>({
           const { host: resolvedHost, port: resolvedPort } = normalizeAddress(addressInfo)
           const url = `ws://${resolvedHost}:${resolvedPort}`
 
-          clack.log.info(`${pc.blue('ℹ')} Logger websocket listening on ${url}`)
+          clack.log.info(`${styleText('blue', 'ℹ')} Logger websocket listening on ${url}`)
           broadcast('websocket:ready', { url })
         }
       })
 
       wss.on('connection', (socket) => {
-        clack.log.info(`${pc.blue('ℹ')} Logger websocket client connected`)
+        clack.log.info(`${styleText('blue', 'ℹ')} Logger websocket client connected`)
         socket.send(
           JSON.stringify({
             event: 'welcome',
@@ -126,17 +126,17 @@ export const loggerPlugin = definePlugin<Options>({
       })
 
       wss.on('error', (error) => {
-        clack.log.error(`${pc.red('✗')} Logger websocket error: ${error.message}`)
+        clack.log.error(`${styleText('red', '✗')} Logger websocket error: ${error.message}`)
       })
     }
 
     ctx.on('lifecycle:start', async () => {
-      clack.intro(`${pc.blue('Fabric')} ${pc.dim('Starting run')}`)
+      clack.intro(`${styleText('blue', 'Fabric')} ${styleText('dim', 'Starting run')}`)
       broadcast('lifecycle:start', { timestamp: Date.now() })
     })
 
     ctx.on('lifecycle:render', async () => {
-      clack.log.info(`${pc.blue('ℹ')} Rendering application graph`)
+      clack.log.info(`${styleText('blue', 'ℹ')} Rendering application graph`)
       broadcast('lifecycle:render', { timestamp: Date.now() })
     })
 
@@ -145,24 +145,24 @@ export const loggerPlugin = definePlugin<Options>({
         return
       }
 
-      clack.log.info(`${pc.blue('ℹ')} Queued ${pluralize('file', files.length)}`)
+      clack.log.info(`${styleText('blue', 'ℹ')} Queued ${pluralize('file', files.length)}`)
       broadcast('files:added', {
         files: files.map(serializeFile),
       })
     })
 
     ctx.on('file:resolve:path', async (file) => {
-      clack.log.step(`Resolving path for ${pc.dim(formatPath(file.path))}`)
+      clack.log.step(`Resolving path for ${styleText('dim', formatPath(file.path))}`)
       broadcast('file:resolve:path', { file: serializeFile(file) })
     })
 
     ctx.on('file:resolve:name', async (file) => {
-      clack.log.step(`Resolving name for ${pc.dim(formatPath(file.path))}`)
+      clack.log.step(`Resolving name for ${styleText('dim', formatPath(file.path))}`)
       broadcast('file:resolve:name', { file: serializeFile(file) })
     })
 
     ctx.on('files:processing:start', async (files) => {
-      clack.log.step(`Processing ${pc.green(pluralize('file', files.length))}`)
+      clack.log.step(`Processing ${styleText('green', pluralize('file', files.length))}`)
       broadcast('files:processing:start', {
         total: files.length,
         timestamp: Date.now(),
@@ -180,7 +180,7 @@ export const loggerPlugin = definePlugin<Options>({
 
     ctx.on('file:processing:start', async (file, index, total) => {
       if (!state.progressBar) {
-        clack.log.step(`Processing ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
+        clack.log.step(`Processing ${styleText('dim', `[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       }
 
       broadcast('file:processing:start', {
@@ -203,15 +203,15 @@ export const loggerPlugin = definePlugin<Options>({
         state.progressBar.advance(undefined, `Writing ${formatPath(file.path)}`)
       } else {
         const formattedPercentage = Number.isFinite(percentage) ? percentage.toFixed(1) : '0.0'
-        clack.log.step(`Progress ${pc.green(`${formattedPercentage}%`)} ${pc.dim(`(${processed}/${total})`)} → ${formatPath(file.path)}`)
+        clack.log.step(`Progress ${styleText('green', `${formattedPercentage}%`)} ${styleText('dim', `(${processed}/${total})`)} → ${formatPath(file.path)}`)
       }
     })
 
     ctx.on('file:processing:end', async (file, index, total) => {
       if (state.progressBar) {
-        state.progressBar.message(`${pc.green('✓')} Finished ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
+        state.progressBar.message(`${styleText('green', '✓')} Finished ${styleText('dim', `[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       } else {
-        clack.log.success(`${pc.green('✓')} Finished ${pc.dim(`[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
+        clack.log.success(`${styleText('green', '✓')} Finished ${styleText('dim', `[${index + 1}/${total}]`)} ${formatPath(file.path)}`)
       }
 
       broadcast('file:processing:end', {
@@ -235,10 +235,10 @@ export const loggerPlugin = definePlugin<Options>({
 
     ctx.on('files:processing:end', async (files) => {
       if (state.progressBar) {
-        state.progressBar.stop(`${pc.green('✓')} Processed ${pluralize('file', files.length)}`)
+        state.progressBar.stop(`${styleText('green', '✓')} Processed ${pluralize('file', files.length)}`)
         state.progressBar = undefined
       } else {
-        clack.log.success(`${pc.green('✓')} Processed ${pluralize('file', files.length)}`)
+        clack.log.success(`${styleText('green', '✓')} Processed ${pluralize('file', files.length)}`)
       }
 
       broadcast('files:processing:end', {
@@ -253,7 +253,7 @@ export const loggerPlugin = definePlugin<Options>({
         state.progressBar = undefined
       }
 
-      clack.outro(`${pc.blue('Fabric')} ${pc.dim('completed')}`)
+      clack.outro(`${styleText('blue', 'Fabric')} ${styleText('dim', 'completed')}`)
 
       broadcast('lifecycle:end', { timestamp: Date.now() })
 
@@ -284,7 +284,7 @@ export const loggerPlugin = definePlugin<Options>({
 
       if (closures.length) {
         await Promise.allSettled(closures)
-        clack.log.info(`${pc.blue('ℹ')} Logger websocket closed`)
+        clack.log.info(`${styleText('blue', 'ℹ')} Logger websocket closed`)
       }
     })
   },

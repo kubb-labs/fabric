@@ -45,15 +45,13 @@ vi.mock('@clack/prompts', () => ({
   log: hoisted.log,
 }))
 
-vi.mock('picocolors', () => ({
-  default: {
-    blue: (str: string) => str,
-    green: (str: string) => str,
-    red: (str: string) => str,
-    yellow: (str: string) => str,
-    dim: (str: string) => str,
-  },
-}))
+vi.mock('node:util', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:util')>()
+  return {
+    ...actual,
+    styleText: (_style: string, str: string) => str,
+  }
+})
 
 const { progressMock, log, intro, outro, progress } = hoisted
 
