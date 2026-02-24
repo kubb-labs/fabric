@@ -1,7 +1,6 @@
 import { createHash } from 'node:crypto'
 import path from 'node:path'
-import { orderBy } from 'natural-orderby'
-import { uniqueBy } from 'remeda'
+import { sortBy, uniqueBy } from 'remeda'
 import type * as KubbFile from './KubbFile.ts'
 import { trimExtName } from './utils/trimExtName.ts'
 
@@ -18,13 +17,15 @@ export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.
 }
 
 export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.Export> {
-  const sorted = orderBy(exports, [
+  const sorted = sortBy(
+    exports,
     (v) => !!Array.isArray(v.name),
     (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
-    (v) => (Array.isArray(v.name) ? orderBy(v.name) : v.name),
-  ])
+    // join with null byte — can't appear in identifiers, so avoids collisions between e.g. ['a','b'] and ['a,b']
+    (v) => (Array.isArray(v.name) ? [...v.name].sort().join('\0') : (v.name ?? '')),
+  )
 
   const prev: Array<KubbFile.Export> = []
   // Map to track items by path for O(1) lookup
@@ -111,13 +112,15 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
     return isUsed
   }
 
-  const sorted = orderBy(imports, [
-    (v) => !!Array.isArray(v.name),
+  const sorted = sortBy(
+    imports,
+    (v) => Array.isArray(v.name),
     (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
-    (v) => (Array.isArray(v.name) ? orderBy(v.name) : v.name),
-  ])
+    // join with null byte — can't appear in identifiers, so avoids collisions between e.g. ['a','b'] and ['a,b']
+    (v) => (Array.isArray(v.name) ? [...v.name].sort().join('\0') : (v.name ?? '')),
+  )
 
   const prev: Array<KubbFile.Import> = []
   // Map to track items by path+isTypeOnly for O(1) lookup

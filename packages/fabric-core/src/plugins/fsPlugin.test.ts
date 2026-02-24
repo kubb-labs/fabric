@@ -1,6 +1,6 @@
+import { access, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { access, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { describe, expect, it, vi } from 'vitest'
 import type { FabricContext } from '../Fabric.ts'
 import { fsPlugin, write } from './fsPlugin.ts'
@@ -72,8 +72,16 @@ describe('write', () => {
     await mkdir(cleanDir, { recursive: true })
     await writeFile(nestedFile, 'should be removed')
 
-    expect(await access(cleanDir).then(() => true).catch(() => false)).toBe(true)
-    expect(await access(nestedFile).then(() => true).catch(() => false)).toBe(true)
+    expect(
+      await access(cleanDir)
+        .then(() => true)
+        .catch(() => false),
+    ).toBe(true)
+    expect(
+      await access(nestedFile)
+        .then(() => true)
+        .catch(() => false),
+    ).toBe(true)
 
     const ctxStub = {
       on: vi.fn(),
@@ -81,7 +89,11 @@ describe('write', () => {
 
     await fsPlugin.install(ctxStub, { clean: { path: cleanDir } })
 
-    expect(await access(cleanDir).then(() => true).catch(() => false)).toBe(false)
+    expect(
+      await access(cleanDir)
+        .then(() => true)
+        .catch(() => false),
+    ).toBe(false)
   })
 
   it('should call onBeforeWrite callback', async () => {

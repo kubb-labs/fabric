@@ -154,19 +154,6 @@ import { loggerPlugin } from '@kubb/fabric-core/plugins'
 By default the plugin displays a progress bar, starts a websocket server on an ephemeral port, and announces the URL. Every key lifecycle hook (`start`, `process:*`, `file:*`, `write:*`, `end`) is logged with a `Fabric` tag, animated in the progress bar, and broadcast to connected clients—perfect for building dashboards on top of Fabric.
 
 
-#### `graphPlugin`
-Shows a graph of all files
-
-```
-import { graphPlugin } from '@kubb/fabric-core/plugins'
-```
-
-| Option | Type      | Default | Description                                   |
-|--------|-----------|---------|-----------------------------------------------|
-| root   | `string`  |         | Root directory where to start searching from. |
-| open   | `boolean` | false   | Open a webpage with the generated graph       |
-
-
 #### `reactPlugin`
 Enables rendering React components to the terminal or to a string. Useful for CLI UIs and templating.
 

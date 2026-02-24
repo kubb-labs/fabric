@@ -1,4 +1,4 @@
-import { orderBy } from 'natural-orderby'
+import { sortBy } from 'remeda'
 import { createFile } from './createFile.ts'
 import type { FabricEvents } from './Fabric.ts'
 import { FileProcessor, type ProcessFilesProps } from './FileProcessor.ts'
@@ -137,7 +137,11 @@ export class FileManager {
     const cachedKeys = this.#cache.keys()
 
     // order by path length and if file is a barrel file
-    const keys = orderBy(cachedKeys, [(v) => v.length, (v) => trimExtName(v).endsWith('index')])
+    const keys = sortBy(
+      cachedKeys,
+      (v) => v.length,
+      (v) => trimExtName(v).endsWith('index'),
+    )
 
     const files: Array<KubbFile.ResolvedFile> = []
 

@@ -18,7 +18,6 @@ export { useLifecycle } from './composables/useLifecycle.ts'
 export { useNodeTree } from './composables/useNodeTree.ts'
 
 // context api
-
 export { createContext, inject, provide, unprovide } from './context.ts'
 export { AppContext } from './contexts/AppContext.ts'
 export { FileContext } from './contexts/FileContext.ts'
@@ -26,15 +25,17 @@ export { NodeTreeContext } from './contexts/NodeTreeContext.ts'
 export { RenderContext } from './contexts/RenderContext.ts'
 export { RootContext } from './contexts/RootContext.ts'
 export { createComponent } from './createComponent.ts'
+
 // helpers
 export { createFabric } from './createFabric.ts'
 export { createFile } from './createFile.ts'
+
 // utils
 export type { Fabric } from './Fabric.ts'
-
 export { FileManager } from './FileManager.ts'
 export { FileProcessor } from './FileProcessor.ts'
 export { renderIndent, renderIntrinsic } from './intrinsic.ts'
 export { createJSDoc } from './utils/createJSDoc.ts'
 export { getRelativePath } from './utils/getRelativePath.ts'
+export { onProcessExit } from './utils/onProcessExit.ts'
 export { TreeNode } from './utils/TreeNode.ts'

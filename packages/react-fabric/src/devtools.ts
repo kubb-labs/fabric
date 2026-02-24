@@ -1,7 +1,6 @@
-import { x } from 'tinyexec'
-import { onExit } from 'signal-exit'
+import { spawn } from 'node:child_process'
+import { onProcessExit } from '@kubb/fabric-core'
 import ws from 'ws'
-
 import { Renderer } from './Renderer.ts'
 
 declare global {
@@ -92,11 +91,13 @@ export function openDevtools() {
     console.info('Opening devtools')
     const controller = new AbortController()
     if (!isOpen) {
-        x('npx', ['react-devtools@6.1.5'], {
-          signal: controller.signal,
-          nodeOptions: { stdio: 'pipe' },
-        })
-      }
+      const child = spawn('npx', ['react-devtools@6.1.5'], {
+        signal: controller.signal,
+        stdio: 'pipe',
+        detached: true,
+      })
+      child.unref()
+    }
 
     isOpen = true
 
@@ -131,12 +132,9 @@ export function openDevtools() {
       console.info('Error when connecting the devtools')
     }
 
-    onExit(
-      () => {
-        console.info('Disconnecting devtools')
-        controller.abort()
-      },
-      { alwaysLast: false },
-    )
+    onProcessExit(() => {
+      console.info('Disconnecting devtools')
+      controller.abort()
+    })
   })
 }

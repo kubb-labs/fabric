@@ -1,8 +1,8 @@
-import { onExit } from 'signal-exit'
 import { Root } from '../../components/Root.ts'
 import type { ComponentNode } from '../../composables/useNodeTree.ts'
 import type { FabricElement } from '../../Fabric.ts'
 import type { FileManager } from '../../FileManager.ts'
+import { onProcessExit } from '../../utils/onProcessExit.ts'
 import { TreeNode } from '../../utils/TreeNode.ts'
 
 type Options = {
@@ -19,12 +19,9 @@ export class Runtime {
     this.#options = options
 
     // Unmount when process exits
-    this.unsubscribeExit = onExit(
-      (code) => {
-        this.unmount(code)
-      },
-      { alwaysLast: false },
-    ).bind(this)
+    this.unsubscribeExit = onProcessExit((code) => {
+      this.unmount(code)
+    })
   }
 
   get fileManager() {

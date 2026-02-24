@@ -1,5 +1,5 @@
 import { createFabric } from '@kubb/fabric-core'
-import { fsPlugin, graphPlugin } from '@kubb/fabric-core/plugins'
+import { fsPlugin } from '@kubb/fabric-core/plugins'
 
 async function run() {
   const fabric = createFabric()
@@ -39,7 +39,6 @@ async function run() {
   fabric.use(fsPlugin, {
     clean: { path: './example5/gen' },
   })
-  fabric.use(graphPlugin, { root: './example5', open: false })
 
   await fabric.write()
 }

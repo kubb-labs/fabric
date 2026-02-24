@@ -1,4 +1,4 @@
-import { orderBy } from 'natural-orderby'
+import { sortBy } from 'remeda'
 
 export type Param = {
   /**
@@ -44,28 +44,22 @@ type Options = {
 }
 
 function order(items: Array<[key: string, item?: ParamItem]>) {
-  return orderBy(
-    items.filter(Boolean),
-    [
-      ([_key, item]) => {
-        if (item?.children) {
-          return 0 // Treat items with children as required (they'll get = {} if all children are optional)
-        }
-        // Priority order: required (0) → optional (1) → default-only (2)
-        if (item?.optional) {
-          return 1 // Optional parameters (with or without default)
-        }
-        if (item?.default) {
-          // Parameters with default only (not marked as optional)
-          // Note: While the ParamItem type suggests optional and default are mutually exclusive,
-          // this handles the case where a parameter has a default value but isn't explicitly marked as optional
-          return 2
-        }
-        return 0 // Required parameters
-      },
-    ],
-    ['asc'],
-  )
+  return sortBy(items.filter(Boolean) as Array<[key: string, item?: ParamItem]>, ([_key, item]) => {
+    if (item?.children) {
+      return 0 // Treat items with children as required (they'll get = {} if all children are optional)
+    }
+    // Priority order: required (0) → optional (1) → default-only (2)
+    if (item?.optional) {
+      return 1 // Optional parameters (with or without default)
+    }
+    if (item?.default) {
+      // Parameters with default only (not marked as optional)
+      // Note: While the ParamItem type suggests optional and default are mutually exclusive,
+      // this handles the case where a parameter has a default value but isn't explicitly marked as optional
+      return 2
+    }
+    return 0 // Required parameters
+  })
 }
 
 function parseChild(key: string, item: ParamItem, options: Options): string | null {

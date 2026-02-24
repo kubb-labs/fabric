@@ -23,7 +23,7 @@
 ## Features
 - Language-agnostic toolkit for generating code and files using JSX and TypeScript.
 - Works with Node.js 20+ and Bun.
-- Plugin ecosystem with fsPlugin, barrelPlugin, loggerPlugin, graphPlugin, and reactPlugin.
+- Plugin ecosystem with fsPlugin, barrelPlugin, loggerPlugin, and reactPlugin.
 - Parser system for TypeScript, TSX, and custom file formats.
 - Event-driven architecture for file generation lifecycle.
 - Built-in debugging utilities and progress tracking.
