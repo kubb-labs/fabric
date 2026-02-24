@@ -1,5 +1,5 @@
-import { onProcessExit } from '@kubb/fabric-core'
 import { spawn } from 'node:child_process'
+import { onProcessExit } from '@kubb/fabric-core'
 import ws from 'ws'
 import { Renderer } from './Renderer.ts'
 
