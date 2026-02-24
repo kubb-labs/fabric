@@ -85,7 +85,7 @@ describe('loggerPlugin', () => {
   describe('lifecycle events', () => {
     it('should display intro and outro for lifecycle:start and lifecycle:end', async () => {
       const fabric = createFabric()
-      await fabric.use(loggerPlugin, { })
+      await fabric.use(loggerPlugin, {})
 
       await fabric.context.emit('lifecycle:start')
       expect(intro).toHaveBeenCalledWith('Fabric Starting run')
@@ -96,7 +96,7 @@ describe('loggerPlugin', () => {
 
     it('should log lifecycle:render event', async () => {
       const fabric = createFabric()
-      await fabric.use(loggerPlugin, { })
+      await fabric.use(loggerPlugin, {})
 
       await fabric.context.emit('lifecycle:render', fabric)
       expect(log.info).toHaveBeenCalledWith(expect.stringContaining('Rendering application graph'))
@@ -106,7 +106,7 @@ describe('loggerPlugin', () => {
   describe('file events', () => {
     it('should log files:added event', async () => {
       const fabric = createFabric()
-      await fabric.use(loggerPlugin, { })
+      await fabric.use(loggerPlugin, {})
 
       const files = makeFiles(3)
       await fabric.context.emit('files:added', files)
@@ -115,7 +115,7 @@ describe('loggerPlugin', () => {
 
     it('should not log files:added when no files', async () => {
       const fabric = createFabric()
-      await fabric.use(loggerPlugin, { })
+      await fabric.use(loggerPlugin, {})
 
       await fabric.context.emit('files:added', [])
       expect(log.info).not.toHaveBeenCalled()
@@ -123,7 +123,7 @@ describe('loggerPlugin', () => {
 
     it('should log file:resolve:path event', async () => {
       const fabric = createFabric()
-      await fabric.use(loggerPlugin, { })
+      await fabric.use(loggerPlugin, {})
 
       const file = makeFile()
       await fabric.context.emit('file:resolve:path', file)
@@ -132,7 +132,7 @@ describe('loggerPlugin', () => {
 
     it('should log file:resolve:name event', async () => {
       const fabric = createFabric()
-      await fabric.use(loggerPlugin, { })
+      await fabric.use(loggerPlugin, {})
 
       const file = makeFile()
       await fabric.context.emit('file:resolve:name', file)
@@ -143,7 +143,7 @@ describe('loggerPlugin', () => {
   describe('file processing', () => {
     it('should log files:processing:start event', async () => {
       const fabric = createFabric()
-      await fabric.use(loggerPlugin, { })
+      await fabric.use(loggerPlugin, {})
 
       const files = makeFiles(2)
       await fabric.context.emit('files:processing:start', files)
