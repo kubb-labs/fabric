@@ -32,7 +32,7 @@
     "example6": "bun ./example6/run.ts",
     "example7": "bun ./example7/run.ts",
     "example8": "bun ./example8/run.ts",
-    "clean": "npx rimraf ./dist",
+    "clean": "node -e \"require('fs').rmSync('./dist', {recursive:true,force:true})\"",
     "test": "vitest",
     "typecheck": "echo 'empty'"
   },
