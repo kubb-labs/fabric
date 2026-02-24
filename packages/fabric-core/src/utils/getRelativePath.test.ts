@@ -1,5 +1,5 @@
 import path from 'node:path'
-import fs from 'fs-extra'
+import { mkdir, rm, writeFile } from 'node:fs/promises'
 import { afterEach, describe, expect, it } from 'vitest'
 import { getRelativePath } from './getRelativePath.ts'
 
@@ -9,13 +9,14 @@ describe('getRelativePath', () => {
   const folderPath = path.resolve(mocksPath, './folder')
 
   afterEach(async () => {
-    await fs.remove(filePath)
-    await fs.remove(folderPath)
+    await rm(filePath, { force: true })
+    await rm(folderPath, { recursive: true, force: true })
   })
 
   it('should return correct relative path for Linux and macOS', async () => {
     const testFile = path.resolve(folderPath, 'test.js')
-    await fs.outputFile(testFile, 'test', { encoding: 'utf-8' })
+    await mkdir(folderPath, { recursive: true })
+    await writeFile(testFile, 'test', { encoding: 'utf-8' })
 
     expect(getRelativePath(mocksPath, testFile)).toBe('./folder/test.js')
 
@@ -27,11 +28,12 @@ describe('getRelativePath', () => {
       expect(e).toBeDefined()
     }
 
-    await fs.remove(testFile)
+    await rm(testFile, { force: true })
   })
   it('should return correct relative path for Windows', async () => {
     const testFile = path.resolve(folderPath, 'test.js')
-    await fs.outputFile(testFile, 'test', { encoding: 'utf-8' })
+    await mkdir(folderPath, { recursive: true })
+    await writeFile(testFile, 'test', { encoding: 'utf-8' })
 
     expect(getRelativePath(mocksPath, testFile, 'windows')).toBe('./folder/test.js')
     expect(getRelativePath(folderPath, mocksPath, 'windows')).toBe('./..')
@@ -42,6 +44,6 @@ describe('getRelativePath', () => {
       expect(e).toBeDefined()
     }
 
-    await fs.remove(testFile)
+    await rm(testFile, { force: true })
   })
 })

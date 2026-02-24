@@ -84,7 +84,7 @@
   ],
   "scripts": {
     "build": "tsdown && size-limit",
-    "clean": "npx rimraf ./dist",
+    "clean": "node -e \"require('fs').rmSync('./dist', {recursive:true,force:true})\"",
     "lint": "pnpm biome lint .",
     "lint:fix": "pnpm biome lint --fix --unsafe .",
     "release": "pnpm publish --no-git-check",
@@ -95,7 +95,6 @@
   },
   "dependencies": {
     "@clack/prompts": "^1.0.1",
-    "fs-extra": "^11.3.3",
     "natural-orderby": "^5.0.0",
     "p-limit": "^7.3.0",
     "picocolors": "^1.1.1",
@@ -106,7 +105,6 @@
     "ws": "^8.19.0"
   },
   "devDependencies": {
-    "@types/fs-extra": "^11.0.4",
     "@types/serve-handler": "^6.1.4",
     "@types/ws": "^8.18.1"
   },

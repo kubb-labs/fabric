@@ -104,7 +104,7 @@
   "scripts": {
     "build": "tsdown && size-limit",
     "start": "tsdown --watch ./src",
-    "clean": "npx rimraf ./dist",
+    "clean": "node -e \"require('fs').rmSync('./dist', {recursive:true,force:true})\"",
     "lint": "pnpm biome lint .",
     "lint:fix": "pnpm biome lint --fix --unsafe .",
     "release": "pnpm publish --no-git-check",
@@ -116,11 +116,11 @@
   },
   "dependencies": {
     "@kubb/fabric-core": "workspace:*",
-    "execa": "^9.6.1",
     "natural-orderby": "^5.0.0",
     "react-devtools-core": "6.1.5",
     "remeda": "catalog:",
     "signal-exit": "^4.1.0",
+    "tinyexec": "^0.3.2",
     "ws": "8.18.0"
   },
   "devDependencies": {

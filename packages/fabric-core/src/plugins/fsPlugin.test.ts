@@ -1,6 +1,6 @@
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import fs from 'fs-extra'
+import { access, mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { describe, expect, it, vi } from 'vitest'
 import type { FabricContext } from '../Fabric.ts'
 import { fsPlugin, write } from './fsPlugin.ts'
@@ -13,7 +13,7 @@ describe('write', () => {
     const text = `export const hallo = 'world'`
 
     await write(filePath, text)
-    const file = await fs.readFile(filePath, { encoding: 'utf8' })
+    const file = await readFile(filePath, { encoding: 'utf8' })
 
     expect(file).toBeDefined()
     expect(file).toBe(text)
@@ -47,7 +47,7 @@ describe('write', () => {
     expect(result).toBe(text)
 
     // Clean up
-    await fs.remove(sanityFilePath)
+    await rm(sanityFilePath, { recursive: true, force: true })
   })
 
   it('should throw error when sanity check fails', async () => {
@@ -62,18 +62,18 @@ describe('write', () => {
     await expect(write(sanityFilePath, text, { sanity: true })).rejects.toThrow('Sanity check failed')
 
     // Clean up
-    await fs.remove(sanityFilePath)
+    await rm(sanityFilePath, { recursive: true, force: true })
   })
 
   it('should clean directory at the beginning of plugin generation', async () => {
     const cleanDir = path.resolve(mocksPath, './tmp-clean')
     const nestedFile = path.resolve(cleanDir, 'test.txt')
 
-    await fs.ensureDir(cleanDir)
-    await fs.outputFile(nestedFile, 'should be removed')
+    await mkdir(cleanDir, { recursive: true })
+    await writeFile(nestedFile, 'should be removed')
 
-    expect(await fs.pathExists(cleanDir)).toBe(true)
-    expect(await fs.pathExists(nestedFile)).toBe(true)
+    expect(await access(cleanDir).then(() => true).catch(() => false)).toBe(true)
+    expect(await access(nestedFile).then(() => true).catch(() => false)).toBe(true)
 
     const ctxStub = {
       on: vi.fn(),
@@ -81,7 +81,7 @@ describe('write', () => {
 
     await fsPlugin.install(ctxStub, { clean: { path: cleanDir } })
 
-    expect(await fs.pathExists(cleanDir)).toBe(false)
+    expect(await access(cleanDir).then(() => true).catch(() => false)).toBe(false)
   })
 
   it('should call onBeforeWrite callback', async () => {
@@ -102,7 +102,7 @@ describe('write', () => {
     expect(onBeforeWriteMock).toHaveBeenCalledWith(testFilePath, 'test content')
 
     // Clean up
-    await fs.remove(testFilePath).catch(() => {})
+    await rm(testFilePath, { force: true }).catch(() => {})
   })
 
   it('should not clean if clean option is not provided', async () => {

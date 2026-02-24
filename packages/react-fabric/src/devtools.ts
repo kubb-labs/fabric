@@ -1,4 +1,4 @@
-import { execa } from 'execa'
+import { x } from 'tinyexec'
 import { onExit } from 'signal-exit'
 import ws from 'ws'
 
@@ -92,13 +92,11 @@ export function openDevtools() {
     console.info('Opening devtools')
     const controller = new AbortController()
     if (!isOpen) {
-      execa({
-        stdio: 'pipe',
-        preferLocal: true,
-        cancelSignal: controller.signal,
-        gracefulCancel: true,
-      })`npx react-devtools@6.1.5`
-    }
+        x('npx', ['react-devtools@6.1.5'], {
+          signal: controller.signal,
+          nodeOptions: { stdio: 'pipe' },
+        })
+      }
 
     isOpen = true
 

@@ -1,5 +1,6 @@
-import { resolve } from 'node:path'
-import fs from 'fs-extra'
+import { rmSync } from 'node:fs'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, resolve } from 'node:path'
 import type * as KubbFile from '../KubbFile.ts'
 import { definePlugin } from './definePlugin.ts'
 
@@ -50,7 +51,7 @@ export async function write(path: string, data: string | undefined, options: { s
   }
 
   try {
-    const oldContent = await fs.readFile(resolve(path), {
+    const oldContent = await readFile(resolve(path), {
       encoding: 'utf-8',
     })
     if (oldContent?.toString() === data?.toString()) {
@@ -60,10 +61,11 @@ export async function write(path: string, data: string | undefined, options: { s
     /* empty */
   }
 
-  await fs.outputFile(resolve(path), data.trim(), { encoding: 'utf-8' })
+  await mkdir(dirname(resolve(path)), { recursive: true })
+  await writeFile(resolve(path), data.trim(), { encoding: 'utf-8' })
 
   if (options?.sanity) {
-    const savedData = await fs.readFile(resolve(path), {
+    const savedData = await readFile(resolve(path), {
       encoding: 'utf-8',
     })
 
@@ -89,7 +91,7 @@ export const fsPlugin = definePlugin<Options, ExtendOptions>({
   name: 'fs',
   install(ctx, options = {}) {
     if (options.clean) {
-      fs.removeSync(options.clean.path)
+      rmSync(options.clean.path, { recursive: true, force: true })
     }
 
     ctx.on('file:processing:update', async ({ file, source }) => {
