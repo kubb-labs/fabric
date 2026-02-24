@@ -81,7 +81,6 @@
     "remeda": "catalog:",
     "size-limit": "catalog:",
     "taze": "^19.9.2",
-    "ts-node": "^10.9.2",
     "tsdown": "catalog:",
     "turbo": "^2.8.10",
     "typescript": "catalog:",
