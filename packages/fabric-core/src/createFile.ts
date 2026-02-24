@@ -23,7 +23,8 @@ export function combineExports(exports: Array<KubbFile.Export>): Array<KubbFile.
     (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
-    (v) => (Array.isArray(v.name) ? [...v.name].sort().join(',') : (v.name ?? '')),
+    // join with null byte — can't appear in identifiers, so avoids collisions between e.g. ['a','b'] and ['a,b']
+    (v) => (Array.isArray(v.name) ? [...v.name].sort().join('\0') : (v.name ?? '')),
   )
 
   const prev: Array<KubbFile.Export> = []
@@ -113,11 +114,12 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
 
   const sorted = sortBy(
     imports,
-    (v) => !!Array.isArray(v.name),
+    (v) => Array.isArray(v.name),
     (v) => !v.isTypeOnly,
     (v) => v.path,
     (v) => !!v.name,
-    (v) => (Array.isArray(v.name) ? [...v.name].sort().join(',') : (v.name ?? '')),
+    // join with null byte — can't appear in identifiers, so avoids collisions between e.g. ['a','b'] and ['a,b']
+    (v) => (Array.isArray(v.name) ? [...v.name].sort().join('\0') : (v.name ?? '')),
   )
 
   const prev: Array<KubbFile.Import> = []

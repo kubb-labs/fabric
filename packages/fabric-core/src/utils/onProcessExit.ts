@@ -12,8 +12,11 @@ export function onProcessExit(callback: (code: number | null) => void): () => vo
   for (const signal of SIGNALS) {
     const handler = () => {
       unsubscribe()
-      callback(null)
-      process.kill(process.pid, signal)
+      try {
+        callback(null)
+      } finally {
+        process.kill(process.pid, signal)
+      }
     }
     signalHandlers.set(signal, handler)
     process.on(signal, handler)

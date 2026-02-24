@@ -16,8 +16,8 @@ function DynamicGenerator() {
 
   return (
     <>
-      {Array.from({ length: count }).map((_, i) => (
-        <File key={i} baseName={`config-${i}.ts`} path={path.resolve(__dirname, `gen/config-${i}.ts`)}>
+      {Array.from({ length: count }, (_, i) => i).map((i) => (
+        <File key={`config-${i}`} baseName={`config-${i}.ts`} path={path.resolve(__dirname, `gen/config-${i}.ts`)}>
           <File.Source isExportable>
             <Const name={`CONFIG_${i}`} export>
               {`'value-${i}'`}

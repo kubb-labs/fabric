@@ -91,11 +91,12 @@ export function openDevtools() {
     console.info('Opening devtools')
     const controller = new AbortController()
     if (!isOpen) {
-      spawn('npx', ['react-devtools@6.1.5'], {
+      const child = spawn('npx', ['react-devtools@6.1.5'], {
         signal: controller.signal,
         stdio: 'pipe',
         detached: true,
       })
+      child.unref()
     }
 
     isOpen = true
