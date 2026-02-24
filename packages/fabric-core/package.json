@@ -97,12 +97,9 @@
     "@clack/prompts": "^1.0.1",
     "p-limit": "^7.3.0",
     "remeda": "catalog:",
-    "typescript": "5.9.3",
-    "ws": "^8.19.0"
+    "typescript": "5.9.3"
   },
-  "devDependencies": {
-    "@types/ws": "^8.18.1"
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">=20"
   },

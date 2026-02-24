@@ -1,29 +1,27 @@
 ---
 layout: doc
 title: logger Plugin - Progress Tracking & Event Logging
-description: Use the loggerPlugin for CLI progress bars, event logging, and WebSocket server for Fabric generation dashboards.
+description: Use the loggerPlugin for CLI progress bars and event logging during Fabric generation.
 outline: deep
 ---
 
 # Progress & Event Logging Plugin
 
-The loggerPlugin provides beautiful CLI progress bars, event logging, and a WebSocket server for building custom dashboards and tooling.
+The loggerPlugin provides beautiful CLI progress bars and event logging for Fabric generation.
 
-**Use loggerPlugin when:** You need visual progress feedback or want to stream events to external tools.
+**Use loggerPlugin when:** You need visual progress feedback during file generation.
 
-**Perfect for:** CLI tools, developer experience, debugging, custom dashboards, build monitoring.
+**Perfect for:** CLI tools, developer experience, debugging, build monitoring.
 
 **Key features:**
 - Beautiful CLI progress bars (@clack/prompts)
 - Real-time percentage and file count
-- WebSocket server for custom tooling
-- Event streaming for dashboards
 
 ## Usage
 
 Register the logger plugin for progress tracking.
 
-**Example:** Enable progress bar and WebSocket server.
+**Example:** Enable progress bar.
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -33,7 +31,6 @@ const fabric = createFabric()
 
 fabric.use(loggerPlugin, {
   progress: true,
-  websocket: true,
 })
 ```
 
@@ -60,42 +57,9 @@ fabric.use(loggerPlugin, {
 })
 ```
 
-### websocket
-
-Toggles or configures the websocket server that broadcasts Fabric events for dashboards and GUIs.
-
-|           |                                                  |
-|----------:|:-------------------------------------------------|
-|     Type: | `boolean \| { host?: string; port?: number }`   |
-| Required: | `false`                                          |
-|  Default: | `true`                                           |
-
-**Example:**
-
-```ts
-// Enable with default settings
-fabric.use(loggerPlugin, {
-  websocket: true,
-})
-
-// Custom host and port
-fabric.use(loggerPlugin, {
-  websocket: {
-    host: 'localhost',
-    port: 3000,
-  },
-})
-
-// Disable websocket
-fabric.use(loggerPlugin, {
-  websocket: false,
-})
-```
-
 ## Features
 
-- CLI Progress Bar: Displays a beautiful progress bar with colored output and symbols using `@clack/prompts`:
-- Websocket Broadcasting: Broadcasts Fabric events to connected clients for building custom dashboards
+- CLI Progress Bar: Displays a beautiful progress bar with colored output and symbols using `@clack/prompts`.
 
 ## Examples
 
@@ -144,7 +108,6 @@ const isCI = process.env.CI === 'true'
 
 fabric.use(loggerPlugin, {
   progress: !isCI, // Disable progress bar in CI
-  websocket: false, // Disable websocket in CI
 })
 ```
 
