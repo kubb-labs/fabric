@@ -161,9 +161,6 @@ importers:
       remeda:
         specifier: 'catalog:'
         version: 2.33.6
-      tinyexec:
-        specifier: ^1.0.2
-        version: 1.0.2
       ws:
         specifier: 8.18.0
         version: 8.18.0

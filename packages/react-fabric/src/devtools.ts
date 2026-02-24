@@ -1,5 +1,5 @@
 import { onProcessExit } from '@kubb/fabric-core'
-import { x } from 'tinyexec'
+import { spawn } from 'node:child_process'
 import ws from 'ws'
 import { Renderer } from './Renderer.ts'
 
@@ -91,9 +91,10 @@ export function openDevtools() {
     console.info('Opening devtools')
     const controller = new AbortController()
     if (!isOpen) {
-      x('npx', ['react-devtools@6.1.5'], {
+      spawn('npx', ['react-devtools@6.1.5'], {
         signal: controller.signal,
-        nodeOptions: { stdio: 'pipe' },
+        stdio: 'pipe',
+        detached: true,
       })
     }
 

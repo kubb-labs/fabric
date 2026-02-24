@@ -118,7 +118,6 @@
     "@kubb/fabric-core": "workspace:*",
     "react-devtools-core": "6.1.5",
     "remeda": "catalog:",
-    "tinyexec": "^1.0.2",
     "ws": "8.18.0"
   },
   "devDependencies": {
