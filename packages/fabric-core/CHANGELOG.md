@@ -1,5 +1,13 @@
 # @kubb/fabric-core
 
+## 0.13.0
+
+### Minor Changes
+
+- [#177](https://github.com/kubb-labs/fabric/pull/177) [`b961d98`](https://github.com/kubb-labs/fabric/commit/b961d98ae89e3f67237bc02ccc5f52c9fa5d368a) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Use of tiny packages + refactor and use of remeda utils
+
+- [#177](https://github.com/kubb-labs/fabric/pull/177) [`b961d98`](https://github.com/kubb-labs/fabric/commit/b961d98ae89e3f67237bc02ccc5f52c9fa5d368a) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Remove websocket of loggerPlugin
+
 ## 0.12.11
 
 ### Patch Changes
