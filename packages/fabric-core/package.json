@@ -1,6 +1,6 @@
 {
   "name": "@kubb/fabric-core",
-  "version": "0.12.11",
+  "version": "0.13.0",
   "description": "Core functionality for Kubb's fabric - A language-agnostic toolkit providing the foundation for plugin-based code generation with TypeScript support",
   "keywords": [
     "codegen",
