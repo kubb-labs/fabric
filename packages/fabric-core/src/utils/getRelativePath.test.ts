@@ -1,5 +1,5 @@
-import path from 'node:path'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
+import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { getRelativePath } from './getRelativePath.ts'
 

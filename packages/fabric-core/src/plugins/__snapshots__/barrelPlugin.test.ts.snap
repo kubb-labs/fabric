@@ -26,8 +26,8 @@ exports[`barrelPlugin > should produce named exports and mark barrel sources ind
   {
     "isTypeOnly": undefined,
     "name": [
-      "world",
       "hello",
+      "world",
     ],
     "path": "./sub/index.ts",
   },

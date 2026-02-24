@@ -9,7 +9,7 @@ export type Pet = Pets
 
 exports[`createFile > should parse file with exports and aliased exports correctly 1`] = `
 "import type Dog from './Dog.ts'
-import type { Pets, Lily } from './Pets.ts'
+import type { Lily, Pets } from './Pets.ts'
 
 export const test = 2
 type Test = Pets | Lily | Dog
@@ -18,7 +18,7 @@ type Test = Pets | Lily | Dog
 
 exports[`createFile > should parse file with exports and aliased exports correctly 2`] = `
 "export type * as Dog from './Dog'
-export type { Pets, Lily } from './Pets'
+export type { Lily, Pets } from './Pets'
 "
 `;
 

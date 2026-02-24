@@ -1,8 +1,8 @@
 import process from 'node:process'
-import { type FileManager, TreeNode } from '@kubb/fabric-core'
+import { type FileManager, onProcessExit, TreeNode } from '@kubb/fabric-core'
 import { ConcurrentRoot } from 'react-reconciler/constants.js'
-import { onExit } from 'signal-exit'
 import { Root } from './components/Root.tsx'
+
 import { createNode } from './dom.ts'
 import type { FiberRoot } from './Renderer.ts'
 import { Renderer } from './Renderer.ts'
@@ -71,12 +71,10 @@ export class Runtime {
     )
 
     // Unmount when process exits
-    this.unsubscribeExit = onExit(
-      (code) => {
-        this.unmount(code)
-      },
-      { alwaysLast: false },
-    ).bind(this)
+    // Unmount when process exits
+    this.unsubscribeExit = onProcessExit((code) => {
+      this.unmount(code)
+    })
   }
 
   get fileManager() {

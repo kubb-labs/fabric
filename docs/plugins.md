@@ -79,21 +79,6 @@ fabric.use(barrelPlugin, {
 })
 ```
 
-### [graphPlugin](/plugins/graph-plugin)
-
-Track dependencies between generated files.
-
-Creates a dependency graph of your generated files, enabling analysis and optimization of file relationships.
-
-```typescript
-import { createFabric } from '@kubb/fabric-core'
-import { graphPlugin } from '@kubb/fabric-core/plugins'
-
-const fabric = createFabric()
-
-fabric.use(graphPlugin)
-```
-
 ## React Integration
 
 ### [reactPlugin](/plugins/react-plugin)

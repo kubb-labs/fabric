@@ -233,11 +233,6 @@
               "activeMatch": "^/plugins/barrel-plugin/?$"
             },
             {
-              "text": "Graph Plugin",
-              "link": "/plugins/graph-plugin",
-              "activeMatch": "^/plugins/graph-plugin/?$"
-            },
-            {
               "text": "React Plugin",
               "link": "/plugins/react-plugin",
               "activeMatch": "^/plugins/react-plugin/?$"

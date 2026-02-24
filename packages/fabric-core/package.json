@@ -95,16 +95,12 @@
   },
   "dependencies": {
     "@clack/prompts": "^1.0.1",
-    "natural-orderby": "^5.0.0",
     "p-limit": "^7.3.0",
     "remeda": "catalog:",
-    "serve-handler": "^6.1.6",
-    "signal-exit": "^4.1.0",
     "typescript": "5.9.3",
     "ws": "^8.19.0"
   },
   "devDependencies": {
-    "@types/serve-handler": "^6.1.4",
     "@types/ws": "^8.18.1"
   },
   "engines": {
