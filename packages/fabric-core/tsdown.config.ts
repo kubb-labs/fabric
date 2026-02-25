@@ -9,15 +9,15 @@ export default defineConfig({
     plugins: 'src/plugins/index.ts',
   },
   dts: true,
-  target: 'es2019',
   format: ['esm', 'cjs'],
   platform: 'node',
   sourcemap: true,
   shims: true,
   exports: true,
   fixedExtension: false,
-  outputOptions: {
-    keepNames: true,
+  outExtensions({ format }) {
+    if (format === 'cjs') return { dts: '.d.ts' }
+    return {}
   },
   inlineOnly: false,
 })

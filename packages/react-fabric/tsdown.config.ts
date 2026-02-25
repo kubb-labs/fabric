@@ -11,15 +11,15 @@ export default defineConfig({
     plugins: 'src/plugins/index.ts',
   },
   dts: true,
-  target: 'es2019',
   platform: 'node',
   format: ['esm', 'cjs'],
-  sourcemap: 'hidden', // TODO see if we can enable this again to help with debugging, issue with React DevTools
+  sourcemap: true,
   shims: true,
   exports: true,
   fixedExtension: false,
-  outputOptions: {
-    keepNames: true,
+  outExtensions({ format }) {
+    if (format === 'cjs') return { dts: '.d.ts' }
+    return {}
   },
   inlineOnly: false,
 })
