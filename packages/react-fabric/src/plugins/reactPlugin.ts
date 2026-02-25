@@ -18,6 +18,7 @@ type ExtendOptions = {
   render(App: FabricReactElement): Promise<void>
   renderToString(App: FabricReactElement): Promise<string>
   waitUntilExit(): Promise<void>
+  unmount(error?: Error | number | null): void
 }
 
 declare global {
@@ -26,6 +27,7 @@ declare global {
       render(App: FabricReactElement): Promise<void>
       renderToString(App: FabricReactElement): Promise<string>
       waitUntilExit(): Promise<void>
+      unmount(error?: Error | number | null): void
     }
   }
 }
@@ -47,6 +49,9 @@ export const reactPlugin = definePlugin<Options, ExtendOptions>({
       },
       async waitUntilExit() {
         await runtime.waitUntilExit()
+      },
+      unmount(error) {
+        runtime.unmount(error)
       },
     }
   },
