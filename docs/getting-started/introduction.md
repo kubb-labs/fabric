@@ -125,8 +125,7 @@ import { loggerPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(loggerPlugin, {
-  progress: true,
-  websocket: true,
+  progress: true
 })
 ```
 
