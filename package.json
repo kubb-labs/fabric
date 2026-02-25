@@ -25,19 +25,7 @@
     "packages": [
       "packages/*",
       "examples/*"
-    ],
-    "catalog": {
-      "@size-limit/file": "^11.2.0",
-      "@types/node": "^20.19.30",
-      "@types/react": "^19.2.10",
-      "@types/react-reconciler": "0.32.0",
-      "react": "19.2.3",
-      "react-reconciler": "0.33.0",
-      "remeda": "^2.33.4",
-      "size-limit": "^11.2.0",
-      "tsdown": "^0.20.1",
-      "typescript": "^5.9.3"
-    }
+    ]
   },
   "scripts": {
     "build": "turbo run build --filter=./packages/*",
