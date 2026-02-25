@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.13.1
+
+### Patch Changes
+
+- [`40d106c`](https://github.com/kubb-labs/fabric/commit/40d106c950f1639aac4370d884a99047d7a5fa08) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - correct typing export
+
 ## 0.13.0
 
 ### Minor Changes
