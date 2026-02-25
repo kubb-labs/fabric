@@ -33,7 +33,7 @@ async function start() {
     },
     clean: { path: path.resolve(__dirname, './gen') },
   })
-  fabric.use(loggerPlugin, { progress: true, websocket: false })
+  fabric.use(loggerPlugin, { progress: true })
 
   await fabric.render(<App />)
   await fabric.write()

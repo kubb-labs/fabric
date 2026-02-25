@@ -158,7 +158,7 @@ fabric.use(typescriptParser)
 - **Cross-Runtime Support1** - Fabric works seamlessly with `Node.js` and `Bun`, allowing you to choose the runtime that best fits your project.
 - **Plugin system** - Extend with custom functionality or use community plugins
 - **Event-Driven Architecture** - Listen to lifecycle events to monitor progress, transform files, or perform custom operations at specific points in the generation process.
-- **Debug mode** - Use the `loggerPlugin` to visualize generation progress with beautiful CLI output, progress bars, and websocket support for building custom dashboards.
+- **Debug mode** - Use the `loggerPlugin` to visualize generation progress with beautiful CLI output, progress bars.
 - **Barrel files** - Automatic `index.ts` generation for clean imports
 - **React Integration** - The `@kubb/react-fabric` package enables using React components as templates for code generation, bringing the component model to file generation.
 

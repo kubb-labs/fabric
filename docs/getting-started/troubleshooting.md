@@ -308,21 +308,11 @@ await fabric.addFile({
 **Problem:** File generation takes too long for large projects
 
 **Common causes:**
-- WebSocket server overhead
 - Processing too many files at once
 
 **Solutions:**
 
-**1. Disable websocket if not needed:**
-
-```ts [disable-websocket.ts]
-fabric.use(loggerPlugin, {
-  progress: true,
-  websocket: false,
-})
-```
-
-**2. Process files in batches:**
+**1. Process files in batches:**
 
 ```ts [batch-processing.ts]
 const files = [...] // Large array of files

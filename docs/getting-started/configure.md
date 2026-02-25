@@ -71,11 +71,10 @@ fabric.use(fsPlugin, {
 
 ### Logger Plugin (loggerPlugin)
 
-Displays progress bars, percentage completion, and optionally runs a WebSocket server for custom dashboards.
+Displays progress bars, percentage completion
 
 **Common options:**
 - `progress` - Enable progress bar display
-- `websocket` - WebSocket server configuration for live updates
 
 ```ts twoslash
 import { createFabric } from '@kubb/fabric-core'
@@ -85,10 +84,6 @@ const fabric = createFabric()
 
 fabric.use(loggerPlugin, {
   progress: true,
-  websocket: {
-    host: 'localhost',
-    port: 3000,
-  },
 })
 ```
 
