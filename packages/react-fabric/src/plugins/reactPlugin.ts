@@ -27,7 +27,6 @@ declare global {
       render(App: FabricReactElement): Promise<void>
       renderToString(App: FabricReactElement): Promise<string>
       waitUntilExit(): Promise<void>
-      unmount(error?: Error | number | null): void
     }
   }
 }
@@ -52,6 +51,7 @@ export const reactPlugin = definePlugin<Options, ExtendOptions>({
       },
       unmount(error) {
         runtime.unmount(error)
+        ctx.removeAll()
       },
     }
   },

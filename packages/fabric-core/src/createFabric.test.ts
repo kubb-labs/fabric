@@ -261,4 +261,51 @@ describe('createFabric', () => {
     expect(typeof fabric.hello).toBe('function')
     expect(fabric.hello()).toBe('world')
   })
+
+  describe('unmount', () => {
+    it('should remove all event listeners on unmount', () => {
+      const fabric = createFabric()
+      const handler = vi.fn()
+
+      fabric.context.on('lifecycle:start', handler)
+      fabric.unmount()
+
+      // After unmount, emitting should not invoke the handler
+      fabric.context.emit('lifecycle:start')
+      expect(handler).not.toHaveBeenCalled()
+    })
+
+    it('should be safe to call unmount multiple times', () => {
+      const fabric = createFabric()
+
+      expect(() => {
+        fabric.unmount()
+        fabric.unmount()
+      }).not.toThrow()
+    })
+
+    it('should accept an optional error argument', () => {
+      const fabric = createFabric()
+
+      expect(() => fabric.unmount(new Error('test'))).not.toThrow()
+      expect(() => fabric.unmount(1)).not.toThrow()
+      expect(() => fabric.unmount(null)).not.toThrow()
+    })
+
+    it('should remove listeners for multiple event types', () => {
+      const fabric = createFabric()
+      const startHandler = vi.fn()
+      const endHandler = vi.fn()
+
+      fabric.context.on('lifecycle:start', startHandler)
+      fabric.context.on('lifecycle:end', endHandler)
+      fabric.unmount()
+
+      fabric.context.emit('lifecycle:start')
+      fabric.context.emit('lifecycle:end')
+
+      expect(startHandler).not.toHaveBeenCalled()
+      expect(endHandler).not.toHaveBeenCalled()
+    })
+  })
 })

@@ -6,6 +6,7 @@ const hoisted = vi.hoisted(() => {
     render: vi.fn(),
     renderToString: vi.fn().mockResolvedValue('hello'),
     waitUntilExit: vi.fn().mockResolvedValue(undefined),
+    unmount: vi.fn(),
   }
   return { instance }
 })
@@ -15,6 +16,7 @@ vi.mock('./Runtime.tsx', () => {
     render = hoisted.instance.render
     renderToString = hoisted.instance.renderToString
     waitUntilExit = hoisted.instance.waitUntilExit
+    unmount = hoisted.instance.unmount
   }
   return { Runtime: RuntimeMock }
 })
@@ -46,5 +48,46 @@ describe('e2e', () => {
 
     await fabric.waitUntilExit()
     expect(hoisted.instance.waitUntilExit).toHaveBeenCalledTimes(1)
+  })
+
+  describe('unmount', () => {
+    it('should delegate unmount to runtime', () => {
+      const fabric = createReactFabric()
+
+      fabric.unmount()
+
+      expect(hoisted.instance.unmount).toHaveBeenCalledTimes(1)
+      expect(hoisted.instance.unmount).toHaveBeenCalledWith(undefined)
+    })
+
+    it('should forward error argument to runtime.unmount', () => {
+      const fabric = createReactFabric()
+      const err = new Error('test error')
+
+      fabric.unmount(err)
+
+      expect(hoisted.instance.unmount).toHaveBeenCalledWith(err)
+    })
+
+    it('should remove all event listeners on unmount', () => {
+      const fabric = createReactFabric()
+      const handler = vi.fn()
+
+      fabric.context.on('lifecycle:start', handler)
+      fabric.unmount()
+
+      fabric.context.emit('lifecycle:start')
+      expect(handler).not.toHaveBeenCalled()
+    })
+
+    it('should not increase process listener count after unmount', () => {
+      const before = process.listenerCount('SIGINT')
+      const fabric = createReactFabric()
+
+      // Runtime is mocked, so we check the base fabric cleanup
+      fabric.unmount()
+
+      expect(process.listenerCount('SIGINT')).toBe(before)
+    })
   })
 })

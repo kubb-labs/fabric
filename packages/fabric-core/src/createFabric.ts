@@ -67,10 +67,13 @@ export function createFabric<T extends FabricOptions>(config: FabricConfig<T> = 
       return fileManager.files
     },
     async addFile(...files) {
-      await fileManager.add(...files)
+      fileManager.add(...files)
     },
     async upsertFile(...files) {
-      await fileManager.upsert(...files)
+      fileManager.upsert(...files)
+    },
+    unmount(_error?: Error | number | null) {
+      events.removeAll()
     },
     async use(pluginOrParser, ...options) {
       if (pluginOrParser.type === 'plugin') {

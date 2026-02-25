@@ -5,12 +5,6 @@ import type { Parser } from './parsers/types.ts'
 import type { Plugin } from './plugins/types.ts'
 import type { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
 
-declare global {
-  namespace Kubb {
-    interface Fabric {}
-  }
-}
-
 export type FabricElement<TProps extends object = object> = {
   (): FabricNode
   type: string
@@ -249,4 +243,9 @@ export interface Fabric<T extends FabricOptions = FabricOptions> extends Kubb.Fa
    * Add one or more files to the Fabric file manager and merge the source, imports, exports
    */
   upsertFile(...files: KubbFile.File[]): Promise<void>
+  /**
+   * Unmount the Fabric instance and remove all registered event listeners.
+   * Plugins may extend this to perform additional cleanup (e.g. process signal listeners).
+   */
+  unmount(error?: Error | number | null): void
 }
