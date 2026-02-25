@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.13.2
+
+### Patch Changes
+
+- [`5ab5956`](https://github.com/kubb-labs/fabric/commit/5ab5956ea700e20e5ef19291aff32b904c95c98c) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Unmount helper
+
+- Updated dependencies [[`5ab5956`](https://github.com/kubb-labs/fabric/commit/5ab5956ea700e20e5ef19291aff32b904c95c98c)]:
+  - @kubb/fabric-core@0.13.2
+
 ## 0.13.1
 
 ### Patch Changes
