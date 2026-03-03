@@ -19,6 +19,7 @@ const shared: Partial<UserConfig> = {
   outputOptions: {
     keepNames: true,
   },
+  inlineOnly: false,
 }
 
 export default defineConfig([
