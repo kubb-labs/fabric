@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.13.3
+
+### Patch Changes
+
+- [`f6eccb8`](https://github.com/kubb-labs/fabric/commit/f6eccb87f554b2a7b6a5235a01cff672176f9d7c) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - update packages
+
 ## 0.13.2
 
 ### Patch Changes
