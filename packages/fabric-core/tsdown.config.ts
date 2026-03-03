@@ -1,23 +1,35 @@
-import { defineConfig } from 'tsdown'
+import { defineConfig, type UserConfig } from 'tsdown'
 
-export default defineConfig({
-  entry: {
-    index: 'src/index.ts',
-    types: 'src/types.ts',
-    parsers: 'src/parsers/index.ts',
-    'parsers/typescript': 'src/parsers/typescriptParser.ts',
-    plugins: 'src/plugins/index.ts',
-  },
-  dts: true,
-  format: ['esm', 'cjs'],
+const entry = {
+  index: 'src/index.ts',
+  types: 'src/types.ts',
+  parsers: 'src/parsers/index.ts',
+  'parsers/typescript': 'src/parsers/typescriptParser.ts',
+  plugins: 'src/plugins/index.ts',
+}
+
+const shared: Partial<UserConfig> = {
   platform: 'node',
   sourcemap: true,
   shims: true,
   exports: true,
   fixedExtension: false,
-  outExtensions({ format }) {
-    if (format === 'cjs') return { dts: '.d.ts' }
-    return {}
+  outputOptions: {
+    keepNames: true,
   },
-  inlineOnly: false,
-})
+}
+
+export default defineConfig([
+  {
+    entry,
+    format: 'esm',
+    dts: true,
+    ...shared,
+  },
+  {
+    entry,
+    format: 'cjs',
+    dts: false,
+    ...shared,
+  },
+])
