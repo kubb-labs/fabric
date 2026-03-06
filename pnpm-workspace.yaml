@@ -4,12 +4,12 @@ packages:
 
 catalog:
   '@size-limit/file': ^11.2.0
-  '@types/node': ^20.19.35
+  '@types/node': ^20.19.37
   '@types/react': ^19.2.14
   '@types/react-reconciler': 0.32.0
   react: 19.2.3
   react-reconciler: 0.33.0
   remeda: ^2.33.6
   size-limit: ^11.2.0
-  tsdown: ^0.20.3
+  tsdown: ^0.21.0
   typescript: ^5.9.3

@@ -134,5 +134,10 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
+  },
+  "inlinedDependencies": {
+    "react": "19.2.3",
+    "scheduler": "0.27.0",
+    "react-reconciler": "0.33.0"
   }
 }
