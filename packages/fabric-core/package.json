@@ -95,7 +95,7 @@
     "typecheck": "tsc -p ./tsconfig.json --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@clack/prompts": "^1.0.1",
+    "@clack/prompts": "^1.1.0",
     "p-limit": "^7.3.0",
     "remeda": "catalog:",
     "typescript": "5.9.3"

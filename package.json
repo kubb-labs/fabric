@@ -55,7 +55,7 @@
     ]
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.5",
+    "@biomejs/biome": "^2.4.6",
     "@changesets/changelog-github": "^0.5.2",
     "@changesets/cli": "^2.30.0",
     "@manypkg/cli": "^0.25.1",
@@ -70,7 +70,7 @@
     "size-limit": "catalog:",
     "taze": "^19.10.0",
     "tsdown": "catalog:",
-    "turbo": "^2.8.12",
+    "turbo": "^2.8.13",
     "typescript": "catalog:",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.0.18"

@@ -19,7 +19,9 @@ const shared: Partial<UserConfig> = {
   outputOptions: {
     keepNames: true,
   },
-  inlineOnly: false,
+  deps: {
+    onlyAllowBundle: false,
+  },
 }
 
 export default defineConfig([

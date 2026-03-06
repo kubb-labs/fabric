@@ -1,8 +1,8 @@
-import * as React from 'react/jsx-dev-runtime'
+import * as React from 'react/jsx-runtime'
 import type { FabricReactElement, FabricReactNode } from './types.ts'
 
 export const Fragment = React.Fragment
-export const jsxDEV = React.jsxDEV
+export const jsxDEV = React.jsx
 
 export type * from './jsx-namespace.d.ts'
 
