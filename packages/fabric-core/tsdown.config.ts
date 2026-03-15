@@ -18,7 +18,7 @@ const shared: Partial<UserConfig> = {
     keepNames: true,
   },
   deps: {
-    onlyAllowBundle: false,
+    onlyBundle: false,
   },
 }
 
