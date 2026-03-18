@@ -1,5 +1,16 @@
 # @kubb/react-fabric
 
+## 0.14.0
+
+### Minor Changes
+
+- [`d044d07`](https://github.com/kubb-labs/fabric/commit/d044d0746fc4b7fd27b5184037a8bb38c5a011d0) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Use of Fabric instead of App
+
+### Patch Changes
+
+- Updated dependencies [[`d044d07`](https://github.com/kubb-labs/fabric/commit/d044d0746fc4b7fd27b5184037a8bb38c5a011d0)]:
+  - @kubb/fabric-core@0.14.0
+
 ## 0.13.3
 
 ### Patch Changes
