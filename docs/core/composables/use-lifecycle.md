@@ -65,4 +65,4 @@ function MyComponent({ data }: { data?: unknown }) {
 
 ## See Also
 
-- [useApp](/core/composables/use-app) - Access App context
+- [useFabric](/core/composables/use-fabric) - Access App context

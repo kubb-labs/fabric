@@ -2,8 +2,8 @@ import path from 'node:path'
 import { FileManager, TreeNode } from '@kubb/fabric-core'
 import { describe, expect, it, vi } from 'vitest'
 import { createReactFabric } from '../createReactFabric.ts'
-import { App } from './App.tsx'
 import { Const, type ConstProps } from './Const.tsx'
+import { Fabric } from './Fabric.tsx'
 import { Root } from './Root.tsx'
 
 describe('<Const/>', () => {
@@ -43,9 +43,9 @@ describe('<Const/>', () => {
     const fabric = createReactFabric()
     const output = await fabric.renderToString(
       <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
-        <App meta={{ name: 'TestApp' }}>
+        <Fabric meta={{ name: 'TestApp' }}>
           <Const name={'myVar'}>"hello"</Const>
-        </App>
+        </Fabric>
       </Root>,
     )
 

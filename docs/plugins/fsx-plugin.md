@@ -84,7 +84,7 @@ This method also emits the `lifecycle:start` event.
 **Signature:**
 
 ```ts
-render(App: FabricElement<any>): Promise<string>
+render(Fabric: FabricElement<any>): Promise<string>
 ```
 
 ### `waitUntilExit()`

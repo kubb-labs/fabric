@@ -97,7 +97,7 @@ const fabric = createFabric()
 
 Functional components for generating TypeScript code elements. Use these to build type definitions, constants, functions, and files.
 
-- **[App](/core/components/app)** - Application container for file generation
+- **[Fabric](/core/components/fabric)** - Application container for file generation
 - **[Root](/core/components/root)** - Root runtime context provider (no need to use directly)
 - **[File](/core/components/file)** - File generation with imports/exports
 - **[Function](/core/components/function)** - TypeScript function declarations
@@ -108,7 +108,7 @@ Functional components for generating TypeScript code elements. Use these to buil
 
 Access Fabric's internal context and state via composable hooks. Use these in custom components or plugins.
 
-- **[useApp](/core/composables/use-app)** - Access application context
+- **[useFabric](/core/composables/use-fabric)** - Fabric application context
 - **[useContext](/core/composables/use-context)** - Access Fabric context
 - **[useFile](/core/composables/use-file)** - Access current file context
 - **[useFileManager](/core/composables/use-file-manager)** - Manage files

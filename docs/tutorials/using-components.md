@@ -131,12 +131,12 @@ return response.json()
 
 ## Step 4: Generate Multiple Files
 
-Use the `App` component for multiple files:
+Use the `Fabric` component for multiple files:
 
 ::: code-group
 
 ```tsx twoslash [run.ts]
-import { App, File, Br, Type, createFabric } from '@kubb/fabric-core'
+import { Fabric, File, Br, Type, createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
@@ -145,7 +145,7 @@ fabric.use(fsxPlugin)
 
 const models = ['User', 'Post', 'Comment']
 
-const component = App().children(
+const component = Fabric().children(
   models.map(name =>
     File({
       baseName: `${name.toLowerCase()}.ts`,
@@ -174,7 +174,7 @@ export type Comment = { id: number }
 
 | Component | Purpose |
 |-----------|---------|
-| `App` | Container for multiple files |
+| `Fabric` | Container for multiple files |
 | `File` | File with imports/exports/source |
 | `Type` | Type declaration |
 | `Function` | Function declaration |

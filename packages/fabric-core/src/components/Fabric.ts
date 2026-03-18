@@ -1,13 +1,13 @@
 import { useContext } from '../composables/useContext.ts'
 import { useNodeTree } from '../composables/useNodeTree.ts'
 import { provide } from '../context.ts'
-import { AppContext } from '../contexts/AppContext.ts'
+import { FabricContext } from '../contexts/FabricContext.ts'
 import { NodeTreeContext } from '../contexts/NodeTreeContext.ts'
 import { RootContext } from '../contexts/RootContext.ts'
 import { createComponent } from '../createComponent.ts'
 import type { FabricNode } from '../Fabric.ts'
 
-export type AppProps<TMeta extends Object = Object> = {
+export type FabricProps<TMeta extends Object = Object> = {
   /**
    * Metadata attached to the App context.
    *
@@ -28,14 +28,14 @@ export type AppProps<TMeta extends Object = Object> = {
  *
  * @example
  * ```tsx
- * <App meta={{ version: '1.0.0', author: 'John Doe' }}>
+ * <Fabric meta={{ version: '1.0.0', author: 'John Doe' }}>
  *   <File baseName="user.ts" path="./user.ts">
  *     <File.Source>export type User = {}</File.Source>
  *   </File>
- * </App>
+ * </Fabric>
  * ```
  */
-export const App = createComponent('App', ({ children, ...props }: AppProps) => {
+export const Fabric = createComponent('Fabric', ({ children, ...props }: FabricProps) => {
   const { meta = {} } = props
 
   const { exit } = useContext(RootContext)
@@ -43,14 +43,14 @@ export const App = createComponent('App', ({ children, ...props }: AppProps) => 
   const nodeTree = useNodeTree()
 
   if (nodeTree) {
-    const childTree = nodeTree.addChild({ type: 'App', props })
+    const childTree = nodeTree.addChild({ type: 'Fabric', props })
 
     provide(NodeTreeContext, childTree)
   }
 
-  provide(AppContext, { exit, meta })
+  provide(FabricContext, { exit, meta })
 
   return children
 })
 
-App.displayName = 'App'
+Fabric.displayName = 'Fabric'

@@ -78,5 +78,5 @@ await fabric.render(component)
 ## See Also
 
 - [Root (React Fabric)](/react/components/root) - React version
-- [App](/core/components/app) - App container component
+- [Fabric](/core/components/fabric) - Fabric container component
 - [createFabric](/core/create-fabric) - Fabric factory

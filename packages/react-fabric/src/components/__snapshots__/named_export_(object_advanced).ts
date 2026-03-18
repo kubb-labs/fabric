@@ -1,1 +1,1 @@
-export { App, createFrabric } from "@kubb/react-fabric";
+export { Fabric, createFrabric } from "@kubb/react-fabric";

@@ -1,1 +1,1 @@
-export { App, createFabric } from "@kubb/fabric-core";
+export { Fabric, createFabric } from "@kubb/fabric-core";

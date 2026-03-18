@@ -93,5 +93,5 @@ function DynamicSource({ types }: { types: string[] }) {
 
 - [File](/core/components/file) - File component
 - [useFileManager](/core/composables/use-file-manager) - Manage multiple files
-- [useApp](/core/composables/use-app) - Access app context
+- [useFabric](/core/composables/use-fabric) - Access app context
 

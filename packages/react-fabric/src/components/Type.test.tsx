@@ -2,7 +2,7 @@ import path from 'node:path'
 import { FileManager, TreeNode } from '@kubb/fabric-core'
 import { describe, expect, it, vi } from 'vitest'
 import { createReactFabric } from '../createReactFabric.ts'
-import { App } from './App.tsx'
+import { Fabric } from './Fabric.tsx'
 import { Root } from './Root.tsx'
 import type { TypeProps } from './Type.tsx'
 import { Type } from './Type.tsx'
@@ -42,9 +42,9 @@ describe('<Type/>', () => {
     const fabric = createReactFabric()
     const output = await fabric.renderToString(
       <Root treeNode={treeNode} fileManager={new FileManager()} onExit={vi.fn()} onError={vi.fn()}>
-        <App>
+        <Fabric>
           <Type name={'MyType'}>{'{ a: string }'}</Type>
-        </App>
+        </Fabric>
       </Root>,
     )
 

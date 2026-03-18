@@ -1,14 +1,14 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { inject, unprovide } from '../context.ts'
-import { AppContext } from '../contexts/AppContext.ts'
+import { FabricContext } from '../contexts/FabricContext.ts'
 import { createComponent } from '../createComponent.ts'
 import { createFabric } from '../createFabric.ts'
 import { fsxPlugin } from '../plugins'
-import { App } from './App.ts'
+import { Fabric } from './Fabric.ts'
 
-describe('App', () => {
+describe('Fabric', () => {
   afterEach(() => {
-    unprovide(AppContext)
+    unprovide(FabricContext)
   })
 
   it('should return children when provided', async () => {
@@ -17,7 +17,7 @@ describe('App', () => {
     fabric.use(fsxPlugin)
 
     const children = 'const x = 1'
-    const component = App().children([children])
+    const component = Fabric().children([children])
 
     const output = await fabric.render(component)
 
@@ -33,7 +33,7 @@ describe('App', () => {
       return 'const x = 1'
     })
 
-    const component = App().children([Const(), Const()])
+    const component = Fabric().children([Const(), Const()])
 
     const output = await fabric.render(component)
 
@@ -49,7 +49,7 @@ describe('App', () => {
       return 'const x = 1'
     })
 
-    const component = App({
+    const component = Fabric({
       children: [Const(), Const()],
     })
 
@@ -59,17 +59,17 @@ describe('App', () => {
   })
 
   it('should handle undefined children', () => {
-    const output = App({ meta: { test: true } })()
+    const output = Fabric({ meta: { test: true } })()
     expect(output).toBe('')
   })
 
   it('should inject meta data', () => {
     const Text = createComponent('Text', () => {
-      const ctx = inject(AppContext)
+      const ctx = inject(FabricContext)
       return JSON.stringify(ctx?.meta)
     })
 
-    const output = App({
+    const output = Fabric({
       meta: { version: '1.0.0', author: 'test' },
     }).children(Text())
 

@@ -75,7 +75,7 @@ function MyComponent({ children }: { children: any }) {
 
 ## See Also
 
-- [App](/core/components/app) - App container component
+- [Fabric](/core/components/fabric) - Fabric container component
 - [Root](/core/components/root) - Root component with tree structure
 - [useContext](/core/composables/use-context) - Generic context access
 

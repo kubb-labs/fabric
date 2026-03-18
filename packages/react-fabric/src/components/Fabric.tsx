@@ -1,7 +1,7 @@
-import { AppContext, NodeTreeContext, provide, RootContext, useContext, useNodeTree } from '@kubb/fabric-core'
+import { FabricContext, NodeTreeContext, provide, RootContext, useContext, useNodeTree } from '@kubb/fabric-core'
 import type { FabricReactElement, FabricReactNode } from '../types.ts'
 
-export type AppProps<TMeta extends object = object> = {
+export type FabricProps<TMeta extends object = object> = {
   /**
    * Metadata associated with the App.
    */
@@ -13,9 +13,9 @@ export type AppProps<TMeta extends object = object> = {
 }
 
 /**
- * App container containing the AppContext carrying `meta` and an `exit` hook.
+ * Fabric container containing the FabricContext carrying `meta` and an `exit` hook.
  */
-export function App<TMeta extends object = object>({ children, ...props }: AppProps<TMeta>): FabricReactElement {
+export function Fabric<TMeta extends object = object>({ children, ...props }: FabricProps<TMeta>): FabricReactElement {
   const { meta = {} } = props
 
   const { exit } = useContext(RootContext)
@@ -28,9 +28,9 @@ export function App<TMeta extends object = object>({ children, ...props }: AppPr
     provide(NodeTreeContext, childTree)
   }
 
-  provide(AppContext, { exit, meta })
+  provide(FabricContext, { exit, meta })
 
   return <>{children}</>
 }
 
-App.displayName = 'App'
+Fabric.displayName = 'Fabric'

@@ -1,23 +1,23 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { provide, unprovide } from '../context.ts'
-import { AppContext, type AppContextProps } from '../contexts/AppContext.ts'
-import { useApp } from './useApp.ts'
+import { FabricContext, type FabricContextProps } from '../contexts/FabricContext.ts'
+import { useFabric } from './useFabric.ts'
 
-describe('useApp', () => {
+describe('useFabric', () => {
   afterEach(() => {
     // Clean up context after each test
-    unprovide(AppContext)
+    unprovide(FabricContext)
   })
 
   it('should return app context when provided', () => {
-    const appContext: AppContextProps = {
+    const appContext: FabricContextProps = {
       exit: () => {},
       meta: { version: '1.0.0' },
     }
 
-    provide(AppContext, appContext)
+    provide(FabricContext, appContext)
 
-    const result = useApp()
+    const result = useFabric()
 
     expect(result).toBe(appContext)
     expect(result.meta).toEqual({ version: '1.0.0' })
@@ -25,14 +25,14 @@ describe('useApp', () => {
 
   it('should support generic meta type', () => {
     type CustomMeta = { customField: string }
-    const appContext: AppContextProps<CustomMeta> = {
+    const appContext: FabricContextProps<CustomMeta> = {
       exit: () => {},
       meta: { customField: 'custom value' },
     }
 
-    provide(AppContext, appContext)
+    provide(FabricContext, appContext)
 
-    const result = useApp<CustomMeta>()
+    const result = useFabric<CustomMeta>()
 
     expect(result.meta?.customField).toBe('custom value')
   })

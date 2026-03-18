@@ -1,16 +1,16 @@
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { unprovide } from '../context.ts'
-import { AppContext } from '../contexts/AppContext.ts'
+import { FabricContext } from '../contexts/FabricContext.ts'
 import { createFabric } from '../createFabric.ts'
 import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
-import { App } from './App.ts'
 import { Const, type ConstProps } from './Const.ts'
+import { Fabric } from './Fabric.ts'
 
 describe('Const', () => {
   afterEach(() => {
-    unprovide(AppContext)
+    unprovide(FabricContext)
   })
 
   const scenarios: Array<{ name: string; props: ConstProps }> = [
@@ -48,7 +48,7 @@ describe('Const', () => {
 
     fabric.use(fsxPlugin, { treeNode })
 
-    const component = App({
+    const component = Fabric({
       meta: {
         name: 'TestApp',
       },
@@ -61,7 +61,7 @@ describe('Const', () => {
     expect(treeNode.children).toHaveLength(1)
 
     const appChild = treeNode.children[0]!
-    expect(appChild.data.type).toBe('App')
+    expect(appChild.data.type).toBe('Fabric')
     expect(appChild.data.props).toMatchObject({
       meta: {
         name: 'TestApp',

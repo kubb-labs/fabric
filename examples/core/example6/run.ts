@@ -1,4 +1,4 @@
-import { App, createFabric, File } from '@kubb/fabric-core'
+import { createFabric, Fabric, File } from '@kubb/fabric-core'
 import { fsPlugin, fsxPlugin } from '@kubb/fabric-core/plugins'
 
 async function run() {
@@ -10,7 +10,7 @@ async function run() {
 
   fabric.use(fsxPlugin)
 
-  const app = App({
+  const app = Fabric({
     children: [
       File({
         baseName: 'file1.ts',

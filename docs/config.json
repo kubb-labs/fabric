@@ -80,9 +80,9 @@
               "collapsed": true,
               "items": [
                 {
-                  "text": "App",
-                  "link": "/core/components/app",
-                  "activeMatch": "^/core/components/app/?$"
+                  "text": "Fabric",
+                  "link": "/core/components/fabric",
+                  "activeMatch": "^/core/components/fabric/?$"
                 },
                 {
                   "text": "Root",
@@ -131,9 +131,9 @@
               "collapsed": true,
               "items": [
                 {
-                  "text": "useApp",
-                  "link": "/core/composables/use-app",
-                  "activeMatch": "^/core/composables/use-app/?$"
+                  "text": "useFabric",
+                  "link": "/core/composables/use-fabric",
+                  "activeMatch": "^/core/composables/use-fabric/?$"
                 },
                 {
                   "text": "useContext",
@@ -174,9 +174,9 @@
               "collapsed": true,
               "items": [
                 {
-                  "text": "App",
-                  "link": "/react/components/app",
-                  "activeMatch": "^/react/components/app/?$"
+                  "text": "Fabric",
+                  "link": "/react/components/fabric",
+                  "activeMatch": "^/react/components/fabric/?$"
                 },
                 {
                   "text": "Root",

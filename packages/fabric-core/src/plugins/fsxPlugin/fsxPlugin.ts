@@ -13,14 +13,14 @@ export type Options = {
 }
 
 type ExtendOptions = {
-  render(App: FabricElement<any>): Promise<string>
+  render(Fabric: FabricElement<any>): Promise<string>
   waitUntilExit(): Promise<void>
 }
 
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(App: FabricElement<any>): Promise<string>
+      render(Fabric: FabricElement<any>): Promise<string>
       waitUntilExit(): Promise<void>
     }
   }
@@ -33,9 +33,9 @@ export const fsxPlugin = definePlugin<Options, ExtendOptions>({
     const runtime = new Runtime({ fileManager: ctx.fileManager, ...options })
 
     return {
-      async render(App) {
+      async render(Fabric) {
         await ctx.emit('lifecycle:start')
-        return runtime.render(App)
+        return runtime.render(Fabric)
       },
       async waitUntilExit() {
         await runtime.waitUntilExit()

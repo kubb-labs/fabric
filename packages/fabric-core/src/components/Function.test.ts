@@ -1,17 +1,17 @@
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { unprovide } from '../context.ts'
-import { AppContext } from '../contexts/AppContext.ts'
+import { FabricContext } from '../contexts/FabricContext.ts'
 import { createComponent } from '../createComponent.ts'
 import { createFabric } from '../createFabric.ts'
 import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
-import { App } from './App.ts'
+import { Fabric } from './Fabric.ts'
 import { Function } from './Function.ts'
 
 describe('Function', () => {
   afterEach(() => {
-    unprovide(AppContext)
+    unprovide(FabricContext)
   })
 
   const Component = createComponent('test', () => {
@@ -43,7 +43,7 @@ describe('Function', () => {
     fabric.use(fsxPlugin, { treeNode })
 
     const output = await fabric.render(
-      App({
+      Fabric({
         children: Function({ name: 'myFunc', children: 'return true' }),
       }),
     )
@@ -87,7 +87,7 @@ describe('Function.Arrow', () => {
 
     fabric.use(fsxPlugin, { treeNode })
 
-    const component = App({
+    const component = Fabric({
       children: Function.Arrow({ name: 'myFunc', children: 'return true' }),
     })
 

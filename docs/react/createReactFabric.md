@@ -133,7 +133,7 @@ The `reactPlugin` injects additional methods into the Fabric instance:
 
 Renders a React component and writes output to the configured stream or file system.
 
-- `App` — React element to render
+- `Fabric` — React element to render
 
 **Example:**
 
@@ -159,7 +159,7 @@ await fabric.render(<Generator />)
 
 Renders a React component to a string without side effects.
 
-- `App` — React element to render
+- `Fabric` — React element to render
 - Returns: `Promise<string>`
 
 **Example:**

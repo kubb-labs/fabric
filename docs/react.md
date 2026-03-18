@@ -95,7 +95,7 @@ const fabric = createReactFabric({
 
 React Fabric provides JSX components for generating TypeScript code:
 
-- **[App](/react/components/app)** - Application container component
+- **[Fabric](/react/components/fabric)** - Application container component
 - **[File](/react/components/file)** - File generation with imports/exports
 - **[Function](/react/components/function)** - TypeScript function declarations
 - **[Const](/react/components/const)** - TypeScript constant declarations
@@ -316,7 +316,7 @@ React Fabric uses React components and JSX syntax. Fabric Core uses FSX (a light
 
 ### Can I use React hooks in my generators?
 
-Yes. React Fabric supports `useState`, `useEffect`, and custom hooks. It also provides Fabric-specific hooks like `useFile()`, `useApp()`, and `useLifecycle()`.
+Yes. React Fabric supports `useState`, `useEffect`, and custom hooks. It also provides Fabric-specific hooks like `useFile()`, `useFabric()`, and `useLifecycle()`.
 
 ### Does this require React DOM?
 

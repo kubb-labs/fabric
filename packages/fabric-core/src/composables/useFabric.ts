@@ -1,4 +1,4 @@
-import { AppContext, type AppContextProps } from '../contexts/AppContext.ts'
+import { FabricContext, type FabricContextProps } from '../contexts/FabricContext.ts'
 import { useContext } from './useContext.ts'
 
 /**
@@ -11,10 +11,10 @@ import { useContext } from './useContext.ts'
  *
  * @example
  * ```ts
- * const { meta, exit } = useApp<{ version: string }>()
+ * const { meta, exit } = useFabric<{ version: string }>()
  * console.log(meta.version)
  * ```
  */
-export function useApp<TMeta extends object = object>(): AppContextProps<TMeta> {
-  return useContext(AppContext) as AppContextProps<TMeta>
+export function useFabric<TMeta extends object = object>(): FabricContextProps<TMeta> {
+  return useContext(FabricContext) as FabricContextProps<TMeta>
 }

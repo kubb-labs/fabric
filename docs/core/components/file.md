@@ -471,14 +471,14 @@ export function createUser(data: User): User {
 ```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { File, App, Br } from '@kubb/fabric-core'
+import { File, Fabric, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
 const entities = ['User', 'Post', 'Comment']
 
-const component = App().children(
+const component = Fabric().children(
   entities.map(entity =>
     File({
       baseName: `${entity.toLowerCase()}.ts`,

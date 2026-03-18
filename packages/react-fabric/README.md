@@ -172,8 +172,8 @@ Injected methods (via `reactPlugin`):
 
 | Method | Signature | Description                                                                                        |
 |---|---|----------------------------------------------------------------------------------------------------|
-| `render` | `(App: React.ElementType) => Promise<void> \| void` | Render a React component tree to the terminal and emit the core `start` event.                     |
-| `renderToString` | `(App: React.ElementType) => Promise<string> \| string` | Render a React component tree and return the final output as a string (without writing to stdout). |
+| `render` | `(Fabric: React.ElementType) => Promise<void> \| void` | Render a React component tree to the terminal and emit the core `start` event.                     |
+| `renderToString` | `(Fabric: React.ElementType) => Promise<string> \| string` | Render a React component tree and return the final output as a string (without writing to stdout). |
 | `waitUntilExit` | `() => Promise<void>` | Wait until the rendered app exits, resolves when unmounted and emits the core `end` event.         |
 
 #### `definePlugin`

@@ -1,7 +1,6 @@
 // import './globals.ts'
 import * as React from 'react'
 
-export type { Fabric } from '@kubb/fabric-core'
 // expose fabric core helpers
 export { createContext, createFabric, createFile, FileManager, FileProcessor, TreeNode, useContext } from '@kubb/fabric-core'
 
@@ -11,8 +10,8 @@ export const useEffect = React.useEffect
 export const useReducer = React.useReducer
 export const useRef = React.useRef
 
-export { App } from './components/App.tsx'
 export { Const } from './components/Const.tsx'
+export { Fabric } from './components/Fabric.tsx'
 export { File } from './components/File.tsx'
 export { Function } from './components/Function.tsx'
 // components
@@ -20,7 +19,7 @@ export { Root } from './components/Root.tsx'
 export { Type } from './components/Type.tsx'
 
 // composables
-export { useApp } from './composables/useApp.ts'
+export { useFabric } from './composables/useFabric.ts'
 export { useFile } from './composables/useFile.ts'
 export { useLifecycle } from './composables/useLifecycle.tsx'
 

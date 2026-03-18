@@ -23,12 +23,12 @@ The Dedent component decreases the indentation level in generated code. Use with
 ```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
+import { Fabric, Indent, Dedent, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = App().children([
+const component = Fabric().children([
   'function example() {',
   Br(),
   Indent(),
@@ -61,12 +61,12 @@ This component accepts no props.
 ```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { App, Indent, Dedent, Br } from '@kubb/fabric-core'
+import { Fabric, Indent, Dedent, Br } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = App().children([
+const component = Fabric().children([
   'switch (value) {',
   Br(),
   Indent(),

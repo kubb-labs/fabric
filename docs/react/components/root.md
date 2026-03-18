@@ -23,7 +23,7 @@ Internal React component providing core Fabric runtime context. This component i
 ::: code-group
 
 ```tsx twoslash [run.tsx]
-import { createReactFabric, Root, App, TreeNode, FileManager } from '@kubb/react-fabric'
+import { createReactFabric, Root, Fabric, TreeNode, FileManager } from '@kubb/react-fabric'
 import type { ComponentNode } from '@kubb/react-fabric/types'
 
 const fabric = createReactFabric()
@@ -38,9 +38,9 @@ export function Generator() {
       treeNode={treeNode}
       fileManager={fileManager}
     >
-      <App>
+      <Fabric>
         {/* Your components */}
-      </App>
+      </Fabric>
     </Root>
   )
 }
@@ -115,9 +115,9 @@ Child React components.
 
 No. The `createReactFabric()` function automatically creates and configures `Root` for you. You only need direct access for advanced customization.
 
-### How does Root differ from App?
+### How does Root differ from Fabric?
 
-`Root` is the runtime context provider (internal infrastructure). `App` is the entry point for your generator components (your code). Always wrap your components in `App`, not `Root`.
+`Root` is the runtime context provider (internal infrastructure). `Fabric` is the entry point for your generator components (your code). Always wrap your components in `App`, not `Root`.
 
 ### Can I have multiple Root components?
 
@@ -126,7 +126,7 @@ No. Each Fabric instance has one `Root` component that manages the entire compon
 ## Related Components
 
 - [Root (Fabric Core)](/core/components/root) - FSX version for non-React workflows
-- [App Component](/react/components/app) - Application container for generators
+- [Fabric Component](/react/components/fabric) - Application container for generators
 - [createReactFabric()](/react/createReactFabric) - React Fabric factory function
 
 ## Next Steps

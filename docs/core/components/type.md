@@ -86,7 +86,7 @@ JSDoc comments.
 ```tsx twoslash [run.ts]
 import { createFabric } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
-import { App, Type } from '@kubb/fabric-core'
+import { Type } from '@kubb/fabric-core'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)

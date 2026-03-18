@@ -1,16 +1,16 @@
 import { createFabric } from '@kubb/fabric-core'
 import { describe, expect, test } from 'vitest'
-import { App } from '../components/App'
+import { Fabric } from '../components/Fabric.tsx'
 import { reactPlugin } from '../plugins/reactPlugin'
-import { useApp } from './useApp'
+import { useFabric } from './useFabric.ts'
 
-describe('useApp', () => {
+describe('useFabric', () => {
   test('returns meta and exit when used inside <App />', async () => {
-    let value: ReturnType<typeof useApp<{ count: number }>> | undefined
+    let value: ReturnType<typeof useFabric<{ count: number }>> | undefined
 
     const Test = () => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
-      value = useApp<{ count: number }>()
+      value = useFabric<{ count: number }>()
       return null
     }
 
@@ -19,9 +19,9 @@ describe('useApp', () => {
     fabric.use(reactPlugin)
 
     const Component = (
-      <App meta={meta}>
+      <Fabric meta={meta}>
         <Test />
-      </App>
+      </Fabric>
     )
 
     await fabric.render(Component)

@@ -274,7 +274,7 @@ describe('<File.Import/>', () => {
     },
     {
       name: 'named import (object advanced)',
-      props: { name: ['App', { propertyName: 'createFabric', name: 'create' }], path: '@kubb/react-fabric' },
+      props: { name: ['Fabric', { propertyName: 'createFabric', name: 'create' }], path: '@kubb/react-fabric' },
     },
   ]
 
@@ -405,7 +405,7 @@ describe('<File.Export/>', () => {
     },
     {
       name: 'named export (object advanced)',
-      props: { name: ['App', 'createFrabric'], path: '@kubb/react-fabric' },
+      props: { name: ['Fabric', 'createFrabric'], path: '@kubb/react-fabric' },
     },
   ]
 

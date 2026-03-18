@@ -21,14 +21,14 @@ The useContext composable accesses context values from context providers in Fabr
 
 Access values from a specific context key.
 
-**Example:** Access App context values.
+**Example:** Access Fabric context values.
 
 ```ts twoslash
 import { useContext } from '@kubb/fabric-core'
-import { AppContext } from '@kubb/fabric-core'
+import { FabricContext } from '@kubb/fabric-core'
 
 function MyComponent() {
-  const { meta } = useContext(AppContext)
+  const { meta } = useContext(FabricContext)
 
   return `Version: ${(meta as { version: string }).version}`
 }
@@ -70,5 +70,5 @@ function MyComponent() {
 
 ## See Also
 
-- [useApp](/core/composables/use-app) - Access App context
+- [useFabric](/core/composables/use-fabric) - Access App context
 - [useFile](/core/composables/use-file) - Access File context

@@ -21,13 +21,13 @@ The Indent component increases the indentation level for child content in genera
 ::: code-group
 
 ```tsx twoslash [run.ts]
-import { createFabric, App, Indent, Dedent, Br } from '@kubb/fabric-core'
+import { createFabric, Fabric, Indent, Dedent, Br } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = App().children([
+const component = Fabric().children([
   'function example() {',
   Br(),
   Indent(),
@@ -99,13 +99,13 @@ if (condition) {
 ::: code-group
 
 ```tsx twoslash [run.ts]
-import { createFabric, App, Indent, Dedent, Br } from '@kubb/fabric-core'
+import { createFabric, Fabric, Indent, Dedent, Br } from '@kubb/fabric-core'
 import { fsxPlugin } from '@kubb/fabric-core/plugins'
 
 const fabric = createFabric()
 fabric.use(fsxPlugin)
 
-const component = App().children([
+const component = Fabric().children([
   'class Example {',
   Br(),
   Indent(),

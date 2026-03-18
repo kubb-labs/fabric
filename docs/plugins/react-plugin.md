@@ -111,7 +111,7 @@ fabric.use(reactPlugin, {
 
 The reactPlugin adds the following methods to the Fabric instance:
 
-### `render(App)`
+### `render(Fabric)`
 
 Renders a React component tree to the terminal and emits the `lifecycle:start` event.
 
@@ -123,7 +123,7 @@ const App = () => <div>Building files...</div>
 await fabric.render(App)
 ```
 
-### `renderToString(App)`
+### `renderToString(Fabric)`
 
 Renders a React component tree and returns the final output as a string without writing to stdout.
 

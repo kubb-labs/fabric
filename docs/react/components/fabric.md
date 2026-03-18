@@ -1,37 +1,37 @@
 ---
 layout: doc
-title: App Component - React Container for Fabric
-description: Use the App React component as a container for file generation with metadata using JSX syntax in Fabric.
+title: Fabric Component - React Container for Fabric
+description: Use the Fabric React component as a container for file generation with metadata using JSX syntax in Fabric.
 
 outline: deep
 ---
 
-# App <Badge type="tip" text="react-fabric" />
+# Fabric <Badge type="tip" text="react-fabric" />
 
-React component providing App context with metadata.
+React component providing Fabric context with metadata.
 
 > [!NOTE]
 > This is the **react-fabric** version using React.
-> For the FSX version, see [App (Fabric Core)](/core/components/app).
+> For the FSX version, see [Fabric (Fabric Core)](/core/components/fabric).
 
 ## Usage
 
 ::: code-group
 
 ```tsx twoslash [run.tsx]
-import { createReactFabric, App, File } from '@kubb/react-fabric'
+import { createReactFabric, Fabric, File } from '@kubb/react-fabric'
 
 const fabric = createReactFabric()
 
 export function Generator() {
   return (
-    <App>
+    <Fabric>
       <File baseName="user.ts" path="./generated/user.ts">
         <File.Source isExportable>
           export type User = {'{'} id: number {'}'}
         </File.Source>
       </File>
-    </App>
+    </Fabric>
   )
 }
 
@@ -47,7 +47,7 @@ export type User = { id: number };
 
 ### meta
 
-Metadata attached to the App context.
+Metadata attached to the Fabric context.
 
 |           |        |
 |----------:|:-------|
@@ -66,6 +66,6 @@ Child React components.
 
 ## See Also
 
-- [App (Fabric Core)](/core/components/app) - FSX version
+- [Fabric (Fabric Core)](/core/components/fabric) - FSX version
 - [File](/react/components/file) - File generation component
 - [Overview](/getting-started/introduction#fabric-core-vs-react-fabric) - fabric-core vs react-fabric

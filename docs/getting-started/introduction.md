@@ -78,10 +78,10 @@ Both packages export components with the same names.
 
 ```ts
 // Fabric Core
-import { App, File, Function } from '@kubb/fabric-core'
+import { Fabric, File, Function } from '@kubb/fabric-core'
 
 // React Fabric
-import { App, File, Function } from '@kubb/react-fabric'
+import { Fabric, File, Function } from '@kubb/react-fabric'
 ```
 
 ## Why Use Fabric?

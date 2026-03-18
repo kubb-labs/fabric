@@ -1,1 +1,1 @@
-import { App, createFabric as create } from "@kubb/react-fabric";
+import { Fabric, createFabric as create } from "@kubb/react-fabric";

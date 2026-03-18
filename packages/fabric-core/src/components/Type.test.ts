@@ -1,16 +1,16 @@
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { unprovide } from '../context.ts'
-import { AppContext } from '../contexts/AppContext.ts'
+import { FabricContext } from '../contexts/FabricContext.ts'
 import { createFabric } from '../createFabric.ts'
 import { fsxPlugin } from '../plugins'
 import { TreeNode } from '../utils/TreeNode.ts'
-import { App } from './App.ts'
+import { Fabric } from './Fabric.ts'
 import { Type, type TypeProps } from './Type.ts'
 
 describe('Type', () => {
   afterEach(() => {
-    unprovide(AppContext)
+    unprovide(FabricContext)
   })
 
   const scenarios: Array<{ name: string; props: TypeProps }> = [
@@ -46,7 +46,7 @@ describe('Type', () => {
 
     fabric.use(fsxPlugin, { treeNode })
 
-    const component = App({
+    const component = Fabric({
       meta: {
         name: 'TestApp',
       },

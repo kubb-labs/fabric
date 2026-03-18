@@ -15,8 +15,8 @@ export type Options = {
 }
 
 type ExtendOptions = {
-  render(App: FabricReactElement): Promise<void>
-  renderToString(App: FabricReactElement): Promise<string>
+  render(Fabric: FabricReactElement): Promise<void>
+  renderToString(Fabric: FabricReactElement): Promise<string>
   waitUntilExit(): Promise<void>
   unmount(error?: Error | number | null): void
 }
@@ -24,8 +24,8 @@ type ExtendOptions = {
 declare global {
   namespace Kubb {
     interface Fabric {
-      render(App: FabricReactElement): Promise<void>
-      renderToString(App: FabricReactElement): Promise<string>
+      render(Fabric: FabricReactElement): Promise<void>
+      renderToString(Fabric: FabricReactElement): Promise<string>
       waitUntilExit(): Promise<void>
     }
   }
@@ -38,13 +38,13 @@ export const reactPlugin = definePlugin<Options, ExtendOptions>({
     const runtime = new Runtime({ fileManager: ctx.fileManager, ...options })
 
     return {
-      async render(App) {
+      async render(Fabric) {
         await ctx.emit('lifecycle:start')
-        await runtime.render(App)
+        await runtime.render(Fabric)
       },
-      async renderToString(App) {
+      async renderToString(Fabric) {
         await ctx.emit('lifecycle:start')
-        return runtime.renderToString(App)
+        return runtime.renderToString(Fabric)
       },
       async waitUntilExit() {
         await runtime.waitUntilExit()
