@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.15.1
+
+### Patch Changes
+
+- [`e32bd7f`](https://github.com/kubb-labs/fabric/commit/e32bd7f8d66f4b61ede88f8413123dcabecf75d2) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - revert removal
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.15.1
+
 ## 0.15.0
 
 ### Minor Changes
