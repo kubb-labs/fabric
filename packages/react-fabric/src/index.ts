@@ -27,5 +27,4 @@ export { useLifecycle } from './composables/useLifecycle.tsx'
 export { createReactFabric } from './createReactFabric.ts'
 export { openDevtools } from './devtools.ts'
 export { Runtime } from './Runtime.tsx'
-// utils
-export { createFunctionParams, FunctionParams } from './utils/getFunctionParams.ts'
+
