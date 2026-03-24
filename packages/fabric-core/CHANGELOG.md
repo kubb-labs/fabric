@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.15.0
+
+### Minor Changes
+
+- [#186](https://github.com/kubb-labs/fabric/pull/186) [`2ad651f`](https://github.com/kubb-labs/fabric/commit/2ad651fc08b54f12e153c68917623c5a9b049245) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Update to TypeScript v6
+
 ## 0.14.0
 
 ### Minor Changes
