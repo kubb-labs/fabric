@@ -5,8 +5,6 @@ import { Renderer } from './Renderer.ts'
 
 declare global {
   var WebSocket: typeof WebSocket
-  var self: any
-  var window: any
   var isDevtoolsEnabled: any
 }
 
