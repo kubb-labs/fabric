@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type * as KubbFile from '../KubbFile.ts'
+import type * as KubbFile from '../FabricFile.ts'
 import { tsxParser } from './tsxParser.ts'
 
 describe('tsxParser', () => {

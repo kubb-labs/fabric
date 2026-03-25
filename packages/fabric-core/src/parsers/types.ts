@@ -1,5 +1,5 @@
 import type { Install } from '../Fabric.ts'
-import type * as KubbFile from '../KubbFile.ts'
+import type * as KubbFile from '../FabricFile.ts'
 
 type PrintOptions = {
   extname?: KubbFile.Extname

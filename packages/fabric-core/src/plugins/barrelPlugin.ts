@@ -2,7 +2,7 @@
 
 import path from 'node:path'
 import { createFile } from '../createFile.ts'
-import type * as KubbFile from '../KubbFile.ts'
+import type * as KubbFile from '../FabricFile.ts'
 import { getRelativePath } from '../utils/getRelativePath.ts'
 import { TreeNode } from '../utils/TreeNode.ts'
 import { definePlugin } from './definePlugin.ts'

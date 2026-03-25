@@ -1,5 +1,5 @@
 import { FileContext } from '../contexts/FileContext.ts'
-import type * as KubbFile from '../KubbFile.ts'
+import type * as KubbFile from '../FabricFile.ts'
 import { useContext } from './useContext.ts'
 
 /**

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { sortBy, uniqueBy } from 'remeda'
-import type * as KubbFile from './KubbFile.ts'
+import type * as KubbFile from './FabricFile.ts'
 import { trimExtName } from './utils/trimExtName.ts'
 
 export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.Source> {

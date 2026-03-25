@@ -1,6 +1,6 @@
 import pLimit from 'p-limit'
 import type { FabricEvents, FabricMode } from './Fabric.ts'
-import type * as KubbFile from './KubbFile.ts'
+import type * as KubbFile from './FabricFile.ts'
 import { defaultParser } from './parsers/defaultParser.ts'
 import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'

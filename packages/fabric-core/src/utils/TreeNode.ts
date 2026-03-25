@@ -1,4 +1,4 @@
-import type * as KubbFile from '../KubbFile.ts'
+import type * as KubbFile from '../FabricFile.ts'
 
 type BarrelData = {
   file?: KubbFile.File

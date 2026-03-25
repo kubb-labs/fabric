@@ -1,7 +1,7 @@
 import { rmSync } from 'node:fs'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
-import type * as KubbFile from '../KubbFile.ts'
+import type * as KubbFile from '../FabricFile.ts'
 import { definePlugin } from './definePlugin.ts'
 
 type WriteOptions = {

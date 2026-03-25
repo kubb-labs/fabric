@@ -1,6 +1,6 @@
+import type * as KubbFile from './FabricFile.ts'
 import type { FileManager } from './FileManager.ts'
 import type { Intrinsic } from './intrinsic.ts'
-import type * as KubbFile from './KubbFile.ts'
 import type { Parser } from './parsers/types.ts'
 import type { Plugin } from './plugins/types.ts'
 import type { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'

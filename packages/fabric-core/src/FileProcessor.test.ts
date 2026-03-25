@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createFile } from './createFile.ts'
+import type * as KubbFile from './FabricFile.ts'
 import { FileProcessor } from './FileProcessor.ts'
-import type * as KubbFile from './KubbFile.ts'
 import { defaultParser, tsxParser, typescriptParser } from './parsers'
 import type { Parser } from './parsers/types.ts'
 import { AsyncEventEmitter } from './utils/AsyncEventEmitter.ts'
