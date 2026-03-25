@@ -1,5 +1,11 @@
 # @kubb/fabric-core
 
+## 0.15.2
+
+### Patch Changes
+
+- [`fb79b0b`](https://github.com/kubb-labs/fabric/commit/fb79b0bcf927ace16a33a19c3740cf74f7f54af9) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Use of FabricFile
+
 ## 0.15.1
 
 ## 0.15.0
