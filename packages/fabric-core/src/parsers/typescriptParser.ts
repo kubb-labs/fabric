@@ -18,8 +18,11 @@ const { factory } = ts
  */
 function parseTypeNode(typeStr: string): ts.TypeNode {
   const source = ts.createSourceFile('temp.ts', `type __T = ${typeStr}`, ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS)
-  const typeAlias = source.statements[0] as ts.TypeAliasDeclaration
-  return typeAlias.type
+  const stmt = source.statements[0]
+  if (!stmt || !ts.isTypeAliasDeclaration(stmt)) {
+    throw new Error(`Could not parse type: ${typeStr}`)
+  }
+  return stmt.type
 }
 
 /**
@@ -31,8 +34,11 @@ function parseParameters(paramsStr: string): ts.ParameterDeclaration[] {
     return []
   }
   const source = ts.createSourceFile('temp.ts', `function __f(${paramsStr}) {}`, ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS)
-  const fn = source.statements[0] as ts.FunctionDeclaration
-  return [...(fn.parameters ?? [])]
+  const stmt = source.statements[0]
+  if (!stmt || !ts.isFunctionDeclaration(stmt)) {
+    throw new Error(`Could not parse parameters: ${paramsStr}`)
+  }
+  return [...(stmt.parameters ?? [])]
 }
 
 /**
@@ -44,8 +50,11 @@ function parseTypeParameters(genericsStr: string): ts.TypeParameterDeclaration[]
     return []
   }
   const source = ts.createSourceFile('temp.ts', `function __f<${genericsStr}>() {}`, ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS)
-  const fn = source.statements[0] as ts.FunctionDeclaration
-  return [...(fn.typeParameters ?? [])]
+  const stmt = source.statements[0]
+  if (!stmt || !ts.isFunctionDeclaration(stmt)) {
+    throw new Error(`Could not parse generics: ${genericsStr}`)
+  }
+  return [...(stmt.typeParameters ?? [])]
 }
 
 /**
@@ -57,8 +66,11 @@ function parseStatements(bodyStr: string): ts.Statement[] {
     return []
   }
   const source = ts.createSourceFile('temp.ts', `function __f() { ${bodyStr} }`, ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS)
-  const fn = source.statements[0] as ts.FunctionDeclaration
-  return [...(fn.body?.statements ?? [])]
+  const stmt = source.statements[0]
+  if (!stmt || !ts.isFunctionDeclaration(stmt)) {
+    throw new Error(`Could not parse statements: ${bodyStr}`)
+  }
+  return [...(stmt.body?.statements ?? [])]
 }
 
 /**
@@ -82,6 +94,8 @@ function addJSDocComment<T extends ts.Node>(node: T, jsdoc: JSDoc): T {
   if (!jsdoc.comments.length) {
     return node
   }
+  // The trailing space before the closing */ is required by the JSDoc block comment
+  // format so that the printer emits `/** ... */` with a clean closing sequence.
   const commentBody = `*\n${jsdoc.comments.map((c) => ` * ${c}`).join('\n')}\n `
   return ts.addSyntheticLeadingComment(node, ts.SyntaxKind.MultiLineCommentTrivia, commentBody, true) as T
 }
