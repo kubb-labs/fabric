@@ -69,7 +69,6 @@ export function squashTextNodes(
             if (returnType && isAsync) parts.push(`: Promise<${returnType}>`)
 
             const signature = renderIndent(parts.join(''), context)
-            context.currentLineLength = parts.join('').length
 
             context.indentLevel++
             context.currentLineLength = 0
@@ -100,7 +99,6 @@ export function squashTextNodes(
             }
 
             const signature = renderIndent(parts.join(''), context)
-            context.currentLineLength = parts.join('').length
 
             const body = walk(child, context)
             let result = `${signature}= ${body}`
@@ -117,7 +115,6 @@ export function squashTextNodes(
             parts.push(`type ${name} = `)
 
             const signature = renderIndent(parts.join(''), context)
-            context.currentLineLength = parts.join('').length
 
             const body = walk(child, context)
             return `${signature}${body}`

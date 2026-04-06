@@ -58,7 +58,7 @@ export function Function({ children, ...props }: Props): FabricReactElement {
   }
 
   // Normalize generics array to comma-separated string for DOM attribute storage
-  const genericsStr = Array.isArray(generics) ? generics.join(', ').trim() : generics
+  const genericsString = Array.isArray(generics) ? generics.join(', ').trim() : generics
 
   return (
     <>
@@ -68,7 +68,7 @@ export function Function({ children, ...props }: Props): FabricReactElement {
           <br />
         </>
       )}
-      <kubb-function name={name} params={params} export={canExport} default={isDefault} async={isAsync} generics={genericsStr} returnType={returnType}>
+      <kubb-function name={name} params={params} export={canExport} default={isDefault} async={isAsync} generics={genericsString} returnType={returnType}>
         {children}
       </kubb-function>
     </>

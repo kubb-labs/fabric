@@ -224,8 +224,8 @@ export function createFunction({ name, params, export: isExport = false, default
 
   let returnTypeNode: ts.TypeNode | undefined
   if (returnType && isAsync) {
-    const inner = parseTypeAnnotation(returnType)
-    returnTypeNode = factory.createTypeReferenceNode('Promise', inner ? [inner] : [factory.createTypeReferenceNode(factory.createIdentifier(returnType))])
+    const inner = parseTypeAnnotation(returnType) ?? factory.createTypeReferenceNode(returnType)
+    returnTypeNode = factory.createTypeReferenceNode('Promise', [inner])
   } else {
     returnTypeNode = parseTypeAnnotation(returnType)
   }
