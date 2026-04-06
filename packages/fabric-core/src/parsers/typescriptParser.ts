@@ -207,7 +207,15 @@ function parseTypeAnnotation(typeStr?: string): ts.TypeNode | undefined {
  * print(node) // → "export function getUser(): User {}"
  * ```
  */
-export function createFunction({ name, params, export: isExport = false, default: isDefault = false, async: isAsync = false, generics, returnType }: KubbFile.FunctionNode): ts.FunctionDeclaration {
+export function createFunction({
+  name,
+  params,
+  export: isExport = false,
+  default: isDefault = false,
+  async: isAsync = false,
+  generics,
+  returnType,
+}: KubbFile.FunctionNode): ts.FunctionDeclaration {
   const modifiers: ts.ModifierLike[] = []
   if (isExport) {
     modifiers.push(factory.createModifier(ts.SyntaxKind.ExportKeyword))
@@ -284,7 +292,12 @@ export function createTypeAlias({ name, export: isExport = false }: KubbFile.Typ
     modifiers.push(factory.createModifier(ts.SyntaxKind.ExportKeyword))
   }
 
-  return factory.createTypeAliasDeclaration(modifiers.length ? modifiers : undefined, factory.createIdentifier(name), undefined, factory.createTypeReferenceNode('unknown'))
+  return factory.createTypeAliasDeclaration(
+    modifiers.length ? modifiers : undefined,
+    factory.createIdentifier(name),
+    undefined,
+    factory.createTypeReferenceNode('unknown'),
+  )
 }
 
 export const typescriptParser = defineParser({

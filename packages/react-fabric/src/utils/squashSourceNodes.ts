@@ -1,5 +1,5 @@
-import type { KubbFile } from '@kubb/fabric-core/types'
 import { createConst, createFunction, createTypeAlias } from '@kubb/fabric-core/parsers/typescript'
+import type { KubbFile } from '@kubb/fabric-core/types'
 import type ts from 'typescript'
 
 import { nodeNames } from '../dom.ts'
