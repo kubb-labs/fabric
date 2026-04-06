@@ -1,6 +1,5 @@
 import { createConst, createFunction, createTypeAlias } from '@kubb/fabric-core/parsers/typescript'
 import type { KubbFile } from '@kubb/fabric-core/types'
-import type ts from 'typescript'
 
 import { nodeNames } from '../dom.ts'
 import type { DOMElement, ElementNames } from '../types.ts'
@@ -11,8 +10,8 @@ import { squashTextNodes } from './squashTextNodes.ts'
  * and kubb-type elements. This is the same pattern as squashImportNodes/squashExportNodes
  * but for top-level declarations inside a source block.
  */
-function collectAstNodes(node: DOMElement): Array<ts.Node> {
-  const nodes: Array<ts.Node> = []
+function collectAstNodes(node: DOMElement): NonNullable<KubbFile.Source['nodes']> {
+  const nodes: NonNullable<KubbFile.Source['nodes']> = []
 
   const walk = (current: DOMElement): void => {
     for (const child of current.childNodes) {
@@ -80,7 +79,7 @@ export function squashSourceNodes(node: DOMElement, ignores: Array<ElementNames>
         const astNodes = collectAstNodes(child)
 
         const source: KubbFile.Source = {
-          name: child.attributes.get('name'),
+          name: child.attributes.get('name')?.toString(),
           isTypeOnly: (child.attributes.get('isTypeOnly') ?? false) as boolean,
           isExportable: (child.attributes.get('isExportable') ?? false) as boolean,
           isIndexable: (child.attributes.get('isIndexable') ?? false) as boolean,
