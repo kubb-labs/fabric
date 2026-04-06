@@ -1,3 +1,5 @@
+import type ts from 'typescript'
+
 type ImportName =
   | string
   | Array<
@@ -7,6 +9,77 @@ type ImportName =
           name?: string
         }
     >
+
+export type FunctionNode = {
+  /**
+   * Name of the function.
+   */
+  name: string
+  /**
+   * Function parameters string.
+   * @example 'id: number, name: string'
+   */
+  params?: string
+  /**
+   * Include export keyword.
+   * @default false
+   */
+  export?: boolean
+  /**
+   * Include default keyword (for default exports).
+   * @default false
+   */
+  default?: boolean
+  /**
+   * Make the function async.
+   * @default false
+   */
+  async?: boolean
+  /**
+   * TypeScript generics string or array.
+   * @example 'T' or ['T', 'U extends string']
+   */
+  generics?: string | string[]
+  /**
+   * Return type string.
+   * @example 'User'
+   */
+  returnType?: string
+}
+
+export type ConstNode = {
+  /**
+   * Name of the constant.
+   */
+  name: string
+  /**
+   * TypeScript type annotation string.
+   * @example 'string' or 'User[]'
+   */
+  type?: string
+  /**
+   * Include export keyword.
+   * @default false
+   */
+  export?: boolean
+  /**
+   * Use const assertion (`as const`).
+   * @default false
+   */
+  asConst?: boolean
+}
+
+export type TypeNode = {
+  /**
+   * Name of the type alias (must start with a capital letter).
+   */
+  name: string
+  /**
+   * Include export keyword.
+   * @default false
+   */
+  export?: boolean
+}
 
 export type Import = {
   /**
@@ -45,6 +118,12 @@ export type Import = {
 export type Source = {
   name?: string
   value?: string
+  /**
+   * TypeScript AST nodes representing the source declarations.
+   * Populated when source is created from Function, Const, or Type components.
+   * Can be used as an alternative to `value` for programmatic AST manipulation.
+   */
+  nodes?: Array<ts.Node>
   /**
    * Make this source a type-only export.
    * - `true` marks source as type export

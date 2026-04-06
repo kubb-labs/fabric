@@ -46,6 +46,79 @@ export function squashTextNodes(
             }
             return ''
           }
+          case 'kubb-function': {
+            const attrs = child.attributes
+            const name = attrs.get('name') as string
+            const params = (attrs.get('params') as string | undefined) || ''
+            const isExport = attrs.get('export') as boolean | undefined
+            const isDefault = attrs.get('default') as boolean | undefined
+            const isAsync = attrs.get('async') as boolean | undefined
+            const generics = attrs.get('generics') as string | undefined
+            const returnType = attrs.get('returnType') as string | undefined
+
+            const parts: string[] = []
+            if (isExport) parts.push('export ')
+            if (isDefault) parts.push('default ')
+            if (isAsync) parts.push('async ')
+            parts.push(`function ${name}`)
+            if (generics) {
+              parts.push(`<${generics}>`)
+            }
+            parts.push(`(${params})`)
+            if (returnType && !isAsync) parts.push(`: ${returnType}`)
+            if (returnType && isAsync) parts.push(`: Promise<${returnType}>`)
+
+            const signature = renderIndent(parts.join(''), context)
+
+            context.indentLevel++
+            context.currentLineLength = 0
+            const body = walk(child, context)
+            context.indentLevel--
+            context.currentLineLength = 0
+
+            const closingIndent = ' '.repeat(context.indentLevel * context.indentSize)
+            if (body.trim()) {
+              return `${signature} {\n${body}\n${closingIndent}}`
+            }
+            return `${signature} {}`
+          }
+          case 'kubb-const': {
+            const attrs = child.attributes
+            const name = attrs.get('name') as string
+            const type = attrs.get('type') as string | undefined
+            const isExport = attrs.get('export') as boolean | undefined
+            const asConst = attrs.get('asConst') as boolean | undefined
+
+            const parts: string[] = []
+            if (isExport) parts.push('export ')
+            parts.push(`const ${name}`)
+            if (type) {
+              parts.push(`:${type} `)
+            } else {
+              parts.push(' ')
+            }
+
+            const signature = renderIndent(parts.join(''), context)
+
+            const body = walk(child, context)
+            let result = `${signature}= ${body}`
+            if (asConst) result += ' as const'
+            return result
+          }
+          case 'kubb-type': {
+            const attrs = child.attributes
+            const name = attrs.get('name') as string
+            const isExport = attrs.get('export') as boolean | undefined
+
+            const parts: string[] = []
+            if (isExport) parts.push('export ')
+            parts.push(`type ${name} = `)
+
+            const signature = renderIndent(parts.join(''), context)
+
+            const body = walk(child, context)
+            return `${signature}${body}`
+          }
           case 'kubb-source':
             return text
           default:

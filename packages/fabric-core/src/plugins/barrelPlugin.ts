@@ -99,7 +99,7 @@ export function getBarrelFiles({ files, root, mode }: GetBarrelFilesOptions): Ar
 
     for (const leaf of node.leaves) {
       const file = leaf.data.file
-      if (!file || !file.path) {
+      if (!file?.path) {
         continue
       }
 

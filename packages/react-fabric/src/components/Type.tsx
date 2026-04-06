@@ -48,8 +48,9 @@ export function Type({ children, ...props }: TypeProps): FabricReactElement {
           <br />
         </>
       )}
-      {canExport && <>export </>}
-      type {name} = {children}
+      <kubb-type name={name} export={canExport}>
+        {children}
+      </kubb-type>
     </>
   )
 }

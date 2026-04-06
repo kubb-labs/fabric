@@ -47,7 +47,7 @@ type Props = {
  * Generates a TypeScript function declaration.
  */
 export function Function({ children, ...props }: Props): FabricReactElement {
-  const { name, default: isDefault, export: canExport, async, generics, params, returnType, JSDoc } = props
+  const { name, default: isDefault, export: canExport, async: isAsync, generics, params, returnType, JSDoc } = props
 
   const nodeTree = useNodeTree()
 
@@ -57,6 +57,9 @@ export function Function({ children, ...props }: Props): FabricReactElement {
     provide(NodeTreeContext, childTree)
   }
 
+  // Normalize generics array to comma-separated string for DOM attribute storage
+  const genericsString = Array.isArray(generics) ? generics.join(', ').trim() : generics
+
   return (
     <>
       {JSDoc?.comments && (
@@ -65,34 +68,9 @@ export function Function({ children, ...props }: Props): FabricReactElement {
           <br />
         </>
       )}
-      {canExport && <>export </>}
-      {isDefault && <>default </>}
-      {async && <>async </>}
-      function {name}
-      {generics && (
-        <>
-          {'<'}
-          {Array.isArray(generics) ? generics.join(', ').trim() : generics}
-          {'>'}
-        </>
-      )}
-      ({params}){returnType && !async && <>: {returnType}</>}
-      {returnType && async && (
-        <>
-          : Promise{'<'}
-          {returnType}
-          {'>'}
-        </>
-      )}
-      {' {'}
-      <br />
-      <indent />
-      {/* Indent component to handle indentation*/}
-      {children}
-      <br />
-      <dedent />
-      {/* Indent component to handle indentation*/}
-      {'}'}
+      <kubb-function name={name} params={params} export={canExport} default={isDefault} async={isAsync} generics={genericsString} returnType={returnType}>
+        {children}
+      </kubb-function>
     </>
   )
 }

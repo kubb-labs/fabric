@@ -52,18 +52,9 @@ export function Const({ children, ...props }: ConstProps): FabricReactElement {
           <br />
         </>
       )}
-      {canExport && <>export </>}
-      const {name}
-      {type ? (
-        <>
-          {':'}
-          {type}{' '}
-        </>
-      ) : (
-        ' '
-      )}
-      = {children}
-      {asConst && <> as const</>}
+      <kubb-const name={name} type={type} export={canExport} asConst={asConst}>
+        {children}
+      </kubb-const>
     </>
   )
 }
