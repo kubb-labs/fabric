@@ -1,5 +1,16 @@
 # @kubb/react-fabric
 
+## 0.16.0
+
+### Minor Changes
+
+- [#191](https://github.com/kubb-labs/fabric/pull/191) [`4af2bc4`](https://github.com/kubb-labs/fabric/commit/4af2bc4a746a269266a1a2bf39fb74de17dc95c4) Thanks [@copilot-swe-agent](https://github.com/apps/copilot-swe-agent)! - Add `KubbFunction`, `KubbConst`, and `KubbType` custom components that render `kubb-function`, `kubb-const`, and `kubb-type` DOM elements for transformation into Kubb AST nodes. Add `createFunction`, `createConst`, and `createTypeAlias` AST factory functions in `typescriptParser`. Add `nodes?: Array<ts.Node>` to `KubbFile.Source` and a `squashSourceNodes` utility that collects AST nodes from the new DOM elements.
+
+### Patch Changes
+
+- Updated dependencies [[`4af2bc4`](https://github.com/kubb-labs/fabric/commit/4af2bc4a746a269266a1a2bf39fb74de17dc95c4)]:
+  - @kubb/fabric-core@0.16.0
+
 ## 0.15.2
 
 ### Patch Changes
