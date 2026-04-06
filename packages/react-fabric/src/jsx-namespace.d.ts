@@ -1,6 +1,6 @@
 import type React from 'react'
 
-import type { FabricReactNode, FabricReactElement, FabricExportProps, FabricFileProps, FabricImportProps, FabricSourceProps, FabricTextProps, LineBreakProps } from './types'
+import type { FabricReactNode, FabricReactElement, FabricExportProps, FabricFileProps, FabricImportProps, FabricSourceProps, FabricTextProps, FabricFunctionProps, FabricConstProps, FabricTypeProps, LineBreakProps } from './types'
 
 export namespace JSX {
   type ElementType = React.JSX.ElementType
@@ -23,6 +23,9 @@ export namespace JSX {
     'kubb-source': FabricSourceProps
     'kubb-import': FabricImportProps
     'kubb-export': FabricExportProps
+    'kubb-function': FabricFunctionProps
+    'kubb-const': FabricConstProps
+    'kubb-type': FabricTypeProps
     br: LineBreakProps
     indent: {}
     dedent: {}

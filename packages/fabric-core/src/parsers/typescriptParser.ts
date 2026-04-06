@@ -1,5 +1,6 @@
 import path from 'node:path'
 import ts from 'typescript'
+import type * as KubbFile from '../FabricFile.ts'
 import { getRelativePath } from '../utils/getRelativePath.ts'
 import { trimExtName } from '../utils/trimExtName.ts'
 import { defineParser } from './defineParser.ts'
@@ -147,6 +148,145 @@ export function createExport({
   )
 }
 
+/**
+ * Parse a TypeScript code snippet to extract a specific statement.
+ * Used internally to convert string-based props (params, generics, types) to AST nodes.
+ */
+function parseStatement<T extends ts.Statement>(code: string): T {
+  const sourceFile = ts.createSourceFile('temp.ts', code, ts.ScriptTarget.ES2022, true)
+  return sourceFile.statements[0] as T
+}
+
+/**
+ * Parse function parameter declarations from a params string.
+ * @example parseParams('id: number, name: string') → ParameterDeclaration[]
+ */
+function parseParams(params?: string): ts.ParameterDeclaration[] {
+  if (!params) {
+    return []
+  }
+  const func = parseStatement<ts.FunctionDeclaration>(`function f(${params}) {}`)
+  return [...func.parameters]
+}
+
+/**
+ * Parse type parameter declarations from a generics string or array.
+ * @example parseTypeParameters('T') or parseTypeParameters(['T', 'U extends string'])
+ */
+function parseTypeParameters(generics?: string | string[]): ts.TypeParameterDeclaration[] | undefined {
+  if (!generics) {
+    return undefined
+  }
+  const gs = Array.isArray(generics) ? generics.join(', ').trim() : generics
+  if (!gs) {
+    return undefined
+  }
+  const func = parseStatement<ts.FunctionDeclaration>(`function f<${gs}>() {}`)
+  return func.typeParameters ? [...func.typeParameters] : undefined
+}
+
+/**
+ * Parse a TypeScript type annotation string to a TypeNode.
+ * @example parseTypeAnnotation('User') → TypeReferenceNode
+ */
+function parseTypeAnnotation(typeStr?: string): ts.TypeNode | undefined {
+  if (!typeStr) {
+    return undefined
+  }
+  const typeAlias = parseStatement<ts.TypeAliasDeclaration>(`type T = ${typeStr}`)
+  return typeAlias.type
+}
+
+/**
+ * Create a TypeScript function declaration AST node from FunctionNode props.
+ * Similar to createImport/createExport but for function declarations.
+ *
+ * @example
+ * ```ts
+ * const node = createFunction({ name: 'getUser', export: true, returnType: 'User' })
+ * print(node) // → "export function getUser(): User {}"
+ * ```
+ */
+export function createFunction({ name, params, export: isExport = false, default: isDefault = false, async: isAsync = false, generics, returnType }: KubbFile.FunctionNode): ts.FunctionDeclaration {
+  const modifiers: ts.ModifierLike[] = []
+  if (isExport) {
+    modifiers.push(factory.createModifier(ts.SyntaxKind.ExportKeyword))
+  }
+  if (isDefault) {
+    modifiers.push(factory.createModifier(ts.SyntaxKind.DefaultKeyword))
+  }
+  if (isAsync) {
+    modifiers.push(factory.createModifier(ts.SyntaxKind.AsyncKeyword))
+  }
+
+  const typeParameters = parseTypeParameters(generics)
+  const parameters = parseParams(params)
+
+  let returnTypeNode: ts.TypeNode | undefined
+  if (returnType && isAsync) {
+    const inner = parseTypeAnnotation(returnType)
+    returnTypeNode = factory.createTypeReferenceNode('Promise', inner ? [inner] : [factory.createTypeReferenceNode(factory.createIdentifier(returnType))])
+  } else {
+    returnTypeNode = parseTypeAnnotation(returnType)
+  }
+
+  return factory.createFunctionDeclaration(
+    modifiers.length ? modifiers : undefined,
+    undefined,
+    factory.createIdentifier(name),
+    typeParameters,
+    parameters,
+    returnTypeNode,
+    factory.createBlock([], true),
+  )
+}
+
+/**
+ * Create a TypeScript variable statement (const) AST node from ConstNode props.
+ * Similar to createImport/createExport but for const declarations.
+ *
+ * @example
+ * ```ts
+ * const node = createConst({ name: 'API_URL', type: 'string', export: true })
+ * print(node) // → "export const API_URL: string"
+ * ```
+ */
+export function createConst({ name, type, export: isExport = false }: KubbFile.ConstNode): ts.VariableStatement {
+  const modifiers: ts.ModifierLike[] = []
+  if (isExport) {
+    modifiers.push(factory.createModifier(ts.SyntaxKind.ExportKeyword))
+  }
+
+  const typeNode = parseTypeAnnotation(type)
+
+  return factory.createVariableStatement(
+    modifiers.length ? modifiers : undefined,
+    factory.createVariableDeclarationList(
+      [factory.createVariableDeclaration(factory.createIdentifier(name), undefined, typeNode, undefined)],
+      ts.NodeFlags.Const,
+    ),
+  )
+}
+
+/**
+ * Create a TypeScript type alias declaration AST node from TypeNode props.
+ * Similar to createImport/createExport but for type alias declarations.
+ *
+ * @example
+ * ```ts
+ * const node = createTypeAlias({ name: 'User', export: true })
+ * print(node) // → "export type User = unknown"
+ * ```
+ */
+export function createTypeAlias({ name, export: isExport = false }: KubbFile.TypeNode): ts.TypeAliasDeclaration {
+  const modifiers: ts.ModifierLike[] = []
+  if (isExport) {
+    modifiers.push(factory.createModifier(ts.SyntaxKind.ExportKeyword))
+  }
+
+  return factory.createTypeAliasDeclaration(modifiers.length ? modifiers : undefined, factory.createIdentifier(name), undefined, factory.createTypeReferenceNode('unknown'))
+}
+
 export const typescriptParser = defineParser({
   name: 'typescript',
   extNames: ['.ts', '.js'],
@@ -156,6 +296,8 @@ export const typescriptParser = defineParser({
     for (const item of file.sources) {
       if (item.value) {
         sourceParts.push(item.value)
+      } else if (item.nodes && item.nodes.length > 0) {
+        sourceParts.push(print(...item.nodes))
       }
     }
     const source = sourceParts.join('\n\n')

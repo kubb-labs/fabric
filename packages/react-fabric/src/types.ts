@@ -14,6 +14,9 @@ export type ElementNames =
   | 'kubb-source'
   | 'kubb-import'
   | 'kubb-export'
+  | 'kubb-function'
+  | 'kubb-const'
+  | 'kubb-type'
   | 'kubb-root'
   | 'kubb-app'
 
@@ -78,6 +81,18 @@ export type FabricSourceProps = KubbFile.Source & {
 export type FabricImportProps = KubbFile.Import
 
 export type FabricExportProps = KubbFile.Export
+
+export type FabricFunctionProps = KubbFile.FunctionNode & {
+  children?: FabricReactNode
+}
+
+export type FabricConstProps = KubbFile.ConstNode & {
+  children?: FabricReactNode
+}
+
+export type FabricTypeProps = KubbFile.TypeNode & {
+  children?: FabricReactNode
+}
 
 export type LineBreakProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLBRElement>, HTMLBRElement>
 

@@ -36,4 +36,71 @@ describe('squashSourceNodes', () => {
       ]
     `)
   })
+
+  it('should collect AST nodes from kubb-function elements inside kubb-source', () => {
+    const root = createNode('kubb-root')
+    const src = kubbElement('kubb-source', { name: 'getUser', isExportable: true })
+
+    const fn = kubbElement('kubb-function', { name: 'getUser', export: true, returnType: 'User' })
+    appendChildNode(fn, createTextNode('return fetch("/users")'))
+    appendChildNode(src, fn)
+    appendChildNode(root, src)
+
+    const result = squashSourceNodes(root, ['kubb-export', 'kubb-import'])
+    const sources = [...result]
+
+    expect(sources).toHaveLength(1)
+    expect(sources[0]!.nodes).toBeDefined()
+    expect(sources[0]!.nodes).toHaveLength(1)
+    // nodes should be TypeScript AST nodes (ts.FunctionDeclaration)
+    const node = sources[0]!.nodes![0]!
+    expect(node).toHaveProperty('kind')
+  })
+
+  it('should collect AST nodes from kubb-const elements inside kubb-source', () => {
+    const root = createNode('kubb-root')
+    const src = kubbElement('kubb-source', { name: 'API_URL' })
+
+    const constEl = kubbElement('kubb-const', { name: 'API_URL', type: 'string', export: true })
+    appendChildNode(constEl, createTextNode('"https://api.example.com"'))
+    appendChildNode(src, constEl)
+    appendChildNode(root, src)
+
+    const result = squashSourceNodes(root, ['kubb-export', 'kubb-import'])
+    const sources = [...result]
+
+    expect(sources).toHaveLength(1)
+    expect(sources[0]!.nodes).toBeDefined()
+    expect(sources[0]!.nodes).toHaveLength(1)
+  })
+
+  it('should collect AST nodes from kubb-type elements inside kubb-source', () => {
+    const root = createNode('kubb-root')
+    const src = kubbElement('kubb-source', { name: 'User' })
+
+    const typeEl = kubbElement('kubb-type', { name: 'User', export: true })
+    appendChildNode(typeEl, createTextNode('{ id: number; name: string }'))
+    appendChildNode(src, typeEl)
+    appendChildNode(root, src)
+
+    const result = squashSourceNodes(root, ['kubb-export', 'kubb-import'])
+    const sources = [...result]
+
+    expect(sources).toHaveLength(1)
+    expect(sources[0]!.nodes).toBeDefined()
+    expect(sources[0]!.nodes).toHaveLength(1)
+  })
+
+  it('should not add nodes field when source has no function/const/type elements', () => {
+    const root = createNode('kubb-root')
+    const src = kubbElement('kubb-source', { name: 'plain' })
+    appendChildNode(src, createTextNode('const x = 1'))
+    appendChildNode(root, src)
+
+    const result = squashSourceNodes(root, [])
+    const sources = [...result]
+
+    expect(sources).toHaveLength(1)
+    expect(sources[0]).not.toHaveProperty('nodes')
+  })
 })
