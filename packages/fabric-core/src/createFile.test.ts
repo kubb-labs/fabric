@@ -393,6 +393,23 @@ describe('createFile', () => {
     ])
   })
 
+  it('should sort imports by their resolved relative path, not the absolute path', () => {
+    // When `root` is set the import specifier is `getRelativePath(root, path)`.
+    // Sorting must use that relative path so the order is stable regardless of
+    // the absolute location on disk (e.g. a CLI cwd vs a bundler root).
+    // Here the absolute-`path` order ([Y, X]) differs from the relative order
+    // ([X, Y]); only the relative sort is deterministic across environments.
+    const root = '/a/b/c/file.ts'
+    const imports: Array<KubbFile.Import> = [
+      { path: '/a/x.ts', name: 'X', root }, // -> ../../x.ts
+      { path: '/a/b/y.ts', name: 'Y', root }, // -> ../y.ts
+    ]
+
+    const result = combineImports(imports, [], 'const v = X + Y;')
+
+    expect(result.map((i) => i.name)).toEqual(['X', 'Y'])
+  })
+
   it('should keep both type-only and non-type-only exports/imports with same path and name', () => {
     // When exports/imports have the same path and name but different isTypeOnly values,
     // both should be preserved because they serve different purposes:
