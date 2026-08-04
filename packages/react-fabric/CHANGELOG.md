@@ -1,5 +1,14 @@
 # @kubb/react-fabric
 
+## 0.16.1
+
+### Patch Changes
+
+- [#195](https://github.com/kubb-labs/fabric/pull/195) [`bdd4814`](https://github.com/kubb-labs/fabric/commit/bdd48149664411c615e5837e7fc3933c0e935bb3) Thanks [@stijnvanhulle](https://github.com/stijnvanhulle)! - Bump `ws` to 8.21.2 to fix two high severity vulnerabilities (uninitialized memory disclosure and memory exhaustion DoS)
+
+- Updated dependencies []:
+  - @kubb/fabric-core@0.16.1
+
 ## 0.16.0
 
 ### Minor Changes
