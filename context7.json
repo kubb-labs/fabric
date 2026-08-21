@@ -3,7 +3,7 @@
   "url": "https://context7.com/kubb-labs/fabric",
   "public_key": "pk_E3UkJR9X5FvhME9wB1sCS",
   "projectTitle": "Kubb Fabric",
-  "description": "Language-agnostic toolkit for generating code and files with JSX and TypeScript. Fabric is the engine you build a generator on, not an OpenAPI generator itself.",
+  "description": "Language-agnostic toolkit for generating code and files using JSX and TypeScript. Fabric is the engine you build a generator on, not an OpenAPI generator itself.",
   "folders": ["docs", "packages"],
   "excludeFiles": ["AGENTS.md", "CHANGELOG.md", "changelog.md", "CODE_OF_CONDUCT.md", "SECURITY.md"],
   "rules": [
