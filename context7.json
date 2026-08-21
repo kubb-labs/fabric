@@ -1,15 +1,4 @@
 {
   "url": "https://context7.com/kubb-labs/fabric",
-  "public_key": "pk_E3UkJR9X5FvhME9wB1sCS",
-  "projectTitle": "Kubb Fabric",
-  "description": "Language-agnostic toolkit for generating code and files using JSX and TypeScript. Fabric is the engine you build a generator on, not an OpenAPI generator itself.",
-  "folders": ["docs", "packages"],
-  "excludeFiles": ["AGENTS.md", "CHANGELOG.md", "changelog.md", "CODE_OF_CONDUCT.md", "SECURITY.md"],
-  "rules": [
-    "Fabric and Kubb are separate projects. Fabric generates files from JSX and reads no OpenAPI spec. Reach for Fabric when you are building the generator itself.",
-    "To generate TypeScript types, clients, hooks or schemas from an OpenAPI spec, use Kubb instead: https://kubb.dev, indexed on Context7 as /kubb-labs/docs.",
-    "The packages are `@kubb/fabric-core` and `@kubb/react-fabric`. Neither is a Kubb plugin, and `@kubb/plugin-*` packages do not run on Fabric.",
-    "Fabric runs on Node.js 20+ and Bun.",
-    "Plugins are `fsPlugin`, `barrelPlugin`, `loggerPlugin` and `reactPlugin`, and parsers cover TypeScript, TSX and custom formats."
-  ]
+  "public_key": "pk_E3UkJR9X5FvhME9wB1sCS"
 }
