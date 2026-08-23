@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { sortBy, uniqueBy } from 'remeda'
 import type * as KubbFile from './FabricFile.ts'
+import { getRelativePath } from './utils/getRelativePath.ts'
 import { trimExtName } from './utils/trimExtName.ts'
 
 export function combineSources(sources: Array<KubbFile.Source>): Array<KubbFile.Source> {
@@ -116,7 +117,12 @@ export function combineImports(imports: Array<KubbFile.Import>, exports: Array<K
     imports,
     (v) => Array.isArray(v.name),
     (v) => !v.isTypeOnly,
-    (v) => v.path,
+    // Sort by the path as it will actually be emitted. When `root` is set the
+    // specifier is `getRelativePath(root, path)`, so sorting on the raw absolute
+    // `path` makes the order depend on where the project lives on disk (e.g. a
+    // CLI cwd vs a bundler root), producing different orderings for identical
+    // output. Sorting on the resolved relative path keeps it deterministic.
+    (v) => (v.root ? getRelativePath(v.root, v.path) : v.path),
     (v) => !!v.name,
     // join with null byte — can't appear in identifiers, so avoids collisions between e.g. ['a','b'] and ['a,b']
     (v) => (Array.isArray(v.name) ? [...v.name].sort().join('\0') : (v.name ?? '')),
